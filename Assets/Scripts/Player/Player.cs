@@ -9,53 +9,51 @@ public class Player : MonoBehaviour
     protected float speed;
 
     [SerializeField, Tooltip("점프 입력 시 y축으로 받을 힘(Force)")] 
-    protected float jumpPower;
+    protected float jumpForce;
 
     [SerializeField, Tooltip("대시 입력 시 x축으로 받을 힘(Force)")]  
-    protected float dashPower;
+    protected float dashForce;
 
     [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]  
     protected float dashCooldown;
+
+    private enum Status
+    {
+        Idle,
+        Move,
+        Jump,
+        DoubleJump,
+        Dash
+    }
     
     private Rigidbody2D rig2D;
     private Animator anim;
+    private Status currStatus;
 
     /* Basic Functions */
     void Start()
     {
         rig2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        currStatus = Status.Idle;
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Dash"))
         {
-            if (!anim.GetBool("bDash"))
-            {
-                dash();
-            }
+            dash();
         }
         if (Input.GetButtonDown("Jump")) 
         {
-            if (!anim.GetBool("bJump"))
-            {
-                jump();
-            }
-            else if (!anim.GetBool("bDoubleJump")) 
-            {
-                doubleJump();
-            }
+            jump();
         }
     }
 
     void FixedUpdate()
     {
         checkJumpStatus();
-        if (!anim.GetBool("bDash"))
-        {
-            move();
-        }
+        move();
     }
 
     private void move()
@@ -67,30 +65,44 @@ public class Player : MonoBehaviour
 
     private void jump()
     {
+        if (anim.GetBool("bDoubleJump")) 
+            return;
+
+        if (!anim.GetBool("bJump"))
+            StartCoroutine(jumpCoroutine(jumpForce));
+        else 
+            StartCoroutine(jumpCoroutine(jumpForce * 4f/5f));
+        /*rig2D.velocity = new Vector2(0, 0);
+        rig2D.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);*/
+    }
+
+    private IEnumerator jumpCoroutine(float force)
+    {
+        yield return new WaitForFixedUpdate();
         anim.SetBool("bJump", true);
         rig2D.velocity = new Vector2(0, 0);
-        rig2D.AddForce(new Vector2(0, jumpPower), ForceMode2D.Impulse);
+        rig2D.AddForce(new Vector2(0, force), ForceMode2D.Impulse);
     }
 
     private void doubleJump()
     {
         anim.SetBool("bDoubleJump", true);
         rig2D.velocity = new Vector2(0, 0);
-        rig2D.AddForce(new Vector2(0, jumpPower * 3f/4f), ForceMode2D.Impulse);
+        rig2D.AddForce(new Vector2(0, jumpForce * 3f/4f), ForceMode2D.Impulse);
     }
 
     private void dash()
     {
-        StartCoroutine(runDash());
+        anim.SetBool("bDash", true);
+        StartCoroutine(dashCoroutine());
     }
 
-    private IEnumerator runDash()
+    private IEnumerator dashCoroutine()
     {
-        anim.SetBool("bDash", true);
         float unit = Input.GetAxisRaw("Horizontal");
         if (unit == 0) yield break;
 
-        float s = dashPower;
+        float s = dashForce;
         while (7f < s)
         {
             yield return new WaitForFixedUpdate();
@@ -99,7 +111,6 @@ public class Player : MonoBehaviour
         }
 
         anim.SetBool("bDash", false);
-        yield break;
     }
 
     private bool isJump()
@@ -124,11 +135,13 @@ public class Player : MonoBehaviour
         if (isJump())
         {
             anim.SetBool("bJump", true);
+            currStatus = Status.Jump;
         }
         else
         {
             anim.SetBool("bJump", false);
             anim.SetBool("bDoubleJump", false);
+            currStatus = Status.Idle;
         }
     }
 }

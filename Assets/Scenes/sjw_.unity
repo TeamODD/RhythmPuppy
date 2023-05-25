@@ -353,7 +353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   jumpPower: 5
-  dashPower: 15
+  dashPower: 13
   dashCooldown: 3
 --- !u!212 &1413994228
 SpriteRenderer:
