@@ -14,14 +14,16 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("대시 입력 시 x축으로 받을 힘(Force)")]  
     protected float dashForce;
 
+    [SerializeField, Tooltip("대시 소모 시간")]  
+    protected float dashTime;
+
     [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]  
-    protected WaitForSeconds dashCooldown;
+    protected float dashCooldown;
     
     private Rigidbody2D rig2D;
     private Animator anim;
     private bool onDash, onJump;
 
-    /* Basic Functions */
     void Start()
     {
         rig2D = GetComponent<Rigidbody2D>();
@@ -33,7 +35,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown("Dash"))
         {
-            if (!onDash) 
+            if(!onDash)
                 onDash = true;
         }
         if (Input.GetButtonDown("Jump")) 
@@ -45,7 +47,10 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         checkJumpStatus();
-        if (onDash) 
+        /*if (anim.GetBool("bDash"))
+            return;*/
+
+        if (onDash && !anim.GetBool("bDash")) 
         {
             dash();
         }
@@ -69,13 +74,13 @@ public class Player : MonoBehaviour
         if (!anim.GetBool("bJump"))
         {
             anim.SetBool("bJump", true);
-            rig2D.velocity = new Vector2(0, 0);
+            rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
             rig2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
         }
         else if (!anim.GetBool("bDoubleJump")) 
         {
             anim.SetBool("bDoubleJump", true);
-            rig2D.velocity = new Vector2(0, 0);
+            rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
             rig2D.AddForce(transform.up * jumpForce * 3f/4f, ForceMode2D.Impulse);
         }
         // else { }         // 이미 2단 점프까지 한 경우
@@ -90,10 +95,14 @@ public class Player : MonoBehaviour
 
     private IEnumerator dashCoroutine(float dir)
     {
-        anim.SetTrigger("tDash");
-        rig2D.velocity = new Vector2(dir * dashForce, 0);
+        anim.SetBool("bDash", true);
+        rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
 
-        yield return dashCooldown;
+        yield return new WaitForSeconds(dashTime);
+        rig2D.velocity = new Vector2(0, rig2D.velocity.y);
+
+        yield return new WaitForSeconds(dashCooldown);
+        anim.SetBool("bDash", false);
         onDash = false;
     }
 
@@ -105,7 +114,7 @@ public class Player : MonoBehaviour
         {
             if(ray2D.collider != null)
             {
-                if (ray2D.distance < 0.5f)
+                if (ray2D.distance < 0.7f)
                 {
                     return false;
                 }
