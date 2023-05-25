@@ -9,97 +9,101 @@ public class Player : MonoBehaviour
     protected float speed;
 
     [SerializeField, Tooltip("점프 입력 시 y축으로 받을 힘(Force)")] 
-    protected float jumpPower;
+    protected float jumpForce;
 
     [SerializeField, Tooltip("대시 입력 시 x축으로 받을 힘(Force)")]  
-    protected float dashPower;
+    protected float dashForce;
+
+    [SerializeField, Tooltip("대시 소모 시간")]  
+    protected float dashTime;
 
     [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]  
     protected float dashCooldown;
     
     private Rigidbody2D rig2D;
     private Animator anim;
+    private bool onDash, onJump;
 
-    /* Basic Functions */
     void Start()
     {
         rig2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        onDash = onJump = false;
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Dash"))
         {
-            if (!anim.GetBool("bDash"))
-            {
-                dash();
-            }
+            if(!onDash)
+                onDash = true;
         }
         if (Input.GetButtonDown("Jump")) 
         {
-            if (!anim.GetBool("bJump"))
-            {
-                jump();
-            }
-            else if (!anim.GetBool("bDoubleJump")) 
-            {
-                doubleJump();
-            }
+            onJump = true;
         }
     }
 
     void FixedUpdate()
     {
         checkJumpStatus();
-        if (!anim.GetBool("bDash"))
+        /*if (anim.GetBool("bDash"))
+            return;*/
+
+        if (onDash && !anim.GetBool("bDash")) 
         {
-            move();
+            dash();
         }
+        if (onJump) 
+        {
+            onJump = false;
+            jump();
+        }
+        move();
     }
 
     private void move()
     {
         float h = Input.GetAxis("Horizontal");
         
-        transform.Translate(new Vector3(h * speed * Time.deltaTime, 0, 0));
+        transform.Translate(new Vector3(h * speed * Time.fixedDeltaTime, 0, 0));
     }
 
     private void jump()
     {
-        anim.SetBool("bJump", true);
-        rig2D.velocity = new Vector2(0, 0);
-        rig2D.AddForce(new Vector2(0, jumpPower), ForceMode2D.Impulse);
-    }
-
-    private void doubleJump()
-    {
-        anim.SetBool("bDoubleJump", true);
-        rig2D.velocity = new Vector2(0, 0);
-        rig2D.AddForce(new Vector2(0, jumpPower * 3f/4f), ForceMode2D.Impulse);
+        if (!anim.GetBool("bJump"))
+        {
+            anim.SetBool("bJump", true);
+            rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
+            rig2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+        }
+        else if (!anim.GetBool("bDoubleJump")) 
+        {
+            anim.SetBool("bDoubleJump", true);
+            rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
+            rig2D.AddForce(transform.up * jumpForce * 3f/4f, ForceMode2D.Impulse);
+        }
+        // else { }         // 이미 2단 점프까지 한 경우
     }
 
     private void dash()
     {
-        StartCoroutine(runDash());
+        float dir = Input.GetAxisRaw("Horizontal");
+        if (dir == 0) return;
+        StartCoroutine(dashCoroutine(dir));
     }
 
-    private IEnumerator runDash()
+    private IEnumerator dashCoroutine(float dir)
     {
         anim.SetBool("bDash", true);
-        float unit = Input.GetAxisRaw("Horizontal");
-        if (unit == 0) yield break;
+        rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
 
-        float s = dashPower;
-        while (7f < s)
-        {
-            yield return new WaitForFixedUpdate();
-            transform.position += new Vector3(unit * s * Time.deltaTime, 0, 0);
-            s -= 0.5f;
-        }
+        yield return new WaitForSeconds(dashTime);
+        rig2D.velocity = new Vector2(0, rig2D.velocity.y);
 
+        yield return new WaitForSeconds(dashCooldown);
         anim.SetBool("bDash", false);
-        yield break;
+        onDash = false;
     }
 
     private bool isJump()
@@ -110,7 +114,7 @@ public class Player : MonoBehaviour
         {
             if(ray2D.collider != null)
             {
-                if (ray2D.distance < 0.5f)
+                if (ray2D.distance < 0.7f)
                 {
                     return false;
                 }
