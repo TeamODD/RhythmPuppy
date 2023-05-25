@@ -15,44 +15,45 @@ public class Player : MonoBehaviour
     protected float dashForce;
 
     [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]  
-    protected float dashCooldown;
-
-    private enum Status
-    {
-        Idle,
-        Move,
-        Jump,
-        DoubleJump,
-        Dash
-    }
+    protected WaitForSeconds dashCooldown;
     
     private Rigidbody2D rig2D;
     private Animator anim;
-    private Status currStatus;
+    private bool onDash, onJump;
 
     /* Basic Functions */
     void Start()
     {
         rig2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        currStatus = Status.Idle;
+        onDash = onJump = false;
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Dash"))
         {
-            dash();
+            if (!onDash) 
+                onDash = true;
         }
         if (Input.GetButtonDown("Jump")) 
         {
-            jump();
+            onJump = true;
         }
     }
 
     void FixedUpdate()
     {
         checkJumpStatus();
+        if (onDash) 
+        {
+            dash();
+        }
+        if (onJump) 
+        {
+            onJump = false;
+            jump();
+        }
         move();
     }
 
@@ -60,57 +61,40 @@ public class Player : MonoBehaviour
     {
         float h = Input.GetAxis("Horizontal");
         
-        transform.Translate(new Vector3(h * speed * Time.deltaTime, 0, 0));
+        transform.Translate(new Vector3(h * speed * Time.fixedDeltaTime, 0, 0));
     }
 
     private void jump()
     {
-        if (anim.GetBool("bDoubleJump")) 
-            return;
-
         if (!anim.GetBool("bJump"))
-            StartCoroutine(jumpCoroutine(jumpForce));
-        else 
-            StartCoroutine(jumpCoroutine(jumpForce * 4f/5f));
-        /*rig2D.velocity = new Vector2(0, 0);
-        rig2D.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);*/
-    }
-
-    private IEnumerator jumpCoroutine(float force)
-    {
-        yield return new WaitForFixedUpdate();
-        anim.SetBool("bJump", true);
-        rig2D.velocity = new Vector2(0, 0);
-        rig2D.AddForce(new Vector2(0, force), ForceMode2D.Impulse);
-    }
-
-    private void doubleJump()
-    {
-        anim.SetBool("bDoubleJump", true);
-        rig2D.velocity = new Vector2(0, 0);
-        rig2D.AddForce(new Vector2(0, jumpForce * 3f/4f), ForceMode2D.Impulse);
+        {
+            anim.SetBool("bJump", true);
+            rig2D.velocity = new Vector2(0, 0);
+            rig2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+        }
+        else if (!anim.GetBool("bDoubleJump")) 
+        {
+            anim.SetBool("bDoubleJump", true);
+            rig2D.velocity = new Vector2(0, 0);
+            rig2D.AddForce(transform.up * jumpForce * 3f/4f, ForceMode2D.Impulse);
+        }
+        // else { }         // 이미 2단 점프까지 한 경우
     }
 
     private void dash()
     {
-        anim.SetBool("bDash", true);
-        StartCoroutine(dashCoroutine());
+        float dir = Input.GetAxisRaw("Horizontal");
+        if (dir == 0) return;
+        StartCoroutine(dashCoroutine(dir));
     }
 
-    private IEnumerator dashCoroutine()
+    private IEnumerator dashCoroutine(float dir)
     {
-        float unit = Input.GetAxisRaw("Horizontal");
-        if (unit == 0) yield break;
+        anim.SetTrigger("tDash");
+        rig2D.velocity = new Vector2(dir * dashForce, 0);
 
-        float s = dashForce;
-        while (7f < s)
-        {
-            yield return new WaitForFixedUpdate();
-            transform.position += new Vector3(unit * s * Time.deltaTime, 0, 0);
-            s -= 0.5f;
-        }
-
-        anim.SetBool("bDash", false);
+        yield return dashCooldown;
+        onDash = false;
     }
 
     private bool isJump()
@@ -135,13 +119,11 @@ public class Player : MonoBehaviour
         if (isJump())
         {
             anim.SetBool("bJump", true);
-            currStatus = Status.Jump;
         }
         else
         {
             anim.SetBool("bJump", false);
             anim.SetBool("bDoubleJump", false);
-            currStatus = Status.Idle;
         }
     }
 }
