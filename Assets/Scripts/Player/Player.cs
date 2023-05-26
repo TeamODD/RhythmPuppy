@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
     [SerializeField, Tooltip("기본 이동속도")] 
     protected float speed;
 
@@ -20,19 +21,37 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]  
     protected float dashCooldown;
     
+    [SerializeField, Header("투사체 오브젝트")]
+    protected GameObject projectile;
+
+    [SerializeField, Tooltip("투사체 발사 시 적용되는 힘(Force)")]
+    protected float shootForce;
+
+    [SerializeField, Tooltip("발사 종료 후 재사용 대기시간")]
+    protected float shootCooldown;
+
     private Rigidbody2D rig2D;
+    private Rigidbody2D projectileRig2D;
     private Animator anim;
-    private bool onDash, onJump;
+    private bool onDash, onJump, onShoot, onCancel;
+    private bool isProjectileFlying, isShootCooldown;
+    private Vector3 mousePos;
 
     void Start()
     {
         rig2D = GetComponent<Rigidbody2D>();
+        projectileRig2D = projectile.GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        onDash = onJump = false;
+        onDash = onJump = onShoot = onCancel = false;
+        isProjectileFlying = false;
+        isShootCooldown = false;
     }
 
     void Update()
     {
+        mousePos = updateMousePos();
+        headToMousePos();
+
         if (Input.GetButtonDown("Dash"))
         {
             if(!onDash)
@@ -42,10 +61,20 @@ public class Player : MonoBehaviour
         {
             onJump = true;
         }
+        if (Input.GetButtonDown("Shoot")) 
+        {
+            onShoot = true; 
+        }
+        if (Input.GetButtonDown("Cancel")) 
+        {
+            if (isProjectileFlying)
+                onCancel = true;
+        }
     }
 
     void FixedUpdate()
     {
+        
         checkJumpStatus();
         /*if (anim.GetBool("bDash"))
             return;*/
@@ -58,6 +87,11 @@ public class Player : MonoBehaviour
         {
             onJump = false;
             jump();
+        }
+        if (onShoot && !isShootCooldown)
+        {
+            onShoot = false;
+            shoot(mousePos);
         }
         move();
     }
@@ -106,6 +140,37 @@ public class Player : MonoBehaviour
         onDash = false;
     }
 
+    private void shoot(Vector3 m)
+    {
+        if (!isProjectileFlying)
+        {
+            isProjectileFlying = true;
+            projectileRig2D.velocity = new Vector2(m.normalized.x, m.normalized.y) * shootForce;
+            return;
+        }
+        else if (onCancel)
+        {
+            onCancel = false;
+            projectileRig2D.velocity = Vector2.zero;
+            isProjectileFlying = false;
+        }
+        else
+        {
+            projectileRig2D.velocity = Vector2.zero;
+            transform.position = projectile.transform.position;
+            isProjectileFlying = false;
+        }
+        StartCoroutine(shootCoolDownCoroutine());
+    }
+
+    private IEnumerator shootCoolDownCoroutine()
+    {
+        isShootCooldown = true;
+        yield return new WaitForSeconds(shootCooldown);
+        isShootCooldown = false;
+        onShoot = false;
+    }
+
     private bool isJump()
     {
         RaycastHit2D ray2D = Physics2D.Raycast(transform.position, Vector3.down, 1, LayerMask.GetMask("Ground"));
@@ -133,6 +198,28 @@ public class Player : MonoBehaviour
         {
             anim.SetBool("bJump", false);
             anim.SetBool("bDoubleJump", false);
+        }
+    }
+
+    private Vector3 updateMousePos()
+    {
+        return Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+    }
+
+    private void headToMousePos()
+    {
+        /* 
+         * 댕댕이 머리 회전 코드 추가 예정 
+         */
+
+
+        if (!isProjectileFlying)
+        {
+            Vector3 projectileDir = (mousePos - transform.position);
+            if (0.4f < projectileDir.magnitude)
+                projectileDir = projectileDir.normalized * 0.4f;
+
+            projectile.transform.position = transform.position + projectileDir;
         }
     }
 }
