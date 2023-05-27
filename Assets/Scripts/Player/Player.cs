@@ -76,6 +76,7 @@ public class Player : MonoBehaviour
     {
         
         checkJumpStatus();
+        if(isProjectileFlying) fixProjectilePos();
         /*if (anim.GetBool("bDash"))
             return;*/
 
@@ -83,16 +84,24 @@ public class Player : MonoBehaviour
         {
             dash();
         }
+
         if (onJump) 
         {
             onJump = false;
             jump();
         }
+
         if (onShoot && !isShootCooldown)
         {
             onShoot = false;
             shoot(mousePos);
         }
+        else if (onCancel && isProjectileFlying)
+        {
+            onCancel = false;
+            shootCancel();
+        }
+
         move();
     }
 
@@ -101,6 +110,13 @@ public class Player : MonoBehaviour
         float h = Input.GetAxis("Horizontal");
         
         transform.Translate(new Vector3(h * speed * Time.fixedDeltaTime, 0, 0));
+
+        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+        if (pos.x <= 0f) pos.x = 0f;
+        if (1f <= pos.x) pos.x = 1f;
+        if (pos.y <= 0f) pos.y = 0f;
+        if (1f <= pos.y) pos.y = 1f;
+        transform.position = Camera.main.ViewportToWorldPoint(pos);
     }
 
     private void jump()
@@ -115,7 +131,7 @@ public class Player : MonoBehaviour
         {
             anim.SetBool("bDoubleJump", true);
             rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
-            rig2D.AddForce(transform.up * jumpForce * 3f/4f, ForceMode2D.Impulse);
+            rig2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
         }
         // else { }         // 이미 2단 점프까지 한 경우
     }
@@ -130,10 +146,10 @@ public class Player : MonoBehaviour
     private IEnumerator dashCoroutine(float dir)
     {
         anim.SetBool("bDash", true);
-        rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
+        rig2D.velocity = new Vector2(dir * dashForce, 0);
 
         yield return new WaitForSeconds(dashTime);
-        rig2D.velocity = new Vector2(0, rig2D.velocity.y);
+        rig2D.velocity = new Vector2(0, 0);
 
         yield return new WaitForSeconds(dashCooldown);
         anim.SetBool("bDash", false);
@@ -148,18 +164,21 @@ public class Player : MonoBehaviour
             projectileRig2D.velocity = new Vector2(m.normalized.x, m.normalized.y) * shootForce;
             return;
         }
-        else if (onCancel)
-        {
-            onCancel = false;
-            projectileRig2D.velocity = Vector2.zero;
-            isProjectileFlying = false;
-        }
         else
         {
             projectileRig2D.velocity = Vector2.zero;
             transform.position = projectile.transform.position;
+            anim.SetBool("bDoubleJump", false);
             isProjectileFlying = false;
         }
+        StartCoroutine(shootCoolDownCoroutine());
+    }
+
+    private void shootCancel()
+    {
+        onCancel = false;
+        projectileRig2D.velocity = Vector2.zero;
+        isProjectileFlying = false;
         StartCoroutine(shootCoolDownCoroutine());
     }
 
@@ -168,7 +187,6 @@ public class Player : MonoBehaviour
         isShootCooldown = true;
         yield return new WaitForSeconds(shootCooldown);
         isShootCooldown = false;
-        onShoot = false;
     }
 
     private bool isJump()
@@ -198,6 +216,40 @@ public class Player : MonoBehaviour
         {
             anim.SetBool("bJump", false);
             anim.SetBool("bDoubleJump", false);
+        }
+    }
+
+    private void fixProjectilePos()
+    {
+        Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
+        Debug.Log(pos);
+        bool isFixed = false;
+
+        if (pos.x <= 0f)
+        {
+            pos.x = 0f;
+            isFixed = true;
+        }
+        if (1f <= pos.x)
+        {
+            pos.x = 1f;
+            isFixed = true;
+        }
+        if (pos.y <= 0f)
+        {
+            pos.y = 0f;
+            isFixed = true;
+        }
+        if (1f <= pos.y)
+        {
+            pos.y = 1f;
+            isFixed = true;
+        }
+
+        if (isFixed)
+        {
+            projectileRig2D.velocity = Vector2.zero;
+            projectile.transform.position = Camera.main.ViewportToWorldPoint(pos);
         }
     }
 
