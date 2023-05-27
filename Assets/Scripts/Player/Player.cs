@@ -222,7 +222,6 @@ public class Player : MonoBehaviour
     private void fixProjectilePos()
     {
         Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
-        Debug.Log(pos);
         bool isFixed = false;
 
         if (pos.x <= 0f)

@@ -509,9 +509,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   jumpForce: 5
-  dashForce: 15
-  dashTime: 0.1
-  dashCooldown: 1
+  dashForce: 8
+  dashTime: 0.3
+  dashCooldown: 0.1
   projectile: {fileID: 948796808}
   shootForce: 10
   shootCooldown: 1
