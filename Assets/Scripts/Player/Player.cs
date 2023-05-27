@@ -147,9 +147,11 @@ public class Player : MonoBehaviour
     {
         anim.SetBool("bDash", true);
         rig2D.velocity = new Vector2(dir * dashForce, 0);
+        rig2D.gravityScale = 0f;
 
         yield return new WaitForSeconds(dashTime);
         rig2D.velocity = new Vector2(0, 0);
+        rig2D.gravityScale = 1f;
 
         yield return new WaitForSeconds(dashCooldown);
         anim.SetBool("bDash", false);
