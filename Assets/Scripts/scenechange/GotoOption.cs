@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GotoStage1 : MonoBehaviour
+public class GotoOption : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
         
     }
-
     // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            SceneManager.LoadScene("SceneStage1");
+            
+            SceneManager.LoadScene("SceneOption");
+
         }
     }
 }
