@@ -14,12 +14,12 @@ public class GotoSelectStage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0) || Input.anyKeyDown) 
         {
             PlaySelectSound.instance.SelectSound();
             PlaySelectSound.instance.audioSourceSelect.Play();
 
-            SceneManager.LoadScene("SceneSelectStage");
+            SceneManager.LoadScene("SceneMenu_01");
 
         }
     }
