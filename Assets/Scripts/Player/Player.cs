@@ -6,7 +6,13 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-    [SerializeField, Tooltip("기본 이동속도")] 
+    [SerializeField, Tooltip("체력")]
+    protected int health;
+
+    [SerializeField, Tooltip("스태미나")]
+    protected float stamina;
+
+    [SerializeField, Tooltip("기본 이동속도")]
     protected float speed;
 
     [SerializeField, Tooltip("점프 입력 시 y축으로 받을 힘(Force)")] 
@@ -195,7 +201,7 @@ public class Player : MonoBehaviour
     {
         RaycastHit2D ray2D = Physics2D.Raycast(transform.position, Vector3.down, 1, LayerMask.GetMask("Ground"));
 
-        if(Mathf.Abs(rig2D.velocity.y) < 0.001f)
+        if(Mathf.Abs(rig2D.velocity.y) < 0.01f)
         {
             if(ray2D.collider != null)
             {
