@@ -12,7 +12,7 @@ public class SoundButtonOptions : MonoBehaviour
     public TMP_Text BgmText;
     public TMP_Text SfxText;
 
-    private float volumeIncrement = 0.01f; // 볼륨 증가량 조절   
+    private float volumeIncrement = 0.1f; // 볼륨 증가량 조절   
 
     public void IncreaseMusicVolume()
     {
@@ -44,11 +44,11 @@ public class SoundButtonOptions : MonoBehaviour
 
     private void UpdateMusicText()
     {
-        BgmText.text = "Music : " + (musicsource.volume * 100f).ToString("0") + "%";
+        BgmText.text = (musicsource.volume * 100f).ToString("0") + "%";
     }
 
     private void UpdateSfxText()
     {
-        SfxText.text = "Sound : " + (btnsource.volume * 100f).ToString("0") + "%";
+        SfxText.text = (btnsource.volume * 100f).ToString("0") + "%";
     }
 }

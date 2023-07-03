@@ -21,4 +21,9 @@ public class SoundOptions : MonoBehaviour
     {
         btnsource.Play();
     }
+
+    public void OffBgm()
+    {
+        musicsource.Stop();
+    }
 }
