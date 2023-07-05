@@ -30,6 +30,9 @@ public class Player : MonoBehaviour
     [SerializeField, Header("투사체 오브젝트")]
     protected GameObject projectile;
 
+    [SerializeField, Header("목 오브젝트")]
+    protected GameObject neck;
+
     [SerializeField, Tooltip("투사체 발사 시 적용되는 힘(Force)")]
     protected float shootForce;
 
@@ -42,6 +45,7 @@ public class Player : MonoBehaviour
     private bool onDash, onJump, onShoot, onCancel;
     private bool isProjectileFlying, isShootCooldown;
     private Vector3 mousePos;
+    private Vector3 neckPos;
 
     void Start()
     {
@@ -51,11 +55,14 @@ public class Player : MonoBehaviour
         onDash = onJump = onShoot = onCancel = false;
         isProjectileFlying = false;
         isShootCooldown = false;
+
+        rig2D.gravityScale = 1;
     }
 
     void Update()
     {
         mousePos = updateMousePos();
+        neckPos = transform.position + new Vector3(0.7f, 1.2f, 0);
         headToMousePos();
 
         if (Input.GetButtonDown("Dash"))
@@ -100,7 +107,7 @@ public class Player : MonoBehaviour
         if (onShoot && !isShootCooldown)
         {
             onShoot = false;
-            shoot(mousePos);
+            shoot(mousePos - neckPos);
         }
         else if (onCancel && isProjectileFlying)
         {
@@ -267,18 +274,18 @@ public class Player : MonoBehaviour
 
     private void headToMousePos()
     {
-        /* 
-         * 댕댕이 머리 회전 코드 추가 예정 
-         */
+        /* head rotation */
+        Vector3 neckDir = (mousePos - neckPos).normalized;
+        neck.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(neckDir.x, neckDir.y) * Mathf.Rad2Deg * -1 + 120);
 
-
+        /* projectile rotation */
         if (!isProjectileFlying)
         {
-            Vector3 projectileDir = (mousePos - transform.position);
+            Vector3 projectileDir = (mousePos - neckPos);
             if (0.4f < projectileDir.magnitude)
                 projectileDir = projectileDir.normalized * 0.4f;
 
-            projectile.transform.position = transform.position + projectileDir;
+            projectile.transform.position = neckPos + projectileDir;
         }
     }
 }
