@@ -288,4 +288,13 @@ public class Player : MonoBehaviour
             projectile.transform.position = neckPos + projectileDir;
         }
     }
+
+    public void getDamage(int damage)
+    {
+        health -= damage;
+        if(health < 0)
+        {
+            gameObject.SetActive(false);
+        }
+    }
 }
