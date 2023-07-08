@@ -9,7 +9,7 @@ public class Menu_PlayerTransform : MonoBehaviour
 {
     public Vector3[] waypoints;
     private Vector3 currentPosition;
-    private int currentIndex = 0;
+    public static int currentIndex = 0;
     private ShowInfo showinfo;
 
     // Start is called before the first frame update
@@ -58,7 +58,6 @@ public class Menu_PlayerTransform : MonoBehaviour
 
         if (Vector3.Distance(waypoints[currentIndex], currentPosition) == 0)
         {
-            showinfo.showInfo(currentIndex);
             //스테이지 도착시 곡 정보(노래 이름, 아티스트)를 표시
             if (Input.GetKeyDown(KeyCode.Space))
             {
