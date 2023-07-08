@@ -1,21 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-
-public class NewBehaviourScript : MonoBehaviour
+public class Pattern1_a : MonoBehaviour
 {
     private Vector3 xPosition;
     private float yPosition;
-    
 
-    void BeeAttack(yPosition)
+    public void BeeMove()
     {
-        transform.position = new Vector3(14, yPosition, 0);
+        this.transform.position = new Vector3(14, 0, 0);
+        this.transform.position += new Vector3(-14, 0, -2);
 
     }
-    
+
     // Update is called once per frame
     void Update()
     {
