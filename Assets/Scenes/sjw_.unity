@@ -519,7 +519,7 @@ GameObject:
   - component: {fileID: 900013155}
   m_Layer: 0
   m_Name: ObstacleManager
-  m_TagString: Untagged
+  m_TagString: ObstacleManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -897,28 +897,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1419285239}
-  - component: {fileID: 1419285238}
+  - component: {fileID: 1419285240}
   m_Layer: 0
   m_Name: PatternManager
-  m_TagString: Untagged
+  m_TagString: PatternManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1419285238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419285237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 867958dc23ed39d4297c87e0b11bc481, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObstacleManager: {fileID: 900013154}
-  oakA: {fileID: 6322776409558534927, guid: af0ce8cb333ef1e4db192517092818b4, type: 3}
 --- !u!4 &1419285239
 Transform:
   m_ObjectHideFlags: 0
@@ -934,6 +920,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1419285240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419285237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100658219ba8d5f47ba8439b67d8d220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pt_1_a: {fileID: 1273078494639283698, guid: 599b16f22b2c1764e9f1bdfd48561f97, type: 3}
 --- !u!1 &1590812507
 GameObject:
   m_ObjectHideFlags: 0
