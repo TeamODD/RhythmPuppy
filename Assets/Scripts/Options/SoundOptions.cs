@@ -6,6 +6,7 @@ public class SoundOptions : MonoBehaviour
 {
     public AudioSource musicsource;
     public AudioSource btnsource;
+    
     public void SetMusicVolume(float volume)
     {
         musicsource.volume = volume;
@@ -19,5 +20,10 @@ public class SoundOptions : MonoBehaviour
     public void OnSfx()
     {
         btnsource.Play();
+    }
+
+    public void OffBgm()
+    {
+        musicsource.Stop();
     }
 }
