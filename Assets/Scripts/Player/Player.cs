@@ -102,6 +102,17 @@ public class Player : MonoBehaviour
             shootCancel();
         }
 
+        Vector2 currentPosition = transform.position;
+        Vector2 previousPosition = currentPosition - (Time.deltaTime * (Vector2)transform.right); // 1프레임 전 좌표
+
+        Debug.Log(currentPosition);
+        Debug.Log(previousPosition);
+
+        if (Vector2.Distance(currentPosition, previousPosition) > 0.03)
+            anim.SetBool("IsWalking", true);
+        else
+            anim.SetBool("IsWalking", false);
+
         move();
     }
 
