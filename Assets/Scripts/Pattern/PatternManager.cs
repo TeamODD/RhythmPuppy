@@ -1,22 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class GotoStage1 : MonoBehaviour
+
+public class PatternManager : MonoBehaviour
 {
+    private Pattern1_a Pattern1_a;
+    private float yPosition;
     // Start is called before the first frame update
     void Start()
     {
-        
+        Pattern1_a.BeeMove();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            SceneManager.LoadScene("SceneStage1");
-        }
+        yPosition = Random.Range(-5.0f, 5.0f);
     }
 }

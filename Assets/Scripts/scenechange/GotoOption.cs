@@ -3,23 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GotoSelectStage : MonoBehaviour
+public class GotoOption : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
         
     }
-    
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) || Input.anyKeyDown) 
+        if (Input.GetMouseButtonDown(0))
         {
-            PlaySelectSound.instance.SelectSound();
-            PlaySelectSound.instance.audioSourceSelect.Play();
-
-            SceneManager.LoadScene("SceneMenu_01");
+            
+            SceneManager.LoadScene("SceneOption");
 
         }
     }
