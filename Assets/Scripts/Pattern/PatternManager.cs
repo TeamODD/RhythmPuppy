@@ -2,20 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class PatternManager : MonoBehaviour
 {
-    private Pattern1_a Pattern1_a;
-    private float yPosition;
-    // Start is called before the first frame update
-    void Start()
+    public GameObject target;
+    public GameObject Warning;
+    private int count;
+    
+    void Awake()
     {
-        Pattern1_a.BeeMove();
+        Bee();
+        count = 1;
     }
-
-    // Update is called once per frame
+    void Bee()
+    {
+        Instantiate(target);
+        Instantiate(Warning);
+        
+        count++;
+        Invoke("Bee", 0.5f);
+    }
     void Update()
     {
-        yPosition = Random.Range(-5.0f, 5.0f);
+        if (count == 32)
+            CancelInvoke("Bee");
     }
+    //처음 두 마리 붙어서 나옴(가로)
 }
