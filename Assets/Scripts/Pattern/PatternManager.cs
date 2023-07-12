@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PatternManager : MonoBehaviour
 {
-    [SerializeField] GameObject pt_1_a;
+    [SerializeField] GameObject pattern;
 
     private GameObject patternManager;
     private Pattern1_a Pattern1_a;
@@ -16,7 +16,7 @@ public class PatternManager : MonoBehaviour
         //Pattern1_a.BeeMove();
 
         patternManager = GameObject.FindGameObjectWithTag("PatternManager");
-        GameObject o = Instantiate(pt_1_a);
+        GameObject o = Instantiate(pattern);
         o.transform.SetParent(patternManager.transform);
         o.SetActive(true);
     }
