@@ -1,66 +1,68 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Diagnostics;
 
 public class PatternController : MonoBehaviour
 {
     [SerializeField]
-   /private GameController gameController;
-    [SerializeField]
-    private GameObject[] patterns; //보유하고 있는 모든 패턴
-    private GameObject currentPatterns; //현재 작동하고 있는 패턴
-    private int[] patternIndexs; //겹치지 않는 Patterns.Length 개수의 숫자
-    private int current = 0; //patterns 배열의 순번
+    private GameObject[] patterns;
+    private GameObject currentPattern;
+    private int[] patternIndex;
+    private int current = 0;
 
     private void Awake()
     {
-        patternIndexs = new int[patterns.Length];
+        patternIndex = new int[patterns.Length];
 
-        //처음에는 패턴을 순차적으로 실행하도록 설정
-        for (int i = 0; i < patternIndexs.Length; ++i)
+        for (int i = 0; i < patterns.Length; i++)
         {
-            patternIndexs[i] = i;
+            patternIndex[i] = i;
         }
+    }
+
+    private void Start()
+    {
+        Gamestart();
     }
 
     private void Update()
     {
-        if (gameController.IsGamePlay == false) return;
-
-        //현재 재생중인 패턴이 종료되어 오브젝트 비활성화되면
-        if (currentPattern.activeSelf == false)
+        if (currentPattern != null && currentPattern.activeSelf == false)
         {
             ChangePattern();
         }
     }
 
-    public void GameStart()
+    private void Gamestart()
     {
         ChangePattern();
     }
 
-    public void GameOver()
+    private void Gameover()
     {
-        //현재 재생중인 패턴만 비활성화
+        if (currentPattern != null)
+        {
+            currentPattern.SetActive(false);
+        }
     }
 
-    public void ChangePattern()
+    private void ChangePattern()
     {
-        //현재 패턴 변경
-        currentPatterns = patterns[patternIndexs[current]];
+        if (currentPattern != null)
+        {
+            currentPattern.SetActive(false);
+        }
 
-        //현재 패턴 활성화
-        currentPatterns.SetActive(true);
+        currentPattern = patterns[patternIndex[current]];
+        currentPattern.SetActive(true);
 
         current++;
 
-        //패턴을 한바퀴 모두 실행했다면 패턴 순서를 겹치지 않는 임의의 숫자로 설정
         if (current >= patterns.Length)
         {
-            patternIndexs = Utils.RandomNumbers(patternIndexs.Length, patternIndexs.Length);
+            patternIndex = Utiles.RandomNumbers(patternIndex.Length, patternIndex.Length);
             current = 0;
-
         }
     }
 }
