@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Obstacles
 {
-    public class Cat : MonoBehaviour
+    public class Cat_1 : MonoBehaviour
     {
         private float speed = 4f;
 
@@ -22,6 +22,15 @@ namespace Obstacles
         {
             if(transform.position.y < -1.5f)
             {
+                Destroy(gameObject);
+            }
+        }
+
+        void OnCollisionEnter2D(Collision2D col)
+        {
+            if (col.gameObject.CompareTag("Player"))
+            {
+                col.gameObject.GetComponent<Player>().getDamage(1);
                 Destroy(gameObject);
             }
         }
