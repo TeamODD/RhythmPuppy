@@ -9,6 +9,8 @@ public class MovementTransform2D : MonoBehaviour
     [SerializeField]
     private Vector3 moveDirection;
 
+    public Vector3 MoveDirection => moveDirection;
+
     private void Update()
     {
         transform.position += moveDirection * movespeed * Time.deltaTime;

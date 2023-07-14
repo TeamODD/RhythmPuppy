@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +27,7 @@ public class PatternController : MonoBehaviour
 
     private void Update()
     {
-        if (currentPattern != null && currentPattern.activeSelf == false)
+        if (currentPattern.activeSelf == false)
         {
             ChangePattern();
         }
@@ -36,15 +35,9 @@ public class PatternController : MonoBehaviour
 
     private void Gamestart()
     {
-        ChangePattern();
-    }
-
-    private void Gameover()
-    {
-        if (currentPattern != null)
-        {
-            currentPattern.SetActive(false);
-        }
+        currentPattern = patterns[patternIndex[current]];
+        currentPattern.SetActive(true);
+        current++;
     }
 
     private void ChangePattern()
@@ -59,7 +52,7 @@ public class PatternController : MonoBehaviour
 
         current++;
 
-        if (current >= patterns.Length)
+        if (current >= patternIndex.Length)
         {
             patternIndex = Utiles.RandomNumbers(patternIndex.Length, patternIndex.Length);
             current = 0;

@@ -1,4 +1,5 @@
-using System;
+// Pattern10.cs
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,31 +10,51 @@ public class Pattern10 : MonoBehaviour
     private GameObject chestnut;
     [SerializeField]
     private GameObject chestnutProjectile;
+    [SerializeField]
+    private GameObject warning;
+    [SerializeField]
+    private float chestnutSpeed;
+    [SerializeField]
+    private float splinterSpeed;
+    [SerializeField]
+    private float splinterInterval;
 
-    private float chestnutSpeed = 4f;
-    private float splinterSpeed = 4f;
-    private float splinterInterval = 45f;
-
-    private void Start()
+    private void OnEnable()
     {
         StartCoroutine(DropChestnuts());
     }
 
+    private void OnDisable()
+    {
+        StopCoroutine(DropChestnuts());
+    }
+
     private IEnumerator DropChestnuts()
     {
+        yield return null; // 한 프레임을 기다립니다.
+
         while (true)
         {
             float xPos = UnityEngine.Random.Range(-7f, 7f);
             Vector3 chestnutPosition = new Vector3(xPos, 5.5f, 0f);
 
+            // 경고 오브젝트 생성
+            Vector3 warningPosition = new Vector3(xPos, chestnutPosition.y - 1f, 0f);
+            GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
+
+            yield return new WaitForSeconds(0.5f);
+
+            // ChestNut 오브젝트 생성
             GameObject newChestnut = Instantiate(chestnut, chestnutPosition, Quaternion.identity);
             Rigidbody2D chestnutRigidbody = newChestnut.GetComponent<Rigidbody2D>();
             chestnutRigidbody.velocity = Vector2.down * chestnutSpeed;
 
+            Destroy(newWarning);
+
             yield return new WaitForSeconds(1f);
 
             ExplodeChestnut(newChestnut.transform.position);
-            newChestnut.SetActive(false);
+            Destroy(newChestnut);
             yield return null;
         }
     }
@@ -48,7 +69,38 @@ public class Pattern10 : MonoBehaviour
 
             Vector3 splinterDirection = new Vector3(x, y, 0f).normalized;
             GameObject newSplinter = Instantiate(chestnutProjectile, position, Quaternion.identity);
-            newSplinter.GetComponent<MovementTransform2D>().MoveTo(splinterDirection * splinterSpeed);
+
+            MovementTransform2D movementComponent = newSplinter.GetComponent<MovementTransform2D>();
+            movementComponent.MoveTo(splinterDirection * splinterSpeed);
+
+            float angleInDegrees = Mathf.Atan2(splinterDirection.y, splinterDirection.x) * Mathf.Rad2Deg;
+            newSplinter.transform.rotation = Quaternion.Euler(0f, 0f, angleInDegrees - 90f); // -90도 회전
+
+            StartCoroutine(DestroyIfOutOfBounds(newSplinter));
         }
+    }
+
+    private IEnumerator DestroyIfOutOfBounds(GameObject obj)
+    {
+        while (true)
+        {
+            // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
+            if (!IsWithinMapBounds(obj.transform.position))
+            {
+                Destroy(obj);
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    private bool IsWithinMapBounds(Vector3 position)
+    {
+        float minX = -10f;
+        float maxX = 10f;
+        float minY = -5f;
+        float maxY = 5f;
+
+        return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
     }
 }
