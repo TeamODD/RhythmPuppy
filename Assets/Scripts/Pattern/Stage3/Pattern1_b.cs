@@ -9,7 +9,7 @@ public class Pattern1_b : MonoBehaviour
     [SerializeField]
     private int dir;
 
-    public float yPosition;
+    public static float yPosition;
 
     void Awake()
     {
@@ -17,7 +17,7 @@ public class Pattern1_b : MonoBehaviour
     }
     void Start()
     {
-        gameObject.transform.position = new Vector3(14, yPosition, 0);
+        gameObject.transform.position = new Vector3(13, yPosition, 0);
     }
     void Update()
     {

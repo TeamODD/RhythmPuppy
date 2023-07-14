@@ -29,5 +29,5 @@ public class PatternManager_1 : MonoBehaviour
         if (count_1_a == 32)
             CancelInvoke("Bee_1_a");
     }
-    //처음 두 마리 붙어서 나옴(가로)
+    
 }

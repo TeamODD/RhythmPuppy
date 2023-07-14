@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Pattern1_a;
+using static Pattern1_b;
 
-public class Warning1_a : MonoBehaviour
+public class Warning1_b : MonoBehaviour
 {
     private float time;
     // Start is called before the first frame update
