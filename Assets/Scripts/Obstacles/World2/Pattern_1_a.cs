@@ -2,17 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class Pattern1_a : MonoBehaviour
+public class Pattern_1_a : MonoBehaviour
 {
-    private Vector3 xPosition;
-    private float yPosition;
-
-
-    public void BeeMove()
+    // Start is called before the first frame update
+    void Start()
     {
         
-
     }
 
     // Update is called once per frame
