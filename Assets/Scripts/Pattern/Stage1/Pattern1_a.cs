@@ -13,11 +13,11 @@ public class Pattern1_a : MonoBehaviour
 
     void Awake()
     {
-        yPosition = Random.Range(-3.5f, 5.0f);
+        yPosition = Random.Range(-3.2f, 4.5f);
     }
     void Start()
     {
-        gameObject.transform.position = new Vector3(14, yPosition, 0);
+        gameObject.transform.position = new Vector3(19, yPosition, 0);
     }
     // FixedUpdate로 변경해야 할 수도 있음.
     void Update()

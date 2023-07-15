@@ -17,7 +17,7 @@ public class Pattern1_b : MonoBehaviour
     }
     void Start()
     {
-        gameObject.transform.position = new Vector3(13, yPosition, 0);
+        gameObject.transform.position = new Vector3(13.5f, yPosition, 0);
     }
     void Update()
     {
