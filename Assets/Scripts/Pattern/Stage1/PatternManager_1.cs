@@ -5,13 +5,17 @@ using UnityEngine;
 public class PatternManager_1 : MonoBehaviour
 {
     [SerializeField]
-    private GameObject Bee;
+    private GameObject Bee_1_a;
     [SerializeField]
     private GameObject Warning_1_a;
     [SerializeField]
+    private GameObject Bee_1_b;
+    [SerializeField]
+    private GameObject Warning_1_b;
+    [SerializeField]
     private GameObject Piranha;
     [SerializeField]
-    private GameObject Warning3;
+    private GameObject Warning_3;
     [SerializeField]
     private GameObject Oak_2_a;
     [SerializeField]
@@ -20,14 +24,28 @@ public class PatternManager_1 : MonoBehaviour
     private GameObject Warning_2_a;
     [SerializeField]
     private GameObject Warning_2_b;
+    [SerializeField]
+    private GameObject Apple;
+    [SerializeField]
+    private GameObject Warning_4;
 
+    private float time;
     private int count_1_a;
-    private int count3;
+    private int count_1_b;
+    private int count_2_a;
+    private int count_2_b;
+    private int count_3;
+    private int count_4;
 
     void Awake()
     {
+        time = 0;
         count_1_a = 1;
-        count3 = 1;
+        count_1_b = 1;
+        count_3 = 1;
+        count_2_a = 1;
+        count_2_b = 1;
+        count_4 = 1;
     }
     void Start()
     {
@@ -35,29 +53,23 @@ public class PatternManager_1 : MonoBehaviour
         Invoke("Pattern1_a", 3.0f);
         Invoke("Pattern3", 19.0f);
 
-        Invoke("Pattern2_a", 12.0f);
-        Invoke("Pattern2_a", 20.0f);
-        //패턴2_b 첫번째 호출
-        Invoke("Pattern2_b", 5.7f);
-        Invoke("Pattern2_b", 7.7f);
-        //패턴2_b 두번째 호출
-        Invoke("Pattern2_b", 13.7f);
-        Invoke("Pattern2_b", 15.7f);
-        Invoke("Pattern2_b", 17.7f);
-        //패턴2_b 세번째 호출
-        Invoke("Pattern2_b", 21.7f);
-        Invoke("Pattern2_b", 23.7f);
-
     }
     void Pattern1_a()
     {
-        Instantiate(Bee);
+        Instantiate(Bee_1_a);
         Instantiate(Warning_1_a);
 
         count_1_a++;
         Invoke("Pattern1_a", 0.5f);
     }
+    void Pattern1_b()
+    {
+        Instantiate(Bee_1_b);
+        Instantiate(Warning_1_b);
 
+        count_1_b++;
+        Invoke("Pattern1_b", 2f);
+    }
     void Pattern2_a()
     {
         Instantiate(Warning_2_a);
@@ -71,10 +83,10 @@ public class PatternManager_1 : MonoBehaviour
 
     void Pattern3()
     {
-        Instantiate(Warning3);
+        Instantiate(Warning_3);
         Instantiate(Piranha);
         
-        count3++;
+        count_3++;
         Invoke("Pattern3", 1f);
     }
 
@@ -82,12 +94,21 @@ public class PatternManager_1 : MonoBehaviour
     {
         //32회 실행시 호출 중단
         if (count_1_a == 32)
+        {
             CancelInvoke("Pattern1_a");
-        if (count3 == 32)
+            count_1_a = 1;
+        }
+        if (count_3 == 32)
         {
             CancelInvoke("Pattern3");
+            count_3 = 1;
         }
             
     }
-    
+    void FixedUpdate()
+    {
+        time += Time.fixedDeltaTime;
+        
+        
+    }
 }
