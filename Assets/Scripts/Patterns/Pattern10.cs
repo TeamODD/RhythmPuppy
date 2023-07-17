@@ -1,5 +1,3 @@
-// Pattern10.cs
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +31,7 @@ public class Pattern10 : MonoBehaviour
     {
         yield return null; // 한 프레임을 기다립니다.
 
-        while (true)
+        for (int i = 0; i < 5; i++)
         {
             float xPos = UnityEngine.Random.Range(-7f, 7f);
             Vector3 chestnutPosition = new Vector3(xPos, 5.5f, 0f);

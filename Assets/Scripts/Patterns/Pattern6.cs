@@ -46,7 +46,7 @@ public class Pattern6 : MonoBehaviour
 
     private IEnumerator RunPattern()
     {
-        while (isPatternRunning)
+        if (isPatternRunning)
         {
             if (currentStem == null) // 현재 생성된 장애물이 없을 때만 패턴 실행
             {
