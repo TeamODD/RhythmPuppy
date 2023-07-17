@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pattern8a : MonoBehaviour
+public class Pattern8c : MonoBehaviour
 {
     [SerializeField]
     private GameObject weasel;
@@ -100,13 +100,13 @@ public class Pattern8a : MonoBehaviour
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * weaselSpeed;
 
-        while (newWeasel.transform.position.y < -4.6f)
+        while (newWeasel.transform.position.y < -4f)
         {
             yield return null;
         }
 
         weaselRigidbody.velocity = Vector2.zero;
-        newWeasel.transform.position = new Vector3(newWeasel.transform.position.x, -4.6f, newWeasel.transform.position.z);
+        newWeasel.transform.position = new Vector3(newWeasel.transform.position.x, -4f, newWeasel.transform.position.z);
 
         yield return new WaitForSeconds(0.5f);
 
@@ -116,6 +116,7 @@ public class Pattern8a : MonoBehaviour
 
         StartCoroutine(DestroyIfOutOfBounds(newWeasel));
     }
+
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
     {
