@@ -1,21 +1,50 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Pattern8b : MonoBehaviour
 {
     [SerializeField]
-    private GameObject weasel;
+    public GameObject weaselwarning; // 경고 오브젝트
     [SerializeField]
-    private GameObject weaselwarning;
-    [SerializeField]
-    private float weaselSpeed = 10f;
-    [SerializeField]
-    private float[] timings = { 0f, 0.6f, 0.8f, 1.1f, 1.5f, 1.8f, 2.2f, 2.3f, 2.7f, 2.9f, 3.2f, 3.5f, 3.9f, 4.2f };
+    public GameObject weasel; // 족제비 프리팹
 
-    private List<GameObject> weasels = new List<GameObject>();
-    private List<GameObject> warnings = new List<GameObject>();
-    private Coroutine performActionsCoroutine;
+    public List<Vector3> firstPositions = new List<Vector3>
+    {
+        new Vector3(-7.5f, -5f, 0f),
+        new Vector3(-5f, -5f, 0f),
+        new Vector3(-2.5f, -5f, 0f),
+        new Vector3(0f, -5f, 0f),
+        new Vector3(2.5f, -5f, 0f),
+        new Vector3(5f, -5f, 0f),
+        new Vector3(7.5f, -5f, 0f)
+    };
+
+    public List<Vector3> secondPositions = new List<Vector3>
+    {
+        new Vector3(-7.5f, -3f, 0f),
+        new Vector3(-5f, -3f, 0f),
+        new Vector3(-2.5f, -3f, 0f),
+        new Vector3(0f, -3f, 0f),
+        new Vector3(2.5f, -3f, 0f),
+        new Vector3(5f, -3f, 0f),
+        new Vector3(7.5f, -3f, 0f)
+    };
+
+    public List<Vector3> warningPositions = new List<Vector3>
+    {
+        new Vector3(-7.5f, -4.55f, 0f),
+        new Vector3(-5f, -4.55f, 0f),
+        new Vector3(-2.5f, -4.55f, 0f),
+        new Vector3(0f, -4.55f, 0f),
+        new Vector3(2.5f, -4.55f, 0f),
+        new Vector3(5f, -4.55f, 0f),
+        new Vector3(7.5f, -4.55f, 0f)
+    };
+
+    public float movementSpeed = 5f; // 족제비 이동 속도
+    private Coroutine weaselCoroutine;
+    private GameObject currentWarning;
 
     private void OnEnable()
     {
@@ -29,82 +58,109 @@ public class Pattern8b : MonoBehaviour
 
     private void StartPattern()
     {
-        performActionsCoroutine = StartCoroutine(PerformActions());
+        weaselCoroutine = StartCoroutine(SpawnWeasels());
     }
 
     private void StopPattern()
     {
-        if (performActionsCoroutine != null)
+        if (weaselCoroutine != null)
         {
-            StopCoroutine(performActionsCoroutine);
-            performActionsCoroutine = null;
+            StopCoroutine(weaselCoroutine);
+            weaselCoroutine = null;
         }
 
-        foreach (GameObject weaselObj in weasels)
+        if (currentWarning != null)
         {
-            Destroy(weaselObj);
-        }
-        weasels.Clear();
-
-        foreach (GameObject warningObj in warnings)
-        {
-            Destroy(warningObj);
-        }
-        warnings.Clear();
-    }
-
-    private IEnumerator PerformActions()
-    {
-        yield return new WaitForSeconds(timings[6]);
-
-        // Step 1: Display warning object
-        GameObject warning = Instantiate(weaselwarning, new Vector3(GetRandomXPosition(-10f, -2f), -4.6f, 0f), Quaternion.identity);
-        warnings.Add(warning);
-
-        yield return new WaitForSeconds(0.5f);
-
-        // Step 2: Destroy warning object and spawn weasel object
-        Destroy(warning);
-
-        GameObject newWeasel = Instantiate(weasel, new Vector3(warning.transform.position.x, -4.6f, 0f), Quaternion.identity);
-        weasels.Add(newWeasel);
-
-        // Step 3: Move weasel objects up and down
-        yield return new WaitForSeconds(timings[12] - timings[6]);
-
-        foreach (GameObject weaselObj in weasels)
-        {
-            StartCoroutine(MoveWeaselUpAndDown(weaselObj));
+            Destroy(currentWarning);
+            currentWarning = null;
         }
     }
 
-    private IEnumerator MoveWeaselUpAndDown(GameObject weaselObj)
+    private IEnumerator SpawnWeasels()
     {
-        Vector3 startPosition = weaselObj.transform.position;
-        Vector3 targetPosition = new Vector3(startPosition.x, 4.6f, 0f);
+        List<GameObject> weaselObjects = new List<GameObject>();
 
-        float upSpeed = 5f;  // Speed of moving up
-        float downSpeed = 10f;  // Speed of moving down
-
-        // Move up
-        while (weaselObj.transform.position != targetPosition)
+        for (int i = 0; i < 7; i++)
         {
-            weaselObj.transform.position = Vector3.MoveTowards(weaselObj.transform.position, targetPosition, upSpeed * 0.5f);
+            ShowWarningObject(warningPositions[i]);
+
+            yield return new WaitForSeconds(0.5f);
+
+            HideWarningObject();
+
+            GameObject weaselObject = Instantiate(weasel, new Vector3(firstPositions[i].x, -6.12f, firstPositions[i].z), Quaternion.identity);
+            weaselObjects.Add(weaselObject);
+
+            Rigidbody2D weaselRigidbody = weaselObject.GetComponent<Rigidbody2D>();
+            weaselRigidbody.velocity = Vector2.up * 5f;
+            while (weaselObject.transform.position.y < -5f)
+            {
+                yield return null;
+            }
+            weaselRigidbody.velocity = Vector2.zero;
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return StartCoroutine(FlyingWeasels(weaselObjects));
+    }
+
+    private void ShowWarningObject(Vector3 position)
+    {
+        weaselwarning.SetActive(true);
+        weaselwarning.transform.position = position;
+    }
+
+    private void HideWarningObject()
+    {
+        weaselwarning.SetActive(false);
+    }
+
+    private IEnumerator FlyingWeasels(List<GameObject> weaselObjects)
+    {
+        float duration = 0.5f;
+        float startTime = Time.time;
+
+        while (Time.time - startTime < duration)
+        {
+            float t = (Time.time - startTime) / duration;
+
+            for (int i = 0; i < weaselObjects.Count; i++)
+            {
+                GameObject weaselObject = weaselObjects[i];
+                Vector3 startPosition = firstPositions[i];
+                Vector3 targetPosition = secondPositions[i];
+
+                weaselObject.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            }
+
             yield return null;
         }
 
         // Move down
-        while (weaselObj.transform.position != startPosition)
+        duration = 0.5f;
+        startTime = Time.time;
+
+        while (Time.time - startTime < duration)
         {
-            weaselObj.transform.position = Vector3.MoveTowards(weaselObj.transform.position, startPosition, downSpeed * 0.5f);
+            float t = (Time.time - startTime) / duration;
+
+            for (int i = 0; i < weaselObjects.Count; i++)
+            {
+                GameObject weaselObject = weaselObjects[i];
+                Vector3 startPosition = secondPositions[i];
+                Vector3 targetPosition = firstPositions[i];
+
+                weaselObject.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            }
+
             yield return null;
         }
 
-        Destroy(weaselObj);
-    }
-
-    private float GetRandomXPosition(float minX, float maxX)
-    {
-        return Random.Range(minX, maxX);
+        // Destroy weasel objects
+        foreach (GameObject weaselObject in weaselObjects)
+        {
+            Destroy(weaselObject);
+        }
     }
 }
