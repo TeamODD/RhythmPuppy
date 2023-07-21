@@ -26,11 +26,12 @@ namespace Obstacles
             }
         }
 
-        void OnCollisionEnter2D(Collision2D col)
+        void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.gameObject.CompareTag("Player"))
+            GameObject o = col.transform.parent.gameObject;
+            if (o.gameObject.CompareTag("Player"))
             {
-                col.gameObject.GetComponent<Player>().getDamage(1);
+                o.gameObject.GetComponent<Player>().getDamage(1);
                 Destroy(gameObject);
             }
         }
