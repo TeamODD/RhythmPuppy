@@ -10,7 +10,7 @@ public class Warning1_b : MonoBehaviour
     void Start()
     {
         time = 0;
-        gameObject.transform.position = new Vector3(15.5f, yPosition, 0);
+        gameObject.transform.position = new Vector3(9f, yPosition, 0);
         GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, 0);
 
     }

@@ -170,7 +170,7 @@ MonoBehaviour:
   Bee_1_a: {fileID: 6541753761479392345, guid: ca3956b71b1799445b5461df00a07fcb, type: 3}
   Warning_1_a: {fileID: 4904516389055038612, guid: a9e8f56058fb542409b82f99d937bd06, type: 3}
   Bee_1_b: {fileID: 6541753761479392345, guid: 63337fcfa6a10e540bf5e99435128002, type: 3}
-  Warning_1_b: {fileID: 4904516389055038612, guid: aca38526e130eb34991e167439ded27b, type: 3}
+  Warning_1_b: {fileID: 4904516389055038612, guid: 1a0365c4a0bd80b4dab048f853ef212b, type: 3}
   Piranha: {fileID: 6598958768871231442, guid: 33df1ae8ab4ee3f469f9ab1e02fae4f2, type: 3}
   Warning_3: {fileID: 4627423929631552446, guid: 93997b556cf30454da6c5d4feda363f4, type: 3}
   Oak_2_a: {fileID: 6721251123791347442, guid: a66b45efed3463c47a74fb026b5b0ed7, type: 3}
