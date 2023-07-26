@@ -11,7 +11,7 @@ public class Pattern8a : MonoBehaviour
     [SerializeField]
     private float weaselSpeed = 10f;
     [SerializeField]
-    private float[] rhythmTimings = { 0f, 0.6f, 0.8f, 1.1f, 1.5f, 1.8f, 2.2f, 2.3f, 2.7f, 2.9f, 3.2f, 3.5f, 3.9f };
+    private float[] rhythmTimings = {0f, 0.6f, 0.8f, 1.1f, 1.5f, 1.8f, 2.2f, 2.3f, 2.7f, 2.9f, 3.2f, 3.5f, 3.9f};
 
     private Coroutine weaselCoroutine;
     private GameObject currentWarning;

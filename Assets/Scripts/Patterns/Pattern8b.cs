@@ -5,9 +5,17 @@ using System.Collections.Generic;
 public class Pattern8b : MonoBehaviour
 {
     [SerializeField]
-    public GameObject weaselwarning; // 경고 오브젝트
+    private GameObject weaselwarning; // 경고 오브젝트
     [SerializeField]
-    public GameObject weasel; // 족제비 프리팹
+    private GameObject weasel; // 족제비 프리팹
+    [SerializeField]
+    private float weaselspeed = 10f;
+
+    private float[] firstweaselTimings = { 0f, 0.6f, 0.8f, 1.1f, 1.5f, 1.8f };
+    private float[] secondweaselTimings = { 2.2f, 2.3f, 2.7f, 2.9f, 3.2f, 3.5f, 3.9f };
+
+    private Coroutine weaselCoroutine;
+    private GameObject currentWarning;
 
     public List<Vector3> firstPositions = new List<Vector3>
     {
@@ -42,10 +50,6 @@ public class Pattern8b : MonoBehaviour
         new Vector3(7.5f, -4.55f, 0f)
     };
 
-    public float movementSpeed = 5f; // 족제비 이동 속도
-    private Coroutine weaselCoroutine;
-    private GameObject currentWarning;
-
     private void OnEnable()
     {
         StartPattern();
@@ -58,7 +62,7 @@ public class Pattern8b : MonoBehaviour
 
     private void StartPattern()
     {
-        weaselCoroutine = StartCoroutine(SpawnWeasels());
+        weaselCoroutine = StartCoroutine(WeaselRoutine());
     }
 
     private void StopPattern()
@@ -76,12 +80,90 @@ public class Pattern8b : MonoBehaviour
         }
     }
 
+    private IEnumerator WeaselRoutine()
+    {
+        float startTime = Time.time;
+
+        for (int i = 0; i < firstweaselTimings.Length; i++)
+        {
+            float targetTime = startTime + firstweaselTimings[i];
+
+            while (Time.time < targetTime)
+            {
+                yield return null;
+            }
+
+            if (i < firstweaselTimings.Length - 1) // 마지막 족제비 타이밍 이전에만 경고 표시
+            {
+                if (currentWarning != null)
+                {
+                    Destroy(currentWarning);
+                    currentWarning = null;
+                }
+
+                Vector3 spawnPosition = ShowWeaselWarning();
+                yield return new WaitForSeconds(0.5f);
+
+                Destroy(currentWarning);
+                yield return StartCoroutine(SpawnWeasel(spawnPosition)); // 변경된 부분
+            }
+            else // 마지막 족제비 타이밍에 모든 경고 표시 제거
+            {
+                if (currentWarning != null)
+                {
+                    Destroy(currentWarning);
+                    currentWarning = null;
+                }
+            }
+        }
+        StartCoroutine(SpawnWeasels());
+    }
+
+    private Vector3 ShowWeaselWarning()
+    {
+        float xPos = Random.Range(-9f, 9f);
+        Vector3 warningPosition = new Vector3(xPos, -4.6f, 0f);
+        currentWarning = Instantiate(weaselwarning, warningPosition, Quaternion.identity);
+        return new Vector3(xPos, -5f, 0f);
+    }
+
+    private IEnumerator SpawnWeasel(Vector3 spawnPosition)
+    {
+        spawnPosition.y = -7f;
+
+        GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
+        Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
+        weaselRigidbody.velocity = Vector2.up * weaselspeed;
+
+        while (newWeasel.transform.position.y < -4.6f)
+        {
+            yield return null;
+        }
+
+        weaselRigidbody.velocity = Vector2.zero;
+        newWeasel.transform.position = new Vector3(newWeasel.transform.position.x, -4.6f, newWeasel.transform.position.z);
+
+        yield return new WaitForSeconds(0.5f);
+
+        weaselRigidbody.velocity = Vector2.down * weaselspeed;
+        StartCoroutine(DestroyIfOutOfBounds(newWeasel));
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private IEnumerator SpawnWeasels()
     {
         List<GameObject> weaselObjects = new List<GameObject>();
 
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < secondweaselTimings.Length; i++)
         {
+            float timing = secondweaselTimings[i];
+
+            while (Time.time < timing)
+            {
+                yield return null;
+            }
+
             ShowWarningObject(warningPositions[i]);
 
             yield return new WaitForSeconds(0.5f);
@@ -148,10 +230,9 @@ public class Pattern8b : MonoBehaviour
             for (int i = 0; i < weaselObjects.Count; i++)
             {
                 GameObject weaselObject = weaselObjects[i];
-                Vector3 startPosition = secondPositions[i];
-                Vector3 targetPosition = firstPositions[i];
 
-                weaselObject.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+                Rigidbody2D weaselObjectRigidbody = weaselObject.GetComponent<Rigidbody2D>();
+                weaselObjectRigidbody.velocity = Vector2.down * 5f;
             }
 
             yield return null;
@@ -160,7 +241,31 @@ public class Pattern8b : MonoBehaviour
         // Destroy weasel objects
         foreach (GameObject weaselObject in weaselObjects)
         {
-            Destroy(weaselObject);
+            StartCoroutine(DestroyIfOutOfBounds(weaselObject));
         }
+    }
+
+    private IEnumerator DestroyIfOutOfBounds(GameObject obj)
+    {
+        while (true)
+        {
+            // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
+            if (!IsWithinMapBounds(obj.transform.position))
+            {
+                Destroy(obj);
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    private bool IsWithinMapBounds(Vector3 position)
+    {
+        float minX = -10f;
+        float maxX = 10f;
+        float minY = -5f;
+        float maxY = 5f;
+
+        return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
     }
 }
