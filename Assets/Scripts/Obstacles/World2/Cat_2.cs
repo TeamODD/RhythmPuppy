@@ -6,13 +6,13 @@ namespace Obstacles
 {
     public class Cat_2 : MonoBehaviour
     {
+        [SerializeField] float speed;
+
         private GameObject player;
         private Vector3 dir;
-        private float speed;
 
         void OnEnable()
         {
-            speed = 5f;
             player = GameObject.FindGameObjectWithTag("Player");
         }
 

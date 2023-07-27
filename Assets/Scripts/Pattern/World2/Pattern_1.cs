@@ -6,6 +6,17 @@ namespace World_2
 {
     public class Pattern_1 : MonoBehaviour
     {
+        [System.Serializable]
+        public struct Patterns
+        {
+            public bool pattern_Random;
+            public bool patternA;
+            public bool patternB;
+            public bool patternC;
+            public bool patternD;
+        }
+
+        [SerializeField] Patterns patterns;
         [SerializeField] GameObject cat;
 
         private GameObject ObstacleManager;
@@ -16,7 +27,53 @@ namespace World_2
         {
             ObstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager");
             objectList = new List<GameObject>();
-            StartCoroutine(runPatternD());
+
+            if (patterns.pattern_Random)
+            {
+                int r = Random.Range(0, 4);
+                switch (r)
+                {
+                    case 0:
+                        StartCoroutine(runPatternA());
+                        break;
+                    case 1:
+                        StartCoroutine(runPatternB());
+                        break;
+                    case 2:
+                        StartCoroutine(runPatternC());
+                        break;
+                    case 3:
+                        StartCoroutine(runPatternD());
+                        break;
+                }
+            }
+            else if (patterns.patternA)
+                StartCoroutine(runPatternA());
+            else if (patterns.patternB)
+                StartCoroutine(runPatternB());
+            else if (patterns.patternC)
+                StartCoroutine(runPatternC());
+            else if (patterns.patternD)
+                StartCoroutine(runPatternD());
+            else
+            {
+                int r = Random.Range(0, 4);
+                switch (r)
+                {
+                    case 0:
+                        StartCoroutine(runPatternA());
+                        break;
+                    case 1:
+                        StartCoroutine(runPatternB());
+                        break;
+                    case 2:
+                        StartCoroutine(runPatternC());
+                        break;
+                    case 3:
+                        StartCoroutine(runPatternD());
+                        break;
+                }
+            }
         }
 
         void Update()

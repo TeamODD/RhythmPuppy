@@ -6,8 +6,9 @@ namespace Obstacles
 {
     public class RatSwarm : MonoBehaviour
     {
+        [SerializeField] float speed = 6f;
+        
         private int dir;
-        private float speed = 3f;
         private bool cooldown = true;
 
         void OnEnable()
