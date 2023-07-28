@@ -6,22 +6,18 @@ namespace Obstacles
 {
     public class RatSwarm : MonoBehaviour
     {
-        [SerializeField] float speed = 6f;
-        
-        private int dir;
-        private bool cooldown = true;
+        [SerializeField] float speed = 3f;
+        [SerializeField] float runtime = 16f;
+        [SerializeField] float cooltime;
+
+        private bool cooldown;
+        private float dir;
+        private GameObject player;
 
         void OnEnable()
         {
-            if (transform.position.x < 0)
-            {
-                dir = 1;
-            }
-            else
-            {
-                dir = -1;
-            }
             cooldown = true;
+            player = GameObject.FindGameObjectWithTag("Player");
             StartCoroutine(runCooldown());
         }
 
@@ -29,12 +25,9 @@ namespace Obstacles
         {
             if (!cooldown)
             {
+                dir = player.transform.position.x - transform.position.x;
+                dir /= Mathf.Abs(dir);
                 transform.position += dir * new Vector3(speed * Time.fixedDeltaTime, 0, 0);
-            }
-
-            if (15 < Mathf.Abs(transform.position.x))
-            {
-                Destroy(gameObject);
             }
         }
 
@@ -50,9 +43,15 @@ namespace Obstacles
 
         private IEnumerator runCooldown()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(cooltime);
             cooldown = false;
+            Invoke("destroySelf", runtime);
             yield break;
+        }
+
+        private void destroySelf()
+        {
+            Destroy(gameObject);
         }
     }
 }

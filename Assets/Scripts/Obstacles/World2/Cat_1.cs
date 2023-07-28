@@ -6,7 +6,7 @@ namespace Obstacles
 {
     public class Cat_1 : MonoBehaviour
     {
-        private float speed = 4f;
+        [SerializeField] float force;
 
         /*void FixedUpdate()
         {
@@ -15,7 +15,7 @@ namespace Obstacles
 
         void OnEnable()
         {
-            GetComponent<Rigidbody2D>().AddForce(transform.up * 10, ForceMode2D.Impulse);
+            GetComponent<Rigidbody2D>().AddForce(transform.up * force, ForceMode2D.Impulse);
         }
 
         void FixedUpdate()

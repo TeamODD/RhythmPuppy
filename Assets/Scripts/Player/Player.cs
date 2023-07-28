@@ -5,47 +5,47 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Header("기본 정보")]
+    [Tooltip("체력")] public int health;
 
-    [SerializeField, Tooltip("체력")]
-    protected int health;
-
-    [SerializeField, Tooltip("스태미나")]
-    protected float stamina;
+    [Tooltip("스태미나")] public float stamina;
 
     [SerializeField, Tooltip("기본 이동속도")]
-    protected float speed;
+    float speed;
 
-    [SerializeField, Tooltip("점프 입력 시 y축으로 받을 힘(Force)")] 
-    protected float jumpForce;
+    [Header("세부 정보")]
+    [SerializeField, Tooltip("점프 입력 시 y축으로 받을 힘(Force)")]
+    float jumpForce;
 
-    [SerializeField, Tooltip("대시 입력 시 x축으로 받을 힘(Force)")]  
-    protected float dashForce;
+    [SerializeField, Tooltip("대시 입력 시 x축으로 받을 힘(Force)")]
+    float dashForce;
 
-    [SerializeField, Tooltip("대시 소모 시간")]  
-    protected float dashTime;
+    [SerializeField, Tooltip("대시 소모 시간")]
+    float dashTime;
 
-    [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]  
-    protected float dashCooldown;
-    
-    [SerializeField, Header("투사체 오브젝트")]
-    protected GameObject projectile;
+    [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]
+    float dashCooldown;
 
-    [SerializeField, Header("목 오브젝트")]
-    protected GameObject neck;
+    [Header("투사체 오브젝트")]
+    [SerializeField] GameObject projectile;
+
+    [Header("목 오브젝트")]
+    [SerializeField] GameObject neck;
 
     [SerializeField, Tooltip("투사체 발사 시 적용되는 힘(Force)")]
-    protected float shootForce;
+    float shootForce;
 
     [SerializeField, Tooltip("발사 종료 후 재사용 대기시간")]
-    protected float shootCooldown;
+    float shootCooldown;
 
-    private Rigidbody2D rig2D;
-    private Rigidbody2D projectileRig2D;
-    private Animator anim;
-    private bool onDash, onJump, onShoot, onCancel;
-    private bool isProjectileFlying, isShootCooldown;
-    private Vector3 mousePos;
-    private Vector3 neckPos;
+    Rigidbody2D rig2D;
+    Rigidbody2D projectileRig2D;
+    Animator anim;
+    bool onDash, onJump, onShoot, onCancel;
+    bool isProjectileFlying, isShootCooldown;
+    Vector3 mousePos;
+    Vector3 neckPos;
+    HPManager hpManager;
 
     void Start()
     {
@@ -55,8 +55,10 @@ public class Player : MonoBehaviour
         onDash = onJump = onShoot = onCancel = false;
         isProjectileFlying = false;
         isShootCooldown = false;
+        hpManager = FindObjectOfType<HPManager>();
 
         rig2D.gravityScale = 1;
+        hpManager.updateHP(health);
     }
 
     void Update()
@@ -83,6 +85,8 @@ public class Player : MonoBehaviour
             if (isProjectileFlying)
                 onCancel = true;
         }
+
+        
     }
 
     void FixedUpdate()
@@ -303,6 +307,7 @@ public class Player : MonoBehaviour
     public void getDamage(int damage)
     {
         health -= damage;
+        hpManager.updateHP(health);
         if(health < 0)
         {
             gameObject.SetActive(false);
