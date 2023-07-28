@@ -19,10 +19,10 @@ public class Pattern2_a : MonoBehaviour
         Destroy(gameObject, 4.2f);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         time += Time.deltaTime;
-        if (time >= 1)
+        if (time >= 1f)
         {
             if (time <= 1.6f)
             {

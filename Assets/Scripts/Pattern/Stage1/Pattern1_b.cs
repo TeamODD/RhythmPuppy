@@ -9,33 +9,34 @@ public class Pattern1_b : MonoBehaviour
     [SerializeField]
     private int dir;
 
+    private float time;
     public static float yPosition;
 
     void Awake()
     {
-        yPosition = Random.Range(-3f, 2f);
+        time = 0;
+        yPosition = Random.Range(-2.5f, 3.5f);
     }
     void Start()
     {
-        gameObject.transform.position = new Vector3(13.5f, yPosition, 0);
+        gameObject.transform.position = new Vector3(10f, yPosition, 0);
+        Destroy(gameObject, 3f);
     }
-    void Update()
+    void FixedUpdate()
     {
-        //가로 길이 18 세로 10
-        gameObject.transform.position += new Vector3(speed * dir * 2f, 0 , 0) * Time.deltaTime;
-        if (gameObject.transform.position.x <= 9)
-            transform.position += new Vector3(speed * dir, speed * 2, 0) * Time.deltaTime;
-        if (gameObject.transform.position.x <= 4.5)
-            transform.position += new Vector3(speed * dir, -speed * 4, 0) * Time.deltaTime;
-        if (gameObject.transform.position.x <= 0)
-            transform.position += new Vector3(speed * dir, speed * 4, 0) * Time.deltaTime;
-        if (gameObject.transform.position.x <= -4.5)
-            transform.position += new Vector3(speed * dir, -speed * 4, 0) * Time.deltaTime;
-        if (gameObject.transform.position.x <= -9)
-            transform.position += new Vector3(speed * dir, speed, 0) * Time.deltaTime;
+        time += 1f * Time.deltaTime;
 
-
-        if (gameObject.transform.position.x <= -14)
-            Destroy(gameObject);
+        if (time > 1f)
+        {
+            //가로 길이 18 세로 10
+            if (time < 1.5f)
+                transform.position += new Vector3(speed * dir, -speed * 0.3f, 0) * Time.deltaTime;
+            else if (time < 2f)
+                transform.position += new Vector3(speed * dir, speed * 0.6f, 0) * Time.deltaTime;
+            else if (time < 2.5f)
+                transform.position += new Vector3(speed * dir, -speed * 0.6f, 0) * Time.deltaTime;
+            else if (time < 3f)
+                transform.position += new Vector3(speed * dir, speed * 0.6f, 0) * Time.deltaTime;
+        }
     }
 }

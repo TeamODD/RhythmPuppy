@@ -9,19 +9,28 @@ public class Pattern2_b : MonoBehaviour
     [SerializeField]
     private float power;
     private float RotateSpeed;
+    private float time;
 
+    void Awake()
+    {
+        time = 0;
+    }
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         
         RotateSpeed = 540;
         //1ÃÊ µ¿¾È ¸Ê ¹Û¿¡¼­ ±¼·¯°¡¼­ °æ°í¹®º¸´Ù 1ÃÊ ´Ê°Ô µµÂø ÈÄ 4ÃÊ µ¿¾È ¸Ê ¾È¿¡¼­ ±¼·¯°¨.
-        Destroy(gameObject, 5);
+        Destroy(gameObject, 4.5f);
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        gameObject.transform.position += new Vector3(power * -1, 0, 0) * Time.deltaTime;
-        gameObject.transform.Rotate(0, 0, Time.deltaTime * RotateSpeed, Space.Self);
+        time += Time.deltaTime;
+        if (time > 1f)
+        {
+            gameObject.transform.position += new Vector3(power * -1, 0, 0) * Time.deltaTime;
+            gameObject.transform.Rotate(0, 0, Time.deltaTime * RotateSpeed, Space.Self);
+        }
     }
 }

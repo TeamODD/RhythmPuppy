@@ -137,6 +137,7 @@ public class PatternManager_1 : MonoBehaviour
         Instantiate(Piranha);
         
         count_3++;
+        Invoke("Pattern3", 1f);
     }
     IEnumerator Pattern4(float waitTime)
     {
