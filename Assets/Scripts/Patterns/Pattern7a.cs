@@ -11,10 +11,13 @@ public class Pattern7a : MonoBehaviour
     [SerializeField]
     private float redappleSpeed;
 
-    private List<float> patternTimings = new List<float> {0f, 0.4f, 0.8f, 1.2f, 1.8f, 2f, 2.4f, 2.8f, 3f, 3.4f, 3.8f};
+    private List<float> patternTimings = new List<float> { 0f, 0.4f, 0.8f, 1.2f, 1.8f, 2f, 2.4f, 2.8f, 3f, 3.4f, 3.8f };
+
+    private float startTime; // 패턴7a가 시작된 시간을 저장하기 위한 변수
 
     private void OnEnable()
     {
+        startTime = Time.time; // 패턴7a가 활성화될 때 시작 시간 저장
         StartCoroutine(DropRedapple());
     }
 
@@ -30,14 +33,14 @@ public class Pattern7a : MonoBehaviour
         {
             float timing = patternTimings[i];
 
-            while (Time.time < timing)
+            while (GetElapsedTime() < timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
             }
 
             // 경고 오브젝트 생성
-            float xPos = UnityEngine.Random.Range(-7f, 7f);
+            float xPos = Random.Range(-10f, 10f);
             Vector3 warningPosition = new Vector3(xPos, 4.5f, 0f);
             GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
@@ -61,9 +64,9 @@ public class Pattern7a : MonoBehaviour
             StartCoroutine(DestroyIfOutOfBounds(newRedApple));
         }
 
-        // 패턴이 모두 실행되면 스크립트를 비활성화합니다.
+        // 패턴이 모두 실행되면 스크립트를 삭제합니다. * 복제된 스크립트를 삭제하기 위함
         yield return new WaitForSeconds(4.5f);
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
@@ -89,5 +92,11 @@ public class Pattern7a : MonoBehaviour
         float maxY = 10f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
+    }
+
+    // 고유 시간 변수를 사용하여 경과 시간을 계산하는 메서드
+    private float GetElapsedTime()
+    {
+        return Time.time - startTime;
     }
 }

@@ -15,9 +15,11 @@ public class Pattern8a : MonoBehaviour
 
     private Coroutine weaselCoroutine;
     private GameObject currentWarning;
+    private float startTime;
 
     private void OnEnable()
     {
+        startTime = Time.time;
         StartPattern();
     }
 
@@ -48,14 +50,13 @@ public class Pattern8a : MonoBehaviour
 
     private IEnumerator WeaselRoutine()
     {
-        float startTime = Time.time;
-
         for (int i = 0; i < rhythmTimings.Length; i++)
         {
-            float targetTime = startTime + rhythmTimings[i];
+            float timing = rhythmTimings[i];
 
-            while (Time.time < targetTime)
+            while (GetElapsedTime() < timing)
             {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
             }
 
@@ -82,6 +83,9 @@ public class Pattern8a : MonoBehaviour
                 }
             }
         }
+        // 모든 패턴이 끝나면 해당 게임 오브젝트를 삭제합니다.
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
     }
 
     private Vector3 ShowWeaselWarning()
@@ -94,7 +98,7 @@ public class Pattern8a : MonoBehaviour
 
     private IEnumerator SpawnWeasel(Vector3 spawnPosition)
     {
-        spawnPosition.y = -6f;
+        spawnPosition.y = -6.2f;
 
         GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
@@ -108,13 +112,14 @@ public class Pattern8a : MonoBehaviour
         weaselRigidbody.velocity = Vector2.zero;
         newWeasel.transform.position = new Vector3(newWeasel.transform.position.x, -4.6f, newWeasel.transform.position.z);
 
-        yield return new WaitForSeconds(0.5f);
-
-        weaselRigidbody.velocity = Vector2.down * weaselSpeed;
-
-        yield return new WaitForSeconds(0.5f);
-
+        StartCoroutine(WeaselGoDown(weaselRigidbody));
         StartCoroutine(DestroyIfOutOfBounds(newWeasel));
+    }
+
+    private IEnumerator WeaselGoDown(Rigidbody2D weaselRigidbody)
+    {
+        yield return new WaitForSeconds(0.5f);
+        weaselRigidbody.velocity = Vector2.down * weaselSpeed;
     }
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
@@ -135,9 +140,15 @@ public class Pattern8a : MonoBehaviour
     {
         float minX = -10f;
         float maxX = 10f;
-        float minY = -5f;
+        float minY = -6.5f;
         float maxY = 5f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
+    }
+
+    // 고유 시간 변수를 사용하여 경과 시간을 계산하는 메서드
+    private float GetElapsedTime()
+    {
+        return Time.time - startTime;
     }
 }

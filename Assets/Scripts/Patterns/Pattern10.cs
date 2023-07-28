@@ -86,6 +86,10 @@ public class Pattern10 : MonoBehaviour
             if (!IsWithinMapBounds(obj.transform.position))
             {
                 Destroy(obj);
+                if (transform.parent == null)
+                {
+                    Destroy(gameObject);
+                }
                 yield break;
             }
             yield return null;

@@ -51,6 +51,7 @@ public class Pattern9 : MonoBehaviour
             if (!IsWithinMapBounds(obj.transform.position))
             {
                 Destroy(obj);
+                Destroy(gameObject);
                 yield break;
             }
             yield return null;
