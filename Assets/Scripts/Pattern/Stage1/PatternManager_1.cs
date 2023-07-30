@@ -33,7 +33,6 @@ public class PatternManager_1 : MonoBehaviour
     private int count_1_b;
     private int count_3;
     private int count_4;
-    private float callTime;
 
     void Awake()
     {
@@ -41,7 +40,6 @@ public class PatternManager_1 : MonoBehaviour
         count_1_b = 0;
         count_3 = 0;
         count_4 = 0;
-        callTime = 0.5f;
     }
     void Start()
     {
@@ -213,7 +211,6 @@ public class PatternManager_1 : MonoBehaviour
         {
             CancelInvoke("Pattern4");
             count_4 = 1;
-            callTime = 0.5f;
         }   
     }
 }
