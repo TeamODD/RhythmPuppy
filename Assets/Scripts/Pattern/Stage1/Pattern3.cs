@@ -18,23 +18,26 @@ public class Pattern3 : MonoBehaviour
     void Start()
     {
         gameObject.transform.position = new Vector3(xPosition, -10f, 0);
-        Destroy(gameObject, 1.5f);
+        Destroy(gameObject, 2.5f);
     }
     void FixedUpdate()
     {
-        time += 1f*Time.deltaTime;
-        if(gameObject.transform.position.y < - 7.83)
+        time += Time.deltaTime;
+        if (time > 1)
         {
-            gameObject.transform.position += new Vector3(0, 6f, 0) * Time.deltaTime;
-        }
-        if (time > 0.5f)
-        {
-            if (gameObject.transform.position.y < -2.87)
-                gameObject.transform.position += new Vector3(0, 50f, 0) * Time.deltaTime;
-        }
-        if (time > 1f)
-        {
-            gameObject.transform.position += new Vector3(0, -70f, 0) * Time.deltaTime;
+            if (gameObject.transform.position.y < -7.83)
+            {
+                gameObject.transform.position += new Vector3(0, 6f, 0) * Time.deltaTime;
+            }
+            if (time > 1.5f)
+            {
+                if (gameObject.transform.position.y < -2.87)
+                    gameObject.transform.position += new Vector3(0, 50f, 0) * Time.deltaTime;
+            }
+            if (time > 2f)
+            {
+                gameObject.transform.position += new Vector3(0, -70f, 0) * Time.deltaTime;
+            }
         }
     }
 }

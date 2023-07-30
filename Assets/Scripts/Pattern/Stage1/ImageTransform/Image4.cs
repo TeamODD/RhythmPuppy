@@ -6,6 +6,6 @@ public class Image4 : MonoBehaviour
 {
     void FixedUpdate()
     {
-        gameObject.transform.position += new Vector3(-0.4f, 0, 0) * Time.deltaTime;
+        gameObject.transform.position += new Vector3(-0.3f, 0, 0) * Time.deltaTime;
     }
 }

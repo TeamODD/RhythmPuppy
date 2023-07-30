@@ -68,7 +68,7 @@ public class PatternManager_1 : MonoBehaviour
         StartCoroutine(Pattern2_b_3(108f));
         StartCoroutine(Pattern2_b_3(114f));
 
-        StartCoroutine(Pattern4(36f));
+        StartCoroutine(Pattern4(34.5f));
         StartCoroutine(Pattern4(44f));
         StartCoroutine(Pattern4(52f));
         StartCoroutine(Pattern4(60f));
@@ -95,7 +95,7 @@ public class PatternManager_1 : MonoBehaviour
         Instantiate(Warning_1_b);
 
         count_1_b++;
-        Invoke("Pattern1_b", 2f);
+        Invoke("Pattern1_b", 0.5f);
     }
     void Pattern2_a()
     {
@@ -104,29 +104,29 @@ public class PatternManager_1 : MonoBehaviour
     }
     IEnumerator Pattern2_b_2(float waitTime)
     {
-        yield return new WaitForSecondsRealtime(waitTime);
+        yield return new WaitForSeconds(waitTime);
 
         Instantiate(Warning_2_b);
         Instantiate(Oak_2_b);
 
-        yield return new WaitForSecondsRealtime(2.0f);
+        yield return new WaitForSeconds(2.0f);
 
         Instantiate(Warning_2_b);
         Instantiate(Oak_2_b);
     }
     IEnumerator Pattern2_b_3(float waitTime)
     {
-        yield return new WaitForSecondsRealtime(waitTime);
+        yield return new WaitForSeconds(waitTime);
 
         Instantiate(Warning_2_b);
         Instantiate(Oak_2_b);
 
-        yield return new WaitForSecondsRealtime(2.0f);
+        yield return new WaitForSeconds(2.0f);
 
         Instantiate(Warning_2_b);
         Instantiate(Oak_2_b);
 
-        yield return new WaitForSecondsRealtime(2.0f);
+        yield return new WaitForSeconds(2.0f);
 
         Instantiate(Warning_2_b);
         Instantiate(Oak_2_b);
@@ -141,33 +141,51 @@ public class PatternManager_1 : MonoBehaviour
     }
     IEnumerator Pattern4(float waitTime)
     {
-        yield return new WaitForSecondsRealtime(waitTime);
+        yield return new WaitForSeconds(waitTime);
         Instantiate(Apple);
         Instantiate(Warning_4);
-
-        //시간 조작
-        if (count_4 == 3)
-            callTime += 0.3f;
-        if (count_4 == 4)
-            callTime -= 0.1f;
-        if (count_4 == 5)
-            callTime -= 0.2f;
-        if (count_4 == 10)
-            callTime += 0.5f;
-        if (count_4 == 11)
-            callTime -= 0.5f;
-        if (count_4 == 14)
-            callTime -= 0.4f;
-
-        count_4++;
-
-        if (count_4 == 15)
-        {
-            callTime = 0.5f;
-            yield break;
-        }
-        yield return new WaitForSecondsRealtime(callTime);
-            StartCoroutine(Pattern4(0));
+        yield return new WaitForSeconds(0.5f);
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.5f);
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.8f);
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.7f);
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.5f); //3
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.5f); //3.5
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.5f); //4
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.5f); //4.5
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.5f); //5
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(1f); //6
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.5f); //6.5
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.5f); //7
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.5f); //7.5
+        Instantiate(Apple);
+        Instantiate(Warning_4);
+        yield return new WaitForSeconds(0.1f);
+        Instantiate(Apple);
+        Instantiate(Warning_4);
     }
 
     void Update()
@@ -188,8 +206,8 @@ public class PatternManager_1 : MonoBehaviour
             if (count_1_b == 0)
             {
                 Invoke("Pattern3", 32f);
+                count_3 = 0;
             }
-            count_3 = 0;
         }
         if (count_4 == 16)
         {
