@@ -51,15 +51,15 @@ public class Pattern6 : MonoBehaviour
             if (currentStem == null) // 현재 생성된 장애물이 없을 때만 패턴 실행
             {
                 //오른쪽 위치에서만 시작
-                float startX = 11f;
+                float startX = 9.44f;
                 float startY = 0;
                 Vector3 startPos = new Vector3(startX, startY, 0f);
 
                 // 경고 오브젝트 생성
-                Vector3 warningPosition = new Vector3(startX-1f, startY, 0f);
+                Vector3 warningPosition = new Vector3(startX - 1f, startY, 0f);
                 GameObject warning = Instantiate(thornStemWarning, warningPosition, Quaternion.identity);
                             
-                Destroy(warning, 0.5f);
+                Destroy(warning, 0.3f);
 
                 // 가시 줄기 생성
                 currentStem = Instantiate(thornStem, startPos, Quaternion.identity);

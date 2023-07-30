@@ -73,6 +73,7 @@ public class PatternController : MonoBehaviour
 
     private List<float> pattern8bTimings = new List<float>
     {
+        0f,
         29.1f, 95.9f, 162.7f
     };
 
@@ -119,12 +120,14 @@ public class PatternController : MonoBehaviour
         pattern7a.SetActive(false);
         pattern7b.SetActive(false);
         pattern8a.SetActive(false);
+        pattern8b.SetActive(false);
         // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
 
         //StartCoroutine(RunPattern6());
         //StartCoroutine(RunPattern7a());
-        //StartCoroutine(RunPattern7b());
+        //StartCoroutine(RunPattern7b()); 
         StartCoroutine(RunPattern8a());
+        StartCoroutine(RunPattern8b());
         // 추가 패턴 실행 메서드들도 필요에 따라 추가
     }
 
@@ -147,7 +150,7 @@ public class PatternController : MonoBehaviour
     }
 
     private IEnumerator RunPattern7a()
-    {
+    {   
         for (int i = 0; i < pattern7aTimings.Count; i++)
         {
             float timing = pattern7aTimings[i];
@@ -196,6 +199,24 @@ public class PatternController : MonoBehaviour
             // 패턴을 복제하고 활성화
             GameObject newPattern8a = Instantiate(pattern8a, pattern8a.transform.position, pattern8a.transform.rotation);
             newPattern8a.SetActive(true);
+        }
+        yield return null;
+    }
+
+    private IEnumerator RunPattern8b()
+    {
+        for (int i = 0; i < pattern8bTimings.Count; i++)
+        {
+            float timing = pattern8bTimings[i];
+
+            while (Time.time < timing)
+            {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                yield return null;
+            }
+            // 패턴을 복제하고 활성화
+            GameObject newPattern8b = Instantiate(pattern8b, pattern8b.transform.position, pattern8b.transform.rotation);
+            newPattern8b.SetActive(true);
         }
         yield return null;
     }

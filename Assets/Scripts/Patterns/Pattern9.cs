@@ -7,6 +7,8 @@ public class Pattern9 : MonoBehaviour
     [SerializeField]
     private GameObject flyingSquirrel;
     [SerializeField]
+    private GameObject warning;
+    [SerializeField]
     private float squirrelSpeed = 4f;
 
     private void OnEnable()
@@ -29,6 +31,12 @@ public class Pattern9 : MonoBehaviour
             xPos = -10f;
         else // 오른쪽 위에서 시작
             xPos = 10f;
+
+        Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
+        GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
+
+        yield return new WaitForSeconds(0.5f);
+        Destroy(newWarning);
 
         Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);
 

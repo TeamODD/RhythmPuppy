@@ -17,6 +17,11 @@ public class Pattern8a : MonoBehaviour
     private GameObject currentWarning;
     private float startTime;
 
+    float xPos;
+    float yPos;
+    float[] previousXPositions = new float[3]; // 이전 3개의 xPos 값을 저장할 배열 선언
+    int currentIndex = 0; // 현재 저장할 인덱스를 나타내는 변수 선언
+
     private void OnEnable()
     {
         startTime = Time.time;
@@ -59,46 +64,42 @@ public class Pattern8a : MonoBehaviour
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
             }
+            // 모든 패턴이 끝날 때쯤에 해당 게임 오브젝트를 삭제합니다.
+            Destroy(gameObject, 9.5f);
 
-            if (i < rhythmTimings.Length - 1) // 마지막 족제비 타이밍 이전에만 경고 표시
+            if (currentIndex < previousXPositions.Length)
             {
-                if (currentWarning != null)
-                {
-                    Destroy(currentWarning);
-                    currentWarning = null;
-                }
-
-                Vector3 spawnPosition = ShowWeaselWarning();
-                yield return new WaitForSeconds(0.5f);
-
-                Destroy(currentWarning);
-                yield return StartCoroutine(SpawnWeasel(spawnPosition)); // 변경된 부분
+                xPos = Random.Range(-8.33f, 8.33f);
+                previousXPositions[currentIndex] = xPos;
             }
-            else // 마지막 족제비 타이밍에 모든 경고 표시 제거
+            else
             {
-                if (currentWarning != null)
+                do
                 {
-                    Destroy(currentWarning);
-                    currentWarning = null;
-                }
+                    xPos = Random.Range(-8.33f, 8.33f);
+                } while (IsWithinRangeOfPreviousXPositions(xPos));
+                previousXPositions[currentIndex % previousXPositions.Length] = xPos;
             }
+
+            currentIndex++;
+
+
+            //경고 오브젝트 생성
+
+            yPos = -4.6f;
+
+            Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
+            GameObject currentWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
+            Destroy(currentWarning, 0.5f);
+
+            StartCoroutine(SpawnWeasel());
         }
-        // 모든 패턴이 끝나면 해당 게임 오브젝트를 삭제합니다.
-        yield return new WaitForSeconds(0.5f);
-        Destroy(gameObject);
     }
 
-    private Vector3 ShowWeaselWarning()
+    private IEnumerator SpawnWeasel()
     {
-        float xPos = Random.Range(-9f, 9f);
-        Vector3 warningPosition = new Vector3(xPos, -4.6f, 0f);
-        currentWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
-        return new Vector3(xPos, -5f, 0f);
-    }
-
-    private IEnumerator SpawnWeasel(Vector3 spawnPosition)
-    {
-        spawnPosition.y = -6.2f;
+        yPos = -8f;
+        Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);
 
         GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
@@ -119,7 +120,7 @@ public class Pattern8a : MonoBehaviour
     private IEnumerator WeaselGoDown(Rigidbody2D weaselRigidbody)
     {
         yield return new WaitForSeconds(0.5f);
-        weaselRigidbody.velocity = Vector2.down * weaselSpeed;
+        weaselRigidbody.velocity = Vector2.down * 10f;
     }
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
@@ -129,6 +130,7 @@ public class Pattern8a : MonoBehaviour
             // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
             if (!IsWithinMapBounds(obj.transform.position))
             {
+                Debug.Log("패턴 종료 : " + Time.time);
                 Destroy(obj);
                 yield break;
             }
@@ -140,7 +142,7 @@ public class Pattern8a : MonoBehaviour
     {
         float minX = -10f;
         float maxX = 10f;
-        float minY = -6.5f;
+        float minY = -6.3f;
         float maxY = 5f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
@@ -150,5 +152,17 @@ public class Pattern8a : MonoBehaviour
     private float GetElapsedTime()
     {
         return Time.time - startTime;
+    }
+
+    private bool IsWithinRangeOfPreviousXPositions(float xPos)
+    {
+        foreach (float prevX in previousXPositions)
+        {
+            if (Mathf.Abs(prevX - xPos) < 1.5f)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -85,6 +85,9 @@ public class Pattern7b : MonoBehaviour
                 yield return null;
             }
 
+            // 패턴이 모두 실행되면 스크립트를 비활성화합니다.
+            Destroy(gameObject, 6.5f);
+
             // 경고 오브젝트 생성
             float xPos = Random.Range(-7f, 7f);
             Vector3 warningPosition = new Vector3(xPos, 4.5f, 0f);
@@ -102,10 +105,6 @@ public class Pattern7b : MonoBehaviour
 
             StartCoroutine(DestroyIfOutOfBounds(newGreenApple));
         }
-
-        // 패턴이 모두 실행되면 스크립트를 비활성화합니다.
-        yield return new WaitForSeconds(3f);
-        Destroy(gameObject);
     }
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
