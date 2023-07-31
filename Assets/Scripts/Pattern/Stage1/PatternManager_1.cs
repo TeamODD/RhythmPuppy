@@ -44,40 +44,40 @@ public class PatternManager_1 : MonoBehaviour
     void Start()
     {
         //1초 빠르게 함수 호출(경고가 1초 동안 나오므로), 벌이 날아오는데 1초가 걸리도록 설정
-        Invoke("Pattern1_a", 4.0f);
+        Invoke("Pattern1_a", 3.0f);
         Invoke("Pattern1_b", 68f);
 
-        Invoke("Pattern2_a", 12f);
-        Invoke("Pattern2_a", 20f);
-        Invoke("Pattern2_a", 28f);
-        Invoke("Pattern2_a", 36f);
+        Invoke("Pattern2_a", 11f);
+        Invoke("Pattern2_a", 19f);
+        Invoke("Pattern2_a", 27f);
+        Invoke("Pattern2_a", 35f);
 
         Invoke("Pattern3", 19.0f);
 
-        StartCoroutine(Pattern2_b_2(5.7f));
-        StartCoroutine(Pattern2_b_2(21.7f));
-        StartCoroutine(Pattern2_b_2(37.7f));
-        StartCoroutine(Pattern2_b_2(86f));
+        StartCoroutine(Pattern2_b_2(4.7f));
+        StartCoroutine(Pattern2_b_2(20.7f));
+        StartCoroutine(Pattern2_b_2(36.7f));
+        StartCoroutine(Pattern2_b_2(85f));
 
-        StartCoroutine(Pattern2_b_3(13.7f));
-        StartCoroutine(Pattern2_b_3(29.7f));
-        StartCoroutine(Pattern2_b_3(92f));
-        StartCoroutine(Pattern2_b_3(98f));
-        StartCoroutine(Pattern2_b_3(108f));
-        StartCoroutine(Pattern2_b_3(114f));
+        StartCoroutine(Pattern2_b_3(12.7f));
+        StartCoroutine(Pattern2_b_3(28.7f));
+        StartCoroutine(Pattern2_b_3(91f));
+        StartCoroutine(Pattern2_b_3(97f));
+        StartCoroutine(Pattern2_b_3(107f));
+        StartCoroutine(Pattern2_b_3(113f));
 
-        StartCoroutine(Pattern4(34.5f));
-        StartCoroutine(Pattern4(44f));
-        StartCoroutine(Pattern4(52f));
-        StartCoroutine(Pattern4(60f));
-        StartCoroutine(Pattern4(68f));
-        StartCoroutine(Pattern4(76f));
+        StartCoroutine(Pattern4(35f));
+        StartCoroutine(Pattern4(43f));
+        StartCoroutine(Pattern4(51f));
+        StartCoroutine(Pattern4(59f));
+        StartCoroutine(Pattern4(67f));
+        StartCoroutine(Pattern4(75f));
 
-        StartCoroutine(Pattern4(84f));
-        StartCoroutine(Pattern4(92f));
-        StartCoroutine(Pattern4(100f));
-        StartCoroutine(Pattern4(108f));
-        StartCoroutine(Pattern4(116f));
+        StartCoroutine(Pattern4(83f));
+        StartCoroutine(Pattern4(91f));
+        StartCoroutine(Pattern4(99f));
+        StartCoroutine(Pattern4(107f));
+        StartCoroutine(Pattern4(115f));
     }
     void Pattern1_a()
     {

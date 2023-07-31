@@ -6,6 +6,7 @@ public class BackgroundManager : MonoBehaviour
 {
     [SerializeField]
     private Sprite bgSprite;
+    /*
     [SerializeField]
     private GameObject Img1;
     [SerializeField]
@@ -16,7 +17,11 @@ public class BackgroundManager : MonoBehaviour
     private GameObject Img4;
     [SerializeField]
     private GameObject Img5;
+    */
+
     private GameObject ImgName;
+    [SerializeField]
+    private GameObject parent;   
     
     GameObject[] tempImg = new GameObject[5];
 
@@ -39,7 +44,7 @@ public class BackgroundManager : MonoBehaviour
         StartCoroutine(imgRemove(Img4, 3, 2f));
         imgRout(Img5, 4);
         StartCoroutine(imgRemove(Img5, 4, 2f));
-         */
+        */
     }
 
     IEnumerator imgRemove(GameObject Img, int index, float calltime)
@@ -57,8 +62,10 @@ public class BackgroundManager : MonoBehaviour
     void imgRout(GameObject Img, int index)
     {
         tempImg[index] = Instantiate(Img);
+        tempImg[index].transform.SetParent(parent.transform, false);
         tempImg[index].transform.position = Img.transform.position;
         tempImg[index].transform.position += new Vector3(bgSprite.bounds.size.x - 0.04f, 0, 0);
+        
     }
 
 }

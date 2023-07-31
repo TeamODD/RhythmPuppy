@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static Warning3;
 
 public class Pattern3 : MonoBehaviour
 {
     private float time;
     public Rigidbody2D rb;
-    [SerializeField]
-    private float speed;
+    
+    public Sprite changeImg;
+    public SpriteRenderer thisImg;
 
     void Awake()
     {
@@ -17,7 +19,8 @@ public class Pattern3 : MonoBehaviour
     }
     void Start()
     {
-        gameObject.transform.position = new Vector3(xPosition, -10f, 0);
+        gameObject.transform.position = new Vector3(xPosition, -6f, 0);
+        Invoke("ChangeImg", 1.5f);
         Destroy(gameObject, 2.5f);
     }
     void FixedUpdate()
@@ -25,19 +28,23 @@ public class Pattern3 : MonoBehaviour
         time += Time.deltaTime;
         if (time > 1)
         {
-            if (gameObject.transform.position.y < -7.83)
+            if (gameObject.transform.position.y < -3.94)
             {
                 gameObject.transform.position += new Vector3(0, 6f, 0) * Time.deltaTime;
             }
             if (time > 1.5f)
             {
-                if (gameObject.transform.position.y < -2.87)
-                    gameObject.transform.position += new Vector3(0, 50f, 0) * Time.deltaTime;
+                if (gameObject.transform.position.y < -2.7)
+                    gameObject.transform.position += new Vector3(0, 60f, 0) * Time.deltaTime;
             }
             if (time > 2f)
             {
-                gameObject.transform.position += new Vector3(0, -70f, 0) * Time.deltaTime;
+                gameObject.transform.position += new Vector3(0, -80f, 0) * Time.deltaTime;
             }
         }
+    }
+    void ChangeImg()
+    {
+        thisImg.sprite = changeImg;
     }
 }

@@ -30,7 +30,7 @@ public class Pattern2_b : MonoBehaviour
         if (time > 1f)
         {
             gameObject.transform.position += new Vector3(power * -1, 0, 0) * Time.deltaTime;
-            gameObject.transform.Rotate(0, 0, Time.deltaTime * RotateSpeed, Space.Self);
+            //gameObject.transform.Rotate(0, 0, Time.deltaTime * RotateSpeed, Space.Self);
         }
     }
 }

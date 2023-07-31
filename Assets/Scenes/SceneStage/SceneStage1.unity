@@ -526,6 +526,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22c96043757bdf46b8730a218ef7243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1167593447 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8653719598885068355, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
+  m_PrefabInstance: {fileID: 754665311}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1229372539 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5251921170864561557, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
@@ -647,8 +652,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1460147804}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.5421216, y: -0.10207578, z: 0.25056827}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -3.5421214, y: -0.10207578, z: 0.25056827}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -668,16 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bgSprite: {fileID: -7215957207607214355, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
-  Img1: {fileID: 1561010946}
-  tempImg1: {fileID: 0}
-  Img2: {fileID: 827288213}
-  tempImg2: {fileID: 0}
-  Img3: {fileID: 1229372539}
-  tempImg3: {fileID: 0}
-  Img4: {fileID: 329050946}
-  tempImg4: {fileID: 0}
-  Img5: {fileID: 569947752}
-  tempImg5: {fileID: 0}
+  parent: {fileID: 1167593447}
 --- !u!1 &1561010946 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8990387341346384610, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
