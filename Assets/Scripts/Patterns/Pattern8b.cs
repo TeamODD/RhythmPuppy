@@ -99,7 +99,7 @@ public class Pattern8b : MonoBehaviour
                 yield return null;
             }
             // 모든 패턴이 끝날 때쯤에 해당 게임 오브젝트를 삭제합니다.
-            Destroy(gameObject, 20f);
+            Destroy(gameObject, 10f);
 
             if (currentIndex < previousXPositions.Length)
             {
@@ -245,6 +245,7 @@ public class Pattern8b : MonoBehaviour
             // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
             if (!IsWithinMapBounds(obj.transform.position))
             {
+                Debug.Log("패턴 종료 시간 추적 중 : " + GetElapsedTime());
                 Destroy(obj);
                 yield break;
             }

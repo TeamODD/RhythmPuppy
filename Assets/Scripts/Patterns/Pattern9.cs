@@ -25,12 +25,12 @@ public class Pattern9 : MonoBehaviour
     {
         // 날다람쥐가 시작하는 위치를 랜덤으로 선택합니다.
         float xPos;
-        float yPos = 4.4f;
+        float yPos = 4.5f;
 
         if (Random.Range(0, 2) == 0) // 왼쪽 위에서 시작
-            xPos = -10f;
+            xPos = -8.385f;
         else // 오른쪽 위에서 시작
-            xPos = 10f;
+            xPos = 8.385f;
 
         Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);

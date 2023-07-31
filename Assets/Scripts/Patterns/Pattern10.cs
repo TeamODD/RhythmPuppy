@@ -28,33 +28,29 @@ public class Pattern10 : MonoBehaviour
     }
 
     private IEnumerator DropChestnuts()
-    {
-        yield return null; // 한 프레임을 기다립니다.
+    { 
+        
+        float xPos = UnityEngine.Random.Range(-7f, 7f);
+        Vector3 chestnutPosition = new Vector3(xPos, 5.5f, 0f);
 
-        for (int i = 0; i < 5; i++)
-        {
-            float xPos = UnityEngine.Random.Range(-7f, 7f);
-            Vector3 chestnutPosition = new Vector3(xPos, 5.5f, 0f);
+        // 경고 오브젝트 생성
+        Vector3 warningPosition = new Vector3(xPos, chestnutPosition.y - 1f, 0f);
+        GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
-            // 경고 오브젝트 생성
-            Vector3 warningPosition = new Vector3(xPos, chestnutPosition.y - 1f, 0f);
-            GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
+        yield return new WaitForSeconds(0.5f);
 
-            yield return new WaitForSeconds(0.5f);
+        // ChestNut 오브젝트 생성
+        GameObject newChestnut = Instantiate(chestnut, chestnutPosition, Quaternion.identity);
+        Rigidbody2D chestnutRigidbody = newChestnut.GetComponent<Rigidbody2D>();
+        chestnutRigidbody.velocity = Vector2.down * chestnutSpeed;
 
-            // ChestNut 오브젝트 생성
-            GameObject newChestnut = Instantiate(chestnut, chestnutPosition, Quaternion.identity);
-            Rigidbody2D chestnutRigidbody = newChestnut.GetComponent<Rigidbody2D>();
-            chestnutRigidbody.velocity = Vector2.down * chestnutSpeed;
+        Destroy(newWarning);
 
-            Destroy(newWarning);
+        yield return new WaitForSeconds(1f);
 
-            yield return new WaitForSeconds(1f);
-
-            ExplodeChestnut(newChestnut.transform.position);
-            Destroy(newChestnut);
-            yield return null;
-        }
+        ExplodeChestnut(newChestnut.transform.position);
+        Destroy(newChestnut);
+        yield return null;
     }
 
     private void ExplodeChestnut(Vector3 position)
@@ -75,6 +71,8 @@ public class Pattern10 : MonoBehaviour
             newSplinter.transform.rotation = Quaternion.Euler(0f, 0f, angleInDegrees - 90f); // -90도 회전
 
             StartCoroutine(DestroyIfOutOfBounds(newSplinter));
+
+            Destroy(gameObject, 6f);
         }
     }
 
@@ -86,10 +84,6 @@ public class Pattern10 : MonoBehaviour
             if (!IsWithinMapBounds(obj.transform.position))
             {
                 Destroy(obj);
-                if (transform.parent == null)
-                {
-                    Destroy(gameObject);
-                }
                 yield break;
             }
             yield return null;

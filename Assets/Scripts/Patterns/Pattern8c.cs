@@ -15,6 +15,12 @@ public class Pattern8c : MonoBehaviour
 
     private Coroutine weaselCoroutine;
     private GameObject currentWarning;
+    private float startTime;
+
+    float xPos;
+    float yPos;
+    float[] previousXPositions = new float[3]; // 이전 3개의 xPos 값을 저장할 배열 선언
+    int currentIndex = 0; // 현재 저장할 인덱스를 나타내는 변수 선언
 
     private void OnEnable()
     {
@@ -48,59 +54,57 @@ public class Pattern8c : MonoBehaviour
 
     private IEnumerator WeaselRoutine()
     {
-        float startTime = Time.time;
-
         for (int i = 0; i < rhythmTimings.Length; i++)
         {
-            float targetTime = startTime + rhythmTimings[i];
+            float timing = rhythmTimings[i];
 
-            while (Time.time < targetTime)
+            while (GetElapsedTime() < timing)
             {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
             }
+            // 모든 패턴이 끝날 때쯤에 해당 게임 오브젝트를 삭제합니다.
+            Destroy(gameObject, 9.5f);
 
-            if (i < rhythmTimings.Length - 1) // 마지막 족제비 타이밍 이전에만 경고 표시
+            if (currentIndex < previousXPositions.Length)
             {
-                if (currentWarning != null)
-                {
-                    Destroy(currentWarning);
-                    currentWarning = null;
-                }
-
-                Vector3 spawnPosition = ShowWeaselWarning();
-                yield return new WaitForSeconds(0.5f);
-
-                Destroy(currentWarning);
-                yield return StartCoroutine(SpawnWeasel(spawnPosition)); // 변경된 부분
+                xPos = Random.Range(-8.33f, 8.33f);
+                previousXPositions[currentIndex] = xPos;
             }
-            else // 마지막 족제비 타이밍에 모든 경고 표시 제거
+            else
             {
-                if (currentWarning != null)
+                do
                 {
-                    Destroy(currentWarning);
-                    currentWarning = null;
-                }
+                    xPos = Random.Range(-8.33f, 8.33f);
+                } while (IsWithinRangeOfPreviousXPositions(xPos));
+                previousXPositions[currentIndex % previousXPositions.Length] = xPos;
             }
+
+            currentIndex++;
+
+
+            //경고 오브젝트 생성
+
+            yPos = -4.11f;
+
+            Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
+            GameObject currentWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
+            Destroy(currentWarning, 0.5f);
+
+            StartCoroutine(SpawnWeasel());
         }
     }
 
-    private Vector3 ShowWeaselWarning()
+    private IEnumerator SpawnWeasel()
     {
-        float xPos = Random.Range(-9f, 9f);
-        Vector3 warningPosition = new Vector3(xPos, -4.6f, 0f);
-        currentWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
-        return new Vector3(xPos, -5f, 0f);
-    }
-
-    private IEnumerator SpawnWeasel(Vector3 spawnPosition)
-    {
-        spawnPosition.y = -6f;
+        Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);
+        spawnPosition.y = -8f;
 
         GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * weaselSpeed;
 
-        while (newWeasel.transform.position.y < -4f)
+        while (newWeasel.transform.position.y < -4.11f)
         {
             yield return null;
         }
@@ -111,9 +115,6 @@ public class Pattern8c : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         weaselRigidbody.velocity = Vector2.down * weaselSpeed;
-
-        yield return new WaitForSeconds(0.5f);
-
         StartCoroutine(DestroyIfOutOfBounds(newWeasel));
     }
 
@@ -136,9 +137,26 @@ public class Pattern8c : MonoBehaviour
     {
         float minX = -10f;
         float maxX = 10f;
-        float minY = -5f;
+        float minY = -6.3f;
         float maxY = 5f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
+    }
+
+    private float GetElapsedTime()
+    {
+        return Time.time - startTime;
+    }
+
+    private bool IsWithinRangeOfPreviousXPositions(float xPos)
+    {
+        foreach (float prevX in previousXPositions)
+        {
+            if (Mathf.Abs(prevX - xPos) < 1.5f)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

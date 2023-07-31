@@ -73,7 +73,6 @@ public class PatternController : MonoBehaviour
 
     private List<float> pattern8bTimings = new List<float>
     {
-        0f,
         29.1f, 95.9f, 162.7f
     };
 
@@ -121,13 +120,19 @@ public class PatternController : MonoBehaviour
         pattern7b.SetActive(false);
         pattern8a.SetActive(false);
         pattern8b.SetActive(false);
+        pattern8c.SetActive(false);
+        pattern9.SetActive(false);
+        pattern10.SetActive(false);
         // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
 
-        //StartCoroutine(RunPattern6());
-        //StartCoroutine(RunPattern7a());
-        //StartCoroutine(RunPattern7b()); 
+        StartCoroutine(RunPattern6());
+        StartCoroutine(RunPattern7a());
+        StartCoroutine(RunPattern7b()); 
         StartCoroutine(RunPattern8a());
         StartCoroutine(RunPattern8b());
+        StartCoroutine(RunPattern8c());
+        StartCoroutine(RunPattern9());
+        StartCoroutine(RunPattern10());
         // 추가 패턴 실행 메서드들도 필요에 따라 추가
     }
 
@@ -217,6 +222,60 @@ public class PatternController : MonoBehaviour
             // 패턴을 복제하고 활성화
             GameObject newPattern8b = Instantiate(pattern8b, pattern8b.transform.position, pattern8b.transform.rotation);
             newPattern8b.SetActive(true);
+        }
+        yield return null;
+    }
+
+    private IEnumerator RunPattern8c()
+    {
+        for (int i = 0; i < pattern8cTimings.Count; i++)
+        {
+            float timing = pattern8cTimings[i];
+
+            while (Time.time < timing)
+            {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                yield return null;
+            }
+            // 패턴을 복제하고 활성화
+            GameObject newPattern8c = Instantiate(pattern8c, pattern8c.transform.position, pattern8c.transform.rotation);
+            newPattern8c.SetActive(true);
+        }
+        yield return null;
+    }
+
+    private IEnumerator RunPattern9()
+    {
+        for (int i = 0; i < pattern9Timings.Count; i++)
+        {
+            float timing = pattern9Timings[i];
+
+            while (Time.time < timing)
+            {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                yield return null;
+            }
+            // 패턴을 복제하고 활성화
+            GameObject newPattern9 = Instantiate(pattern9, pattern9.transform.position, pattern9.transform.rotation);
+            newPattern9.SetActive(true);
+        }
+        yield return null;
+    }
+
+    private IEnumerator RunPattern10()
+    {
+        for (int i = 0; i < pattern10Timings.Count; i++)
+        {
+            float timing = pattern10Timings[i];
+
+            while (Time.time < timing)
+            {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                yield return null;
+            }
+            // 패턴을 복제하고 활성화
+            GameObject newPattern10 = Instantiate(pattern10, pattern10.transform.position, pattern10.transform.rotation);
+            newPattern10.SetActive(true);
         }
         yield return null;
     }
