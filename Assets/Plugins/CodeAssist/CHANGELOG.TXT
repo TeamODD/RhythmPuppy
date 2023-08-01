@@ -1,5 +1,9 @@
 List of new features, bug fixes and improvements
 
+# Version 1.1.6
+* Stability improvements for Unity.ScriptFinder
+* Bugfix for Gpt adornment positioning
+
 # Version 1.1.5
 * Stability and usability improvements for exporter/updater
 * Bugfix for Transformer Linq and Auto Input Manager
@@ -11,7 +15,7 @@ List of new features, bug fixes and improvements
 * Stability and usability improvements for Transformer windows
 
 # Version 1.1.3
-* Analyzers are working at a seperate process https://github.com/merryyellow/Unity-Code-Assist/issues/20
+* Analyzers are working at a separate process https://github.com/merryyellow/Unity-Code-Assist/issues/20
 * Inline visuals stability and performance improvements https://github.com/merryyellow/Unity-Code-Assist/issues/22 https://github.com/merryyellow/Unity-Code-Assist/issues/24
 * Exporter/updater stability improvements https://github.com/merryyellow/Unity-Code-Assist/issues/19 https://github.com/merryyellow/Unity-Code-Assist/issues/23
 * Transformer window stability improvements https://github.com/merryyellow/Unity-Code-Assist/issues/21

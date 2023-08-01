@@ -7,10 +7,11 @@ namespace World_2
 {
     public class Pattern_3 : MonoBehaviour
     {
-        private GameObject globalLight;
-        private List<GameObject> lightList;
-        private Image image;
-        private Color c;
+        GameObject globalLight;
+        List<GameObject> lightList;
+        Image image;
+        Color c;
+        ArtifactManager artfMgr;
 
         void OnEnable()
         {
@@ -18,6 +19,7 @@ namespace World_2
             image = globalLight.GetComponent<Image>();
             lightList = new List<GameObject>();
             lightList.AddRange(GameObject.FindGameObjectsWithTag("LampLight"));
+            artfMgr = transform.parent.GetComponent<PatternManager>().artfMgr;
 
             StartCoroutine(activate());
         }
@@ -51,6 +53,10 @@ namespace World_2
             {
                 lightList[i].SetActive(true);
             }
+            for (int i = 0; i < artfMgr.lampList.Count; i++) 
+            {
+                artfMgr.lampList[i].GetComponent<SpriteRenderer>().sprite = artfMgr.lampOn;
+            }
             c = image.color;
             c.a = 0f;
             image.color = c;
@@ -61,6 +67,10 @@ namespace World_2
             for (int i = 0; i < lightList.Count; i++)
             {
                 lightList[i].SetActive(false);
+            }
+            for (int i = 0; i < artfMgr.lampList.Count; i++)
+            {
+                artfMgr.lampList[i].GetComponent<SpriteRenderer>().sprite = artfMgr.lampOff;
             }
             c = image.color;
             c.a = 0.7f;
