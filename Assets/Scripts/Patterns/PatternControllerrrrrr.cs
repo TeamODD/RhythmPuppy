@@ -10,6 +10,16 @@ public class PatternControllerrrrrr : MonoBehaviour
     private GameObject pattern7a;
     [SerializeField]
     private GameObject pattern7b;
+    [SerializeField]
+    private GameObject pattern8a;
+    [SerializeField]
+    private GameObject pattern8b;
+    [SerializeField]
+    private GameObject pattern8c;
+    [SerializeField]
+    private GameObject pattern9;
+    [SerializeField]
+    private GameObject pattern10;
 
     private List<float> pattern6Timings = new List<float>
     {
@@ -38,27 +48,74 @@ public class PatternControllerrrrrr : MonoBehaviour
         159f, 160f, 161.1f, 162.1f,
         163.2f, 164.2f
     };
+
     private List<float> pattern7aTimings = new List<float>
     {
         0f, 4.1f, 8.2f,
         66.8f, 70.9f, 75f,
         133.6f, 137.7f, 141.8f
     };
+
     private List<float> pattern7bTimings = new List<float>
     {
         12.3f, 79.1f, 145.9f
 
     };
 
+    private List<float> pattern8aTimings = new List<float>
+    {
+        16.5f, 20.7f, 24.9f,
+        83.3f, 87.5f, 91.7f,
+        150.1f, 154.3f, 158.5f
+    };
+
+    private List<float> pattern8bTimings = new List<float>
+    {
+        29.1f, 95.9f, 162.7f
+    };
+
+    private List<float> pattern8cTimings = new List<float>
+    {
+        33.3f, 100.1f, 166.9f
+    };
+
+    private List<float> pattern9Timings = new List<float>
+    {
+        33.3f, 33.8f, 34.3f, 34.8f, 35.3f, 35.8f, 36.3f, 36.8f,
+        37.4f, 37.9f, 38.4f, 38.9f, 39.5f, 40.0f, 40.5f, 41.0f,
+        47.3f, 50.5f, 58.8f,
+        102.1f, 102.6f, 103.1f, 103.6f, 104.1f, 104.6f, 105.1f, 105.6f, 106.2f, 106.7f, 107.2f, 107.7f, 108.3f, 108.8f, 109.3f, 109.8f, 116.1f, 119.3f, 127.6f
+    };
+
+    private List<float> pattern10Timings = new List<float>
+    {
+        42.1f, 43.1f, 44.1f, 45.3f, 46.3f, 51.0f, 52.0f, 53.0f, 54.0f, 55.2f, 56.2f, 57.2f, 59.3f, 60.3f, 61.4f, 62.4f, 63.4f, 64.4f,
+110.9f, 111.9f, 112.9f, 114.1f, 115.1f, 119.8f, 120.8f, 121.8f, 122.8f, 123.2f, 124.2f, 125.2f, 128.1f, 129.1f, 130.2f, 131.2f, 132.2f, 133.2f
+    };
+
+
     private void Start()
     {
+        // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
         pattern6.SetActive(false);
         pattern7a.SetActive(false);
         pattern7b.SetActive(false);
+        pattern8a.SetActive(false);
+        pattern8b.SetActive(false);
+        pattern8c.SetActive(false);
+        pattern9.SetActive(false);
+        pattern10.SetActive(false);
+        // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
 
         StartCoroutine(RunPattern6());
         StartCoroutine(RunPattern7a());
         StartCoroutine(RunPattern7b());
+        StartCoroutine(RunPattern8a());
+        StartCoroutine(RunPattern8b());
+        StartCoroutine(RunPattern8c());
+        StartCoroutine(RunPattern9());
+        StartCoroutine(RunPattern10());
+        // 추가 패턴 실행 메서드들도 필요에 따라 추가
     }
 
     private IEnumerator RunPattern6()
@@ -114,4 +171,93 @@ public class PatternControllerrrrrr : MonoBehaviour
         yield return null;
     }
 
+    private IEnumerator RunPattern8a()
+    {
+        for (int i = 0; i < pattern8aTimings.Count; i++)
+        {
+            float timing = pattern8aTimings[i];
+
+            while (Time.time < timing)
+            {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                yield return null;
+            }
+            // 패턴을 복제하고 활성화
+            GameObject newPattern8a = Instantiate(pattern8a, pattern8a.transform.position, pattern8a.transform.rotation);
+            newPattern8a.SetActive(true);
+        }
+        yield return null;
+    }
+
+    private IEnumerator RunPattern8b()
+    {
+        for (int i = 0; i < pattern8bTimings.Count; i++)
+        {
+            float timing = pattern8bTimings[i];
+
+            while (Time.time < timing)
+            {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                yield return null;
+            }
+            // 패턴을 복제하고 활성화
+            GameObject newPattern8b = Instantiate(pattern8b, pattern8b.transform.position, pattern8b.transform.rotation);
+            newPattern8b.SetActive(true);
+        }
+        yield return null;
+    }
+
+    private IEnumerator RunPattern8c()
+    {
+        for (int i = 0; i < pattern8cTimings.Count; i++)
+        {
+            float timing = pattern8cTimings[i];
+
+            while (Time.time < timing)
+            {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                yield return null;
+            }
+            // 패턴을 복제하고 활성화
+            GameObject newPattern8c = Instantiate(pattern8c, pattern8c.transform.position, pattern8c.transform.rotation);
+            newPattern8c.SetActive(true);
+        }
+        yield return null;
+    }
+
+    private IEnumerator RunPattern9()
+    {
+        for (int i = 0; i < pattern9Timings.Count; i++)
+        {
+            float timing = pattern9Timings[i];
+
+            while (Time.time < timing)
+            {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                yield return null;
+            }
+            // 패턴을 복제하고 활성화
+            GameObject newPattern9 = Instantiate(pattern9, pattern9.transform.position, pattern9.transform.rotation);
+            newPattern9.SetActive(true);
+        }
+        yield return null;
+    }
+
+    private IEnumerator RunPattern10()
+    {
+        for (int i = 0; i < pattern10Timings.Count; i++)
+        {
+            float timing = pattern10Timings[i];
+
+            while (Time.time < timing)
+            {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                yield return null;
+            }
+            // 패턴을 복제하고 활성화
+            GameObject newPattern10 = Instantiate(pattern10, pattern10.transform.position, pattern10.transform.rotation);
+            newPattern10.SetActive(true);
+        }
+        yield return null;
+    }
 }
