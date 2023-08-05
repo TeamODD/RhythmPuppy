@@ -29,7 +29,7 @@ public class Pattern_6 : MonoBehaviour
         catObject.transform.position = new Vector3(r, 5, 0);
         Vector3 dir = (player.transform.position - catObject.transform.position);
         float rot = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        catObject.transform.rotation = Quaternion.Euler(0, 0, rot);
+        /*catObject.transform.rotation = Quaternion.Euler(0, 0, rot);*/
         catObject.GetComponent<Obstacles.Cat_2>().setDir(dir);
         catObject.SetActive(true);
 

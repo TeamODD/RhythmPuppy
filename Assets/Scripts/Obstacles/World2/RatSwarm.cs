@@ -10,9 +10,9 @@ namespace Obstacles
         [SerializeField] float runtime = 16f;
         [SerializeField] float cooltime;
 
-        private bool cooldown;
-        private float dir;
-        private GameObject player;
+        bool cooldown;
+        float dir;
+        GameObject player;
 
         void OnEnable()
         {
