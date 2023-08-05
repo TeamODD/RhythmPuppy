@@ -31,7 +31,6 @@ namespace World_2
                 pattern_6 = "runPattern_6";
 
             Invoke(pattern_2, 0.6f);
-            Invoke(pattern_2, 0.6f);
         }
 
         private void runPattern_1()
