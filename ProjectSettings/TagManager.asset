@@ -8,7 +8,7 @@ TagManager:
   - Ground
   - PatternManager
   - ObstacleManager
-  - LampLight
+  - MusicManager
   layers:
   - Default
   - TransparentFX
