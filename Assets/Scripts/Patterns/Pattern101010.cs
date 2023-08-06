@@ -11,6 +11,8 @@ public class Pattern101010 : MonoBehaviour
     [SerializeField]
     private GameObject warning;
     [SerializeField]
+    private GameObject chestnutbomb;
+    [SerializeField]
     private float chestnutSpeed;
     [SerializeField]
     private float splinterSpeed;
@@ -37,16 +39,50 @@ public class Pattern101010 : MonoBehaviour
         Vector3 warningPosition = new Vector3(xPos, chestnutPosition.y - 1f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
-        yield return new WaitForSeconds(0.5f);
+        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
+        if (warningRenderer != null)
+        {
+            warningRenderer.sortingOrder = int.MaxValue;
+        }
+
+        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
+        Color originalColor = warningRenderer.color;
+        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+
+        float totalTime = 0.5f; // 전체 시간 (0.5초)
+        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            // 0.3초 동안은 완전히 불투명하게 유지
+            if (elapsedTime <= fadeInDuration)
+            {
+                warningRenderer.color = originalColor;
+            }
+            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
+            else //0.3초가 지남
+            {
+                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
+                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+            }
+
+            yield return null;
+        }
+
+        // 경고 오브젝트 제거
+        Destroy(newWarning);
 
         // ChestNut 오브젝트 생성
         GameObject newChestnut = Instantiate(chestnut, chestnutPosition, Quaternion.identity);
         Rigidbody2D chestnutRigidbody = newChestnut.GetComponent<Rigidbody2D>();
         chestnutRigidbody.velocity = Vector2.down * chestnutSpeed;
 
-        Destroy(newWarning);
-
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
 
         ExplodeChestnut(newChestnut.transform.position);
         Destroy(newChestnut);
@@ -55,6 +91,9 @@ public class Pattern101010 : MonoBehaviour
 
     private void ExplodeChestnut(Vector3 position)
     {
+        GameObject ChestNutBomb = Instantiate(chestnutbomb, position, Quaternion.identity);
+        Destroy(ChestNutBomb, 0.2f);
+
         for (int i = 0; i < 8; i++)
         {
             float angle = i * splinterInterval;

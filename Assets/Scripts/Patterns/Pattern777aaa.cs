@@ -73,15 +73,38 @@ public class Pattern777aaa : MonoBehaviour
         Vector3 warningPosition = new Vector3(xPos, 4.5f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
+        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        if (warningRenderer != null)
+        Color originalColor = warningRenderer.color;
+        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+
+        float totalTime = 0.5f; // 전체 시간 (0.5초)
+        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < totalTime)
         {
-            warningRenderer.sortingOrder = int.MaxValue;
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            // 0.3초 동안은 완전히 불투명하게 유지
+            if (elapsedTime <= fadeInDuration)
+            {
+                warningRenderer.color = originalColor;
+            }
+            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
+            else //0.3초가 지남
+            {
+                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
+                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+            }
+
+            yield return null;
         }
-        yield return new WaitForSeconds(0.5f);
+
+        // 경고 오브젝트 제거
         Destroy(newWarning);
-
-
 
         Vector3 RedApplePosition = new Vector3(xPos, 4.5f, 0f);
 
@@ -111,7 +134,7 @@ public class Pattern777aaa : MonoBehaviour
         // IsWithinMapBounds 메서드 내용 그대로 가져옵니다.
         float minX = -10f;
         float maxX = 10f;
-        float minY = -5f;
+        float minY = -5.5f;
         float maxY = 10f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;

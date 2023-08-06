@@ -88,32 +88,65 @@ public class Pattern888aaa : MonoBehaviour
 
             yPos = -4.5f;
 
-            StartCoroutine(SpawnWeasel());
+            StartCoroutine(SpawnWeasel(xPos, yPos));
         }
     }
 
-    private IEnumerator SpawnWeasel()
+    private IEnumerator SpawnWeasel(float xPos, float yPos)
     {
         Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
-        GameObject currentWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
+        GameObject newWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
 
-        yield return new WaitForSeconds(0.5f);
-        Destroy(currentWarning);
+        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
+        if (warningRenderer != null)
+        {
+            warningRenderer.sortingOrder = int.MaxValue;
+        }
 
-        yPos = -8f;
-        Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);
+        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
+        Color originalColor = warningRenderer.color;
+        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+
+        float totalTime = 0.5f; // 전체 시간 (0.5초)
+        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            // 0.3초 동안은 완전히 불투명하게 유지
+            if (elapsedTime <= fadeInDuration)
+            {
+                warningRenderer.color = originalColor;
+            }
+            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
+            else //0.3초가 지남
+            {
+                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
+                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+            }
+
+            yield return null;
+        }
+
+        // 경고 오브젝트 제거
+        Destroy(newWarning);
+
+        Vector3 spawnPosition = new Vector3(xPos, -6f, 0f);
 
         GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * weaselSpeed;
 
-        while (newWeasel.transform.position.y < -4.6f)
+        while (newWeasel.transform.position.y < -5f)    
         {
             yield return null;
         }
 
         weaselRigidbody.velocity = Vector2.zero;
-        newWeasel.transform.position = new Vector3(newWeasel.transform.position.x, -4.6f, newWeasel.transform.position.z);
 
         StartCoroutine(WeaselGoDown(weaselRigidbody));
         StartCoroutine(DestroyIfOutOfBounds(newWeasel));
@@ -132,7 +165,6 @@ public class Pattern888aaa : MonoBehaviour
             // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
             if (!IsWithinMapBounds(obj.transform.position))
             {
-                Debug.Log("패턴 종료 : " + Time.time);
                 Destroy(obj);
                 yield break;
             }

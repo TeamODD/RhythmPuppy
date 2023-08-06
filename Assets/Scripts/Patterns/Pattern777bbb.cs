@@ -76,16 +76,44 @@ public class Pattern777bbb : MonoBehaviour
         Vector3 warningPosition = new Vector3(xPos, 4.5f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
+        //경고 오브젝트를 맨 뒤로 보냄
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
         if (warningRenderer != null)
         {
             warningRenderer.sortingOrder = int.MaxValue;
         }
 
-        yield return new WaitForSeconds(0.5f);
+        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
+        Color originalColor = warningRenderer.color;
+        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+
+        float totalTime = 0.5f; // 전체 시간 (0.5초)
+        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            // 0.3초 동안은 완전히 불투명하게 유지
+            if (elapsedTime <= fadeInDuration)
+            {
+                warningRenderer.color = originalColor;
+            }
+            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
+            else //0.3초가 지남
+            {
+                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
+                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+            }
+
+            yield return null;
+        }
+
+        // 경고 오브젝트 제거
         Destroy(newWarning);
-
-
 
         // 원하는 타이밍에 패턴을 실행합니다.
         Vector3 RedApplePosition = new Vector3(xPos, 4.5f, 0f);
@@ -145,7 +173,36 @@ public class Pattern777bbb : MonoBehaviour
             warningRenderer.sortingOrder = int.MaxValue;
         }
 
-        yield return new WaitForSeconds(0.5f);
+        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
+        Color originalColor = warningRenderer.color;
+        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+
+        float totalTime = 0.5f; // 전체 시간 (0.5초)
+        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            // 0.3초 동안은 완전히 불투명하게 유지
+            if (elapsedTime <= fadeInDuration)
+            {
+                warningRenderer.color = originalColor;
+            }
+            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
+            else //0.3초가 지남
+            {
+                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
+                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+            }
+
+            yield return null;
+        }
+
+        // 경고 오브젝트 제거
         Destroy(newWarning);
 
         // 원하는 타이밍에 패턴을 실행합니다.
@@ -177,7 +234,7 @@ public class Pattern777bbb : MonoBehaviour
     {
         float minX = -10f;
         float maxX = 10f;
-        float minY = -5f;
+        float minY = -5.5f;
         float maxY = 10f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;

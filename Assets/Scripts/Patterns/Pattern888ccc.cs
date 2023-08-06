@@ -9,7 +9,7 @@ public class Pattern888ccc : MonoBehaviour
     [SerializeField]
     private GameObject weaselWarning;
     [SerializeField]
-    private float weaselSpeed = 10f;
+    private float weaselSpeed;
     [SerializeField]
     private float[] rhythmTimings = { 0f, 0.6f, 0.8f, 1.1f, 1.5f, 1.8f, 2.2f, 2.3f, 2.7f, 2.9f, 3.2f, 3.5f, 3.9f };
 
@@ -23,7 +23,8 @@ public class Pattern888ccc : MonoBehaviour
     int currentIndex = 0; // 현재 저장할 인덱스를 나타내는 변수 선언
 
     private void OnEnable()
-    {
+    { 
+        startTime = Time.time;
         StartPattern();
     }
 
@@ -54,6 +55,8 @@ public class Pattern888ccc : MonoBehaviour
 
     private IEnumerator WeaselRoutine()
     {
+        // 모든 패턴이 끝날 때쯤에 해당 게임 오브젝트를 삭제합니다.
+        Destroy(gameObject, 9.5f);
         for (int i = 0; i < rhythmTimings.Length; i++)
         {
             float timing = rhythmTimings[i];
@@ -63,8 +66,6 @@ public class Pattern888ccc : MonoBehaviour
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
             }
-            // 모든 패턴이 끝날 때쯤에 해당 게임 오브젝트를 삭제합니다.
-            Destroy(gameObject, 9.5f);
 
             if (currentIndex < previousXPositions.Length)
             {
@@ -82,36 +83,72 @@ public class Pattern888ccc : MonoBehaviour
 
             currentIndex++;
 
-
             //경고 오브젝트 생성
 
-            yPos = -1.38f;
+            yPos = -4f;
 
-            StartCoroutine(SpawnWeasel());
+            StartCoroutine(SpawnWeasel(xPos, yPos));
         }
     }
 
-    private IEnumerator SpawnWeasel()
+    private IEnumerator SpawnWeasel(float xPos, float yPos)
     {
         Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
-        GameObject currentWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
+        GameObject newWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
 
-        yield return new WaitForSeconds(0.5f);
-        Destroy(currentWarning);
+        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
+        if (warningRenderer != null)
+        {
+            warningRenderer.sortingOrder = int.MaxValue;
+        }
 
-        Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);
-        spawnPosition.y = -8f;
+        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
+        Color originalColor = warningRenderer.color;
+        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+
+        float totalTime = 0.5f; // 전체 시간 (0.5초)
+        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            // 0.3초 동안은 완전히 불투명하게 유지
+            if (elapsedTime <= fadeInDuration)
+            {
+                warningRenderer.color = originalColor;
+            }
+            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
+            else //0.3초가 지남
+            {
+                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
+                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+            }
+
+            yield return null;
+        }
+
+        // 경고 오브젝트 제거
+        Destroy(newWarning);
+
+        Vector3 spawnPosition = new Vector3(xPos, -6f, 0f);
 
         GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * weaselSpeed;
 
-        yield return new WaitForSeconds(0.5f);
+        while (newWeasel.transform.position.y < -4f)
+        {
+            yield return null;
+        }
 
         weaselRigidbody.velocity = Vector2.down * 10f;
+
         StartCoroutine(DestroyIfOutOfBounds(newWeasel));
     }
-
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
     {
