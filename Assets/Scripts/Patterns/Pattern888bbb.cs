@@ -8,8 +8,6 @@ public class Pattern888bbb : MonoBehaviour
     [SerializeField]
     private GameObject weasel; // 족제비 프리팹
     [SerializeField]
-    private GameObject jumpweasel;
-    [SerializeField]
     private GameObject weaselwarning; // 경고 오브젝트
     [SerializeField]
     private float weaselspeed;
@@ -290,11 +288,8 @@ public class Pattern888bbb : MonoBehaviour
         {
             GameObject weaselObject = weaselObjects[i];
 
-            SpriteRenderer spriteRenderer = weaselObject.GetComponent<SpriteRenderer>();
-
-            // jumpWeaselPrefab의 SpriteRenderer 컴포넌트를 가져와서 해당 이미지를 적용합니다.
-            SpriteRenderer jumpSpriteRenderer = jumpweasel.GetComponent<SpriteRenderer>();
-            spriteRenderer.sprite = jumpSpriteRenderer.sprite;
+            weaselObject.transform.GetChild(0).gameObject.SetActive(false);
+            weaselObject.transform.GetChild(1).gameObject.SetActive(true);
 
             Rigidbody2D weaselObjectRigidbody = weaselObject.GetComponent<Rigidbody2D>();
             weaselObjectRigidbody.velocity = Vector2.up * 10f;
