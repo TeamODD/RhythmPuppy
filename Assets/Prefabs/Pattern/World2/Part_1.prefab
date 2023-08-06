@@ -46,8 +46,307 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BGM: {fileID: 8300000, guid: 0004e8148b3c80d4c9d22a9c32d931d7, type: 3}
   patternList:
-  - {fileID: 1273078494639283698, guid: 599b16f22b2c1764e9f1bdfd48561f97, type: 3}
-  - {fileID: 301684448673772372, guid: 93739551ab2ea0b41a8a80386b051420, type: 3}
-  - {fileID: 1140727680767832825, guid: 3897701ccea922c4abc1dc9037b06cd4, type: 3}
-  - {fileID: 7938996007636120948, guid: 9b0da4571f3617c4db72596f97e2b226, type: 3}
-  - {fileID: 5713159027828826166, guid: a2754807d97924c41a609b4a4e247837, type: 3}
+  - prefab: {fileID: 1273078494639283698, guid: 599b16f22b2c1764e9f1bdfd48561f97, type: 3}
+    timeline:
+    - startAt: 0.1
+      detail:
+        detailType: 1
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 2.1
+      detail:
+        detailType: 1
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 10.1
+      detail:
+        detailType: 1
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 3.4
+      detail:
+        detailType: 2
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 7.4
+      detail:
+        detailType: 2
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 11.4
+      detail:
+        detailType: 2
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 16.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 20.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 18.1
+      detail:
+        detailType: 4
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 22.1
+      detail:
+        detailType: 4
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 24.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 26.1
+      detail:
+        detailType: 4
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 28.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 30.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 64.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 66.1
+      detail:
+        detailType: 4
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 68.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 70.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 72.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 74.1
+      detail:
+        detailType: 4
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 76.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 78.1
+      detail:
+        detailType: 3
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 80.1
+      detail:
+        detailType: 1
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 83.4
+      detail:
+        detailType: 2
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 87.4
+      detail:
+        detailType: 2
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 91.4
+      detail:
+        detailType: 2
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 96.1
+      detail:
+        detailType: 1
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+  - prefab: {fileID: 301684448673772372, guid: 93739551ab2ea0b41a8a80386b051420, type: 3}
+    timeline:
+    - startAt: 0.6
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 14
+        repeatDelayTime: 1
+    - startAt: 87.6
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 7
+        repeatDelayTime: 1
+  - prefab: {fileID: 1140727680767832825, guid: 3897701ccea922c4abc1dc9037b06cd4, type: 3}
+    timeline:
+    - startAt: 14.3
+      detail:
+        detailType: 0
+        duration: 17.8
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 46.4
+      detail:
+        detailType: 0
+        duration: 33.7
+        repeatNo: 0
+        repeatDelayTime: 0
+  - prefab: {fileID: 7938996007636120948, guid: 9b0da4571f3617c4db72596f97e2b226, type: 3}
+    timeline:
+    - startAt: 15.6
+      detail:
+        detailType: 0
+        duration: 16.5
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 47.7
+      detail:
+        detailType: 0
+        duration: 32.4
+        repeatNo: 0
+        repeatDelayTime: 0
+  - prefab: {fileID: 5713159027828826166, guid: a2754807d97924c41a609b4a4e247837, type: 3}
+    timeline:
+    - startAt: 16.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 18.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 20.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 22.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 24.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 26.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 28.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 30.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 64.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 66.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 68.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 70.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 72.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 74.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 76.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 78.1
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
