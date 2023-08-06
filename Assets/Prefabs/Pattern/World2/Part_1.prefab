@@ -350,3 +350,9 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
+    - startAt: 100
+      detail:
+        detailType: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0

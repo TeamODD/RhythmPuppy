@@ -18,7 +18,7 @@ public class PatternArrayDrawer : PropertyDrawer
     {
         string pathName = property.propertyPath + ".";
         SerializedProperty prefab = property.serializedObject.FindProperty(pathName + "prefab");
-        if (prefab.objectReferenceValue == null)
+        if (prefab == null || prefab.objectReferenceValue == null)
         {
             EditorGUI.PropertyField(position, property, new GUIContent(label.text, label.tooltip), true);
             return;
