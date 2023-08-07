@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Projectile
   - Ground
+  - PatternManager
+  - ObstacleManager
+  - MusicManager
   layers:
   - Default
   - TransparentFX
@@ -16,7 +19,7 @@ TagManager:
   - Player
   - Projectile
   - Obstacle
-  - 
+  - Artifact
   - 
   - 
   - 
@@ -40,6 +43,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 3664997351
+    locked: 0
+  - name: Artifact
+    uniqueID: 1207461167
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 1762480717
     locked: 0
