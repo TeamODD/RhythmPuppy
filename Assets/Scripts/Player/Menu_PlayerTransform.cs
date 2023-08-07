@@ -4,50 +4,33 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
 public class Menu_PlayerTransform : MonoBehaviour
 {
     public Vector3[] waypoints;
-    private Vector3 currentPosition;
-    public static int currentIndex = 0;
-    private ShowInfo showinfo;
+    public GameObject SoundManager;
 
-    // Start is called before the first frame update
+    private Vector3 currentPosition;
+    public static int currentIndex;
+    private ShowInfo showinfo;
+    private Vector3 speed;
+    private float time;
+
     void Start()
     {
-        
-        waypoints = new Vector3[3];
-
-        //도착지 배열에 값 할당
-        waypoints.SetValue(new Vector3(-6, 0, 0), 0);
-        waypoints.SetValue(new Vector3(0, 0, 0), 1);
-
-    }
-
-    private void indexExceptionFunc()
-    {
-        try
-        {
-            Debug.Log(waypoints[currentIndex]);
-        }
-        catch (System.IndexOutOfRangeException)
-        {
-            if (currentIndex < 0)
-                ++currentIndex;
-            else
-                --currentIndex;
-        } //인덱스 초과시에 예외 처리
-    }
-    // Update is called once per frame
-    void Update()
-    {
+        currentIndex = 0;
         currentPosition = transform.position; //플레이어 현재 위치
+
+        time = 1.0f;
+    }
+
+    void FixedUpdate()
+    {
+
         if (Input.GetKeyDown(KeyCode.D))
         {
             ++currentIndex;
             indexExceptionFunc();
-            transform.position = Vector3.MoveTowards(currentPosition, waypoints[currentIndex], 6);
-            //오른쪽 방향키 입력시 캐릭터를 다음 스테이지까지 이동
+            InputD(currentPosition, waypoints[currentIndex], time, gameObject);
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -65,5 +48,40 @@ public class Menu_PlayerTransform : MonoBehaviour
             }
             //스페이스바 입력시 스테이지 입장을 구현
         }
+
+    }
+
+    void InputD(Vector3 currentPosition, Vector3 waypoint, float time, GameObject Cogi)
+    {
+        Vector3 velocity = Vector3.zero;
+
+        float offset = 0.01f;
+        while (waypoint.x - offset > transform.position.x)
+        {
+            transform.position
+                += new Vector3(0.2f, 0, 0) * Time.deltaTime;
+            Debug.Log(transform.position.x);
+
+            //Vector3.SmoothDamp(transform.position, waypoint, ref velocity, time);
+        }
+        transform.position = waypoint;
+
+        //SoundManager.GetComponent<PlaySelectSound>().ChangeMusic(currentIndex);
+        PlaySelectSound.instance.ChangeMusic(currentIndex);
+    }
+
+    private void indexExceptionFunc()
+    {
+        try
+        {
+            Debug.Log(waypoints[currentIndex]);
+        }
+        catch (System.IndexOutOfRangeException)
+        {
+            if (currentIndex < 0)
+                ++currentIndex;
+            else
+                --currentIndex;
+        } //인덱스 초과시에 예외 처리
     }
 }

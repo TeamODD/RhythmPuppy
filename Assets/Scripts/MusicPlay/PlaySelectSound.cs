@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class PlaySelectSound : MonoBehaviour
 {
+    private AudioSource theAudio;
+    [SerializeField]
+    private AudioClip[] Music_Stage;
+
     public AudioSource audioSourceSelect;
     public AudioClip audioClipSelect;
 
@@ -15,21 +19,17 @@ public class PlaySelectSound : MonoBehaviour
     {
         if(PlaySelectSound.instance == null)
             PlaySelectSound.instance = this;
+
+        theAudio = GetComponent<AudioSource>();
     }
 
     public void SelectSound()
     {
         audioSourceSelect.PlayOneShot(audioClipSelect);
     }
-    // Start is called before the first frame update
-    void Start()
+    public void ChangeMusic(int Index)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        theAudio.clip = Music_Stage[Index];
+        theAudio.Play();
     }
 }

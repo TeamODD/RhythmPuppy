@@ -8,14 +8,14 @@ public class Pattern3 : MonoBehaviour
 {
     private float time;
     public Rigidbody2D rb;
-    
+    public BoxCollider2D bc;
+
     public Sprite changeImg;
     public SpriteRenderer thisImg;
 
     void Awake()
     {
         time = 0;
-        rb = gameObject.GetComponent<Rigidbody2D>();
     }
     void Start()
     {
