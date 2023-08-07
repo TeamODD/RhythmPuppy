@@ -12,13 +12,16 @@ namespace World_2
     {
         [SerializeField]
         float[] startDelay;
+        [SerializeField] float duration;
 
         ArtifactManager artfMgr;
-        float duration;
+        UICanvas uiCanvas;
 
         void Start()
         {
-            artfMgr = transform.parent.GetComponent<PatternManager>().artfMgr;
+            PatternManager patternManager = transform.parent.GetComponent<PatternManager>();
+            artfMgr = patternManager.artfMgr;
+            uiCanvas = patternManager.uiCanvas;
 
             StartCoroutine(runPattern());
         }
@@ -46,9 +49,11 @@ namespace World_2
             turnOff();
             while (i < startDelay.Length)
             {
-                yield return new WaitForSeconds(startDelay[i++] - startDelay[i-1]);
+                yield return new WaitForSeconds(startDelay[i] - startDelay[i - 1]);
+                i++;
                 turnOn();
-                yield return new WaitForSeconds(startDelay[i++] - startDelay[i - 1]);
+                yield return new WaitForSeconds(startDelay[i] - startDelay[i - 1]);
+                i++;
                 turnOff();
             }
             yield return new WaitForSeconds(duration);
@@ -65,6 +70,7 @@ namespace World_2
             {
                 artfMgr.lampList[i].GetComponent<SpriteRenderer>().sprite = artfMgr.lampOn;
             }
+            uiCanvas.disableDarkEffect();
         }
 
         private void turnOff()
@@ -73,6 +79,7 @@ namespace World_2
             {
                 artfMgr.lampList[i].GetComponent<SpriteRenderer>().sprite = artfMgr.lampOff;
             }
+            uiCanvas.enableDarkEffect();
         }
     }
 }

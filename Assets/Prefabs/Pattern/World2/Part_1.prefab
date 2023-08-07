@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2987a6cd43ebc5c4dabc6d33282c748a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BGM: {fileID: 8300000, guid: 0004e8148b3c80d4c9d22a9c32d931d7, type: 3}
+  BGM: {fileID: 8300000, guid: 7c627e27a8a4ce743a2ebe064539d77d, type: 3}
   playlist:
   - prefab: {fileID: 1273078494639283698, guid: 599b16f22b2c1764e9f1bdfd48561f97, type: 3}
     type: 1

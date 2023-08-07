@@ -12,6 +12,7 @@ public class PatternManager : MonoBehaviour
     [SerializeField] GameObject patternPrefab;
 
     public ArtifactManager artfMgr;
+    public UICanvas uiCanvas;
 
     private Pattern1_a Pattern1_a;
     private float yPosition;

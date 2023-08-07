@@ -148,4 +148,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   runtime: 16
-  cooltime: 0.5

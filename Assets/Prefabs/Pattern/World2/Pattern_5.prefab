@@ -48,3 +48,4 @@ MonoBehaviour:
   angle: 60
   delta: 2
   cooltime: 0.5
+  duration: 20

@@ -12,10 +12,10 @@ namespace World_2
         [SerializeField] int angle;
         [SerializeField] int delta;
         [SerializeField] float cooltime;
+        [SerializeField] float duration;
 
         GameObject obstacleManager;
         ArtifactManager artfMgr;
-        float duration;
 
         void Start()
         {
