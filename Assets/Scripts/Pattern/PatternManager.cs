@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TimelineManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,7 +9,7 @@ using World_2;
 
 public class PatternManager : MonoBehaviour
 {
-    [SerializeField] GameObject pattern;
+    [SerializeField] GameObject patternPrefab;
 
     public ArtifactManager artfMgr;
 
@@ -22,8 +23,9 @@ public class PatternManager : MonoBehaviour
 
         if (scene.name.Equals("SceneStage2"))
         {
+
             artfMgr = FindObjectOfType<ArtifactManager>();
-            GameObject o = Instantiate(pattern);
+            GameObject o = Instantiate(patternPrefab);
             o.transform.SetParent(transform);
             o.SetActive(true);
         }

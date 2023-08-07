@@ -9,7 +9,7 @@ public class Pattern_6 : MonoBehaviour
 
     private GameObject player;
 
-    void OnEnable()
+    void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         StartCoroutine(runPattern());

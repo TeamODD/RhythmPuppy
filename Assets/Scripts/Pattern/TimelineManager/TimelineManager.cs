@@ -1,17 +1,32 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TimelineManager
 {
-   public delegate void Action(Pattern p, Timeline t);
+    [Serializable]
+    public class PatternAction
+    {
+        public PatternDetail type;
+        public UnityAction action;
+    }
 
-    [System.Serializable]
-    public class Pattern
+    [Serializable]
+    public class Playlist
     {
         public GameObject prefab;
+        public PatternAction[] patternInfo;
         [TimelineElementTitle()]
         public Timeline[] timeline;
-        public Action actionFunc;
+
+        public void defineAction(UnityAction func)
+        {
+            for (int i = 0; i < timeline.Length; i++)
+            {
+                timeline[i].defineAction(func);
+            }
+        }
 
         public void sortTimeline()
         {
@@ -40,14 +55,18 @@ namespace TimelineManager
 
                 if (timeline[i].detail.repeatNo == 0)
                 {
-                    actionFunc(this, timeline[i]);       
+                    /*actionFunc(this, timeline[i]);*/
+                    timeline[i].runAction();
                 }
                 else
                 {
+                    int n = timeline[i].detail.repeatNo;
                     float delay = timeline[i].detail.repeatDelayTime;
-                    for (int j = 0; j < timeline[i].detail.repeatNo; j++)
+                    for (int j = 0; j < n; j++)
                     {
-                        actionFunc(this, timeline[i]);
+                        /*actionFunc(this, timeline[i]);*/
+                        timeline[i].runAction();
+                        if (j == n) break;
                         yield return new WaitForSeconds(delay);
                         sum += delay;
                     }
@@ -57,15 +76,28 @@ namespace TimelineManager
         }
     }
 
-    [System.Serializable]
+    [Serializable]
     public class Timeline
     {
         [Tooltip("패턴 시작 시간")]
         public float startAt;
         public Detail detail;
+
+        UnityEvent action;
+
+        public void defineAction(UnityAction func)
+        {
+            action = new UnityEvent();
+            action.AddListener(func);
+        }
+
+        public void runAction()
+        {
+            action.Invoke();
+        }
     }
 
-    [System.AttributeUsage(System.AttributeTargets.Field,
+    [AttributeUsage(System.AttributeTargets.Field,
         AllowMultiple = false, Inherited = true)]
     public class PatternArrayElementTitleAttribute : PropertyAttribute
     {

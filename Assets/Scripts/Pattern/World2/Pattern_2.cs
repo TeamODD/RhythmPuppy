@@ -10,7 +10,7 @@ namespace World_2
 
         private GameObject ObstacleManager;
 
-        void OnEnable()
+        void Start()
         {
             ObstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager");
             StartCoroutine(runPattern());

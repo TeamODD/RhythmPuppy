@@ -15,7 +15,7 @@ namespace World_2
         private List<GameObject> objectList;
         private bool onExit = false;
 
-        void OnEnable()
+        void Start()
         {
             ObstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager");
             objectList = new List<GameObject>();

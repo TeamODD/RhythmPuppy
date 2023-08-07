@@ -14,7 +14,7 @@ namespace World_2
         GameObject obstacleManager;
         ArtifactManager artfMgr;
 
-        void OnEnable()
+        void Start()
         {
             obstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager");
             artfMgr = transform.parent.GetComponent<PatternManager>().artfMgr;

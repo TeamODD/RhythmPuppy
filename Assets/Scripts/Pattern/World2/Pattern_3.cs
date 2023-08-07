@@ -9,7 +9,7 @@ namespace World_2
     {
         ArtifactManager artfMgr;
 
-        void OnEnable()
+        void Start()
         {
             artfMgr = transform.parent.GetComponent<PatternManager>().artfMgr;
 

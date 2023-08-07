@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1434621901715454959
 Transform:
   m_ObjectHideFlags: 0
@@ -46,7 +46,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BGM: {fileID: 8300000, guid: 0004e8148b3c80d4c9d22a9c32d931d7, type: 3}
   patternList:
+  - {fileID: 1273078494639283698, guid: 599b16f22b2c1764e9f1bdfd48561f97, type: 3}
+  - {fileID: 301684448673772372, guid: 93739551ab2ea0b41a8a80386b051420, type: 3}
+  - {fileID: 1140727680767832825, guid: 3897701ccea922c4abc1dc9037b06cd4, type: 3}
+  - {fileID: 7938996007636120948, guid: 9b0da4571f3617c4db72596f97e2b226, type: 3}
+  - {fileID: 5713159027828826166, guid: a2754807d97924c41a609b4a4e247837, type: 3}
+  playlist:
   - prefab: {fileID: 1273078494639283698, guid: 599b16f22b2c1764e9f1bdfd48561f97, type: 3}
+    patternInfo:
+    - type: 1
     timeline:
     - startAt: 0.1
       detail:
@@ -55,12 +63,6 @@ MonoBehaviour:
         repeatNo: 0
         repeatDelayTime: 0
     - startAt: 2.1
-      detail:
-        detailType: 1
-        duration: 0
-        repeatNo: 0
-        repeatDelayTime: 0
-    - startAt: 10.1
       detail:
         detailType: 1
         duration: 0
@@ -78,6 +80,12 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
+    - startAt: 10.1
+      detail:
+        detailType: 1
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
     - startAt: 11.4
       detail:
         detailType: 2
@@ -90,15 +98,15 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
-    - startAt: 20.1
-      detail:
-        detailType: 3
-        duration: 0
-        repeatNo: 0
-        repeatDelayTime: 0
     - startAt: 18.1
       detail:
         detailType: 4
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 20.1
+      detail:
+        detailType: 3
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
@@ -211,6 +219,7 @@ MonoBehaviour:
         repeatNo: 0
         repeatDelayTime: 0
   - prefab: {fileID: 301684448673772372, guid: 93739551ab2ea0b41a8a80386b051420, type: 3}
+    patternInfo: []
     timeline:
     - startAt: 0.6
       detail:
@@ -225,6 +234,7 @@ MonoBehaviour:
         repeatNo: 7
         repeatDelayTime: 1
   - prefab: {fileID: 1140727680767832825, guid: 3897701ccea922c4abc1dc9037b06cd4, type: 3}
+    patternInfo: []
     timeline:
     - startAt: 14.3
       detail:
@@ -239,6 +249,7 @@ MonoBehaviour:
         repeatNo: 0
         repeatDelayTime: 0
   - prefab: {fileID: 7938996007636120948, guid: 9b0da4571f3617c4db72596f97e2b226, type: 3}
+    patternInfo: []
     timeline:
     - startAt: 15.6
       detail:
@@ -253,8 +264,9 @@ MonoBehaviour:
         repeatNo: 0
         repeatDelayTime: 0
   - prefab: {fileID: 5713159027828826166, guid: a2754807d97924c41a609b4a4e247837, type: 3}
+    patternInfo: []
     timeline:
-    - startAt: 16.1
+    - startAt: 187.1
       detail:
         detailType: 0
         duration: 0
@@ -350,7 +362,7 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
-    - startAt: 100
+    - startAt: 16.1
       detail:
         detailType: 0
         duration: 0
