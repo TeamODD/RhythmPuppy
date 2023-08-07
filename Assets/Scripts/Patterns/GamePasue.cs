@@ -43,6 +43,7 @@ public class GamePasue : MonoBehaviour
         if (stage1_2BGM != null && stage1_2BGM.isPlaying)
         {
             stage1_2BGM.Pause();
+            
         }
 
         // Option_Stage 씬을 로드합니다.
@@ -51,7 +52,7 @@ public class GamePasue : MonoBehaviour
         // 여기에 일시정지시 수행할 작업을 추가할 수 있습니다.
     }
 
-    private void ResumeGame()
+    public void ResumeGame()
     {
         Time.timeScale = 1f; // 시간 경과를 정상적으로 진행합니다.
         isPaused = false;
@@ -63,7 +64,7 @@ public class GamePasue : MonoBehaviour
         }
 
         // Option_Stage 씬을 언로드합니다.
-        SceneManager.UnloadScene("Option_Stage");
+        SceneManager.UnloadSceneAsync("Option_Stage");
 
         // 여기에 일시정지 해제 시 수행할 작업을 추가할 수 있습니다.
     }
