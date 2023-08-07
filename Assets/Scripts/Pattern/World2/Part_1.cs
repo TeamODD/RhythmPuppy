@@ -3,159 +3,85 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using TimelineManager;
+using System;
 
 namespace World_2
 {
     public class Part_1 : PatternBase
     {
-
-        public void ant()
+        public override void bindPatternAction()
         {
-            foreach (Playlist p in playlist)
-            {
-                foreach (Timeline t in p.timeline)
-                {
-                    definePatternAction(p, t);
-                }
-            }
+            bind.Add("Pattern_1a", runPattern_1a);
+            bind.Add("Pattern_1b", runPattern_1b);
+            bind.Add("Pattern_1c", runPattern_1c);
+            bind.Add("Pattern_1d", runPattern_1d);
+            bind.Add("Pattern_2", runPattern_2);
+            bind.Add("Pattern_3", runPattern_3);
+            bind.Add("Pattern_5", runPattern_5);
+            bind.Add("Pattern_6", runPattern_6);
         }
 
-        /*public UnityEngine.Events.UnityAction bindPatternAction(PatternCode c)
+        private void runPattern_1a(Playlist p, Timeline t)
         {
-            switch (c)
-            {
-                case PatternCode.Pattern1_A:
-                    return runPattern1_A;
-
-                case PatternCode.Pattern1_B:
-                    return runPattern1_B;
-
-                case PatternCode.Pattern1_C:
-                    return runPattern1_C;
-
-                case PatternCode.Pattern1_D:
-                    return runPattern1_D;
-
-                case PatternCode.Pattern2:
-                    return runPattern2;
-
-                case PatternCode.Pattern3:
-                    return runPattern3;
-
-                case PatternCode.Pattern5:
-                    return runPattern5;
-
-                case PatternCode.Pattern6:
-                    return runPattern6;
-            }
-            Playlist a = playlist[(int)c];
-        }*/
-
-        public override void definePatternAction(Playlist p, Timeline t)
-        {
-            switch (p.prefab.name)
-            {
-                case "Pattern_1":
-                    switch (t.detail.detailType)
-                    {
-                        case PatternDetail.a:
-                            t.defineAction(() => { });
-                            break;
-
-                        case PatternDetail.b:
-                            t.defineAction(() => { });
-                            break;
-
-                        case PatternDetail.c:
-                            t.defineAction(() => { });
-                            break;
-
-                        case PatternDetail.d:
-                            t.defineAction(() => { });
-                            break;
-
-                        default:
-                            break;
-                    }
-                    break;
-
-                case "Pattern_2":
-                    t.defineAction(() => { });
-                    break;
-
-                case "Pattern_3":
-                    t.defineAction(() => { });
-                    break;
-
-                case "Pattern_5":
-                    t.defineAction(() => { });
-                    break;
-
-                case "Pattern_6":
-                    t.defineAction(() => { });
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        private void runPattern1_a()
-        {
-            GameObject o = Instantiate(patternList[0]);
+            GameObject o = Instantiate(p.prefab);
             o.transform.SetParent(transform.parent);
-            o.GetComponent<Pattern_1>().setDetailType(PatternDetail.a);
+            o.GetComponent<Pattern_1>().setDetailType(PatternType.a);
             o.SetActive(true);
         }
 
-        private void runPattern1_b()
+        private void runPattern_1b(Playlist p, Timeline t)
         {
-            GameObject o = Instantiate(patternList[0]);
+            GameObject o = Instantiate(p.prefab);
             o.transform.SetParent(transform.parent);
-            o.GetComponent<Pattern_1>().setDetailType(PatternDetail.b);
+            o.GetComponent<Pattern_1>().setDetailType(PatternType.b);
             o.SetActive(true);
         }
 
-        private void runPattern1_c()
+        private void runPattern_1c(Playlist p, Timeline t)
         {
-            GameObject o = Instantiate(patternList[0]);
+            GameObject o = Instantiate(p.prefab);
             o.transform.SetParent(transform.parent);
-            o.GetComponent<Pattern_1>().setDetailType(PatternDetail.c);
+            o.GetComponent<Pattern_1>().setDetailType(PatternType.c);
             o.SetActive(true);
         }
 
-        private void runPattern1_d()
+        private void runPattern_1d(Playlist p, Timeline t)
         {
-            GameObject o = Instantiate(patternList[0]);
+            GameObject o = Instantiate(p.prefab);
             o.transform.SetParent(transform.parent);
-            o.GetComponent<Pattern_1>().setDetailType(PatternDetail.d);
+            o.GetComponent<Pattern_1>().setDetailType(PatternType.d);
             o.SetActive(true);
         }
 
-        private void runPattern2()
+        private void runPattern_2(Playlist p, Timeline t)
         {
-            GameObject o = Instantiate(patternList[1]);
+            GameObject o = Instantiate(p.prefab);
             o.transform.SetParent(transform.parent);
             o.SetActive(true);
         }
 
-        private void runPattern3()
+        private void runPattern_3(Playlist p, Timeline t)
         {
-            GameObject o = Instantiate(patternList[2]);
+            float duration = 0;
+            GameObject o = Instantiate(p.prefab);
+            o.transform.SetParent(transform.parent);
+            if (t.detail.endAt != 0)
+                o.GetComponent<Pattern_3>().setDuration(t.startAt, t.detail.endAt);
+            else if (t.detail.duration != 0)
+                o.GetComponent<Pattern_3>().setDuration(duration);
+            o.SetActive(true);
+        }
+
+        private void runPattern_5(Playlist p, Timeline t)
+        {
+            GameObject o = Instantiate(p.prefab);
             o.transform.SetParent(transform.parent);
             o.SetActive(true);
         }
 
-        private void runPattern5()
+        private void runPattern_6(Playlist p, Timeline t)
         {
-            GameObject o = Instantiate(patternList[3]);
-            o.transform.SetParent(transform.parent);
-            o.SetActive(true);
-        }
-
-        private void runPattern6()
-        {
-            GameObject o = Instantiate(patternList[4]);
+            GameObject o = Instantiate(p.prefab);
             o.transform.SetParent(transform.parent);
             o.SetActive(true);
         }

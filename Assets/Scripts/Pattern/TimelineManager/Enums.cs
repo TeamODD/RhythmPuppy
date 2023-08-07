@@ -3,6 +3,11 @@ namespace TimelineManager
     public enum PatternType
     {
         None,
+        a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+    }
+    /*public enum PatternType
+    {
+        None,
         Pattern01,
         Pattern02,
         Pattern03,
@@ -23,10 +28,5 @@ namespace TimelineManager
         Pattern18,
         Pattern19,
         Pattern20,
-    }
-    public enum PatternDetail
-    {
-        None,
-        a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
-    }
+    }*/
 }

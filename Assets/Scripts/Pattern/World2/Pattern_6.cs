@@ -33,6 +33,7 @@ public class Pattern_6 : MonoBehaviour
         catObject.GetComponent<Obstacles.Cat_2>().setDir(dir);
         catObject.SetActive(true);
 
+        Destroy(gameObject);
         yield break;
     }
 }

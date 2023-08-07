@@ -9,8 +9,8 @@ using Unity.VisualScripting;
 
 namespace TimelineManager
 {
-    [CustomPropertyDrawer(typeof(PatternArrayElementTitleAttribute))]
-    public class PatternArrayDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(PlaylistElementNameAttribute))]
+    public class PlaylistDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -19,13 +19,13 @@ namespace TimelineManager
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            string newLabel = "";
             Playlist p = (Playlist)property.GetUnderlyingValue();
-            string newLabel = p.prefab.name;
-
             if (p == null || p.prefab == null)
-            {
                 newLabel = label.text;
-            }
+            else
+                newLabel = p.ToString();
+
             EditorGUI.PropertyField(position, property, new GUIContent(newLabel, label.tooltip), true);
         }
     }
@@ -40,38 +40,31 @@ namespace TimelineManager
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            string[] propName = { "startAt", "detail.detailType", "detail.duration", "detail.repeatNo", "detail.repeatDelayTime" };
-            string newLabel = "", pathName = property.propertyPath + ".";
+            Timeline t = (Timeline)property.GetUnderlyingValue();
+            string newLabel = "";
 
-            float startAt = property.serializedObject.FindProperty(pathName + propName[0]).floatValue;
+            newLabel += t.startAt.ToString() + "段";
 
-            Detail detail = new Detail(
-                    (PatternDetail)property.serializedObject.FindProperty(pathName + propName[1]).enumValueIndex,
-                    property.serializedObject.FindProperty(pathName + propName[2]).floatValue,
-                    property.serializedObject.FindProperty(pathName + propName[3]).intValue,
-                    property.serializedObject.FindProperty(pathName + propName[4]).floatValue
-                );
-
-            if (detail.detailType != PatternDetail.None)
-                newLabel += "(" + detail.detailType.ToString().ToUpper() + ") ";
-            newLabel += startAt.ToString() + "段";
-
-            if (detail.duration != 0)
+            if (t.detail.endAt != 0)
             {
-                if (detail.repeatNo != 0 && detail.repeatDelayTime != 0)
+                newLabel += " ~ " + t.detail.endAt.ToString() + "段";
+            }
+            else if (t.detail.duration != 0)
+            {
+                if (t.detail.repeatNo != 0 && t.detail.repeatDelayTime != 0)
                 {
-                    newLabel += " ~ " + (startAt + detail.repeatNo * (detail.duration + detail.repeatDelayTime)).ToString() + "段";
+                    newLabel += " ~ " + (t.startAt + t.detail.repeatNo * (t.detail.duration + t.detail.repeatDelayTime)).ToString() + "段";
                 }
                 else
                 {
-                    newLabel += " ~ " + (startAt + detail.duration).ToString() + "段";
+                    newLabel += " ~ " + (t.startAt + t.detail.duration).ToString() + "段";
                 }
             }
             else
             {
-                if (detail.repeatNo != 0 && detail.repeatDelayTime != 0)
+                if (t.detail.repeatNo != 0 && t.detail.repeatDelayTime != 0)
                 {
-                    newLabel += " ~ " + (startAt + detail.repeatDelayTime * detail.repeatNo).ToString() + "段";
+                    newLabel += " ~ " + (t.startAt + t.detail.repeatDelayTime * t.detail.repeatNo).ToString() + "段";
                 }
             }
 

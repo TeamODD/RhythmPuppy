@@ -18,14 +18,6 @@ namespace Obstacles
             GetComponent<Rigidbody2D>().AddForce(transform.up * force, ForceMode2D.Impulse);
         }
 
-        void FixedUpdate()
-        {
-            if(transform.position.y < -1.5f)
-            {
-                Destroy(gameObject);
-            }
-        }
-
         void OnTriggerEnter2D(Collider2D col)
         {
             GameObject o = col.transform.parent.gameObject;

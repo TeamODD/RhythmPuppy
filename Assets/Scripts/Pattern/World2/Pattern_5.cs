@@ -1,3 +1,4 @@
+using Obstacles;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.FullSerializer;
@@ -10,9 +11,11 @@ namespace World_2
         [SerializeField] GameObject ratSwarm;
         [SerializeField] int angle;
         [SerializeField] int delta;
+        [SerializeField] float cooltime;
 
         GameObject obstacleManager;
         ArtifactManager artfMgr;
+        float duration;
 
         void Start()
         {
@@ -22,11 +25,23 @@ namespace World_2
             StartCoroutine(runPattern());
         }
 
+        public void setDuration(float duration)
+        {
+            this.duration = duration;
+        }
+
+        public void setDuration(float start, float end)
+        {
+            this.duration = end - start + cooltime;
+        }
+
         private IEnumerator runPattern()
         {
             bool r = Random.Range(0, 2) == 0 ? true : false;
             GameObject o = Instantiate(ratSwarm);
             o.transform.SetParent(obstacleManager.transform);
+            o.GetComponent<RatSwarm>().setCooltime(cooltime);
+            // set spawn position of ratSwarm
             if (r)
             {
                 // Right
@@ -41,6 +56,10 @@ namespace World_2
                 StartCoroutine(shakeManhole(artfMgr.L_Manhole));
             }
             o.SetActive(true);
+
+            yield return new WaitForSeconds(duration);
+            Destroy(o);
+            Destroy(gameObject);
             yield break;
         }
 

@@ -7,9 +7,9 @@ namespace TimelineManager
     [System.Serializable]
     public struct Detail
     {
-        [Header("Detail Type")]
-        [Tooltip("패턴 세부 타입")]
-        public PatternDetail detailType;
+        [Header("End At")]
+        [Tooltip("패턴 종료 시간")]
+        public float endAt;
 
         [Header("Duration")]
         [Tooltip("패턴 지속 시간")]
@@ -21,9 +21,9 @@ namespace TimelineManager
         [Tooltip("반복 딜레이")]
         public float repeatDelayTime;
 
-        public Detail(PatternDetail detailType, float duration, int repeatNo, float repeatDelayTime)
+        public Detail(float endAt, float duration, int repeatNo, float repeatDelayTime)
         {
-            this.detailType = detailType;
+            this.endAt = endAt;
             this.duration = duration;
             this.repeatNo = repeatNo;
             this.repeatDelayTime = repeatDelayTime;

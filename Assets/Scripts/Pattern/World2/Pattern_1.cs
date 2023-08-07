@@ -8,15 +8,17 @@ namespace World_2
 {
     public class Pattern_1 : MonoBehaviour
     {
-        [SerializeField] PatternDetail detailType;
+        [SerializeField] PatternType detailType;
         [SerializeField] GameObject cat;
 
-        private GameObject ObstacleManager;
-        private List<GameObject> objectList;
-        private bool onExit = false;
+        GameObject ObstacleManager;
+        List<GameObject> objectList;
+        Coroutine coroutine;
+        bool isRunning;
 
         void Start()
         {
+            isRunning = false;
             ObstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager");
             objectList = new List<GameObject>();
 
@@ -25,9 +27,22 @@ namespace World_2
 
         void Update()
         {
-            if(onExit)
+            if (isRunning && objectList.Count == 0)
             {
                 Destroy(gameObject);
+            }
+        }
+
+        void FixedUpdate()
+        {
+            if (!isRunning) return;
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                if (objectList[i].transform.position.y < -1.5f)
+                {
+                    Destroy(objectList[i]);
+                    objectList.RemoveAt(i);
+                }
             }
         }
 
@@ -35,29 +50,26 @@ namespace World_2
         {
             switch(detailType)
             {
-                case PatternDetail.a:
-                    runPatternA();
+                case PatternType.a:
+                    coroutine = StartCoroutine(runPatternA());
                     break;
 
-                case PatternDetail.b:
-                    runPatternB();
+                case PatternType.b:
+                    coroutine = StartCoroutine(runPatternB());
                     break;
 
-                case PatternDetail.c:
-                    runPatternC();
+                case PatternType.c:
+                    coroutine = StartCoroutine(runPatternC());
                     break;
 
-                case PatternDetail.d:
-                    runPatternD();
-                    break;
-
-                default:
-                    onExit = true;
+                case PatternType.d:
+                    coroutine = StartCoroutine(runPatternD());
                     break;
             }
+            isRunning = true;
         }
 
-        public void setDetailType(PatternDetail detail)
+        public void setDetailType(PatternType detail)
         {
             this.detailType = detail;
         }
@@ -85,8 +97,6 @@ namespace World_2
                     i = -1;
                 }
             }
-
-            onExit = true;
             yield break;
         }
 
@@ -106,8 +116,6 @@ namespace World_2
                     i = -1;
                 }
             }
-
-            onExit = true;
             yield break;
         }
 
@@ -125,8 +133,6 @@ namespace World_2
                     i = -1;
                 }
             }
-
-            onExit = true;
             yield break;
         }
 
@@ -146,11 +152,7 @@ namespace World_2
                     i = -1;
                 }
             }
-
-            onExit = true;
             yield break;
         }
-
-
     }
 }

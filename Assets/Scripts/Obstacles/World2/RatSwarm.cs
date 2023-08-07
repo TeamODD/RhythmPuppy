@@ -6,12 +6,11 @@ namespace Obstacles
 {
     public class RatSwarm : MonoBehaviour
     {
-        [SerializeField] float speed = 3f;
-        [SerializeField] float runtime = 16f;
-        [SerializeField] float cooltime;
+        [SerializeField] float speed;
+        [SerializeField] float runtime;
 
+        float cooltime, dir;
         bool cooldown;
-        float dir;
         GameObject player;
 
         void OnEnable()
@@ -41,17 +40,16 @@ namespace Obstacles
             }
         }
 
+        public void setCooltime(float cooltime)
+        {
+            this.cooltime = cooltime;
+        }
+
         private IEnumerator runCooldown()
         {
             yield return new WaitForSeconds(cooltime);
             cooldown = false;
-            Invoke("destroySelf", runtime);
             yield break;
-        }
-
-        private void destroySelf()
-        {
-            Destroy(gameObject);
         }
     }
 }

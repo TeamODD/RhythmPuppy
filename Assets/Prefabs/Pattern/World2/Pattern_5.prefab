@@ -45,4 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ratSwarm: {fileID: 4216593479806984942, guid: 12579abe159e059469538a414fb31964, type: 3}
-  time: 16
+  angle: 60
+  delta: 2
+  cooltime: 0.5

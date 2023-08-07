@@ -8,7 +8,7 @@ namespace World_2
     {
         [SerializeField] GameObject paw;
 
-        private GameObject ObstacleManager;
+        GameObject ObstacleManager;
 
         void Start()
         {
@@ -31,6 +31,7 @@ namespace World_2
 
             yield return new WaitForSeconds(1f);
             Destroy(o);
+            Destroy(gameObject);
 
             yield break;
         }

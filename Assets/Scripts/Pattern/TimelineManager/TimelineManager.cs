@@ -2,30 +2,24 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace TimelineManager
 {
-    [Serializable]
-    public class PatternAction
-    {
-        public PatternDetail type;
-        public UnityAction action;
-    }
 
     [Serializable]
     public class Playlist
     {
         public GameObject prefab;
-        public PatternAction[] patternInfo;
+        public PatternType type;
         [TimelineElementTitle()]
         public Timeline[] timeline;
 
-        public void defineAction(UnityAction func)
+        Action<Playlist, Timeline> PatternAction;
+
+        public void defineAction(Action<Playlist, Timeline> action)
         {
-            for (int i = 0; i < timeline.Length; i++)
-            {
-                timeline[i].defineAction(func);
-            }
+            PatternAction = action;
         }
 
         public void sortTimeline()
@@ -43,8 +37,22 @@ namespace TimelineManager
             }
         }
 
+        public override string ToString()
+        {
+            return type == PatternType.None ? prefab.name : prefab.name + type.ToString();
+        }
+
         public IEnumerator Run()
         {
+            if(PatternAction == null)
+            {
+                Debug.Log("Current Scene Name : " + SceneManager.GetActiveScene().name);
+                string name = type == PatternType.None ? prefab.name : prefab.name + "-" + type.ToString();
+                string log = "Fatal Error : can't execute " + name + " because PattenAction is null.";
+                Debug.Log(log);
+                Application.Quit();
+            }
+
             float sum = 0f;
 
             for (int i = 0; i < timeline.Length; i++) 
@@ -55,17 +63,15 @@ namespace TimelineManager
 
                 if (timeline[i].detail.repeatNo == 0)
                 {
-                    /*actionFunc(this, timeline[i]);*/
-                    timeline[i].runAction();
+                    PatternAction(this, timeline[i]);
                 }
                 else
                 {
                     int n = timeline[i].detail.repeatNo;
                     float delay = timeline[i].detail.repeatDelayTime;
-                    for (int j = 0; j < n; j++)
+                    for (int j = 0; j < n; j++) 
                     {
-                        /*actionFunc(this, timeline[i]);*/
-                        timeline[i].runAction();
+                        PatternAction(this, timeline[i]);
                         if (j == n) break;
                         yield return new WaitForSeconds(delay);
                         sum += delay;
@@ -82,26 +88,13 @@ namespace TimelineManager
         [Tooltip("패턴 시작 시간")]
         public float startAt;
         public Detail detail;
-
-        UnityEvent action;
-
-        public void defineAction(UnityAction func)
-        {
-            action = new UnityEvent();
-            action.AddListener(func);
-        }
-
-        public void runAction()
-        {
-            action.Invoke();
-        }
     }
 
     [AttributeUsage(System.AttributeTargets.Field,
         AllowMultiple = false, Inherited = true)]
-    public class PatternArrayElementTitleAttribute : PropertyAttribute
+    public class PlaylistElementNameAttribute : PropertyAttribute
     {
-        public PatternArrayElementTitleAttribute() { }
+        public PlaylistElementNameAttribute() { }
     }
 
     [System.AttributeUsage(System.AttributeTargets.Field,

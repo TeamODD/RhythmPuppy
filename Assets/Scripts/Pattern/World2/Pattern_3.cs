@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,34 +9,52 @@ namespace World_2
 {
     public class Pattern_3 : MonoBehaviour
     {
+
+        [SerializeField]
+        float[] startDelay;
+
         ArtifactManager artfMgr;
+        float duration;
 
         void Start()
         {
             artfMgr = transform.parent.GetComponent<PatternManager>().artfMgr;
 
-            StartCoroutine(activate());
+            StartCoroutine(runPattern());
         }
 
-        private IEnumerator activate()
+        public void setDuration(float duration)
         {
+            this.duration = duration;
+        }
+
+        public void setDuration(float start, float end)
+        {
+            this.duration = end - start + startDelay.Sum();
+        }
+
+        private IEnumerator runPattern()
+        {
+            int i = 0;
+
             turnOff();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(startDelay[i++]);
             turnOn();
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(startDelay[i++]);
             turnOff();
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(startDelay[i++]);
             turnOn();
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(startDelay[i++]);
             turnOff();
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(startDelay[i++]);
             turnOn();
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(startDelay[i++]);
             turnOff();
 
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(duration - startDelay.Sum());
             turnOn();
 
+            yield return new WaitForSeconds(1);
             Destroy(gameObject);
             yield break;
         }
