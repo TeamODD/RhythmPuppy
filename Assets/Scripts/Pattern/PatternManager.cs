@@ -22,7 +22,7 @@ public class PatternManager : MonoBehaviour
         Scene scene = SceneManager.GetActiveScene();
         //Pattern1_a.BeeMove();
 
-        if (scene.name.Equals("SceneStage2"))
+        if (scene.name.Equals("World2"))
         {
 
             artfMgr = FindObjectOfType<ArtifactManager>();
