@@ -280,7 +280,7 @@ MonoBehaviour:
   - prefab: {fileID: 5713159027828826166, guid: a2754807d97924c41a609b4a4e247837, type: 3}
     type: 0
     timeline:
-    - startAt: 187.1
+    - startAt: 16.1
       detail:
         endAt: 0
         duration: 0
@@ -371,12 +371,6 @@ MonoBehaviour:
         repeatNo: 0
         repeatDelayTime: 0
     - startAt: 78.1
-      detail:
-        endAt: 0
-        duration: 0
-        repeatNo: 0
-        repeatDelayTime: 0
-    - startAt: 16.1
       detail:
         endAt: 0
         duration: 0

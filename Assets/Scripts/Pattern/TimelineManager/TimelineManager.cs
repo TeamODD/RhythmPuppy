@@ -44,38 +44,21 @@ namespace TimelineManager
 
         public IEnumerator Run()
         {
-            if(PatternAction == null)
+            int i = 0, j = 0;
+            for (; i < timeline.Length; i++)
             {
-                Debug.Log("Current Scene Name : " + SceneManager.GetActiveScene().name);
-                string name = type == PatternType.None ? prefab.name : prefab.name + "-" + type.ToString();
-                string log = "Fatal Error : can't execute " + name + " because PattenAction is null.";
-                Debug.Log(log);
-                Application.Quit();
-            }
+                if (i == 0)
+                    yield return new WaitForSeconds(timeline[i].startAt);
+                else
+                    yield return new WaitForSeconds(timeline[i].startAt - timeline[i-1].startAt + ((j-1) * timeline[i-1].detail.repeatDelayTime));
 
-            float sum = 0f;
-
-            for (int i = 0; i < timeline.Length; i++) 
-            {
-                float startAt = timeline[i].startAt;
-                yield return new WaitForSeconds(startAt - sum);
-                sum += startAt;
-
-                if (timeline[i].detail.repeatNo == 0)
+                j = 0;
+                // it loops at least once
+                while (j < timeline[i].detail.repeatNo + 1)
                 {
                     PatternAction(this, timeline[i]);
-                }
-                else
-                {
-                    int n = timeline[i].detail.repeatNo;
-                    float delay = timeline[i].detail.repeatDelayTime;
-                    for (int j = 0; j < n; j++) 
-                    {
-                        PatternAction(this, timeline[i]);
-                        if (j == n) break;
-                        yield return new WaitForSeconds(delay);
-                        sum += delay;
-                    }
+                    if (timeline[i].detail.repeatNo <= ++j) break;
+                    yield return new WaitForSeconds(timeline[i].detail.repeatDelayTime);
                 }
             }
             yield break;

@@ -25,14 +25,6 @@ namespace World_2
             runPattern();
         }
 
-        void Update()
-        {
-            if (isRunning && objectList.Count == 0)
-            {
-                Destroy(gameObject);
-            }
-        }
-
         void FixedUpdate()
         {
             if (!isRunning) return;
@@ -42,8 +34,11 @@ namespace World_2
                 {
                     Destroy(objectList[i]);
                     objectList.RemoveAt(i);
+                    i--;
                 }
             }
+            if (objectList.Count <= 0)
+                Destroy(gameObject);
         }
 
         private void runPattern()
