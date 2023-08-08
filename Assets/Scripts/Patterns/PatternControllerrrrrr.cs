@@ -40,11 +40,13 @@ public class PatternControllerrrrrr : MonoBehaviour
         94.2f, 95.2f, 96.3f, 97.3f,
         98.4f, 99.4f
     };
+
     private List<float> pattern7aTimings = new List<float>
     {
         0f, 4.1f, 8.2f,
         68.8f, 72.9f, 77.0f
     };
+
     private List<float> pattern7bTimings = new List<float>
     {
         12.3f, 81.1f
