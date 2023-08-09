@@ -8,6 +8,7 @@ using World_2;
 public abstract class PatternBase : MonoBehaviour
 {
     [SerializeField] AudioClip BGM;
+    [SerializeField] float startDelay;
     [PlaylistElementName()]
     [SerializeField]
     protected Playlist[] playlist;
@@ -37,7 +38,7 @@ public abstract class PatternBase : MonoBehaviour
     {
         musicManager = GameObject.FindGameObjectWithTag("MusicManager").GetComponent<AudioSource>();
         musicManager.clip = BGM;
-        runPlaylist();
+        Invoke("runPlaylist", startDelay);
     }
 
     void Update()

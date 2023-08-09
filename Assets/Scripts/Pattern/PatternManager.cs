@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using TimelineManager;
+using UnityEditor.SearchService;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 using World_2;
 
@@ -18,24 +18,24 @@ public class PatternManager : MonoBehaviour
 
     private Pattern1_a Pattern1_a;
     private float yPosition;
+    UnityEngine.SceneManagement.Scene scene;
 
     void Start()
     {
-        Scene scene = SceneManager.GetActiveScene();
         //Pattern1_a.BeeMove();
 
         if (scene.name.Equals("World2"))
         {
-
             artfMgr = FindObjectOfType<ArtifactManager>();
             GameObject o = Instantiate(patternPrefab);
             o.transform.SetParent(transform);
             o.SetActive(true);
         }
     }
-    
     void Awake()
     {
+        scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        if (scene.name.Equals("World2")) return;
         Bee();
         count = 1;
     }
@@ -49,6 +49,8 @@ public class PatternManager : MonoBehaviour
     }
     void Update()
     {
+        if (scene.name.Equals("World2")) return;
+
         if (count == 32)
             CancelInvoke("Bee");
     }

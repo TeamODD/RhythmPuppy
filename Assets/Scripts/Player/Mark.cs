@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Mark : MonoBehaviour
 {
-
-    private GameObject player;
+    GameObject player;
 
     void OnEnable()
     {
