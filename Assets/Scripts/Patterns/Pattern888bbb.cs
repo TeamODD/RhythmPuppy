@@ -321,7 +321,6 @@ public class Pattern888bbb : MonoBehaviour
             // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
             if (!IsWithinMapBounds(obj.transform.position))
             {
-                Debug.Log("패턴 종료 : " + GetElapsedTime());
                 Destroy(obj);
                 yield break;
             }

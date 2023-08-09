@@ -5,29 +5,65 @@ using UnityEngine.UI;
 
 public class GameProgress : MonoBehaviour
 {
-    public AudioSource musicAudioSource; // 음악을 재생하는 AudioSource 컴포넌트
-    public Image fillImage; // 채움 정도를 나타내는 이미지
+    public AudioSource musicAudioSource;
+    public Image fillImage;
+    public GameObject playerbudge;
+    public RectTransform gameprogressguage;
+    public GameObject emptysavepoint1;
+    public GameObject emptysavepoint2;
+    public GameObject emptysavepoint3;
+    public GameObject fullsavepoint1;
+    public GameObject fullsavepoint2;
+    public GameObject fullsavepoint3;
 
-    private float musicLength; // 음악의 길이 (초)
-    private float beatInterval; // 비트 간격 (초)
+
+    private float musicLength;
+    private Vector3 initialPlayerBudgePosition;
+    private float targetDistance; // 이동할 거리
 
     private void Start()
     {
-        // 음악의 길이와 비트 간격을 계산합니다.
         musicLength = musicAudioSource.clip.length;
-        beatInterval = musicLength / (float) Time.time; // numberOfBeats를 정확한 비트 수로 변경하세요.
 
-        // 음악을 재생합니다.
         musicAudioSource.Play();
+
+        initialPlayerBudgePosition = playerbudge.transform.position;
+
+        targetDistance = gameprogressguage.rect.width;
     }
 
     private void Update()
     {
-        // 현재 음악의 재생 위치를 계산합니다.
         float currentMusicPosition = musicAudioSource.time;
 
-        // 이미지의 채움 정도를 현재 음악의 재생 위치에 맞게 조정합니다.
         float fillAmount = currentMusicPosition / musicLength;
         fillImage.fillAmount = fillAmount;
+
+        if (fillAmount >= 1)
+        {
+            fillAmount = 1;
+        }
+
+        MovePlayerBudge(currentMusicPosition);
+        SavePointChecking();
+    }
+
+    private void MovePlayerBudge(float currentMusicPosition)
+    {
+        float normalizedPosition = Mathf.Clamp01(currentMusicPosition / musicLength);
+        float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, initialPlayerBudgePosition.x + targetDistance, normalizedPosition);
+        Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
+
+        playerbudge.transform.position = newPosition;
+
+        if (currentMusicPosition >= musicLength)
+        {
+            playerbudge.transform.position = new Vector3(initialPlayerBudgePosition.x + targetDistance, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
+        }
+    }
+
+    private void SavePointChecking()
+    {
+        
     }
 }
