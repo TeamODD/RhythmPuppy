@@ -1368,12 +1368,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1155446038}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 100658219ba8d5f47ba8439b67d8d220, type: 3}
+  m_Script: {fileID: 11500000, guid: e5369d951f7d4624db9d0cdd4752e230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patternPrefab: {fileID: 1434621901715454958, guid: 0157883f8e29a9e4489f0722821c1078, type: 3}
-  artfMgr: {fileID: 324388241}
-  uiCanvas: {fileID: 49962679}
+  pattern: {fileID: 1434621901715454958, guid: 0157883f8e29a9e4489f0722821c1078, type: 3}
 --- !u!4 &1155446040
 Transform:
   m_ObjectHideFlags: 0
@@ -2069,6 +2067,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7601405566221232238, guid: 5f150ae1df52bc34ab926a030206334a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 4db6f3afc46fa5b4697f316bdb676942, type: 2}
     - target: {fileID: 8770065118760300558, guid: 5f150ae1df52bc34ab926a030206334a, type: 3}
       propertyPath: m_Name
       value: Player
@@ -2218,6 +2220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   squarePrefab: {fileID: 0}
+  spacing: 0.1
 --- !u!4 &1667242972
 Transform:
   m_ObjectHideFlags: 0
