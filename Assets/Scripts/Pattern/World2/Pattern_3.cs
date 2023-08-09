@@ -41,7 +41,6 @@ namespace World_2
             if (startDelay.Length % 2 == 0)
             {
                 throw new Exception("월드2-1 '패턴3' 프리팹의 startDelay 배열을 검사해주세요.");
-                yield break;
             }
 
             int i = 0;
