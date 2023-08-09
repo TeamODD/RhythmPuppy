@@ -977,7 +977,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 515140142}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.012417916}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2082,12 +2082,12 @@ PrefabInstance:
     - target: {fileID: 9102417089283692648, guid: 5f150ae1df52bc34ab926a030206334a, type: 3}
       propertyPath: projectile
       value: 
-      objectReference: {fileID: 1643924183}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f150ae1df52bc34ab926a030206334a, type: 3}
 --- !u!4 &1573977091 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7601405566221232237, guid: 5f150ae1df52bc34ab926a030206334a, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5027655221936976294, guid: 5f150ae1df52bc34ab926a030206334a, type: 3}
   m_PrefabInstance: {fileID: 1573977090}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1610098235
@@ -2133,6 +2133,42 @@ PrefabInstance:
     - target: {fileID: 5059415101699309088, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
       propertyPath: m_Name
       value: Projectile
+      objectReference: {fileID: 0}
+    - target: {fileID: 6748535378742040864, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6748535378742040864, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.22696711
+      objectReference: {fileID: 0}
+    - target: {fileID: 6748535378742040864, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.22696711
+      objectReference: {fileID: 0}
+    - target: {fileID: 6748535378742040864, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5913
+      objectReference: {fileID: 0}
+    - target: {fileID: 6748535378742040864, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.014
+      objectReference: {fileID: 0}
+    - target: {fileID: 6748535378742040864, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.217
+      objectReference: {fileID: 0}
+    - target: {fileID: 6748535378742040877, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6748535378742040877, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
+      propertyPath: m_SortingOrder
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6748535378742040877, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 111921613
       objectReference: {fileID: 0}
     - target: {fileID: 7894071978993996910, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
       propertyPath: m_RootOrder
@@ -2182,12 +2218,7 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
 --- !u!4 &1643924182 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7894071978993996910, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
-  m_PrefabInstance: {fileID: 1643924181}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1643924183 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5059415101699309088, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
+  m_CorrespondingSourceObject: {fileID: 6748535378742040864, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
   m_PrefabInstance: {fileID: 1643924181}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1667242970
@@ -2597,7 +2628,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1762480717
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 6779949062233181426, guid: 938ad9303250e2a4cb147dd1364ad5dc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
