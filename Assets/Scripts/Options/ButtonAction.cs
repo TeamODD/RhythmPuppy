@@ -1,26 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class ButtonAction : MonoBehaviour
 {
-    // Start is called before the first frame update
     [SerializeField] GameObject Option;
+    GameObject gameplaymanager;
 
-    
-    void Start()
+    public void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        gameplaymanager = GameObject.Find("GamePlayManager");
     }
 
     public void onContinue()
     {
         Option.SetActive(false);
+        gameplaymanager.GetComponent<GamePasue>().ResumeGame();
     }
 }
