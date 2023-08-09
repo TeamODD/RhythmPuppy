@@ -9,6 +9,7 @@ TagManager:
   - PatternManager
   - ObstacleManager
   - MusicManager
+  - LampLight
   layers:
   - Default
   - TransparentFX
@@ -51,6 +52,9 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 111921613
     locked: 0
   - name: UI
     uniqueID: 1762480717

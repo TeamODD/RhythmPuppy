@@ -30,7 +30,7 @@ namespace World_2
             if (!isRunning) return;
             for (int i = 0; i < objectList.Count; i++)
             {
-                if (objectList[i].transform.position.y < -1.5f)
+                if (objectList[i].transform.position.y < -2f)
                 {
                     Destroy(objectList[i]);
                     objectList.RemoveAt(i);
@@ -75,7 +75,7 @@ namespace World_2
 
             GameObject o = Instantiate(cat) as GameObject;
             o.transform.SetParent(ObstacleManager.transform);
-            o.transform.position = new Vector3(r, -1, 0);
+            o.transform.position = new Vector3(r, o.transform.position.y, 0);
             o.SetActive(true);
             return o;
         }
