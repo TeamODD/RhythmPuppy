@@ -8,7 +8,7 @@ public class Pattern2_b : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField]
     private float power;
-    private float RotateSpeed;
+    // private float RotateSpeed;
     private float time;
 
     void Awake()
@@ -19,7 +19,7 @@ public class Pattern2_b : MonoBehaviour
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         
-        RotateSpeed = 540;
+        // RotateSpeed = 540;
         //1초 동안 맵 밖에서 굴러가서 경고문보다 1초 늦게 도착 후 4초 동안 맵 안에서 굴러감.
         Destroy(gameObject, 4.5f);
     }

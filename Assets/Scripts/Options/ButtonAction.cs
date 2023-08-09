@@ -4,18 +4,7 @@ using TimelineManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-<<<<<<<< HEAD:Assets/Scripts/Options/ButtonAction.cs
-public class ButtonAction : MonoBehaviour
-{
-    // Start is called before the first frame update
-    [SerializeField] GameObject Option;
 
-    
-    void Start()
-    {
-        
-    }
-========
 using World_2;
 
 public class PatternManager : MonoBehaviour
@@ -35,7 +24,6 @@ public class PatternManager : MonoBehaviour
     {
         Scene scene = SceneManager.GetActiveScene();
         //Pattern1_a.BeeMove();
->>>>>>>> dev:Assets/Scripts/Pattern/PatternManager.cs
 
         if (scene.name.Equals("World2"))
         {
@@ -62,17 +50,15 @@ public class PatternManager : MonoBehaviour
     }
     void Update()
     {
-<<<<<<<< HEAD:Assets/Scripts/Options/ButtonAction.cs
         
     }
 
     public void onContinue()
     {
-        Option.SetActive(false);
-========
+        //Option.SetActive(false);
+
         if (count == 32)
             CancelInvoke("Bee");
->>>>>>>> dev:Assets/Scripts/Pattern/PatternManager.cs
     }
     //처음 두 마리 붙어서 나옴(가로)
 }

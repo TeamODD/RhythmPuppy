@@ -5,47 +5,47 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Header("기본 정보")]
+    [Tooltip("체력")] public int health;
 
-    [SerializeField, Tooltip("체력")]
-    protected int health;
-
-    [SerializeField, Tooltip("스태미나")]
-    protected float stamina;
+    [Tooltip("스태미나")] public float stamina;
 
     [SerializeField, Tooltip("기본 이동속도")]
-    protected float speed;
+    float speed;
 
-    [SerializeField, Tooltip("점프 입력 시 y축으로 받을 힘(Force)")] 
-    protected float jumpForce;
+    [Header("세부 정보")]
+    [SerializeField, Tooltip("점프 입력 시 y축으로 받을 힘(Force)")]
+    float jumpForce;
 
-    [SerializeField, Tooltip("대시 입력 시 x축으로 받을 힘(Force)")]  
-    protected float dashForce;
+    [SerializeField, Tooltip("대시 입력 시 x축으로 받을 힘(Force)")]
+    float dashForce;
 
-    [SerializeField, Tooltip("대시 소모 시간")]  
-    protected float dashTime;
+    [SerializeField, Tooltip("대시 소모 시간")]
+    float dashTime;
 
-    [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]  
-    protected float dashCooldown;
-    
-    [SerializeField, Header("투사체 오브젝트")]
-    protected GameObject projectile;
+    [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]
+    float dashCooldown;
 
-    [SerializeField, Header("목 오브젝트")]
-    protected GameObject neck;
+    [Header("투사체 오브젝트")]
+    [SerializeField] GameObject projectile;
+
+    [Header("목 오브젝트")]
+    [SerializeField] GameObject neck;
 
     [SerializeField, Tooltip("투사체 발사 시 적용되는 힘(Force)")]
-    protected float shootForce;
+    float shootForce;
 
     [SerializeField, Tooltip("발사 종료 후 재사용 대기시간")]
-    protected float shootCooldown;
+    float shootCooldown;
 
-    private Rigidbody2D rig2D;
-    private Rigidbody2D projectileRig2D;
-    private Animator anim;
-    private bool onDash, onJump, onShoot, onCancel;
-    private bool isProjectileFlying, isShootCooldown;
-    private Vector3 mousePos;
-    private Vector3 neckPos;
+    Rigidbody2D rig2D;
+    Rigidbody2D projectileRig2D;
+    Animator anim;
+    bool onDash, onJump, onShoot, onCancel;
+    bool isProjectileFlying, isShootCooldown;
+    Vector3 mousePos;
+    Vector3 neckPos;
+    HPManager hpManager;
 
     void Start()
     {
@@ -55,8 +55,10 @@ public class Player : MonoBehaviour
         onDash = onJump = onShoot = onCancel = false;
         isProjectileFlying = false;
         isShootCooldown = false;
+        hpManager = FindObjectOfType<HPManager>();
 
         rig2D.gravityScale = 1;
+        hpManager.updateHP(health);
     }
 
     void Update()
@@ -67,38 +69,40 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Dash"))
         {
-            if(!onDash)
+            if (!onDash)
                 onDash = true;
         }
-        if (Input.GetButtonDown("Jump")) 
+        if (Input.GetButtonDown("Jump"))
         {
             onJump = true;
         }
-        if (Input.GetButtonDown("Shoot")) 
+        if (Input.GetButtonDown("Shoot"))
         {
-            onShoot = true; 
+            onShoot = true;
         }
-        if (Input.GetButtonDown("Cancel")) 
+        if (Input.GetButtonDown("Cancel"))
         {
             if (isProjectileFlying)
                 onCancel = true;
         }
+
+
     }
 
     void FixedUpdate()
     {
-        
+
         checkJumpStatus();
-        if(isProjectileFlying) fixProjectilePos();
+        if (isProjectileFlying) fixProjectilePos();
         /*if (anim.GetBool("bDash"))
             return;*/
 
-        if (onDash && !anim.GetBool("bDash")) 
+        if (onDash && !anim.GetBool("bDash"))
         {
             dash();
         }
 
-        if (onJump) 
+        if (onJump)
         {
             onJump = false;
             jump();
@@ -118,9 +122,6 @@ public class Player : MonoBehaviour
         Vector2 currentPosition = transform.position;
         Vector2 previousPosition = currentPosition - (Time.deltaTime * (Vector2)transform.right); // 1프레임 전 좌표
 
-        Debug.Log(currentPosition);
-        Debug.Log(previousPosition);
-
         if (Vector2.Distance(currentPosition, previousPosition) > 0.03)
             anim.SetBool("IsWalking", true);
         else
@@ -132,7 +133,7 @@ public class Player : MonoBehaviour
     private void move()
     {
         float h = Input.GetAxis("Horizontal");
-        
+
         transform.Translate(new Vector3(h * speed * Time.fixedDeltaTime, 0, 0));
 
         Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
@@ -151,7 +152,7 @@ public class Player : MonoBehaviour
             rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
             rig2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
         }
-        else if (!anim.GetBool("bDoubleJump")) 
+        else if (!anim.GetBool("bDoubleJump"))
         {
             anim.SetBool("bDoubleJump", true);
             rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
@@ -219,9 +220,9 @@ public class Player : MonoBehaviour
     {
         RaycastHit2D ray2D = Physics2D.Raycast(transform.position, Vector3.down, 1, LayerMask.GetMask("Ground"));
 
-        if(Mathf.Abs(rig2D.velocity.y) < 0.01f)
+        if (Mathf.Abs(rig2D.velocity.y) < 0.01f)
         {
-            if(ray2D.collider != null)
+            if (ray2D.collider != null)
             {
                 if (ray2D.distance < 0.7f)
                 {
@@ -303,7 +304,8 @@ public class Player : MonoBehaviour
     public void getDamage(int damage)
     {
         health -= damage;
-        if(health < 0)
+        hpManager.updateHP(health);
+        if (health < 0)
         {
             gameObject.SetActive(false);
         }
