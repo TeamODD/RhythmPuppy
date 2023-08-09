@@ -4,20 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GotoOption : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
+{   
+    public void GoOption()
     {
-        
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            
-            SceneManager.LoadScene("SceneOption");
-
-        }
+        SceneManager.LoadScene("Option_Menu");
     }
 }

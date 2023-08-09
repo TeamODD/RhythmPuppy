@@ -69,40 +69,40 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Dash"))
         {
-            if(!onDash)
+            if (!onDash)
                 onDash = true;
         }
-        if (Input.GetButtonDown("Jump")) 
+        if (Input.GetButtonDown("Jump"))
         {
             onJump = true;
         }
-        if (Input.GetButtonDown("Shoot")) 
+        if (Input.GetButtonDown("Shoot"))
         {
-            onShoot = true; 
+            onShoot = true;
         }
-        if (Input.GetButtonDown("Cancel")) 
+        if (Input.GetButtonDown("Cancel"))
         {
             if (isProjectileFlying)
                 onCancel = true;
         }
 
-        
+
     }
 
     void FixedUpdate()
     {
-        
+
         checkJumpStatus();
-        if(isProjectileFlying) fixProjectilePos();
+        if (isProjectileFlying) fixProjectilePos();
         /*if (anim.GetBool("bDash"))
             return;*/
 
-        if (onDash && !anim.GetBool("bDash")) 
+        if (onDash && !anim.GetBool("bDash"))
         {
             dash();
         }
 
-        if (onJump) 
+        if (onJump)
         {
             onJump = false;
             jump();
@@ -133,7 +133,7 @@ public class Player : MonoBehaviour
     private void move()
     {
         float h = Input.GetAxis("Horizontal");
-        
+
         transform.Translate(new Vector3(h * speed * Time.fixedDeltaTime, 0, 0));
 
         Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
@@ -152,7 +152,7 @@ public class Player : MonoBehaviour
             rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
             rig2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
         }
-        else if (!anim.GetBool("bDoubleJump")) 
+        else if (!anim.GetBool("bDoubleJump"))
         {
             anim.SetBool("bDoubleJump", true);
             rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
@@ -220,9 +220,9 @@ public class Player : MonoBehaviour
     {
         RaycastHit2D ray2D = Physics2D.Raycast(transform.position, Vector3.down, 1, LayerMask.GetMask("Ground"));
 
-        if(Mathf.Abs(rig2D.velocity.y) < 0.01f)
+        if (Mathf.Abs(rig2D.velocity.y) < 0.01f)
         {
-            if(ray2D.collider != null)
+            if (ray2D.collider != null)
             {
                 if (ray2D.distance < 0.7f)
                 {
@@ -305,7 +305,7 @@ public class Player : MonoBehaviour
     {
         health -= damage;
         hpManager.updateHP(health);
-        if(health < 0)
+        if (health < 0)
         {
             gameObject.SetActive(false);
         }

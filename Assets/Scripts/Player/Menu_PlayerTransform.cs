@@ -4,56 +4,58 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
 public class Menu_PlayerTransform : MonoBehaviour
 {
+    
     public Vector3[] waypoints;
-    private Vector3 currentPosition;
-    public static int currentIndex = 0;
-    private ShowInfo showinfo;
+    public GameObject SoundManager;
+    public GameObject BackGroundManager;
 
-    // Start is called before the first frame update
+    private Vector3 endPoint;
+    private Vector3 currentPosition;
+    public static int currentIndex;
+    [SerializeField]
+    private float speed;
+    private bool onInputDelay;
+
     void Start()
     {
         
-        waypoints = new Vector3[3];
-
-        //도착지 배열에 값 할당
-        waypoints.SetValue(new Vector3(-6, 0, 0), 0);
-        waypoints.SetValue(new Vector3(0, 0, 0), 1);
-
-    }
-
-    private void indexExceptionFunc()
-    {
-        try
-        {
-            Debug.Log(waypoints[currentIndex]);
-        }
-        catch (System.IndexOutOfRangeException)
-        {
-            if (currentIndex < 0)
-                ++currentIndex;
-            else
-                --currentIndex;
-        } //인덱스 초과시에 예외 처리
-    }
-    // Update is called once per frame
-    void Update()
-    {
+        onInputDelay = false;
+        currentIndex = 0;
         currentPosition = transform.position; //플레이어 현재 위치
+    }
+
+    void FixedUpdate()
+    {
+        if (onInputDelay)
+            return;
+
         if (Input.GetKeyDown(KeyCode.D))
         {
             ++currentIndex;
-            indexExceptionFunc();
-            transform.position = Vector3.MoveTowards(currentPosition, waypoints[currentIndex], 6);
-            //오른쪽 방향키 입력시 캐릭터를 다음 스테이지까지 이동
+            onInputDelay = true; //연타 방지
+            Invoke("InputDelay", 1f); //1초후에 연타 방지 끄도록
+            if (waypoints.Length < currentIndex)
+            {
+                currentIndex--;
+                return;
+            }
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
+            StartCoroutine(move("Forward"));
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
             --currentIndex;
-            indexExceptionFunc();
-            transform.position = Vector3.MoveTowards(currentPosition, waypoints[currentIndex], 6);
+            onInputDelay = true; //연타 방지
+            Invoke("InputDelay", 1f); //1초후에 연타 방지 끄도록
+            if (0 > currentIndex)
+            {
+                currentIndex++;
+                return;
+            }
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex + 1, "disappear");
+            StartCoroutine(move("Back"));
         }
 
         if (Vector3.Distance(waypoints[currentIndex], currentPosition) == 0)
@@ -61,9 +63,48 @@ public class Menu_PlayerTransform : MonoBehaviour
             //스테이지 도착시 곡 정보(노래 이름, 아티스트)를 표시
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene("SceneStage" + (currentIndex + 1));
+                SceneManager.LoadScene("SceneLoading");
             }
             //스페이스바 입력시 스테이지 입장을 구현
         }
+
+    }
+
+    IEnumerator move(string s)
+    {
+        Vector3 velocity = Vector3.zero;
+        float offset = 0.01f;
+        
+        switch(s)
+        {
+            case "Forward":
+                endPoint = waypoints[currentIndex];
+                while(transform.position.x < endPoint.x - offset)
+                {
+                    transform.position += new Vector3(speed, 0, 0) * Time.fixedDeltaTime;
+                    yield return new WaitForEndOfFrame();
+                }
+                break;
+            case "Back":
+                endPoint = waypoints[currentIndex];
+                while (transform.position.x > endPoint.x + offset)
+                {
+                    transform.position -= new Vector3(speed, 0, 0) * Time.fixedDeltaTime;
+                    yield return new WaitForEndOfFrame();
+                }
+                break;
+
+
+        }
+        transform.position = endPoint;
+        //SoundManager.GetComponent<PlaySelectSound>().ChangeMusic(currentIndex);
+        PlaySelectSound.instance.ChangeMusic(currentIndex);
+
+        yield break;
+    }
+
+    void InputDelay()
+    {
+        onInputDelay = false;
     }
 }
