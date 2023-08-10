@@ -20,6 +20,8 @@ public class PatternControllerrrrrr : MonoBehaviour
     private GameObject pattern9;
     [SerializeField]
     private GameObject pattern10;
+    [SerializeField]
+    private GameObject gameprogress;
 
     private List<float> pattern6Timings = new List<float>
     {
@@ -30,12 +32,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         17.1f, 18.1f, 19.1f, 20.1f,
         21.3f, 22.3f, 23.3f, 24.3f,
         25.4f, 26.4f, 27.5f, 28.5f,
-        29.6f, 30.6f,   
+        29.6f, 30.6f,
         69.2f, 70.2f, 71.2f, 72.2f,
-        73.4f, 74.4f, 75.4f, 76.4f, 
+        73.4f, 74.4f, 75.4f, 76.4f,
         77.6f, 78.6f, 79.6f, 80.6f,
         81.7f, 82.7f, 83.7f, 84.7f,
-        85.9f, 86.9f, 87.9f, 88.9f, 
+        85.9f, 86.9f, 87.9f, 88.9f,
         90.1f, 91.1f, 92.1f, 93.1f,
         94.2f, 95.2f, 96.3f, 97.3f,
         98.4f, 99.4f
@@ -83,8 +85,13 @@ public class PatternControllerrrrrr : MonoBehaviour
 110.9f, 111.9f, 112.9f, 114.1f, 115.1f, 119.8f, 120.8f, 121.8f, 122.8f, 123.2f, 124.2f, 125.2f, 128.1f, 129.1f, 130.2f, 131.2f, 132.2f, 133.2f
     };
 
+    private float startTime;
+
     private void Start()
     {
+        startTime = Time.time;
+        Checkingsavepoint();
+
         // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
         pattern6.SetActive(false);
         pattern7a.SetActive(false);
@@ -107,13 +114,63 @@ public class PatternControllerrrrrr : MonoBehaviour
         // 추가 패턴 실행 메서드들도 필요에 따라 추가
     }
 
+    private void OnEnable()
+    {
+        startTime = Time.time;
+        Checkingsavepoint();
+
+        // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
+        pattern6.SetActive(false);
+        pattern7a.SetActive(false);
+        pattern7b.SetActive(false);
+        pattern8a.SetActive(false);
+        pattern8b.SetActive(false);
+        pattern8c.SetActive(false);
+        pattern9.SetActive(false);
+        pattern10.SetActive(false);
+        // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
+
+        StartCoroutine(RunPattern6());
+        StartCoroutine(RunPattern7a());
+        StartCoroutine(RunPattern7b());
+        StartCoroutine(RunPattern8a());
+        StartCoroutine(RunPattern8b());
+        StartCoroutine(RunPattern8c());
+        StartCoroutine(RunPattern9());
+        StartCoroutine(RunPattern10());
+        // 추가 패턴 실행 메서드들도 필요에 따라 추가
+    }
+
+    private void OnDisable()
+    {
+        StopCoroutine(RunPattern6());
+        StopCoroutine(RunPattern7a());
+        StopCoroutine(RunPattern7b());
+        StopCoroutine(RunPattern8a());
+        StopCoroutine(RunPattern8b());
+        StopCoroutine(RunPattern8c());
+        StopCoroutine(RunPattern9());
+        StopCoroutine(RunPattern10());
+    }
+
+    private void Checkingsavepoint()
+    {
+        //gameprogress.GetComponent<>().
+        //gameplaymanager.GetComponent<GamePasue>().ResumeGame();
+    }
+
+    private float GetElapsedTime()
+    {
+        return Time.time - startTime;
+    }
+
     private IEnumerator RunPattern6()
     {
         for (int i = 0; i < pattern6Timings.Count; i++)
         {
             float timing = pattern6Timings[i];
 
-            while (Time.time < timing)
+            while (GetElapsedTime() < timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -131,7 +188,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7aTimings[i];
 
-            while (Time.time < timing)
+            while (GetElapsedTime() < timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -148,7 +205,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7bTimings[i];
 
-            while (Time.time < timing)
+            while (GetElapsedTime() < timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -166,7 +223,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8aTimings[i];
 
-            while (Time.time < timing)
+            while (GetElapsedTime() < timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -184,7 +241,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8bTimings[i];
 
-            while (Time.time < timing)
+            while (GetElapsedTime() < timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -202,7 +259,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8cTimings[i];
 
-            while (Time.time < timing)
+            while (GetElapsedTime() < timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -220,7 +277,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern9Timings[i];
 
-            while (Time.time < timing)
+            while (GetElapsedTime() < timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -238,7 +295,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern10Timings[i];
 
-            while (Time.time < timing)
+            while (GetElapsedTime() < timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
