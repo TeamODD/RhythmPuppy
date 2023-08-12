@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PlayerMask_Head
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: bone_1
+    m_Weight: 0
+  - m_Path: bone_1/leg1
+    m_Weight: 0
+  - m_Path: bone_1/leg1/foot1
+    m_Weight: 0
+  - m_Path: bone_1/leg2
+    m_Weight: 0
+  - m_Path: bone_1/leg2/foot2
+    m_Weight: 0
+  - m_Path: bone_1/tail1
+    m_Weight: 0
+  - m_Path: bone_1/tail1/tail2
+    m_Weight: 0
+  - m_Path: bone_1/tail1/tail2/tail2_4
+    m_Weight: 0
+  - m_Path: bone_2
+    m_Weight: 0
+  - m_Path: bone_2/arm1
+    m_Weight: 0
+  - m_Path: bone_2/arm2
+    m_Weight: 0
+  - m_Path: bone_2/neck
+    m_Weight: 1
+  - m_Path: bone_2/neck/head
+    m_Weight: 1
+  - m_Path: bone_2/neck/head/ear1
+    m_Weight: 1
+  - m_Path: bone_2/neck/head/ear1/ear1_
+    m_Weight: 1
+  - m_Path: bone_2/neck/head/ear2
+    m_Weight: 1
+  - m_Path: bone_2/neck/head/ear2/ear2_
+    m_Weight: 1
+  - m_Path: bone_2/neck_3
+    m_Weight: 0
+  - m_Path: "\uAF2C\uB9AC"
+    m_Weight: 0
+  - m_Path: "\uB4B7\uB2E4\uB9AC1"
+    m_Weight: 0
+  - m_Path: "\uB4B7\uB2E4\uB9AC2"
+    m_Weight: 0
+  - m_Path: "\uB4B7\uBC1C1"
+    m_Weight: 0
+  - m_Path: "\uB4B7\uBC1C2"
+    m_Weight: 0
+  - m_Path: "\uB4B7\uCABD\uADC0"
+    m_Weight: 1
+  - m_Path: "\uB9AC\uBCF8"
+    m_Weight: 0
+  - m_Path: "\uBA38\uB9AC"
+    m_Weight: 1
+  - m_Path: "\uBAB8"
+    m_Weight: 0
+  - m_Path: "\uC55E\uBC1C1"
+    m_Weight: 0
+  - m_Path: "\uC55E\uBC1C2"
+    m_Weight: 0
+  - m_Path: "\uC55E\uCABD\uADC0"
+    m_Weight: 1
+  - m_Path: "\uD22C\uC0AC\uCCB4"
+    m_Weight: 0

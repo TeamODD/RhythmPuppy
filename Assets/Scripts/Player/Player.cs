@@ -1,7 +1,6 @@
-using JetBrains.Annotations;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 
 public class Player : MonoBehaviour
 {
@@ -29,8 +28,8 @@ public class Player : MonoBehaviour
     [Header("투사체 오브젝트")]
     [SerializeField] GameObject projectile;
 
-    [Header("목 오브젝트")]
-    [SerializeField] GameObject neck;
+    [Header("머리 오브젝트")]
+    [SerializeField] GameObject head;
 
     [SerializeField, Tooltip("투사체 발사 시 적용되는 힘(Force)")]
     float shootForce;
@@ -46,6 +45,7 @@ public class Player : MonoBehaviour
     Vector3 mousePos;
     Vector3 neckPos;
     HPManager hpManager;
+    Transform neck;
 
     void Start()
     {
@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
         isProjectileFlying = false;
         isShootCooldown = false;
         hpManager = FindObjectOfType<HPManager>();
+        neck = head.GetComponent<SpriteSkin>().rootBone;
 
         rig2D.gravityScale = 1;
         hpManager.updateHP(health);
@@ -119,13 +120,13 @@ public class Player : MonoBehaviour
             shootCancel();
         }
 
-        Vector2 currentPosition = transform.position;
+        /*Vector2 currentPosition = transform.position;
         Vector2 previousPosition = currentPosition - (Time.deltaTime * (Vector2)transform.right); // 1프레임 전 좌표
 
         if (Vector2.Distance(currentPosition, previousPosition) > 0.03)
             anim.SetBool("IsWalking", true);
         else
-            anim.SetBool("IsWalking", false);
+            anim.SetBool("IsWalking", false);*/
 
         move();
     }
@@ -133,7 +134,9 @@ public class Player : MonoBehaviour
     private void move()
     {
         float h = Input.GetAxis("Horizontal");
+        if (h == 0) return;
 
+        anim.SetInteger("hAxis", (int)Input.GetAxisRaw("Horizontal"));
         transform.Translate(new Vector3(h * speed * Time.fixedDeltaTime, 0, 0));
 
         Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
@@ -224,7 +227,7 @@ public class Player : MonoBehaviour
         {
             if (ray2D.collider != null)
             {
-                if (ray2D.distance < 0.7f)
+                if (ray2D.distance < 0.5f)
                 {
                     return false;
                 }
@@ -288,7 +291,7 @@ public class Player : MonoBehaviour
     {
         /* head rotation */
         Vector3 neckDir = (mousePos - neckPos).normalized;
-        neck.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(neckDir.x, neckDir.y) * Mathf.Rad2Deg * -1 + 120);
+        neck.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(neckDir.x, neckDir.y) * Mathf.Rad2Deg * -1 + 120);
 
         /* projectile rotation */
         if (!isProjectileFlying)
