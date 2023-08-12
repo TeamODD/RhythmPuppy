@@ -12,7 +12,7 @@ namespace World_2
         [SerializeField] GameObject cat;
 
         GameObject ObstacleManager;
-        List<GameObject> objectList;
+        List<GameObject> catObjectList;
         Coroutine coroutine;
         bool isRunning;
 
@@ -20,7 +20,7 @@ namespace World_2
         {
             isRunning = false;
             ObstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager");
-            objectList = new List<GameObject>();
+            catObjectList = new List<GameObject>();
 
             runPattern();
         }
@@ -28,17 +28,25 @@ namespace World_2
         void FixedUpdate()
         {
             if (!isRunning) return;
-            for (int i = 0; i < objectList.Count; i++)
+            if (catObjectList.Count <= 0) Destroy(gameObject);
+            for (int i = 0; i < catObjectList.Count; i++)
             {
-                if (objectList[i].transform.position.y < -2f)
+                if (catObjectList[i] == null)
                 {
-                    Destroy(objectList[i]);
-                    objectList.RemoveAt(i);
-                    i--;
+                    continue;
+                }
+
+                if (catObjectList[i].transform.position.y < -2f)
+                {
+                    Destroy(catObjectList[i]);
+                    catObjectList[i] = null;
+                }
+                else
+                { 
+                    return;
                 }
             }
-            if (objectList.Count <= 0)
-                Destroy(gameObject);
+            Destroy(gameObject);
         }
 
         private void runPattern()
@@ -82,11 +90,11 @@ namespace World_2
 
         private IEnumerator runPatternA()
         {
-            objectList.Add(createCat());
+            catObjectList.Add(createCat());
 
-            for(int i=0; i<objectList.Count; i++)
+            for(int i=0; i<catObjectList.Count; i++)
             {
-                if(objectList[i] != null)
+                if(catObjectList[i] != null)
                 {
                     yield return new WaitForEndOfFrame();
                     i = -1;
@@ -97,15 +105,15 @@ namespace World_2
 
         private IEnumerator runPatternB()
         {
-            objectList.Add(createCat());
+            catObjectList.Add(createCat());
             yield return new WaitForSeconds(0.4f);
-            objectList.Add(createCat());
+            catObjectList.Add(createCat());
             yield return new WaitForSeconds(0.3f);
-            objectList.Add(createCat());
+            catObjectList.Add(createCat());
 
-            for (int i = 0; i < objectList.Count; i++)
+            for (int i = 0; i < catObjectList.Count; i++)
             {
-                if (objectList[i] != null)
+                if (catObjectList[i] != null)
                 {
                     yield return new WaitForEndOfFrame();
                     i = -1;
@@ -116,13 +124,13 @@ namespace World_2
 
         private IEnumerator runPatternC()
         {
-            objectList.Add(createCat());
+            catObjectList.Add(createCat());
             yield return new WaitForSeconds(0.5f);
-            objectList.Add(createCat());
+            catObjectList.Add(createCat());
 
-            for (int i = 0; i < objectList.Count; i++)
+            for (int i = 0; i < catObjectList.Count; i++)
             {
-                if (objectList[i] != null)
+                if (catObjectList[i] != null)
                 {
                     yield return new WaitForEndOfFrame();
                     i = -1;
@@ -133,15 +141,15 @@ namespace World_2
 
         private IEnumerator runPatternD()
         {
-            objectList.Add(createCat());
+            catObjectList.Add(createCat());
             yield return new WaitForSeconds(0.5f);
-            objectList.Add(createCat());
+            catObjectList.Add(createCat());
             yield return new WaitForSeconds(0.7f);
-            objectList.Add(createCat());
+            catObjectList.Add(createCat());
 
-            for (int i = 0; i < objectList.Count; i++)
+            for (int i = 0; i < catObjectList.Count; i++)
             {
-                if (objectList[i] != null)
+                if (catObjectList[i] != null)
                 {
                     yield return new WaitForEndOfFrame();
                     i = -1;
