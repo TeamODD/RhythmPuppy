@@ -23,7 +23,7 @@ namespace World_2
             o.transform.position = new Vector3(r, o.transform.position.y, o.transform.position.z);
             o.transform.SetParent(ObstacleManager.transform);
             o.SetActive(true);
-            for (int i=10; -110<=i; i -= 1)
+            for (int i=10; -140<=i; i -= 1)
             {
                 o.transform.Rotate(new Vector3(0, 0, -1));
                 yield return new WaitForEndOfFrame();
