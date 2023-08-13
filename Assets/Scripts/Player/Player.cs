@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -6,7 +8,6 @@ public class Player : MonoBehaviour
 {
     enum InputType
     {
-
         Dash,
         Jump,
         Shoot,
@@ -46,10 +47,6 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("발사 종료 후 재사용 대기시간")]
     float shootCooldown;
 
-    Rigidbody2D rig2D, projectileRig2D;
-    Transform neck;
-    HPManager hpManager;
-    Animator anim;
 
     /** head 각도 보정치*/
     float headCorrFactor { get; } = 52f;
@@ -57,37 +54,49 @@ public class Player : MonoBehaviour
     float projCorrFactor { get; } = 11f;
     /** 투사체 - 목 사이의 간격 */
     float projRad { get; } = 0.7f;
-    /** 키 입력 임시 버퍼 */
-    bool onDash, onJump, onShoot, onCancel;
-    bool isProjectileFlying, isShootCooldown;
+
+    Rigidbody2D rig2D, projectileRig2D;
+    Transform neck;
+    HPManager hpManager;
+    Animator anim;
+
+    /** 키 입력 버퍼 */
+    Queue<InputType> buffer;
+    bool onFired;
     Vector3 mousePos;
-    Coroutine dashCoroutine;
+    Coroutine dashCoroutine, shootCooldownCoroutine;
+    
 
     void Update()
     {
         mousePos = updateMousePos();
+        onFired = projRad * 1.2f < (projectile.transform.position - neck.position).magnitude;
         if (Input.GetAxisRaw("Horizontal").Equals(0))
             anim.SetBool("bAxisInput", false);
         else
             anim.SetBool("bAxisInput", true);
+        
         headToMousePos();
 
         if (Input.GetButtonDown("Dash"))
         {
-            onDash = true;
+            if(dashCoroutine == null)
+                buffer.Enqueue(InputType.Dash);
         }
         if (Input.GetButtonDown("Jump"))
         {
-            onJump = true;
+            if(true)
+                buffer.Enqueue(InputType.Jump);
         }
         if (Input.GetButtonDown("Shoot"))
         {
-            onShoot = true;
+            if(shootCooldownCoroutine == null)
+                buffer.Enqueue(InputType.Shoot);
         }
         if (Input.GetButtonDown("ShootCancel"))
         {
-            if (isProjectileFlying)
-                onCancel = true;
+            if (onFired)
+                buffer.Enqueue(InputType.ShootCancel);
         }
     }
 
@@ -95,33 +104,30 @@ public class Player : MonoBehaviour
     {
         flipBody();
         checkJumpStatus();
-        if (isProjectileFlying) fixProjectilePos();
-
-        if (onDash && dashCoroutine == null)
-        {
-            onDash = false;
-            dashCoroutine = StartCoroutine(dash());
-        }
-
-        if (onJump)
-        {
-            onJump = false;
-            jump();
-        }
-
-        if (onShoot && !isShootCooldown)
-        {
-            onShoot = false;
-            shoot(mousePos - head.transform.position);
-        }
-        else if (onCancel && isProjectileFlying)
-        {
-            onCancel = false;
-            shootCancel();
-        }
-
+        if (!onFired) fixProjectilePos();
+        fixPlayerPosition();
         move();
-        moveIntoCamera();
+
+        if (buffer.Count <= 0) return;
+        switch (buffer.Dequeue())
+        {
+            case InputType.Dash:
+                dashCoroutine = StartCoroutine(dash());
+                break;
+
+            case InputType.Jump:
+                jump();
+                break;
+
+            case InputType.Shoot:
+                if (onFired) teleport();
+                else shoot();
+                break;
+
+            case InputType.ShootCancel:
+                shootCancel();
+                break;
+        }
     }
 
     public void init()
@@ -132,10 +138,9 @@ public class Player : MonoBehaviour
         this.hpManager = FindObjectOfType<HPManager>();
         this.neck = head.GetComponent<SpriteSkin>().rootBone;
 
-        onDash = onJump = onShoot = onCancel = false;
-        isProjectileFlying = false;
-        isShootCooldown = false;
-        dashCoroutine = null;
+        buffer = new Queue<InputType>();
+        onFired = false;
+        dashCoroutine = shootCooldownCoroutine = null;
 
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
@@ -206,38 +211,36 @@ public class Player : MonoBehaviour
         yield break;
     }
 
-    private void shoot(Vector3 m)
+    private void shoot()
     {
-        if (!isProjectileFlying)
-        {
-            isProjectileFlying = true;
-            projectileRig2D.velocity = new Vector2(m.normalized.x, m.normalized.y) * shootForce;
-            return;
-        }
-        else
-        {
-            projectileRig2D.velocity = Vector2.zero;
-            transform.position = projectile.transform.position;
-            if (2 <= anim.GetInteger("JumpCount"))
-                anim.SetInteger("JumpCount", 1);
-            isProjectileFlying = false;
-        }
-        StartCoroutine(shootCoolDownCoroutine());
+        Vector2 dir = (mousePos - head.transform.position).normalized;
+        projectileRig2D.velocity = dir * shootForce;
+    }
+
+    private void teleport()
+    {
+        int count = anim.GetInteger("JumpCount");
+        Vector3 pos = projectile.transform.position;
+        projectileRig2D.velocity = Vector2.zero;
+        projectile.transform.position = neck.position;
+        transform.position = pos;
+        if (2 <= count)
+            anim.SetInteger("JumpCount", count - 1);
+        shootCooldownCoroutine = StartCoroutine(runShootCooldown());
     }
 
     private void shootCancel()
     {
-        onCancel = false;
         projectileRig2D.velocity = Vector2.zero;
-        isProjectileFlying = false;
-        StartCoroutine(shootCoolDownCoroutine());
+        projectile.transform.position = neck.position;
+        shootCooldownCoroutine = StartCoroutine(runShootCooldown());
     }
 
-    private IEnumerator shootCoolDownCoroutine()
+    private IEnumerator runShootCooldown()
     {
-        isShootCooldown = true;
         yield return new WaitForSeconds(shootCooldown);
-        isShootCooldown = false;
+        shootCooldownCoroutine = null;
+        yield break;
     }
 
     private void checkJumpStatus()
@@ -259,31 +262,17 @@ public class Player : MonoBehaviour
 
     private void fixProjectilePos()
     {
+        if (!onFired) return;
+
         Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
-        bool isFixed = false;
+        Vector3 copy = pos;
 
-        if (pos.x <= 0f)
-        {
-            pos.x = 0f;
-            isFixed = true;
-        }
-        if (1f <= pos.x)
-        {
-            pos.x = 1f;
-            isFixed = true;
-        }
-        if (pos.y <= 0f)
-        {
-            pos.y = 0f;
-            isFixed = true;
-        }
-        if (1f <= pos.y)
-        {
-            pos.y = 1f;
-            isFixed = true;
-        }
+        if (pos.x <= 0f) pos.x = 0f;
+        if (1f <= pos.x) pos.x = 1f;
+        if (pos.y <= 0f) pos.y = 0f;
+        if (1f <= pos.y) pos.y = 1f;
 
-        if (isFixed)
+        if (!pos.Equals(copy))
         {
             projectileRig2D.velocity = Vector2.zero;
             projectile.transform.position = Camera.main.ViewportToWorldPoint(pos);
@@ -321,7 +310,7 @@ public class Player : MonoBehaviour
         neck.rotation = Quaternion.Euler(0, 0, headRot);
 
         /* projectile rotation */
-        if (!isProjectileFlying)
+        if (!onFired)
         {
             projRot = rot + projCorrFactor;
             if (transform.localScale.x < 0) projRot = rot - projCorrFactor;
@@ -332,7 +321,6 @@ public class Player : MonoBehaviour
                 dir = dir.normalized * projRad;
             projectile.transform.position = neck.transform.position + (Vector3)dir;
         }
-
     }
 
     public void getDamage(int damage)
@@ -345,7 +333,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void moveIntoCamera()
+    private void fixPlayerPosition()
     {
         Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
         if (pos.x <= 0f) pos.x = 0f;
