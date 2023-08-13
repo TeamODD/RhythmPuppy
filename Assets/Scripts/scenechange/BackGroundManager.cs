@@ -16,6 +16,7 @@ public class BackGroundManager : MonoBehaviour
 
     public void backgroundAlpha(int Index, string s)
     {
+        if (backgrounds[Index] == null) return;
         Img = backgrounds[Index].GetComponent<SpriteRenderer>();
         StartCoroutine(Alpha(s));
     }

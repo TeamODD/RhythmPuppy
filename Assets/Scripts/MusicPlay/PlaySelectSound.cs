@@ -29,6 +29,7 @@ public class PlaySelectSound : MonoBehaviour
     }
     public void ChangeMusic(int Index)
     {
+        if (Music_Stage[Index] == null) return;
         theAudio.clip = Music_Stage[Index];
         theAudio.Play();
     }
