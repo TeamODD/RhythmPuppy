@@ -23,14 +23,8 @@ namespace World_2
             paw.transform.position = new Vector3(r, paw.transform.position.y, paw.transform.position.z);
             paw.transform.SetParent(ObstacleManager.transform);
             paw.SetActive(true);
-            for (int i=10; -140<=i; i--)
-            {
-                paw.transform.Rotate(new Vector3(0, 0, -1));
-                yield return new WaitForEndOfFrame();
-            }
 
-            yield return new WaitForSeconds(0.5f);
-            Destroy(paw);
+            while(paw != null) yield return new WaitForSeconds(0.5f);
             Destroy(gameObject);
 
             yield break;

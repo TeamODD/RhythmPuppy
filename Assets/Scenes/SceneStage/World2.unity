@@ -1258,6 +1258,7 @@ MonoBehaviour:
   initList:
   - {fileID: 1371218876}
   - {fileID: 1838838418}
+  - {fileID: 1155446038}
 --- !u!1 &956622002
 GameObject:
   m_ObjectHideFlags: 0
@@ -1372,7 +1373,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1155446039
 MonoBehaviour:
   m_ObjectHideFlags: 0
