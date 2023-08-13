@@ -28,11 +28,11 @@ AvatarMask:
   - m_Path: bone_1/tail1/tail2/tail2_4
     m_Weight: 1
   - m_Path: bone_2
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: bone_2/arm1
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: bone_2/arm2
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: bone_2/neck
     m_Weight: 0
   - m_Path: bone_2/neck/head
@@ -46,29 +46,29 @@ AvatarMask:
   - m_Path: bone_2/neck/head/ear2/ear2_
     m_Weight: 0
   - m_Path: bone_2/neck_3
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: "\uAF2C\uB9AC"
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: "\uB4B7\uB2E4\uB9AC1"
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: "\uB4B7\uB2E4\uB9AC2"
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: "\uB4B7\uBC1C1"
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: "\uB4B7\uBC1C2"
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: "\uB4B7\uCABD\uADC0"
     m_Weight: 0
   - m_Path: "\uB9AC\uBCF8"
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: "\uBA38\uB9AC"
     m_Weight: 0
   - m_Path: "\uBAB8"
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: "\uC55E\uBC1C1"
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: "\uC55E\uBC1C2"
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: "\uC55E\uCABD\uADC0"
     m_Weight: 0
   - m_Path: "\uD22C\uC0AC\uCCB4"
