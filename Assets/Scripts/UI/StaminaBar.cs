@@ -8,13 +8,13 @@ public class StaminaBar : MonoBehaviour
     [SerializeField] Slider slider;
     Player player;
 
-    void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();   
-    }
-
     void Update()
     {
         slider.value = player.stamina;
+    }
+
+    public void init()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 }

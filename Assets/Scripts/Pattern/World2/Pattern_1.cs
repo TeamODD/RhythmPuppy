@@ -39,6 +39,7 @@ namespace World_2
                 if (catObjectList[i].transform.position.y < -2f)
                 {
                     Destroy(catObjectList[i]);
+                    
                     catObjectList[i] = null;
                 }
                 else

@@ -6,7 +6,7 @@ public class PatternManager : MonoBehaviour
 {
     [SerializeField] GameObject pattern;
 
-    void Start()
+    public void init()
     {
         GameObject o = Instantiate(pattern);
         o.transform.SetParent(transform);
