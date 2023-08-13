@@ -4,6 +4,15 @@ using UnityEngine.U2D.Animation;
 
 public class Player : MonoBehaviour
 {
+    enum InputType
+    {
+
+        Dash,
+        Jump,
+        Shoot,
+        ShootCancel,
+    }
+
     [Header("기본 정보")]
     [Tooltip("체력")] public int health;
 
@@ -37,22 +46,26 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("발사 종료 후 재사용 대기시간")]
     float shootCooldown;
 
-    Rigidbody2D rig2D;
-    Rigidbody2D projectileRig2D; 
-    HPManager hpManager;
+    Rigidbody2D rig2D, projectileRig2D;
     Transform neck;
+    HPManager hpManager;
     Animator anim;
 
+    /** head 각도 보정치*/
+    float headCorrFactor { get; } = 52f;
+    /** 투사체 각도 보정치 */
+    float projCorrFactor { get; } = 11f;
+    /** 투사체 - 목 사이의 간격 */
+    float projRad { get; } = 0.7f;
+    /** 키 입력 임시 버퍼 */
     bool onDash, onJump, onShoot, onCancel;
     bool isProjectileFlying, isShootCooldown;
     Vector3 mousePos;
-    Vector3 neckPos;
     Coroutine dashCoroutine;
 
     void Update()
     {
         mousePos = updateMousePos();
-        neckPos = transform.position + new Vector3(0.7f, 1.2f, 0);
         if (Input.GetAxisRaw("Horizontal").Equals(0))
             anim.SetBool("bAxisInput", false);
         else
@@ -71,7 +84,7 @@ public class Player : MonoBehaviour
         {
             onShoot = true;
         }
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("ShootCancel"))
         {
             if (isProjectileFlying)
                 onCancel = true;
@@ -80,7 +93,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-
+        flipBody();
         checkJumpStatus();
         if (isProjectileFlying) fixProjectilePos();
 
@@ -99,7 +112,7 @@ public class Player : MonoBehaviour
         if (onShoot && !isShootCooldown)
         {
             onShoot = false;
-            shoot(mousePos - neckPos);
+            shoot(mousePos - head.transform.position);
         }
         else if (onCancel && isProjectileFlying)
         {
@@ -282,31 +295,44 @@ public class Player : MonoBehaviour
         return Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
     }
 
+    private void flipBody()
+    {
+        const float detailCorrFactor = 6f;
+        Vector3 flip = transform.localScale;
+        float rot = neck.localRotation.eulerAngles.z;
+
+        rot = (rot - headCorrFactor + detailCorrFactor);
+        if (90 < rot && rot < 270)
+            flip.x *= -1;
+        transform.localScale = flip;
+    }
+
     private void headToMousePos()
     {
+        Vector2 dir;
+        float rot, headRot, projRot;
+
+        dir = mousePos - head.transform.position;
+        rot = 0 < dir.y ? Vector2.Angle(dir, Vector2.right) : 360f - Vector3.Angle(dir, Vector2.right);
+
         /* head rotation */
-        Vector3 neckDir = (mousePos - neckPos).normalized;
-        float rot = Mathf.Atan2(neckDir.x, neckDir.y) * Mathf.Rad2Deg * -1 + 120;
-        neck.rotation = Quaternion.Euler(0, 0, rot);
+        headRot = rot + headCorrFactor;
+        if (transform.localScale.x < 0) headRot = rot + (180 - headCorrFactor);
+        neck.rotation = Quaternion.Euler(0, 0, headRot);
 
         /* projectile rotation */
         if (!isProjectileFlying)
         {
-            Vector3 projectileDir = (mousePos - neckPos);
-            if (0.4f < projectileDir.magnitude)
-                projectileDir = projectileDir.normalized * 0.4f;
+            projRot = rot + projCorrFactor;
+            if (transform.localScale.x < 0) projRot = rot - projCorrFactor;
+            Quaternion q = Quaternion.Euler(0, 0, projRot);
+            dir = q * Vector2.right;
 
-            projectile.transform.position = neckPos + projectileDir;
+            if (projRad < dir.magnitude)
+                dir = dir.normalized * projRad;
+            projectile.transform.position = neck.transform.position + (Vector3)dir;
         }
 
-        /* flip */
-        Vector3 flip = transform.localScale;
-        rot = rot < 0 ? rot % 360 + 360 : rot % 360;
-        if (140 < rot && rot < 300)
-            flip.x = -Mathf.Abs(flip.x);
-        else
-            flip.x = Mathf.Abs(flip.x);
-        transform.localScale = flip;
     }
 
     public void getDamage(int damage)
