@@ -18,7 +18,6 @@ public class GameRestart : MonoBehaviour
                 SceneManager.LoadSceneAsync(currentSceneName);
                 Time.timeScale = 1f;
                 Debug.Log("�� �ҷ�����Խ��ϴ�.");
-                Debug.Log("�� �ҷ�����Խ��ϴ�.");
             }
             else
             {

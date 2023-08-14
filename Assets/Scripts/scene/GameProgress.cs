@@ -139,6 +139,9 @@ public class GameProgress : MonoBehaviour
 
     public void SettingCheckPoint()
     {
+        // �÷��̾� ������ ��ġ ����
+
+        // �÷��̾� ������ ��ġ ����
         float normalizedPosition = Mathf.Clamp01(checkpointTime / musicLength);
         float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, initialPlayerBudgePosition.x + targetDistance, normalizedPosition);
         Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
