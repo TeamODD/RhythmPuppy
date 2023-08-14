@@ -1760,6 +1760,7 @@ MonoBehaviour:
   fullsavepoint1: {fileID: 284626727}
   fullsavepoint2: {fileID: 220370705}
   fullsavepoint3: {fileID: 1680120446}
+  checkpointTime: 0
 --- !u!1 &1226667386
 GameObject:
   m_ObjectHideFlags: 0
@@ -3734,6 +3735,7 @@ MonoBehaviour:
   pattern8c: {fileID: 120520503}
   pattern9: {fileID: 828353507}
   pattern10: {fileID: 924600124}
+  gameprogress: {fileID: 1094046298}
 --- !u!4 &2136633903
 Transform:
   m_ObjectHideFlags: 0

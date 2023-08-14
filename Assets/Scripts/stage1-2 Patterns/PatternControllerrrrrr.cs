@@ -86,11 +86,12 @@ public class PatternControllerrrrrr : MonoBehaviour
     };
 
     private float startTime;
+    private float savePointTime;
 
     private void Start()
     {
-        startTime = Time.time;
         Checkingsavepoint();
+        gameprogress.GetComponent<GameProgress>().SettingCheckPoint();
 
         // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
         pattern6.SetActive(false);
@@ -114,6 +115,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         // 추가 패턴 실행 메서드들도 필요에 따라 추가
     }
 
+    /*
     private void OnEnable()
     {
         startTime = Time.time;
@@ -140,6 +142,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         StartCoroutine(RunPattern10());
         // 추가 패턴 실행 메서드들도 필요에 따라 추가
     }
+    */
 
     private void OnDisable()
     {
@@ -153,15 +156,38 @@ public class PatternControllerrrrrr : MonoBehaviour
         StopCoroutine(RunPattern10());
     }
 
-    private void Checkingsavepoint()
+    private void Checkingsavepoint() //현재 GameProgress에서 음악 구간과 진행도 바는 설정해주는 상황
     {
-        //gameprogress.GetComponent<>().
-        //gameplaymanager.GetComponent<GamePasue>().ResumeGame();
+        float checkpointTime = gameprogress.GetComponent<GameProgress>().checkpointTime;
+
+        if (checkpointTime == 0)
+        {
+            startTime = 0f;
+        }
+        else if (checkpointTime == 39.6669f)
+        {
+            startTime = 39.6669f;
+        }
+        else if (checkpointTime == 79.3338f)
+        {
+            startTime = 79.3338f;
+        }
+        else if (checkpointTime == 119.0008f)
+        {
+            startTime = 119.0008f;
+        }
     }
 
     private float GetElapsedTime()
     {
-        return Time.time - startTime;
+        float elapsedTime = Time.time + startTime;
+        float roundedElapsedTime = Mathf.Round(elapsedTime * 10f) / 10f; // 소수 첫째 자리까지 반올림
+        return roundedElapsedTime;
+    }
+
+    private void Update()
+    {
+        //Debug.Log("GetElapsedTime : " + GetElapsedTime());
     }
 
     private IEnumerator RunPattern6()
@@ -170,7 +196,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern6Timings[i];
 
-            while (GetElapsedTime() < timing)
+            if (timing < GetElapsedTime())
+            {
+                continue;
+            }
+
+            while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -188,7 +219,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7aTimings[i];
 
-            while (GetElapsedTime() < timing)
+            if (timing < GetElapsedTime())
+            {
+                continue;
+            }
+
+            while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -205,7 +241,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7bTimings[i];
 
-            while (GetElapsedTime() < timing)
+            if (timing < GetElapsedTime())
+            {
+                continue;
+            }
+
+            while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -223,7 +264,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8aTimings[i];
 
-            while (GetElapsedTime() < timing)
+            if (timing < GetElapsedTime())
+            {
+                continue;
+            }
+
+            while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -241,7 +287,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8bTimings[i];
 
-            while (GetElapsedTime() < timing)
+            if (timing < GetElapsedTime())
+            {
+                continue;
+            }
+
+            while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -259,7 +310,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8cTimings[i];
 
-            while (GetElapsedTime() < timing)
+            if (timing < GetElapsedTime())
+            {
+                continue;
+            }
+
+            while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -277,7 +333,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern9Timings[i];
 
-            while (GetElapsedTime() < timing)
+            if (timing < GetElapsedTime())
+            {
+                continue;
+            }
+
+            while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
@@ -295,7 +356,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern10Timings[i];
 
-            while (GetElapsedTime() < timing)
+            if (timing < GetElapsedTime())
+            {
+                continue;
+            }
+
+            while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
