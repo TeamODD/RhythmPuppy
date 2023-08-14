@@ -304,7 +304,11 @@ public class PatternControllerrrrrr : MonoBehaviour
 
             while (GetElapsedTime() < timing)
             {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 yield return null;
+            }
+            // ������ �����ϰ� Ȱ��ȭ
+            GameObject newPattern9 = Instantiate(pattern9, pattern9.transform.position, pattern9.transform.rotation);
             newPattern9.SetActive(true);
         }
         yield return null;

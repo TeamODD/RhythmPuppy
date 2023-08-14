@@ -28,6 +28,7 @@ public class GameProgress : MonoBehaviour
 
     private void Start()
     {
+
         musicLength = musicAudioSource.clip.length;
 
         musicAudioSource.Play();
