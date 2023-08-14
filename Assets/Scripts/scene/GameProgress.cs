@@ -25,6 +25,7 @@ public class GameProgress : MonoBehaviour
     private bool isarrivecheckpoint3 = false;
 
     public float checkpoint;
+    private float targetDistance; // �̵��� �Ÿ�
 
     private void Start()
     {
@@ -149,5 +150,8 @@ public class GameProgress : MonoBehaviour
 
         // fillImage ������Ʈ (�ʿ��� ���)
         fillImage.fillAmount = checkpointTime / musicLength;
+    private void SavePointChecking()
+    {
+        
     }
 }

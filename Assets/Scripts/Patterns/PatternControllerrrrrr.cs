@@ -84,6 +84,7 @@ public class PatternControllerrrrrr : MonoBehaviour
     };
 
 
+
     private float startTime;
     private float savePointTime;
 
@@ -95,7 +96,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private void Start()
     {
-        // ����1, ����2, ����3 ��ũ��Ʈ�� ��Ȱ��ȭ
+
         pattern6.SetActive(false);
         pattern7a.SetActive(false);
         pattern7b.SetActive(false);
@@ -119,6 +120,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
 
     /*
+
     private void OnEnable()
     {
         startTime = Time.time;
@@ -146,6 +148,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         // �߰� ���� ���� �޼���鵵 �ʿ信 ���� �߰�
     }
     */
+
 
     private void OnDisable()
     {
@@ -179,6 +182,11 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             startTime = 119.0008f;
         }
+    private void Checkingsavepoint()
+    {
+        //gameprogress.GetComponent<>().
+        //gameplaymanager.GetComponent<GamePasue>().ResumeGame();
+
     }
 
     private float GetElapsedTime()
@@ -194,6 +202,9 @@ public class PatternControllerrrrrr : MonoBehaviour
         Debug.Log("Time.time : " + Mathf.Round(Time.time * 10f) / 10f);
     }
 
+        return Time.time - startTime;
+    }
+
     private IEnumerator RunPattern6()
     {
         for (int i = 0; i < pattern6Timings.Count; i++)
@@ -207,6 +218,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
             while (GetElapsedTime() != timing)
             {    // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
@@ -222,6 +234,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7aTimings[i];
 
+
             if (timing < GetElapsedTime())
             {
                 continue;
@@ -229,7 +242,6 @@ public class PatternControllerrrrrr : MonoBehaviour
 
             while (GetElapsedTime() != timing)
              {
-                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
@@ -244,6 +256,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7bTimings[i];
 
+
             if (timing < GetElapsedTime())
             {
                 continue;
@@ -253,6 +266,12 @@ public class PatternControllerrrrrr : MonoBehaviour
             while (Time.time < timing)
             {
                 // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
+            while (Time.time < timing)
+            {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
@@ -268,6 +287,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8aTimings[i];
 
+
             if (timing < GetElapsedTime())
             {
                 continue;
@@ -276,6 +296,12 @@ public class PatternControllerrrrrr : MonoBehaviour
             while (GetElapsedTime() != timing)
             {
                 // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
+            while (Time.time < timing)
+            {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
@@ -291,6 +317,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8bTimings[i];
 
+
             if (timing < GetElapsedTime())
             {
                 continue;
@@ -299,6 +326,12 @@ public class PatternControllerrrrrr : MonoBehaviour
             while (GetElapsedTime() != timing)
             {
                 // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
+            while (Time.time < timing)
+            {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
@@ -314,6 +347,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8cTimings[i];
 
+
             if (timing < GetElapsedTime())
             {
                 continue;
@@ -322,6 +356,12 @@ public class PatternControllerrrrrr : MonoBehaviour
             while (GetElapsedTime() != timing)
             {
                 // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
+            while (Time.time < timing)
+            {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
@@ -337,6 +377,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern9Timings[i];
 
+
             if (timing < GetElapsedTime())
             {
                 continue;
@@ -349,16 +390,26 @@ public class PatternControllerrrrrr : MonoBehaviour
             }
             // ������ �����ϰ� Ȱ��ȭ
             GameObject newPattern9 = Instantiate(pattern9, pattern9.transform.position, pattern9.transform.rotation);
+
+            while (Time.time < timing)
+            {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+                yield return null;
+
             newPattern9.SetActive(true);
         }
         yield return null;
     }
-        
+
+
+
+
     private IEnumerator RunPattern10()
     {
         for (int i = 0; i < pattern10Timings.Count; i++)
         {
             float timing = pattern10Timings[i];
+
 
             if (timing < GetElapsedTime())
             {
@@ -368,6 +419,12 @@ public class PatternControllerrrrrr : MonoBehaviour
             while (GetElapsedTime() != timing)
             {
                 // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
+            while (Time.time < timing)
+            {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
