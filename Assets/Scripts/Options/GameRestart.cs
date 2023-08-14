@@ -14,10 +14,9 @@ public class GameRestart : MonoBehaviour
             int stageNumber;
             if (int.TryParse(currentSceneName.Substring("SceneStage".Length), out stageNumber))
             {
-                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½Ä½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
+                // ½ºÅ×ÀÌÁö ¼ýÀÚ¸¦ ÆÄ½ÌÇÏ¿© ¾ÀÀ» ´Ù½Ã ºÒ·¯¿À´Â Ã³¸®
                 SceneManager.LoadSceneAsync(currentSceneName);
                 Time.timeScale = 1f;
-                Debug.Log("ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½Ï´ï¿½.");
             }
             else
             {

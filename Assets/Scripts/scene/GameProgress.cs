@@ -24,32 +24,10 @@ public class GameProgress : MonoBehaviour
     private bool isarrivecheckpoint2 = false;
     private bool isarrivecheckpoint3 = false;
 
-    public float checkpoint;
+    public float checkpointTime;
 
     private void Start()
     {
-
-        musicLength = musicAudioSource.clip.length;
-
-        musicAudioSource.Play();
-
-        initialPlayerBudgePosition = playerbudge.transform.position;
-
-        targetDistance = gameprogressguage.rect.width;
-    }
-
-    private void Update()
-    {
-        float currentMusicPosition = musicAudioSource.time;
-
-        float fillAmount = currentMusicPosition / musicLength;
-        fillImage.fillAmount = fillAmount;
-
-        if (fillAmount >= 1)
-        {
-            fillAmount = 1;
-        }
-
         MovePlayerBudge(currentMusicPosition);
         SavePointChecking(fillAmount);
         SavePointChecking();
@@ -116,21 +94,21 @@ public class GameProgress : MonoBehaviour
         }
     }
 
-    private void BacktoCheckPoint()
+    public void CheckingWhereToBack()
     {
         float checkpointTime = 0f;
 
-        if (isarrivecheckpoint1)
+        if (isarrivecheckpoint3)
         {
-            checkpointTime = musicLength * 0.25f;
+            checkpointTime = musicLength * 0.75f;
         }
         else if (isarrivecheckpoint2)
         {
             checkpointTime = musicLength * 0.50f;
         }
-        else if (isarrivecheckpoint3)
+        else if (isarrivecheckpoint1)
         {
-            checkpointTime = musicLength * 0.75f;
+            checkpointTime = musicLength * 0.25f;
         }
 
         PlayerPrefs.SetFloat("checkpointTime", checkpointTime);
@@ -140,8 +118,6 @@ public class GameProgress : MonoBehaviour
 
     public void SettingCheckPoint()
     {
-        // �÷��̾� ������ ��ġ ����
-
         // �÷��̾� ������ ��ġ ����
         float normalizedPosition = Mathf.Clamp01(checkpointTime / musicLength);
         float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, initialPlayerBudgePosition.x + targetDistance, normalizedPosition);

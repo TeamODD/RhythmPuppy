@@ -46,22 +46,22 @@ public class Pattern666 : MonoBehaviour
 
     private IEnumerator RunPattern()
     {
-        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        //¿À¸¥ÂÊ À§Ä¡¿¡¼­¸¸ ½ÃÀÛ
         float startX = 8.38f; //9.44f, 8.38f
         float startY = 0;
         Vector3 startPos = new Vector3(startX, startY, 0f);
 
-        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+        // °æ°í ¿ÀºêÁ§Æ® »ý¼º
         Vector3 warningPosition = new Vector3(startX, startY, 0f);
         GameObject warning = Instantiate(thornStemWarning, warningPosition, Quaternion.identity);
 
-        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ 0.5ï¿½Ê¿ï¿½ ï¿½ï¿½ï¿½Ä¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // °æ°í ¿ÀºêÁ§Æ®°¡ 0.5ÃÊ¿¡ °ÉÃÄ¼­ Åõ¸íÇØÁöµµ·Ï ¾ËÆÄ°ª Á¶Á¤
         SpriteRenderer warningRenderer = warning.GetComponent<SpriteRenderer>();
         Color originalColor = warningRenderer.color;
         Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
 
-        float totalTime = 0.5f; // ï¿½ï¿½Ã¼ ï¿½Ã°ï¿½ (0.5ï¿½ï¿½)
-        float fadeInDuration = 0.3f; // 0.3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
+        float totalTime = 0.5f; // ÀüÃ¼ ½Ã°£ (0.5ÃÊ)
+        float fadeInDuration = 0.3f; // 0.3ÃÊ µ¿¾ÈÀº ¿ÏÀüÈ÷ ºÒÅõ¸íÇÏ°Ô À¯Áö
 
         float elapsedTime = 0f;
 
@@ -70,44 +70,43 @@ public class Pattern666 : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
+            // 0.3ÃÊ µ¿¾ÈÀº ¿ÏÀüÈ÷ ºÒÅõ¸íÇÏ°Ô À¯Áö
             if (elapsedTime <= fadeInDuration)
             {
                 warningRenderer.color = originalColor;
             }
-            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 0.2ï¿½ï¿½ ï¿½ï¿½ï¿½È¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½
-            else //0.3ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
+            // ±× ÀÌÈÄ 0.2ÃÊ µ¿¾È¿¡´Â ºü¸£°Ô Åõ¸íÇØÁöµµ·Ï ¾ËÆÄ°ª Á¶Á¤
+            else //0.3ÃÊ°¡ Áö³²
             {
-                float fadeOutDuration = totalTime - fadeInDuration; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ (0.2ï¿½ï¿½)
+                float fadeOutDuration = totalTime - fadeInDuration; // Åõ¸íÇØÁö´Â ½Ã°£ (0.2ÃÊ)
                 warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
             }
 
             yield return null;
         }
 
-        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+        // °æ°í ¿ÀºêÁ§Æ® Á¦°Å
         Destroy(warning);
 
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ù±ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // °¡½Ã ÁÙ±â »ý¼º
         currentStem = Instantiate(thornStem, startPos, Quaternion.identity);
         Rigidbody2D stemRigidbody = currentStem.GetComponent<Rigidbody2D>();
 
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
+        // ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿
         if (startX < 0f)
             stemRigidbody.velocity = Vector2.right * stemSpeed;
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
+        // ¿ÞÂÊÀ¸·Î ÀÌµ¿
         else
             stemRigidbody.velocity = Vector2.left * stemSpeed;
 
         StartCoroutine(DestroyIfOutOfBounds(currentStem));
     }
-    
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
     {
         while (isPatternRunning)
         {
-            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½Õ´Ï´ï¿½.
+            // ¸Ê ¹ÛÀ¸·Î ³ª°¥ °æ¿ì ¿ÀºêÁ§Æ®¸¦ ÆÄ±«ÇÕ´Ï´Ù.
             if (!IsWithinMapBounds(obj.transform.position))
             {
                 Destroy(obj);
