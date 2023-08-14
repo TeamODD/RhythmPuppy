@@ -88,7 +88,7 @@ public class PatternControllerrrrrr : MonoBehaviour
     private float startTime;
     private float savePointTime;
 
-    private void Start()
+    public void Start()
     {
         Checkingsavepoint();
         gameprogress.GetComponent<GameProgress>().SettingCheckPoint();
@@ -158,7 +158,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private void Checkingsavepoint() //현재 GameProgress에서 음악 구간과 진행도 바는 설정해주는 상황
     {
-        float checkpointTime = gameprogress.GetComponent<GameProgress>().checkpointTime;
+        float checkpointTime = PlayerPrefs.GetFloat("checkpointTime");
 
         if (checkpointTime == 0)
         {
@@ -187,7 +187,8 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log("GetElapsedTime : " + GetElapsedTime());
+        Debug.Log("GetElapsedTime : " + GetElapsedTime());
+        Debug.Log("Time.time : " + Mathf.Round(Time.time * 10f) / 10f);
     }
 
     private IEnumerator RunPattern6()
