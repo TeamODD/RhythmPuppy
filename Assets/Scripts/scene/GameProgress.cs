@@ -19,7 +19,7 @@ public class GameProgress : MonoBehaviour
 
     private float musicLength;
     private Vector3 initialPlayerBudgePosition;
-    private float targetDistance; // ÀÌµ¿ÇÒ °Å¸®
+    private float targetDistance; // ï¿½Ìµï¿½ï¿½ï¿½ ï¿½Å¸ï¿½
     private bool isarrivecheckpoint1 = false;
     private bool isarrivecheckpoint2 = false;
     private bool isarrivecheckpoint3 = false;
@@ -28,29 +28,9 @@ public class GameProgress : MonoBehaviour
 
     private void Start()
     {
-        musicLength = musicAudioSource.clip.length;  //158.6678f 
-
-        musicAudioSource.Play();
-
-        initialPlayerBudgePosition = playerbudge.transform.position;
-
-        targetDistance = gameprogressguage.rect.width;
-    }
-
-    private void Update()
-    {
-        float currentMusicPosition = musicAudioSource.time;
-
-        float fillAmount = currentMusicPosition / musicLength;
-        fillImage.fillAmount = fillAmount;
-
-        if (fillAmount >= 1)
-        {
-            fillAmount = 1;
-        }
-
         MovePlayerBudge(currentMusicPosition);
         SavePointChecking(fillAmount);
+        SavePointChecking();
     }
 
     private void MovePlayerBudge(float currentMusicPosition)
@@ -68,12 +48,13 @@ public class GameProgress : MonoBehaviour
     }
 
     private void SavePointChecking(float fillAmount)
+    private void SavePointChecking()
     {
-        float checkpoint1Threshold = 0.25f; // 25% ¼¼ÀÌºê Æ÷ÀÎÆ® ÀÓ°è°ª
-        float checkpoint2Threshold = 0.50f; // 50% ¼¼ÀÌºê Æ÷ÀÎÆ® ÀÓ°è°ª
-        float checkpoint3Threshold = 0.75f; // 75% ¼¼ÀÌºê Æ÷ÀÎÆ® ÀÓ°è°ª
+        float checkpoint1Threshold = 0.25f; // 25% ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ó°è°ª
+        float checkpoint2Threshold = 0.50f; // 50% ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ó°è°ª
+        float checkpoint3Threshold = 0.75f; // 75% ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ó°è°ª
 
-        // 25% ÁöÁ¡ Ã¼Å©
+        // 25% ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
         if (fillAmount >= checkpoint1Threshold)
         {
             emptysavepoint1.SetActive(false);
@@ -86,7 +67,7 @@ public class GameProgress : MonoBehaviour
             fullsavepoint1.SetActive(false);
         }
 
-        // 50% ÁöÁ¡ Ã¼Å©
+        // 50% ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
         if (fillAmount >= checkpoint2Threshold)
         {
             emptysavepoint2.SetActive(false);
@@ -99,7 +80,7 @@ public class GameProgress : MonoBehaviour
             fullsavepoint2.SetActive(false);
         }
 
-        // 75% ÁöÁ¡ Ã¼Å©
+        // 75% ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
         if (fillAmount >= checkpoint3Threshold)
         {
             emptysavepoint3.SetActive(false);
@@ -137,16 +118,16 @@ public class GameProgress : MonoBehaviour
 
     public void SettingCheckPoint()
     {
-        // ÇÃ·¹ÀÌ¾î ¹îÁöÀÇ À§Ä¡ ¼³Á¤
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
         float normalizedPosition = Mathf.Clamp01(checkpointTime / musicLength);
         float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, initialPlayerBudgePosition.x + targetDistance, normalizedPosition);
         Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
         playerbudge.transform.position = newPosition;
 
-        // À½¾Ç Àç»ý À§Ä¡ ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
         musicAudioSource.time = checkpointTime;
 
-        // fillImage ¾÷µ¥ÀÌÆ® (ÇÊ¿äÇÑ °æ¿ì)
+        // fillImage ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
         fillImage.fillAmount = checkpointTime / musicLength;
     }
 }

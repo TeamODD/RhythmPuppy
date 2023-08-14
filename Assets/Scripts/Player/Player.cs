@@ -5,37 +5,37 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [Header("±âº» Á¤º¸")]
-    [Tooltip("Ã¼·Â")] public int health;
+    [Header("ï¿½âº» ï¿½ï¿½ï¿½ï¿½")]
+    [Tooltip("Ã¼ï¿½ï¿½")] public int health;
 
-    [Tooltip("½ºÅÂ¹Ì³ª")] public float stamina;
+    [Tooltip("ï¿½ï¿½ï¿½Â¹Ì³ï¿½")] public float stamina;
 
-    [SerializeField, Tooltip("±âº» ÀÌµ¿¼Óµµ")]
+    [SerializeField, Tooltip("ï¿½âº» ï¿½Ìµï¿½ï¿½Óµï¿½")]
     float speed;
 
-    [Header("¼¼ºÎ Á¤º¸")]
-    [SerializeField, Tooltip("Á¡ÇÁ ÀÔ·Â ½Ã yÃàÀ¸·Î ¹ÞÀ» Èû(Force)")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(Force)")]
     float jumpForce;
 
-    [SerializeField, Tooltip("´ë½Ã ÀÔ·Â ½Ã xÃàÀ¸·Î ¹ÞÀ» Èû(Force)")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(Force)")]
     float dashForce;
 
-    [SerializeField, Tooltip("´ë½Ã ¼Ò¸ð ½Ã°£")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ ï¿½Ã°ï¿½")]
     float dashTime;
 
-    [SerializeField, Tooltip("´ë½Ã Á¾·á ÈÄ Àç»ç¿ë ´ë±â½Ã°£")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã°ï¿½")]
     float dashCooldown;
 
-    [Header("Åõ»çÃ¼ ¿ÀºêÁ§Æ®")]
+    [Header("ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®")]
     [SerializeField] GameObject projectile;
 
-    [Header("¸ñ ¿ÀºêÁ§Æ®")]
+    [Header("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®")]
     [SerializeField] GameObject neck;
 
-    [SerializeField, Tooltip("Åõ»çÃ¼ ¹ß»ç ½Ã Àû¿ëµÇ´Â Èû(Force)")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½ß»ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½(Force)")]
     float shootForce;
 
-    [SerializeField, Tooltip("¹ß»ç Á¾·á ÈÄ Àç»ç¿ë ´ë±â½Ã°£")]
+    [SerializeField, Tooltip("ï¿½ß»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã°ï¿½")]
     float shootCooldown;
 
     Rigidbody2D rig2D;
@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
         }
 
         Vector2 currentPosition = transform.position;
-        Vector2 previousPosition = currentPosition - (Time.deltaTime * (Vector2)transform.right); // 1ÇÁ·¹ÀÓ Àü ÁÂÇ¥
+        Vector2 previousPosition = currentPosition - (Time.deltaTime * (Vector2)transform.right); // 1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ç¥
 
         if (Vector2.Distance(currentPosition, previousPosition) > 0.03)
             anim.SetBool("IsWalking", true);
@@ -158,7 +158,7 @@ public class Player : MonoBehaviour
             rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
             rig2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
         }
-        // else { }         // ÀÌ¹Ì 2´Ü Á¡ÇÁ±îÁö ÇÑ °æ¿ì
+        // else { }         // ï¿½Ì¹ï¿½ 2ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
     }
 
     private void dash()
@@ -307,26 +307,18 @@ public class Player : MonoBehaviour
         hpManager.updateHP(health);
         if(health < 0)
         {
-            // ÇÃ·¹ÀÌ¾î »ç¸Á ½Ã Ã¼Å©Æ÷ÀÎÆ® È®ÀÎ ¹× ÆÐÅÏ Àç½ÃÀÛ
+            // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã¼Å©ï¿½ï¿½ï¿½ï¿½Æ® È®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
             PlayerDie();
 
-            // ÇÃ·¹ÀÌ¾î ºñÈ°¼ºÈ­
+            // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
             gameObject.SetActive(false);
         }
     }
 
-    private void PlayerDie()
-    {
-        FindObjectOfType<GameProgress>().CheckingWhereToBack();
-        FindObjectOfType<GameRestart>().onRestart();
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Obstacles"))
+@ -327,6 +328,8 @@ public class Player : MonoBehaviour
         {
             getDamage(10);
-            //Debug.Log("Àå¾Ö¹° Ãæµ¹ÀÌ °¨ÁöµÇ¾ú½À´Ï´Ù.");
+            //Debug.Log("ï¿½ï¿½Ö¹ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
         }
     }
 }
