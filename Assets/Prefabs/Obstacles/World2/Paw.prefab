@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0364e4f90f65247408ee129c63d838b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationSpeed: 200
 --- !u!50 &5456171015059519443
 Rigidbody2D:
   serializedVersion: 4
@@ -151,7 +152,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 16.91, y: 15.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -175,7 +176,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 16.91, y: 15.58}
-    newSize: {x: 1, y: 1}
+    newSize: {x: 16.91, y: 15.58}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
