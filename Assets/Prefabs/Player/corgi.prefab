@@ -128,7 +128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d67cfb51ee8bcf24b99a879964ba1dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDelay: 0.2
 --- !u!1 &599729805235015773
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,6 +199,7 @@ MonoBehaviour:
   dashCooldown: 0.1
   projectile: {fileID: 8564173475123990387}
   mark: {fileID: 4989016434979279782}
+  markFadeDelay: 0.1
   head: {fileID: 1054877313000089185}
   shootForce: 10
   shootCooldown: 1

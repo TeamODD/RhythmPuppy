@@ -1386,7 +1386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5369d951f7d4624db9d0cdd4752e230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pattern: {fileID: 1273078494639283698, guid: 599b16f22b2c1764e9f1bdfd48561f97, type: 3}
+  pattern: {fileID: 1434621901715454958, guid: 0157883f8e29a9e4489f0722821c1078, type: 3}
 --- !u!4 &1155446040
 Transform:
   m_ObjectHideFlags: 0
@@ -2681,14 +2681,6 @@ PrefabInstance:
     - target: {fileID: 1772925942213380158, guid: f31ee09566a08604199d420e5b13dab7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2276363931366130446, guid: f31ee09566a08604199d420e5b13dab7, type: 3}
-      propertyPath: markFadeDelay
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4989016434979279782, guid: f31ee09566a08604199d420e5b13dab7, type: 3}
-      propertyPath: fadeDelay
-      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f31ee09566a08604199d420e5b13dab7, type: 3}
