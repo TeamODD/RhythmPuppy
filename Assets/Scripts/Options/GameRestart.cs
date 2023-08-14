@@ -17,7 +17,6 @@ public class GameRestart : MonoBehaviour
                 // 스테이지 숫자를 파싱하여 씬을 다시 불러오는 처리
                 Time.timeScale = 1f;
                 SceneManager.LoadSceneAsync(currentSceneName);
-                Debug.Log("씬 불러오기왔습니다.");
             }
             else
             {
