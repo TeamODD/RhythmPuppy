@@ -8,12 +8,18 @@ namespace Obstacles
     {
         [SerializeField] float speed;
 
-        private GameObject player;
-        private Vector3 dir;
+        GameObject player;
+        SpriteRenderer sp;
+        Vector3 dir;
 
         void OnEnable()
         {
             player = GameObject.FindGameObjectWithTag("Player");
+            sp = GetComponent<SpriteRenderer>();
+            sp.flipX = false;
+            if (player.transform.position.x < transform.position.x)
+                sp.flipX = true;
+
         }
 
         void FixedUpdate()
@@ -30,7 +36,6 @@ namespace Obstacles
             if (o.gameObject.CompareTag("Player"))
             {
                 o.gameObject.GetComponent<Player>().getDamage(1);
-                Destroy(gameObject);
             }
         }
 

@@ -36,7 +36,6 @@ namespace Obstacles
             if (o.gameObject.CompareTag("Player"))
             {
                 o.gameObject.GetComponent<Player>().getDamage(1);
-                Destroy(gameObject);
             }
         }
 

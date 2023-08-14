@@ -8,6 +8,11 @@ public class PatternManager : MonoBehaviour
 
     public void init()
     {
+        Invoke("runPattern", 1f);
+    }
+
+    private void runPattern()
+    {
         GameObject o = Instantiate(pattern);
         o.transform.SetParent(transform);
         o.SetActive(true);

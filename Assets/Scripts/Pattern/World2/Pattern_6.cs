@@ -5,7 +5,6 @@ using UnityEngine;
 public class Pattern_6 : MonoBehaviour
 {
     [SerializeField] GameObject cat;
-    [SerializeField] GameObject mark;
 
     GameObject player;
     GameObject ObstacleManager;
@@ -19,13 +18,11 @@ public class Pattern_6 : MonoBehaviour
 
     private IEnumerator runPattern()
     {
-        GameObject markObject = Instantiate(mark);
-        markObject.transform.SetParent(player.transform.parent, false);
-        markObject.SetActive(true);
+        player.SendMessage("activateMark");
 
         yield return new WaitForSeconds(1f);
 
-        Destroy(markObject);
+        player.SendMessage("inactivateMark");
 
         float r = Random.Range(-8f, 8f);
         GameObject catObject = Instantiate(cat);

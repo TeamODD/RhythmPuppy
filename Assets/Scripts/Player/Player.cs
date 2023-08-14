@@ -38,6 +38,10 @@ public class Player : MonoBehaviour
     [Header("투사체 오브젝트")]
     [SerializeField] GameObject projectile;
 
+    [Header("표식 오브젝트")]
+    [SerializeField] Mark mark;
+    public float markFadeDelay;
+
     [Header("머리 오브젝트")]
     [SerializeField] GameObject head;
 
@@ -102,7 +106,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        flipBody();
+        /*flipBody();*/
         checkJumpStatus();
         if (!onFired) fixProjectilePos();
         fixPlayerPosition();
@@ -148,12 +152,29 @@ public class Player : MonoBehaviour
         hpManager.updateHP(health);
     }
 
+    public void activateMark()
+    {
+        mark.SendMessage("activate");
+    }
+
+    public void inactivateMark()
+    {
+        mark.SendMessage("inactivate");
+    }
+
     private void move()
     {
         float xInput = Input.GetAxis("Horizontal");
         if (xInput == 0) return;
 
         rig2D.velocity = new Vector2(xInput * speed, rig2D.velocity.y);
+
+        /* flip body */
+        Vector3 flip = transform.localScale;
+        flip.x = Mathf.Abs(flip.x);
+        if (xInput < 0)
+            flip.x *= -1;
+        transform.localScale = flip;
     }
 
     private void jump()
@@ -281,10 +302,10 @@ public class Player : MonoBehaviour
 
     private Vector3 updateMousePos()
     {
-        return Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
-    private void flipBody()
+    /*private void flipBody()
     {
         const float detailCorrFactor = 6f;
         Vector3 flip = transform.localScale;
@@ -294,7 +315,7 @@ public class Player : MonoBehaviour
         if (90 < rot && rot < 270)
             flip.x *= -1;
         transform.localScale = flip;
-    }
+    }*/
 
     private void headToMousePos()
     {
