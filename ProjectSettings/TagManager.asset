@@ -11,7 +11,6 @@ TagManager:
   - MusicManager
   - LampLight
   - StageMusic
-  - Obstacles
   layers:
   - Default
   - TransparentFX

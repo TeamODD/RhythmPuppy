@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3838866895196805259}
   m_Layer: 0
   m_Name: GreenApple
-  m_TagString: Obstacles
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 1599428843697377910}
   m_Layer: 0
   m_Name: GreenApple
-  m_TagString: Obstacles
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

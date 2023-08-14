@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -100,6 +99,16 @@ public class Pattern666 : MonoBehaviour
             stemRigidbody.velocity = Vector2.left * stemSpeed;
 
         StartCoroutine(DestroyIfOutOfBounds(currentStem));
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<Player>().getDamage(1);
+            Destroy(gameObject);
+            Debug.Log("장애물 충돌이 감지되었습니다.");
+        }
     }
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)

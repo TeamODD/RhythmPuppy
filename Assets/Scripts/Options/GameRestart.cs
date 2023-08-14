@@ -15,8 +15,8 @@ public class GameRestart : MonoBehaviour
             if (int.TryParse(currentSceneName.Substring("SceneStage".Length), out stageNumber))
             {
                 // 스테이지 숫자를 파싱하여 씬을 다시 불러오는 처리
-                SceneManager.LoadSceneAsync(currentSceneName);
                 Time.timeScale = 1f;
+                SceneManager.LoadSceneAsync(currentSceneName);
             }
             else
             {

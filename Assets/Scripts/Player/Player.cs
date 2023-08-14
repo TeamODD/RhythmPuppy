@@ -307,26 +307,7 @@ public class Player : MonoBehaviour
         hpManager.updateHP(health);
         if(health < 0)
         {
-            // 플레이어 사망 시 체크포인트 확인 및 패턴 재시작
-            PlayerDie();
-
-            // 플레이어 비활성화
             gameObject.SetActive(false);
-        }
-    }
-
-    private void PlayerDie()
-    {
-        FindObjectOfType<GameProgress>().CheckingWhereToBack();
-        FindObjectOfType<GameRestart>().onRestart();
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Obstacles"))
-        {
-            getDamage(10);
-            //Debug.Log("장애물 충돌이 감지되었습니다.");
         }
     }
 }

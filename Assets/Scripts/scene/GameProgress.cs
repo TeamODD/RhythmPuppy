@@ -129,8 +129,6 @@ public class GameProgress : MonoBehaviour
         {
             checkpointTime = musicLength * 0.25f;
         }
-
-        PlayerPrefs.SetFloat("checkpointTime", checkpointTime);
         
         SettingCheckPoint();
     }
