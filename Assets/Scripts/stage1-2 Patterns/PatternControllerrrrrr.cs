@@ -155,37 +155,12 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private void Checkingsavepoint()
     {
-        float checkpointTime = PlayerPrefs.GetFloat("checkpointTime");
-
-        if (checkpointTime == 0)
-        {
-            startTime = 0f;
-        }
-        else if (checkpointTime == 39.6669f) 
-        {
-            startTime = 39.6669f;
-        }
-        else if (checkpointTime == 79.3338f)
-        {
-            startTime = 79.3338f;
-        }
-        else if (checkpointTime == 119.0008f)
-        {
-            startTime = 119.0008f;
-        }
+        //gameprogress.GetComponent<>().
+        //gameplaymanager.GetComponent<GamePasue>().ResumeGame();
     }
 
     private float GetElapsedTime()
     {
-        float elapsedTime = Time.time + startTime;
-        float roundedElapsedTime = Mathf.Round(elapsedTime * 10f) / 10f; // �Ҽ� ù° �ڸ����� �ݿø�
-        return roundedElapsedTime;
-    }
-
-    private void Update()
-    {
-        Debug.Log("GetElapsedTime : " + GetElapsedTime());
-        Debug.Log("Time.time : " + Mathf.Round(Time.time * 10f) / 10f);
         return Time.time - startTime;
     }
 
