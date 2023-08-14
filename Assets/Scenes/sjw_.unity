@@ -455,8 +455,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 335822115}
-  - {fileID: 1252747928}
-  - {fileID: 1298491608}
+  - {fileID: 1437704165147524443}
+  - {fileID: 5558058971485976367}
   - {fileID: 380770167}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -1379,16 +1379,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1252747928 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5558058970321739190, guid: 9c00740d450322c4994ca51a6508a50e, type: 3}
-  m_PrefabInstance: {fileID: 5558058971485976366}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1298491608 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1437704166273373570, guid: 0b5ec4a556af36a48af12684878039b0, type: 3}
-  m_PrefabInstance: {fileID: 1437704165147524442}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1413994226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1898,8 +1888,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: StaminaBar
       objectReference: {fileID: 0}
+    - target: {fileID: 5022129264639440457, guid: 0b5ec4a556af36a48af12684878039b0, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5022129264639440457, guid: 0b5ec4a556af36a48af12684878039b0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b5ec4a556af36a48af12684878039b0, type: 3}
+--- !u!4 &1437704165147524443 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5022129265618786827, guid: 0b5ec4a556af36a48af12684878039b0, type: 3}
+  m_PrefabInstance: {fileID: 1437704165147524442}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1670789331510266848 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7601405566221232237, guid: 5f150ae1df52bc34ab926a030206334a, type: 3}
@@ -2019,6 +2022,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c00740d450322c4994ca51a6508a50e, type: 3}
+--- !u!4 &5558058971485976367 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3881835982381512926, guid: 9c00740d450322c4994ca51a6508a50e, type: 3}
+  m_PrefabInstance: {fileID: 5558058971485976366}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5968585849003697891 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7894071978993996910, guid: eee78f341a958eb43af5e5edf6bddace, type: 3}
