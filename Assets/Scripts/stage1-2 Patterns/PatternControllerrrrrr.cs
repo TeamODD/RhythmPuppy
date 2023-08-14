@@ -172,7 +172,6 @@ public class PatternControllerrrrrr : MonoBehaviour
 
             while (GetElapsedTime() < timing)
             {
-                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
@@ -190,7 +189,6 @@ public class PatternControllerrrrrr : MonoBehaviour
 
             while (GetElapsedTime() < timing)
             {
-                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
@@ -207,6 +205,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
             while (GetElapsedTime() < timing)
             {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 yield return null;
             }
@@ -226,6 +225,7 @@ public class PatternControllerrrrrr : MonoBehaviour
             while (GetElapsedTime() < timing)
             {
                 // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
@@ -243,6 +243,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
             while (GetElapsedTime() < timing)
             {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 yield return null;
             }
@@ -262,6 +263,7 @@ public class PatternControllerrrrrr : MonoBehaviour
             while (GetElapsedTime() < timing)
             {
                 // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 yield return null;
             }
             // ������ �����ϰ� Ȱ��ȭ
@@ -279,6 +281,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
             while (GetElapsedTime() < timing)
             {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 yield return null;
             newPattern9.SetActive(true);
         }
@@ -293,6 +296,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
             while (GetElapsedTime() < timing)
             {
+                // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 // ���� ��� �ð��� ������ Ÿ�ֿ̹� ������ ������ ��ٸ��ϴ�.
                 yield return null;
             }
