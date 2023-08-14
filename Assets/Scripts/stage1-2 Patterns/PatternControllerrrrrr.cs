@@ -86,14 +86,13 @@ public class PatternControllerrrrrr : MonoBehaviour
     };
 
     private float startTime;
-    private float savePointTime;
 
     public void Start()
     {
+        startTime = Time.time;
         Checkingsavepoint();
-        gameprogress.GetComponent<GameProgress>().SettingCheckPoint();
 
-        // ÆÐÅÏ1, ÆÐÅÏ2, ÆÐÅÏ3 ½ºÅ©¸³Æ®¸¦ ºñÈ°¼ºÈ­
+        // ï¿½ï¿½ï¿½ï¿½1, ï¿½ï¿½ï¿½ï¿½2, ï¿½ï¿½ï¿½ï¿½3 ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
         pattern6.SetActive(false);
         pattern7a.SetActive(false);
         pattern7b.SetActive(false);
@@ -102,7 +101,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         pattern8c.SetActive(false);
         pattern9.SetActive(false);
         pattern10.SetActive(false);
-        // Ãß°¡ ÆÐÅÏ GameObject º¯¼öµé¿¡ ´ëÇØµµ ÇÊ¿ä¿¡ µû¶ó ºñÈ°¼ºÈ­ Ã³¸®
+        // ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ GameObject ï¿½ï¿½ï¿½ï¿½ï¿½é¿¡ ï¿½ï¿½ï¿½Øµï¿½ ï¿½Ê¿ä¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ Ã³ï¿½ï¿½
 
         StartCoroutine(RunPattern6());
         StartCoroutine(RunPattern7a());
@@ -112,16 +111,15 @@ public class PatternControllerrrrrr : MonoBehaviour
         StartCoroutine(RunPattern8c());
         StartCoroutine(RunPattern9());
         StartCoroutine(RunPattern10());
-        // Ãß°¡ ÆÐÅÏ ½ÇÇà ¸Þ¼­µåµéµµ ÇÊ¿ä¿¡ µû¶ó Ãß°¡
+        // ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½éµµ ï¿½Ê¿ä¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     }
 
-    /*
     private void OnEnable()
     {
         startTime = Time.time;
         Checkingsavepoint();
 
-        // ÆÐÅÏ1, ÆÐÅÏ2, ÆÐÅÏ3 ½ºÅ©¸³Æ®¸¦ ºñÈ°¼ºÈ­
+        // ï¿½ï¿½ï¿½ï¿½1, ï¿½ï¿½ï¿½ï¿½2, ï¿½ï¿½ï¿½ï¿½3 ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
         pattern6.SetActive(false);
         pattern7a.SetActive(false);
         pattern7b.SetActive(false);
@@ -130,7 +128,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         pattern8c.SetActive(false);
         pattern9.SetActive(false);
         pattern10.SetActive(false);
-        // Ãß°¡ ÆÐÅÏ GameObject º¯¼öµé¿¡ ´ëÇØµµ ÇÊ¿ä¿¡ µû¶ó ºñÈ°¼ºÈ­ Ã³¸®
+        // ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ GameObject ï¿½ï¿½ï¿½ï¿½ï¿½é¿¡ ï¿½ï¿½ï¿½Øµï¿½ ï¿½Ê¿ä¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ Ã³ï¿½ï¿½
 
         StartCoroutine(RunPattern6());
         StartCoroutine(RunPattern7a());
@@ -140,9 +138,8 @@ public class PatternControllerrrrrr : MonoBehaviour
         StartCoroutine(RunPattern8c());
         StartCoroutine(RunPattern9());
         StartCoroutine(RunPattern10());
-        // Ãß°¡ ÆÐÅÏ ½ÇÇà ¸Þ¼­µåµéµµ ÇÊ¿ä¿¡ µû¶ó Ãß°¡
+        // ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½éµµ ï¿½Ê¿ä¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     }
-    */
 
     private void OnDisable()
     {
@@ -156,7 +153,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         StopCoroutine(RunPattern10());
     }
 
-    private void Checkingsavepoint() //ÇöÀç GameProgress¿¡¼­ À½¾Ç ±¸°£°ú ÁøÇàµµ ¹Ù´Â ¼³Á¤ÇØÁÖ´Â »óÈ²
+    private void Checkingsavepoint()
     {
         float checkpointTime = PlayerPrefs.GetFloat("checkpointTime");
 
@@ -181,7 +178,7 @@ public class PatternControllerrrrrr : MonoBehaviour
     private float GetElapsedTime()
     {
         float elapsedTime = Time.time + startTime;
-        float roundedElapsedTime = Mathf.Round(elapsedTime * 10f) / 10f; // ¼Ò¼ö Ã¹Â° ÀÚ¸®±îÁö ¹Ý¿Ã¸²
+        float roundedElapsedTime = Mathf.Round(elapsedTime * 10f) / 10f; // ï¿½Ò¼ï¿½ Ã¹Â° ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¿Ã¸ï¿½
         return roundedElapsedTime;
     }
 
@@ -189,6 +186,7 @@ public class PatternControllerrrrrr : MonoBehaviour
     {
         Debug.Log("GetElapsedTime : " + GetElapsedTime());
         Debug.Log("Time.time : " + Mathf.Round(Time.time * 10f) / 10f);
+        return Time.time - startTime;
     }
 
     private IEnumerator RunPattern6()
@@ -197,17 +195,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern6Timings[i];
 
-            if (timing < GetElapsedTime())
+            while (GetElapsedTime() < timing)
             {
-                continue;
-            }
-
-            while (GetElapsedTime() != timing)
-            {
-                // ÇöÀç °æ°ú ½Ã°£ÀÌ ÁöÁ¤µÈ Å¸ÀÌ¹Ö¿¡ µµ´ÞÇÒ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½Ï´ï¿½.
                 yield return null;
             }
-            // ÆÐÅÏÀ» º¹Á¦ÇÏ°í È°¼ºÈ­
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ È°ï¿½ï¿½È­
             GameObject newPattern6 = Instantiate(pattern6, pattern6.transform.position, pattern6.transform.rotation);
             newPattern6.SetActive(true);
         }
@@ -220,17 +213,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7aTimings[i];
 
-            if (timing < GetElapsedTime())
+            while (GetElapsedTime() < timing)
             {
-                continue;
-            }
-
-            while (GetElapsedTime() != timing)
-            {
-                // ÇöÀç °æ°ú ½Ã°£ÀÌ ÁöÁ¤µÈ Å¸ÀÌ¹Ö¿¡ µµ´ÞÇÒ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½Ï´ï¿½.
                 yield return null;
             }
-            // ÆÐÅÏÀ» º¹Á¦ÇÏ°í È°¼ºÈ­
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ È°ï¿½ï¿½È­
             GameObject newPattern7a = Instantiate(pattern7a, pattern7a.transform.position, pattern7a.transform.rotation);
             newPattern7a.SetActive(true);
         }
@@ -242,17 +230,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7bTimings[i];
 
-            if (timing < GetElapsedTime())
+            while (GetElapsedTime() < timing)
             {
-                continue;
-            }
-
-            while (GetElapsedTime() != timing)
-            {
-                // ÇöÀç °æ°ú ½Ã°£ÀÌ ÁöÁ¤µÈ Å¸ÀÌ¹Ö¿¡ µµ´ÞÇÒ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½Ï´ï¿½.
                 yield return null;
             }
-            // ÆÐÅÏÀ» º¹Á¦ÇÏ°í È°¼ºÈ­
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ È°ï¿½ï¿½È­
             GameObject newPattern7b = Instantiate(pattern7b, pattern7b.transform.position, pattern7b.transform.rotation);
             newPattern7b.SetActive(true);
         }
@@ -265,17 +248,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8aTimings[i];
 
-            if (timing < GetElapsedTime())
+            while (GetElapsedTime() < timing)
             {
-                continue;
-            }
-
-            while (GetElapsedTime() != timing)
-            {
-                // ÇöÀç °æ°ú ½Ã°£ÀÌ ÁöÁ¤µÈ Å¸ÀÌ¹Ö¿¡ µµ´ÞÇÒ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½Ï´ï¿½.
                 yield return null;
             }
-            // ÆÐÅÏÀ» º¹Á¦ÇÏ°í È°¼ºÈ­
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ È°ï¿½ï¿½È­
             GameObject newPattern8a = Instantiate(pattern8a, pattern8a.transform.position, pattern8a.transform.rotation);
             newPattern8a.SetActive(true);
         }
@@ -288,17 +266,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8bTimings[i];
 
-            if (timing < GetElapsedTime())
+            while (GetElapsedTime() < timing)
             {
-                continue;
-            }
-
-            while (GetElapsedTime() != timing)
-            {
-                // ÇöÀç °æ°ú ½Ã°£ÀÌ ÁöÁ¤µÈ Å¸ÀÌ¹Ö¿¡ µµ´ÞÇÒ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½Ï´ï¿½.
                 yield return null;
             }
-            // ÆÐÅÏÀ» º¹Á¦ÇÏ°í È°¼ºÈ­
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ È°ï¿½ï¿½È­
             GameObject newPattern8b = Instantiate(pattern8b, pattern8b.transform.position, pattern8b.transform.rotation);
             newPattern8b.SetActive(true);
         }
@@ -311,17 +284,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8cTimings[i];
 
-            if (timing < GetElapsedTime())
+            while (GetElapsedTime() < timing)
             {
-                continue;
-            }
-
-            while (GetElapsedTime() != timing)
-            {
-                // ÇöÀç °æ°ú ½Ã°£ÀÌ ÁöÁ¤µÈ Å¸ÀÌ¹Ö¿¡ µµ´ÞÇÒ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½Ï´ï¿½.
                 yield return null;
             }
-            // ÆÐÅÏÀ» º¹Á¦ÇÏ°í È°¼ºÈ­
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ È°ï¿½ï¿½È­
             GameObject newPattern8c = Instantiate(pattern8c, pattern8c.transform.position, pattern8c.transform.rotation);
             newPattern8c.SetActive(true);
         }
@@ -334,40 +302,30 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern9Timings[i];
 
-            if (timing < GetElapsedTime())
+            while (GetElapsedTime() < timing)
             {
-                continue;
-            }
-
-            while (GetElapsedTime() != timing)
-            {
-                // ÇöÀç °æ°ú ½Ã°£ÀÌ ÁöÁ¤µÈ Å¸ÀÌ¹Ö¿¡ µµ´ÞÇÒ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½Ï´ï¿½.
                 yield return null;
             }
-            // ÆÐÅÏÀ» º¹Á¦ÇÏ°í È°¼ºÈ­
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ È°ï¿½ï¿½È­
             GameObject newPattern9 = Instantiate(pattern9, pattern9.transform.position, pattern9.transform.rotation);
             newPattern9.SetActive(true);
         }
         yield return null;
     }
-        
+
     private IEnumerator RunPattern10()
     {
         for (int i = 0; i < pattern10Timings.Count; i++)
         {
             float timing = pattern10Timings[i];
 
-            if (timing < GetElapsedTime())
+            while (GetElapsedTime() < timing)
             {
-                continue;
-            }
-
-            while (GetElapsedTime() != timing)
-            {
-                // ÇöÀç °æ°ú ½Ã°£ÀÌ ÁöÁ¤µÈ Å¸ÀÌ¹Ö¿¡ µµ´ÞÇÒ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½Ï´ï¿½.
                 yield return null;
             }
-            // ÆÐÅÏÀ» º¹Á¦ÇÏ°í È°¼ºÈ­
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ È°ï¿½ï¿½È­
             GameObject newPattern10 = Instantiate(pattern10, pattern10.transform.position, pattern10.transform.rotation);
             newPattern10.SetActive(true);
         }

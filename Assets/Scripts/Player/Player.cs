@@ -312,6 +312,8 @@ public class Player : MonoBehaviour
 
             // �÷��̾� ��Ȱ��ȭ
             gameObject.SetActive(false);
+
+
         }
     }
 
