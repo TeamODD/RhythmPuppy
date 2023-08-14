@@ -6,15 +6,7 @@ public class SoundOptions : MonoBehaviour
 {
     public AudioSource musicsource;
     public AudioSource btnsource;
-
-    AudioSource stagemusicsource;
-
-    private void Start()
-    {
-        GameObject stagemusic = GameObject.FindWithTag("StageMusic");
-        stagemusicsource = stagemusic.GetComponent<AudioSource>(); //일단 보류.
-    }
-
+    
     public void SetMusicVolume(float volume)
     {
         musicsource.volume = volume;

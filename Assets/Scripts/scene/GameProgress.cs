@@ -24,11 +24,11 @@ public class GameProgress : MonoBehaviour
     private bool isarrivecheckpoint2 = false;
     private bool isarrivecheckpoint3 = false;
 
-    public float checkpointTime;
+    public float checkpoint;
 
     private void Start()
     {
-        musicLength = musicAudioSource.clip.length;  //158.6678f 
+        musicLength = musicAudioSource.clip.length;
 
         musicAudioSource.Play();
 
@@ -113,28 +113,23 @@ public class GameProgress : MonoBehaviour
         }
     }
 
-    public void CheckingWhereToBack()
+    private void BacktoCheckPoint()
     {
         float checkpointTime = 0f;
 
-        if (isarrivecheckpoint3)
+        if (isarrivecheckpoint1)
         {
-            checkpointTime = musicLength * 0.75f;
+            checkpointTime = musicLength * 0.25f;
         }
         else if (isarrivecheckpoint2)
         {
             checkpointTime = musicLength * 0.50f;
         }
-        else if (isarrivecheckpoint1)
+        else if (isarrivecheckpoint3)
         {
-            checkpointTime = musicLength * 0.25f;
+            checkpointTime = musicLength * 0.75f;
         }
-        
-        SettingCheckPoint();
-    }
 
-    public void SettingCheckPoint()
-    {
         // 플레이어 뱃지의 위치 설정
         float normalizedPosition = Mathf.Clamp01(checkpointTime / musicLength);
         float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, initialPlayerBudgePosition.x + targetDistance, normalizedPosition);

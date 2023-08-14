@@ -9,8 +9,6 @@ TagManager:
   - PatternManager
   - ObstacleManager
   - MusicManager
-  - LampLight
-  - StageMusic
   layers:
   - Default
   - TransparentFX
