@@ -307,9 +307,9 @@ public class Player : MonoBehaviour
         hpManager.updateHP(health);
         if(health < 0)
         {
+            GameObject patterncontroller = GameObject.Find("PatternControllerrrr");
+            patterncontroller.GetComponent<GameRestart>(); //아직 테스트 안됨
             gameObject.SetActive(false);
-
-
         }
     }
 }

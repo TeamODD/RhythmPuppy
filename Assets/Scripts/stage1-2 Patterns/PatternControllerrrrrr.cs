@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PatternControllerrrrrr : MonoBehaviour
@@ -118,8 +119,8 @@ public class PatternControllerrrrrr : MonoBehaviour
     /*
     private void OnEnable()
     {
-        startTime = Time.time;
         Checkingsavepoint();
+        gameprogress.GetComponent<GameProgress>().SettingCheckPoint();
 
         // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
         pattern6.SetActive(false);
@@ -144,6 +145,34 @@ public class PatternControllerrrrrr : MonoBehaviour
     }
     */
 
+    public void GameRestart()
+    {
+        OnDisable();
+        Checkingsavepoint();
+        gameprogress.GetComponent<GameProgress>().SettingCheckPoint();
+
+        // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
+        pattern6.SetActive(false);
+        pattern7a.SetActive(false);
+        pattern7b.SetActive(false);
+        pattern8a.SetActive(false);
+        pattern8b.SetActive(false);
+        pattern8c.SetActive(false);
+        pattern9.SetActive(false);
+        pattern10.SetActive(false);
+        // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
+
+        StartCoroutine(RunPattern6());
+        StartCoroutine(RunPattern7a());
+        StartCoroutine(RunPattern7b());
+        StartCoroutine(RunPattern8a());
+        StartCoroutine(RunPattern8b());
+        StartCoroutine(RunPattern8c());
+        StartCoroutine(RunPattern9());
+        StartCoroutine(RunPattern10());
+        // 추가 패턴 실행 메서드들도 필요에 따라 추가
+    }
+
     private void OnDisable()
     {
         StopCoroutine(RunPattern6());
@@ -162,32 +191,32 @@ public class PatternControllerrrrrr : MonoBehaviour
 
         if (checkpointTime == 0)
         {
-            startTime = 0f;
+            startTime = Time.time;
         }
         else if (checkpointTime == 39.6669f)
         {
-            startTime = 39.6669f;
+            startTime = Time.time - 39.6669f;
         }
         else if (checkpointTime == 79.3338f)
         {
-            startTime = 79.3338f;
+            startTime = Time.time - 79.3338f;
         }
         else if (checkpointTime == 119.0008f)
         {
-            startTime = 119.0008f;
+            startTime = Time.time - 119.0008f;
         }
     }
 
     private float GetElapsedTime()
     {
-        float elapsedTime = Time.time + startTime;
+        float elapsedTime = Time.time - startTime;
         float roundedElapsedTime = Mathf.Round(elapsedTime * 10f) / 10f; // 소수 첫째 자리까지 반올림
         return roundedElapsedTime;
     }
 
     private void Update()
     {
-        //Debug.Log("GetElapsedTime : " + GetElapsedTime());
+        Debug.Log("GetElapsedTime : " + GetElapsedTime());
     }
 
     private IEnumerator RunPattern6()
