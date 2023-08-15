@@ -8,6 +8,11 @@ public class StaminaBar : MonoBehaviour
     [SerializeField] Slider slider;
     Player player;
 
+    void Awake()
+    {
+        init();
+    }
+
     void Update()
     {
         slider.value = player.stamina;

@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
     /** 투사체 각도 보정치 */
     float projCorrFactor { get; } = 11f;
     /** 투사체 - 목 사이의 간격 */
-    float projRad { get; } = 0.7f;
+    float projRad { get; } = 0.6f;
 
     Rigidbody2D rig2D, projectileRig2D;
     Transform neck;
@@ -71,10 +71,15 @@ public class Player : MonoBehaviour
     Coroutine dashCoroutine, shootCooldownCoroutine;
     
 
+    void Awake()
+    {
+        init();
+    }
+
     void Update()
     {
         mousePos = updateMousePos();
-        onFired = projRad * 1.2f < (projectile.transform.position - neck.position).magnitude;
+        onFired = 1f <= projectileRig2D.velocity.magnitude;
         if (Input.GetAxisRaw("Horizontal").Equals(0))
             anim.SetBool("bAxisInput", false);
         else
@@ -94,7 +99,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown("Shoot"))
         {
-            if(shootCooldownCoroutine == null)
+            if (shootCooldownCoroutine == null)
                 buffer.Enqueue(InputType.Shoot);
         }
         if (Input.GetButtonDown("ShootCancel"))
@@ -112,25 +117,28 @@ public class Player : MonoBehaviour
         fixPlayerPosition();
         move();
 
-        if (buffer.Count <= 0) return;
-        switch (buffer.Dequeue())
+        /*if (buffer.Count <= 0) return;*/
+        while (0 < buffer.Count)
         {
-            case InputType.Dash:
-                dashCoroutine = StartCoroutine(dash());
-                break;
+            switch (buffer.Dequeue())
+            {
+                case InputType.Dash:
+                    dashCoroutine = StartCoroutine(dash());
+                    break;
 
-            case InputType.Jump:
-                jump();
-                break;
+                case InputType.Jump:
+                    jump();
+                    break;
 
-            case InputType.Shoot:
-                if (onFired) teleport();
-                else shoot();
-                break;
+                case InputType.Shoot:
+                    if (onFired) teleport();
+                    else shoot();
+                    break;
 
-            case InputType.ShootCancel:
-                shootCancel();
-                break;
+                case InputType.ShootCancel:
+                    shootCancel();
+                    break;
+            }
         }
     }
 

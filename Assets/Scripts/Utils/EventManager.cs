@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
-    [SerializeField] GameObject[] initList;
+    /*[SerializeField] GameObject[] initList;
 
     void Awake()
     {
         for (int i = 0; i < initList.Length; i++)
             initList[i].SendMessage("init");
-    }
+    }*/
 }

@@ -6,6 +6,11 @@ public class PatternManager : MonoBehaviour
 {
     [SerializeField] GameObject pattern;
 
+    void Awake()
+    {
+        init();
+    }
+
     public void init()
     {
         Invoke("runPattern", 1f);

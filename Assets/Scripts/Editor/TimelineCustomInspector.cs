@@ -64,7 +64,7 @@ namespace TimelineManager
             {
                 if (t.detail.repeatNo != 0 && t.detail.repeatDelayTime != 0)
                 {
-                    newLabel += " ~ " + (t.startAt + t.detail.repeatDelayTime * t.detail.repeatNo).ToString() + "√ ";
+                    newLabel += " ~ " + (t.startAt + t.detail.repeatDelayTime * (t.detail.repeatNo - 1)).ToString() + "√ ";
                 }
             }
 

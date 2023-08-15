@@ -30,8 +30,7 @@ public abstract class PatternBase : MonoBehaviour
 
     void Awake()
     {
-        bindPatternAction();
-        setPatternAction();
+        init();
     }
 
     void OnEnable()
@@ -55,6 +54,13 @@ public abstract class PatternBase : MonoBehaviour
                 Destroy(gameObject);
         }
         
+    }
+
+    public void init()
+    {
+        SortTimelineArraysByTime();
+        bindPatternAction();
+        setPatternAction();
     }
 
     public void setPatternAction()

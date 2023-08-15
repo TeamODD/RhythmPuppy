@@ -358,6 +358,44 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &118608092 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7320363692715735965, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+  m_PrefabInstance: {fileID: 1860036044}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &118608096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118608092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 376c8792cc9c35449b0758adb2add85b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!50 &118608097
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118608092}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &140689682
 GameObject:
   m_ObjectHideFlags: 0
@@ -1073,11 +1111,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &556452582 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1954424302641423539, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
-  m_PrefabInstance: {fileID: 1860036044}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &654559388
 GameObject:
   m_ObjectHideFlags: 0
@@ -1276,10 +1309,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc27276ead8e6f4c8f5e83eb14b30db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initList:
-  - {fileID: 556452582}
-  - {fileID: 1838838418}
-  - {fileID: 1155446038}
 --- !u!1 &956622002
 GameObject:
   m_ObjectHideFlags: 0
@@ -1394,7 +1423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1155446039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2352,11 +2381,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5022129265618786827, guid: 0b5ec4a556af36a48af12684878039b0, type: 3}
   m_PrefabInstance: {fileID: 1838838416}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1838838418 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5022129265618786821, guid: 0b5ec4a556af36a48af12684878039b0, type: 3}
-  m_PrefabInstance: {fileID: 1838838416}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1849641199
 GameObject:
   m_ObjectHideFlags: 0
@@ -2458,6 +2482,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: shootForce
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -2501150029612411199, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2501150029612411199, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 853321459083148496, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -2505,6 +2541,10 @@ PrefabInstance:
     - target: {fileID: 1954424302641423539, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_Name
       value: corgi
+      objectReference: {fileID: 0}
+    - target: {fileID: 8433857165118217412, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
