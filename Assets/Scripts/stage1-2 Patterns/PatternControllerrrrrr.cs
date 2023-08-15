@@ -145,34 +145,6 @@ public class PatternControllerrrrrr : MonoBehaviour
     }
     */
 
-    public void GameRestart()
-    {
-        OnDisable();
-        Checkingsavepoint();
-        gameprogress.GetComponent<GameProgress>().SettingCheckPoint();
-
-        // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
-        pattern6.SetActive(false);
-        pattern7a.SetActive(false);
-        pattern7b.SetActive(false);
-        pattern8a.SetActive(false);
-        pattern8b.SetActive(false);
-        pattern8c.SetActive(false);
-        pattern9.SetActive(false);
-        pattern10.SetActive(false);
-        // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
-
-        StartCoroutine(RunPattern6());
-        StartCoroutine(RunPattern7a());
-        StartCoroutine(RunPattern7b());
-        StartCoroutine(RunPattern8a());
-        StartCoroutine(RunPattern8b());
-        StartCoroutine(RunPattern8c());
-        StartCoroutine(RunPattern9());
-        StartCoroutine(RunPattern10());
-        // 추가 패턴 실행 메서드들도 필요에 따라 추가
-    }
-
     private void OnDisable()
     {
         StopCoroutine(RunPattern6());
@@ -187,8 +159,8 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private void Checkingsavepoint() //현재 GameProgress에서 음악 구간과 진행도 바는 설정해주는 상황
     {
-        float checkpointTime = gameprogress.GetComponent<GameProgress>().checkpointTime;
-
+        float  checkpointTime = PlayerPrefs.GetFloat("checkpointTime");
+       
         if (checkpointTime == 0)
         {
             startTime = Time.time;
@@ -216,7 +188,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("GetElapsedTime : " + GetElapsedTime());
+        //Debug.Log("GetElapsedTime : " + GetElapsedTime());
     }
 
     private IEnumerator RunPattern6()

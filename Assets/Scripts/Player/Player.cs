@@ -307,9 +307,24 @@ public class Player : MonoBehaviour
         hpManager.updateHP(health);
         if(health < 0)
         {
-            GameObject patterncontroller = GameObject.Find("PatternControllerrrr");
-            patterncontroller.GetComponent<GameRestart>(); //아직 테스트 안됨
+            Debug.Log("플레이어가 사망하였습니다.");
+            GameObject gameprogress = GameObject.Find("GameProgress");
+            gameprogress.GetComponent<GameProgress>().CheckingWhereToBack();
+
+            GameObject gameplayermanager = GameObject.Find("GamePlayManager");
+            gameplayermanager.GetComponent<GameRestart>().onRestart();
+
+
             gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Obstacles"))
+        {
+            getDamage(10);
+            Debug.Log("장애물 충돌이 감지되었습니다.");
         }
     }
 }

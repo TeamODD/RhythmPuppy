@@ -24,7 +24,7 @@ public class GameProgress : MonoBehaviour
     private bool isarrivecheckpoint2 = false;
     private bool isarrivecheckpoint3 = false;
 
-    public float checkpointTime;
+    private float checkpointTime;
 
     private void Start()
     {
@@ -129,6 +129,8 @@ public class GameProgress : MonoBehaviour
         {
             checkpointTime = musicLength * 0.25f;
         }
+
+        PlayerPrefs.SetFloat("checkpointTime", checkpointTime);
 
         SettingCheckPoint();
     }
