@@ -39,12 +39,13 @@ public class Player : MonoBehaviour
 
     GameObject uiCanvas, projectile, mark, head, neck;
     Rigidbody2D rig2D;
+    SpriteRenderer[] spriteList;
     HPManager hpManager;
     Animator anim;
 
     bool onFired;
     float headCorrectFactor;
-    Coroutine dashCoroutine, dashCooldownCoroutine;
+    Coroutine dashCoroutine, dashCooldownCoroutine, invincibilityCoroutine;
     
 
     void Awake()
@@ -102,13 +103,15 @@ public class Player : MonoBehaviour
         neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
         rig2D = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         hpManager = FindObjectOfType<HPManager>();
+        anim = GetComponent<Animator>();
 
         onFired = false;
-        dashCoroutine = dashCooldownCoroutine = null;
+        dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
-        
+
+
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
 
@@ -179,6 +182,8 @@ public class Player : MonoBehaviour
         if (dir == 0) yield break;
 
         anim.SetTrigger("Dash");
+        if (invincibilityCoroutine != null) StopCoroutine(invincibilityCoroutine);
+        invincibilityCoroutine = StartCoroutine(activateInvincibility(dashTime));
         rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
         rig2D.gravityScale = 0f;
 
@@ -307,19 +312,51 @@ public class Player : MonoBehaviour
 
     public void getDamage()
     {
-        if (dashCoroutine != null)
-        {
-            Debug.Log("È¸ÇÇ!");
-            return;
-        }
+        if (invincibilityCoroutine != null) return;
+
+        StartCoroutine(hitEvent());
+    }
+
+    private IEnumerator hitEvent()
+    {
+        const float duration = 1.5f;
+        invincibilityCoroutine = StartCoroutine(activateInvincibility(duration));
 
         uiCanvas.SendMessage("hitEffect");
+        head.SendMessage("setSadFace");
+
         health--;
         hpManager.updateHP(health);
         if (health < 0)
         {
+            head.SendMessage("setDeadFace");
             anim.SetTrigger("Death");
             gameObject.SetActive(false);
+        }
+
+        yield return new WaitForSeconds(duration);
+        head.SendMessage("setNormalFace");
+    }
+
+    private IEnumerator activateInvincibility(float duration)
+    {
+        setAlpha(0.6f);
+        yield return new WaitForSeconds(duration);
+        setAlpha(1f);
+        invincibilityCoroutine = null; 
+    }
+
+    private void setAlpha(float a)
+    {
+        const int exceptSortingIndex = 100;
+        Color c;
+
+        for(int i=0; i< spriteList.Length; i++)
+        {
+            if (spriteList[i].sortingOrder.Equals(exceptSortingIndex)) continue;
+            c = spriteList[i].color;
+            c.a = a;
+            spriteList[i].color = c;
         }
     }
 }

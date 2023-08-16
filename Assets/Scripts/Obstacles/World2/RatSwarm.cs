@@ -9,7 +9,6 @@ namespace Obstacles
         [SerializeField] float speed;
         [SerializeField] float runtime;
 
-        GameObject player;
         float cooltime, dir;
         bool cooldown;
 

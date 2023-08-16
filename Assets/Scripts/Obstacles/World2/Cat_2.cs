@@ -8,7 +8,6 @@ namespace Obstacles
     {
         [SerializeField] float speed;
 
-        GameObject player;
         SpriteRenderer sp;
         Vector3 dir;
 

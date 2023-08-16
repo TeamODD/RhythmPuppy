@@ -1321,7 +1321,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5369d951f7d4624db9d0cdd4752e230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pattern: {fileID: 1434621901715454958, guid: 0157883f8e29a9e4489f0722821c1078, type: 3}
+  pattern: {fileID: 1273078494639283698, guid: 599b16f22b2c1764e9f1bdfd48561f97, type: 3}
+  startDelay: 1.5
 --- !u!4 &1155446040
 Transform:
   m_ObjectHideFlags: 0
@@ -2572,6 +2573,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: dashTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: dashCooltime
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: -57217199681390872, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 517403042661185883, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 853321459083148496, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -2619,6 +2636,58 @@ PrefabInstance:
     - target: {fileID: 1954424302641423539, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_Name
       value: corgi
+      objectReference: {fileID: 0}
+    - target: {fileID: 2041517139093749241, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_SortingOrder
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6267850303124000583, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6867225597861305606, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: sweat
+      value: 
+      objectReference: {fileID: 21300000, guid: 76c9d8bfa0e64664bb34e1c7ece14608, type: 3}
+    - target: {fileID: 6867225597861305606, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: face.sad
+      value: 
+      objectReference: {fileID: 21300000, guid: 3cf3cc443df51b14d9f44f95ef526ce5, type: 3}
+    - target: {fileID: 6867225597861305606, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: face.dead
+      value: 
+      objectReference: {fileID: 21300000, guid: 6dab033f33d06ba4091ac2880c02432a, type: 3}
+    - target: {fileID: 6867225597861305606, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: face.happy
+      value: 
+      objectReference: {fileID: 21300000, guid: f9433a412112de143a06556af3a1181c, type: 3}
+    - target: {fileID: 6867225597861305606, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: face.normal
+      value: 
+      objectReference: {fileID: 21300000, guid: f67084f75802e4b418581dca96e96376, type: 3}
+    - target: {fileID: 6867225597861305606, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: faces.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6867225597861305606, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: faces.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: f67084f75802e4b418581dca96e96376, type: 3}
+    - target: {fileID: 6867225597861305606, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: faces.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: f9433a412112de143a06556af3a1181c, type: 3}
+    - target: {fileID: 6867225597861305606, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: faces.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 3cf3cc443df51b14d9f44f95ef526ce5, type: 3}
+    - target: {fileID: 6867225597861305606, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: faces.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 6dab033f33d06ba4091ac2880c02432a, type: 3}
+    - target: {fileID: 8561553825839530443, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_SortingOrder
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}

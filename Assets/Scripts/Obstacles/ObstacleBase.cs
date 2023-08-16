@@ -6,6 +6,8 @@ namespace Obstacles
 {
     public abstract class ObstacleBase : MonoBehaviour
     {
+        protected GameObject player;
+
         PolygonCollider2D col;
 
         public abstract void init();
@@ -13,6 +15,7 @@ namespace Obstacles
         void Awake()
         {
             col = GetComponent<PolygonCollider2D>();
+            player = GameObject.FindGameObjectWithTag("Player");
             init();
         }
 

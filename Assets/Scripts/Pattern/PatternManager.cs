@@ -5,6 +5,7 @@ using UnityEngine;
 public class PatternManager : MonoBehaviour
 {
     [SerializeField] GameObject pattern;
+    [SerializeField] float startDelay;
 
     void Awake()
     {
@@ -13,7 +14,7 @@ public class PatternManager : MonoBehaviour
 
     public void init()
     {
-        Invoke("runPattern", 1f);
+        Invoke("runPattern", startDelay);
     }
 
     private void runPattern()
