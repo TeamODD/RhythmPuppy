@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Mark : MonoBehaviour
 {
-    GameObject player;
+    [SerializeField] float fadeDelay;
+
     SpriteRenderer sp;
     Color from, to;
-    float progress, fadeDelay;
+    float progress;
 
     Coroutine task;
 
@@ -15,7 +16,6 @@ public class Mark : MonoBehaviour
     {
         sp = GetComponent<SpriteRenderer>();
         progress = 0;
-        fadeDelay = transform.parent.GetComponent<Player>().markFadeDelay;
         task = null;
 
         to = sp.color;

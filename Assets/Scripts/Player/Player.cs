@@ -6,7 +6,7 @@ using UnityEngine.U2D.Animation;
 
 public class Player : MonoBehaviour
 {
-    enum InputType
+    enum PlayerAction
     {
         Dash,
         Jump,
@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
         ShootCancel,
     }
 
-    [Header("기본 정보")]
+    [Header("기본 스탯")]
     [Tooltip("체력")] public int health;
 
     [Tooltip("스태미나")] public float stamina;
@@ -22,10 +22,11 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("기본 이동속도")]
     float speed;
 
-    [Header("세부 정보")]
+    [Header("점프")]
     [SerializeField, Tooltip("점프 입력 시 y축으로 받을 힘(Force)")]
     float jumpForce;
 
+    [Header("대시")]
     [SerializeField, Tooltip("대시 입력 시 x축으로 받을 힘(Force)")]
     float dashForce;
 
@@ -35,23 +36,6 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]
     float dashCooldown;
 
-    [Header("투사체 오브젝트")]
-    [SerializeField] GameObject projectile;
-
-    [Header("표식 오브젝트")]
-    [SerializeField] Mark mark;
-    public float markFadeDelay;
-
-    [Header("머리 오브젝트")]
-    [SerializeField] GameObject head;
-
-    [SerializeField, Tooltip("투사체 발사 시 적용되는 힘(Force)")]
-    float shootForce;
-
-    [SerializeField, Tooltip("발사 종료 후 재사용 대기시간")]
-    float shootCooldown;
-
-
     /** head 각도 보정치*/
     float headCorrFactor { get; } = 52f;
     /** 투사체 각도 보정치 */
@@ -59,15 +43,12 @@ public class Player : MonoBehaviour
     /** 투사체 - 목 사이의 간격 */
     float projRad { get; } = 0.6f;
 
-    Rigidbody2D rig2D, projectileRig2D;
-    Transform neck;
+    GameObject projectile, mark, head, neck;
+    Rigidbody2D rig2D;
     HPManager hpManager;
     Animator anim;
 
-    /** 키 입력 버퍼 */
-    Queue<InputType> buffer;
     bool onFired;
-    Vector3 mousePos;
     Coroutine dashCoroutine, shootCooldownCoroutine;
     
 
@@ -78,79 +59,54 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        mousePos = updateMousePos();
-        onFired = 1f <= projectileRig2D.velocity.magnitude;
-        if (Input.GetAxisRaw("Horizontal").Equals(0))
-            anim.SetBool("bAxisInput", false);
-        else
-            anim.SetBool("bAxisInput", true);
-        
-        headToMousePos();
+        /*headToMousePos();*/
+        checkJumpStatus();
 
         if (Input.GetButtonDown("Dash"))
         {
             if(dashCoroutine == null)
-                buffer.Enqueue(InputType.Dash);
+                dashCoroutine = StartCoroutine(dash());
         }
         if (Input.GetButtonDown("Jump"))
         {
-            if(true)
-                buffer.Enqueue(InputType.Jump);
+            jump();
         }
         if (Input.GetButtonDown("Shoot"))
         {
             if (shootCooldownCoroutine == null)
-                buffer.Enqueue(InputType.Shoot);
+                if (!onFired) shoot();
+                else teleport();
         }
         if (Input.GetButtonDown("ShootCancel"))
         {
             if (onFired)
-                buffer.Enqueue(InputType.ShootCancel);
+                shootCancel();
         }
     }
 
     void FixedUpdate()
     {
-        /*flipBody();*/
-        checkJumpStatus();
-        if (!onFired) fixProjectilePos();
-        fixPlayerPosition();
+        flipBody();
         move();
+    }
 
-        /*if (buffer.Count <= 0) return;*/
-        while (0 < buffer.Count)
-        {
-            switch (buffer.Dequeue())
-            {
-                case InputType.Dash:
-                    dashCoroutine = StartCoroutine(dash());
-                    break;
-
-                case InputType.Jump:
-                    jump();
-                    break;
-
-                case InputType.Shoot:
-                    if (onFired) teleport();
-                    else shoot();
-                    break;
-
-                case InputType.ShootCancel:
-                    shootCancel();
-                    break;
-            }
-        }
+    void LateUpdate()
+    {
+        fixProjectilePos();
+        fixPlayerPosition();
     }
 
     public void init()
     {
-        this.rig2D = GetComponent<Rigidbody2D>();
-        this.projectileRig2D = projectile.GetComponent<Rigidbody2D>();
-        this.anim = GetComponent<Animator>();
-        this.hpManager = FindObjectOfType<HPManager>();
-        this.neck = head.GetComponent<SpriteSkin>().rootBone;
+        projectile = transform.Find("투사체").gameObject;
+        mark = transform.Find("표식").gameObject;
+        head = transform.Find("머리").gameObject;
+        neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
-        buffer = new Queue<InputType>();
+        rig2D = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        hpManager = FindObjectOfType<HPManager>();
+
         onFired = false;
         dashCoroutine = shootCooldownCoroutine = null;
 
@@ -173,16 +129,15 @@ public class Player : MonoBehaviour
     private void move()
     {
         float xInput = Input.GetAxis("Horizontal");
-        if (xInput == 0) return;
-
-        rig2D.velocity = new Vector2(xInput * speed, rig2D.velocity.y);
-
-        /* flip body */
-        Vector3 flip = transform.localScale;
-        flip.x = Mathf.Abs(flip.x);
-        if (xInput < 0)
-            flip.x *= -1;
-        transform.localScale = flip;
+        if (xInput.Equals(0))
+        {
+            anim.SetBool("bAxisInput", false);
+        }
+        else
+        {
+            anim.SetBool("bAxisInput", true);
+            transform.Translate(new Vector3(xInput * speed * Time.fixedDeltaTime, 0, 0));
+        }
     }
 
     private void jump()
@@ -194,7 +149,6 @@ public class Player : MonoBehaviour
             case 1:
                 anim.SetTrigger("Jump");
                 anim.SetInteger("JumpCount", count + 1);
-                /*rig2D.velocity = new Vector2(rig2D.velocity.x, 0);*/
                 rig2D.velocity = new Vector2(rig2D.velocity.x, jumpForce);
                 break;
             default:
@@ -226,8 +180,7 @@ public class Player : MonoBehaviour
         if (dir == 0) yield break;
 
         anim.SetTrigger("Dash");
-        /*rig2D.velocity = new Vector2(dir * dashForce, 0);*/
-        rig2D.velocity = new Vector2(dir * dashForce * Time.fixedDeltaTime, rig2D.velocity.y);
+        rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
         rig2D.gravityScale = 0f;
 
         yield return new WaitForSeconds(dashTime);
@@ -242,34 +195,28 @@ public class Player : MonoBehaviour
 
     private void shoot()
     {
-        Vector2 dir = (mousePos - head.transform.position).normalized;
-        projectileRig2D.velocity = dir * shootForce;
+        if (!isProjectileOnScreen()) return;
+        projectile.SendMessage("shoot");
+        onFired = true;
     }
 
     private void teleport()
     {
         int count = anim.GetInteger("JumpCount");
         Vector3 pos = projectile.transform.position;
-        projectileRig2D.velocity = Vector2.zero;
-        projectile.transform.position = neck.position;
+        projectile.SendMessage("stop");
+        projectile.transform.position = neck.transform.position;
         transform.position = pos;
         if (2 <= count)
             anim.SetInteger("JumpCount", count - 1);
-        shootCooldownCoroutine = StartCoroutine(runShootCooldown());
+        onFired = false;
     }
 
     private void shootCancel()
     {
-        projectileRig2D.velocity = Vector2.zero;
-        projectile.transform.position = neck.position;
-        shootCooldownCoroutine = StartCoroutine(runShootCooldown());
-    }
-
-    private IEnumerator runShootCooldown()
-    {
-        yield return new WaitForSeconds(shootCooldown);
-        shootCooldownCoroutine = null;
-        yield break;
+        projectile.SendMessage("stop");
+        projectile.transform.position = neck.transform.position;
+        onFired = false;
     }
 
     private void checkJumpStatus()
@@ -289,6 +236,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void fixPlayerPosition()
+    {
+        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+        if (pos.x <= 0f) pos.x = 0f;
+        if (1f <= pos.x) pos.x = 1f;
+        if (pos.y <= 0f) pos.y = 0f;
+        if (1f <= pos.y) pos.y = 1f;
+        transform.position = Camera.main.ViewportToWorldPoint(pos);
+    }
+
     private void fixProjectilePos()
     {
         if (!onFired) return;
@@ -303,32 +260,54 @@ public class Player : MonoBehaviour
 
         if (!pos.Equals(copy))
         {
-            projectileRig2D.velocity = Vector2.zero;
+            projectile.SendMessage("stop");
             projectile.transform.position = Camera.main.ViewportToWorldPoint(pos);
         }
     }
 
-    private Vector3 updateMousePos()
+    private bool isProjectileOnScreen()
     {
-        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
+
+        if (pos.x <= 0f || 1f <= pos.x || pos.y <= 0f || 1f <= pos.y) return false;
+        return true;
     }
 
-    /*private void flipBody()
+    /** Flip body if corgi is heading behind or moving to behind. */
+    private void flipBody()
     {
         const float detailCorrFactor = 6f;
         Vector3 flip = transform.localScale;
-        float rot = neck.localRotation.eulerAngles.z;
 
-        rot = (rot - headCorrFactor + detailCorrFactor);
-        if (90 < rot && rot < 270)
-            flip.x *= -1;
+        float rot = neck.transform.localRotation.eulerAngles.z - headCorrFactor + detailCorrFactor;
+        rot = 0 <= rot ? rot % 360 : rot % 360 + 360;
+        if (110 < rot && rot < 250)
+        {
+            flip.x = flip.x * -1;
+        }
+        else if (70 < rot && rot < 290)
+        {
+            int xInput = (int)Input.GetAxisRaw("Horizontal");
+            switch (xInput)
+            {
+                case -1:
+                    flip.x = Mathf.Abs(flip.x) * -1;
+                    break;
+                case 1:
+                    flip.x = Mathf.Abs(flip.x);
+                    break;
+            }
+        }
+
         transform.localScale = flip;
-    }*/
+    }
 
     private void headToMousePos()
     {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 dir;
         float rot, headRot, projRot;
+
 
         dir = mousePos - head.transform.position;
         rot = 0 < dir.y ? Vector2.Angle(dir, Vector2.right) : 360f - Vector3.Angle(dir, Vector2.right);
@@ -336,7 +315,7 @@ public class Player : MonoBehaviour
         /* head rotation */
         headRot = rot + headCorrFactor;
         if (transform.localScale.x < 0) headRot = rot + (180 - headCorrFactor);
-        neck.rotation = Quaternion.Euler(0, 0, headRot);
+        neck.transform.rotation = Quaternion.Euler(0, 0, headRot);
 
         /* projectile rotation */
         if (!onFired)
@@ -360,15 +339,5 @@ public class Player : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-    }
-
-    private void fixPlayerPosition()
-    {
-        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
-        if (pos.x <= 0f) pos.x = 0f;
-        if (1f <= pos.x) pos.x = 1f;
-        if (pos.y <= 0f) pos.y = 0f;
-        if (1f <= pos.y) pos.y = 1f;
-        transform.position = Camera.main.ViewportToWorldPoint(pos);
     }
 }
