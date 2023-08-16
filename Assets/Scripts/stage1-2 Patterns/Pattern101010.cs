@@ -32,18 +32,14 @@ public class Pattern101010 : MonoBehaviour
     private IEnumerator DropChestnuts()
     {
 
-        float xPos = Random.Range(-7f, 7f);
-        Vector3 chestnutPosition = new Vector3(xPos, 5.5f, 0f);
+        float xPos = Random.Range(-8.124f, 8.124f);
+        Vector3 chestnutPosition = new Vector3(xPos, 4.201f, 0f);
 
         // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(xPos, chestnutPosition.y - 1f, 0f);
+        Vector3 warningPosition = new Vector3(xPos, 4.327f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        if (warningRenderer != null)
-        {
-            warningRenderer.sortingOrder = int.MaxValue;
-        }
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         Color originalColor = warningRenderer.color;

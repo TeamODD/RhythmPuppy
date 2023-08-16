@@ -188,7 +188,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log("GetElapsedTime : " + GetElapsedTime());
+        Debug.Log("GetElapsedTime : " + GetElapsedTime());
     }
 
     private IEnumerator RunPattern6()
@@ -242,7 +242,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7bTimings[i];
 
-            if (timing < GetElapsedTime())
+            if (timing < GetElapsedTime())  
             {
                 continue;
             }

@@ -26,21 +26,25 @@ public class Pattern999 : MonoBehaviour
     {
         // 날다람쥐가 시작하는 위치를 랜덤으로 선택합니다.
         float xPos;
-        float yPos = 4.5f;
+        float yPos = 4.293f;
 
         if (Random.Range(0, 2) == 0) // 왼쪽 위에서 시작
-            xPos = -8.385f;
+            xPos = -8.16f;
             
         else // 오른쪽 위에서 시작
-            xPos = 8.385f;
+            xPos = 8.16f;
 
         Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        if (warningRenderer != null)
+
+        float scaleX = newWarning.transform.localScale.x;
+        float scaleY = newWarning.transform.localScale.y;
+        float scaleZ = newWarning.transform.localScale.z;
+        if (xPos == -8.16f) // 왼쪽 위에서 시작
         {
-            warningRenderer.sortingOrder = int.MaxValue;
+            newWarning.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
         }
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
@@ -84,10 +88,11 @@ public class Pattern999 : MonoBehaviour
         GameObject newSquirrel = Instantiate(flyingSquirrel, spawnPosition, Quaternion.identity);
         Rigidbody2D squirrelRigidbody = newSquirrel.GetComponent<Rigidbody2D>();
 
-        float scaleX = newSquirrel.transform.localScale.x;
-        float scaleY = newSquirrel.transform.localScale.y;
-        float scaleZ = newSquirrel.transform.localScale.z;
-        if (xPos == -8.385f) // 왼쪽 위에서 시작
+        scaleX = newSquirrel.transform.localScale.x;
+        scaleY = newSquirrel.transform.localScale.y;
+        scaleZ = newSquirrel.transform.localScale.z;
+
+        if (xPos == -8.16f) // 왼쪽 위에서 시작
         {
             newSquirrel.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
         }

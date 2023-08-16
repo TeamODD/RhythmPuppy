@@ -70,7 +70,7 @@ public class Pattern777aaa : MonoBehaviour
     private IEnumerator showWarning(float xPos)
     {
         // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(xPos, 4.5f, 0f);
+        Vector3 warningPosition = new Vector3(xPos, -0.8f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정

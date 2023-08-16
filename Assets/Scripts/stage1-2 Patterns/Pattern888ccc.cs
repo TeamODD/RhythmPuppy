@@ -69,14 +69,14 @@ public class Pattern888ccc : MonoBehaviour
 
             if (currentIndex < previousXPositions.Length)
             {
-                xPos = Random.Range(-8.33f, 8.33f);
+                xPos = Random.Range(-8.14f, 8.14f);
                 previousXPositions[currentIndex] = xPos;
             }
             else
             {
                 do
                 {
-                    xPos = Random.Range(-8.33f, 8.33f);
+                    xPos = Random.Range(-8.14f, 8.14f);
                 } while (IsWithinRangeOfPreviousXPositions(xPos));
                 previousXPositions[currentIndex % previousXPositions.Length] = xPos;
             }
@@ -85,7 +85,7 @@ public class Pattern888ccc : MonoBehaviour
 
             //경고 오브젝트 생성
 
-            yPos = -4f;
+            yPos = -2.53f;
 
             StartCoroutine(SpawnWeasel(xPos, yPos));
         }
@@ -97,10 +97,6 @@ public class Pattern888ccc : MonoBehaviour
         GameObject newWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        if (warningRenderer != null)
-        {
-            warningRenderer.sortingOrder = int.MaxValue;
-        }
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         Color originalColor = warningRenderer.color;
@@ -140,7 +136,7 @@ public class Pattern888ccc : MonoBehaviour
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * weaselSpeed;
 
-        while (newWeasel.transform.position.y < -4f)
+        while (newWeasel.transform.position.y < -2.015385f)
         {
             yield return null;
         }
