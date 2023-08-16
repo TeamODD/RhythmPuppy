@@ -4,21 +4,14 @@ using UnityEngine;
 
 namespace Obstacles
 {
-    public class RatSwarm : MonoBehaviour
+    public class RatSwarm : ObstacleBase
     {
         [SerializeField] float speed;
         [SerializeField] float runtime;
 
+        GameObject player;
         float cooltime, dir;
         bool cooldown;
-        GameObject player;
-
-        void OnEnable()
-        {
-            cooldown = true;
-            player = GameObject.FindGameObjectWithTag("Player");
-            StartCoroutine(runCooldown());
-        }
 
         void FixedUpdate()
         {
@@ -30,13 +23,12 @@ namespace Obstacles
             }
         }
 
-        void OnTriggerEnter2D(Collider2D col)
+        public override void init()
         {
-            GameObject o = col.transform.parent.gameObject;
-            if (o.gameObject.CompareTag("Player"))
-            {
-                o.gameObject.GetComponent<Player>().getDamage(1);
-            }
+            player = GameObject.FindGameObjectWithTag("Player");
+            cooldown = true;
+
+            StartCoroutine(runCooldown());
         }
 
         public void setCooltime(float cooltime)

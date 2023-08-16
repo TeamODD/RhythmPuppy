@@ -3,6 +3,18 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    struct ProjectileData
+    {
+        readonly public float rad { get; }
+        readonly public float correctFactor { get; }
+
+        public ProjectileData(float rad, float corrFactor)
+        {
+            this.rad = rad;
+            this.correctFactor = corrFactor;
+        }
+    }
+
     [SerializeField, Tooltip("투사체 발사 시 적용되는 힘(Force)")]
     float shootForce;
 
@@ -10,17 +22,14 @@ public class Projectile : MonoBehaviour
     float shootCooldown;
 
     GameObject player;
-    Transform head, neck;
+    Transform neck, head;
     Vector2 dir;
     Coroutine cooldownCoroutine;
+    ProjectileData data;
 
     void Awake()
     {
-        player = transform.parent.gameObject;
-        head = player.transform.Find("머리");
-        neck = player.transform.Find("bone_2/neck"); 
-        dir = Vector2.zero;
-        cooldownCoroutine = null;
+        init();
     }
 
     void FixedUpdate()
@@ -37,6 +46,20 @@ public class Projectile : MonoBehaviour
         {
             dir = Vector2.zero;
         }
+    }
+
+    public void init()
+    {
+        player = transform.parent.gameObject;
+        neck = player.transform.Find("bone_2/neck");
+        head = player.transform.Find("bone_2/neck/head");
+        dir = Vector2.zero;
+        cooldownCoroutine = null;
+
+        float rad, correctFactor;
+        rad = (neck.position - transform.position).magnitude;
+        correctFactor = 16f;
+        data = new ProjectileData(rad, correctFactor);
     }
 
     public void shoot()
@@ -61,20 +84,14 @@ public class Projectile : MonoBehaviour
         cooldownCoroutine = null;
     }
 
-    // 2, -2.4
     private void fixPosition()
     {
-        const float projCorrFactor = -42.5f;
-        Vector2 dir;
-        Quaternion q;
-        float rot;
+        float angle, rot;
+        angle = head.localRotation.eulerAngles.z;
+        rot = neck.localRotation.eulerAngles.z + head.localRotation.eulerAngles.z + data.correctFactor;
 
-        rot = neck.rotation.z + projCorrFactor;
-        rot = rot < 0 ? rot % 360 + 360 : rot % 360;
-        q = Quaternion.Euler(0, 0, rot);
-        dir = q * new Vector2(2, -2.4f);
+        Vector3 dir = (Quaternion.Euler(0, 0, rot) * Vector3.right).normalized;
         if (player.transform.localScale.x < 0) dir.x *= -1;
-
-        transform.position = head.position + (Vector3)dir;
+        transform.position = neck.position + dir * data.rad;
     }
 }

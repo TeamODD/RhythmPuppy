@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -34,22 +35,16 @@ public class Player : MonoBehaviour
     float dashTime;
 
     [SerializeField, Tooltip("대시 종료 후 재사용 대기시간")]
-    float dashCooldown;
+    float dashCooltime;
 
-    /** head 각도 보정치*/
-    float headCorrFactor { get; } = 52f;
-    /** 투사체 각도 보정치 */
-    float projCorrFactor { get; } = 11f;
-    /** 투사체 - 목 사이의 간격 */
-    float projRad { get; } = 0.6f;
-
-    GameObject projectile, mark, head, neck;
+    GameObject uiCanvas, projectile, mark, head, neck;
     Rigidbody2D rig2D;
     HPManager hpManager;
     Animator anim;
 
     bool onFired;
-    Coroutine dashCoroutine, shootCooldownCoroutine;
+    float headCorrectFactor;
+    Coroutine dashCoroutine, dashCooldownCoroutine;
     
 
     void Awake()
@@ -59,13 +54,14 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        /*headToMousePos();*/
         checkJumpStatus();
 
         if (Input.GetButtonDown("Dash"))
         {
-            if(dashCoroutine == null)
+            if (dashCoroutine == null && dashCooldownCoroutine == null)
+            {
                 dashCoroutine = StartCoroutine(dash());
+            }
         }
         if (Input.GetButtonDown("Jump"))
         {
@@ -73,14 +69,15 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown("Shoot"))
         {
-            if (shootCooldownCoroutine == null)
-                if (!onFired) shoot();
-                else teleport();
+            if (!onFired) shoot();
+            else teleport();
         }
         if (Input.GetButtonDown("ShootCancel"))
         {
             if (onFired)
+            {
                 shootCancel();
+            }
         }
     }
 
@@ -98,6 +95,7 @@ public class Player : MonoBehaviour
 
     public void init()
     {
+        uiCanvas = GameObject.Find("UICanvas");
         projectile = transform.Find("투사체").gameObject;
         mark = transform.Find("표식").gameObject;
         head = transform.Find("머리").gameObject;
@@ -108,8 +106,9 @@ public class Player : MonoBehaviour
         hpManager = FindObjectOfType<HPManager>();
 
         onFired = false;
-        dashCoroutine = shootCooldownCoroutine = null;
-
+        dashCoroutine = dashCooldownCoroutine = null;
+        headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
+        
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
 
@@ -186,11 +185,15 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(dashTime);
         rig2D.velocity = new Vector2(0, rig2D.velocity.y);
         rig2D.gravityScale = 1f;
-
-        yield return new WaitForSeconds(dashCooldown);
-        anim.ResetTrigger("Dash");
+        dashCooldownCoroutine = StartCoroutine(dashCooldown());
         dashCoroutine = null;
-        yield break;
+    }
+
+    private IEnumerator dashCooldown()
+    {
+        yield return new WaitForSeconds(dashCooltime);
+        anim.ResetTrigger("Dash");
+        dashCooldownCoroutine = null;
     }
 
     private void shoot()
@@ -276,10 +279,10 @@ public class Player : MonoBehaviour
     /** Flip body if corgi is heading behind or moving to behind. */
     private void flipBody()
     {
-        const float detailCorrFactor = 6f;
+        const float detailCorrFactor = 16f;
         Vector3 flip = transform.localScale;
 
-        float rot = neck.transform.localRotation.eulerAngles.z - headCorrFactor + detailCorrFactor;
+        float rot = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
         rot = 0 <= rot ? rot % 360 : rot % 360 + 360;
         if (110 < rot && rot < 250)
         {
@@ -302,41 +305,20 @@ public class Player : MonoBehaviour
         transform.localScale = flip;
     }
 
-    private void headToMousePos()
+    public void getDamage()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 dir;
-        float rot, headRot, projRot;
-
-
-        dir = mousePos - head.transform.position;
-        rot = 0 < dir.y ? Vector2.Angle(dir, Vector2.right) : 360f - Vector3.Angle(dir, Vector2.right);
-
-        /* head rotation */
-        headRot = rot + headCorrFactor;
-        if (transform.localScale.x < 0) headRot = rot + (180 - headCorrFactor);
-        neck.transform.rotation = Quaternion.Euler(0, 0, headRot);
-
-        /* projectile rotation */
-        if (!onFired)
+        if (dashCoroutine != null)
         {
-            projRot = rot + projCorrFactor;
-            if (transform.localScale.x < 0) projRot = rot - projCorrFactor;
-            Quaternion q = Quaternion.Euler(0, 0, projRot);
-            dir = q * Vector2.right;
-
-            if (projRad < dir.magnitude)
-                dir = dir.normalized * projRad;
-            projectile.transform.position = neck.transform.position + (Vector3)dir;
+            Debug.Log("회피!");
+            return;
         }
-    }
 
-    public void getDamage(int damage)
-    {
-        health -= damage;
+        uiCanvas.SendMessage("hitEffect");
+        health--;
         hpManager.updateHP(health);
         if (health < 0)
         {
+            anim.SetTrigger("Death");
             gameObject.SetActive(false);
         }
     }

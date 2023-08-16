@@ -4,23 +4,13 @@ using UnityEngine;
 
 namespace Obstacles
 {
-    public class Cat_2 : MonoBehaviour
+    public class Cat_2 : ObstacleBase
     {
         [SerializeField] float speed;
 
         GameObject player;
         SpriteRenderer sp;
         Vector3 dir;
-
-        void OnEnable()
-        {
-            player = GameObject.FindGameObjectWithTag("Player");
-            sp = GetComponent<SpriteRenderer>();
-            sp.flipX = false;
-            if (player.transform.position.x < transform.position.x)
-                sp.flipX = true;
-
-        }
 
         void FixedUpdate()
         {
@@ -30,13 +20,13 @@ namespace Obstacles
                 Destroy(gameObject);
         }
 
-        void OnTriggerEnter2D(Collider2D col)
+        public override void init()
         {
-            GameObject o = col.transform.parent.gameObject;
-            if (o.gameObject.CompareTag("Player"))
-            {
-                o.gameObject.GetComponent<Player>().getDamage(1);
-            }
+            player = GameObject.FindGameObjectWithTag("Player");
+            sp = GetComponent<SpriteRenderer>();
+            sp.flipX = false;
+            if (player.transform.position.x < transform.position.x)
+                sp.flipX = true;
         }
 
         public void setDir(Vector3 dir)
