@@ -9,7 +9,6 @@ TagManager:
   - PatternManager
   - ObstacleManager
   - MusicManager
-  - LampLight
   layers:
   - Default
   - TransparentFX

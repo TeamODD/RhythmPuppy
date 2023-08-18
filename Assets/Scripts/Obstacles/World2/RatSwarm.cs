@@ -4,13 +4,19 @@ using UnityEngine;
 
 namespace Obstacles
 {
-    public class RatSwarm : ObstacleBase
+    public class RatSwarm : MonoBehaviour
     {
         [SerializeField] float speed;
         [SerializeField] float runtime;
 
+        GameObject player;
         float cooltime, dir;
         bool cooldown;
+
+        void Awake()
+        {
+            init();
+        }
 
         void FixedUpdate()
         {
@@ -22,7 +28,7 @@ namespace Obstacles
             }
         }
 
-        public override void init()
+        public void init()
         {
             player = GameObject.FindGameObjectWithTag("Player");
             cooldown = true;

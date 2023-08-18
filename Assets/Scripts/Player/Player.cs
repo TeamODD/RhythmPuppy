@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
 
     GameObject uiCanvas, projectile, mark, head, neck;
     Rigidbody2D rig2D;
+    PolygonCollider2D col2D;
     SpriteRenderer[] spriteList;
     HPManager hpManager;
     Animator anim;
@@ -85,13 +86,25 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         flipBody();
-        move();
+        move(); 
+        RaycastHit2D raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.up, 1f);
+        /*if(raycast.collider != null) Debug.Log(raycast.collider.gameObject.name);*/
     }
 
     void LateUpdate()
     {
         fixProjectilePos();
         fixPlayerPosition();
+    }
+
+    void OnCollisionEnter2D(Collision2D c)
+    {
+        GameObject o = c.gameObject;
+        if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
+        {
+            /*StartCoroutine(ignoreCollision(o.layer));*/
+            getDamage();
+        }
     }
 
     public void init()
@@ -103,6 +116,7 @@ public class Player : MonoBehaviour
         neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
         rig2D = GetComponent<Rigidbody2D>();
+        col2D = GetComponent<PolygonCollider2D>();
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         hpManager = FindObjectOfType<HPManager>();
         anim = GetComponent<Animator>();
@@ -308,6 +322,13 @@ public class Player : MonoBehaviour
         }
 
         transform.localScale = flip;
+    }
+
+    private IEnumerator ignoreCollision(int target)
+    {
+        Physics2D.IgnoreLayerCollision(gameObject.layer, target, true);
+        yield return new WaitForSeconds(1f);
+        Physics2D.IgnoreLayerCollision(gameObject.layer, target, false);
     }
 
     public void getDamage()

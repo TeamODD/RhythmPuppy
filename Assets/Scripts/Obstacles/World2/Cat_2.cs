@@ -4,12 +4,18 @@ using UnityEngine;
 
 namespace Obstacles
 {
-    public class Cat_2 : ObstacleBase
+    public class Cat_2 : MonoBehaviour
     {
         [SerializeField] float speed;
 
+        GameObject player;
         SpriteRenderer sp;
         Vector3 dir;
+
+        void Awake()
+        {
+            init();
+        }
 
         void FixedUpdate()
         {
@@ -19,7 +25,7 @@ namespace Obstacles
                 Destroy(gameObject);
         }
 
-        public override void init()
+        public void init()
         {
             player = GameObject.FindGameObjectWithTag("Player");
             sp = GetComponent<SpriteRenderer>();

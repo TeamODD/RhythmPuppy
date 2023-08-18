@@ -3,11 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Paw : ObstacleBase
+public class Paw : MonoBehaviour
 {
     [SerializeField] float rotationSpeed;
 
     float rotated, r;
+
+    void Awake()
+    {
+        init();
+    }
 
     void FixedUpdate()
     {
@@ -17,7 +22,7 @@ public class Paw : ObstacleBase
         if (140 < rotated) Destroy(gameObject);
     }
 
-    public override void init()
+    public void init()
     {
         rotated = 0f;
     }

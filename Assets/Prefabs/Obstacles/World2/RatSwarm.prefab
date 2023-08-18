@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 278165312640628888}
   - component: {fileID: 5805386058947043314}
   - component: {fileID: 7501515133327636364}
-  - component: {fileID: 2439272448918316677}
+  - component: {fileID: -2511944139863027116}
   - component: {fileID: 6488401021658816166}
   m_Layer: 8
   m_Name: RatSwarm
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   runtime: 16
---- !u!50 &2439272448918316677
+--- !u!50 &-2511944139863027116
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -132,7 +132,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
