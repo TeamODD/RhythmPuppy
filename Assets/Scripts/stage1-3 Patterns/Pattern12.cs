@@ -30,6 +30,19 @@ public class Pattern12 : MonoBehaviour
         float randomZRotation = Random.Range(-80f, -40f);
         newWarning.transform.rotation = Quaternion.Euler(0f, 0f, randomZRotation);
 
+
+        float distanceFromDiagonal = 14f * Mathf.Sqrt(2f); // 대각선으로부터의 거리
+
+        // 대각선 방향으로의 이동 벡터 계산
+        Vector3 diagonalDirection = new Vector3(Mathf.Cos(Mathf.Deg2Rad * randomZRotation), Mathf.Sin(Mathf.Deg2Rad * randomZRotation), 0f);
+
+        // 왼쪽 아래에서 시작하는 위치 계산
+        Vector3 thorstemPosition = warningPosition - diagonalDirection * distanceFromDiagonal;
+
+        // 새로운 오브젝트 생성 및 위치, 각도 설정
+        GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.Euler(0f, 0f, randomZRotation));
+
+
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
         Color originalColor = warningRenderer.color;
@@ -63,6 +76,7 @@ public class Pattern12 : MonoBehaviour
         // 경고 오브젝트 제거
         Destroy(newWarning);
 
+        /*
         Vector3 thorstemPosition = new Vector3(-18.56f, -18.49f, 0f);
         GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);
 
@@ -72,6 +86,7 @@ public class Pattern12 : MonoBehaviour
 
         // 회전된 각도를 사용하여 벡터 회전
         Vector2 diagonalDirection = Quaternion.Euler(0f, 0f, randomZRotation) * Vector2.up;
+        
 
         // 대각선 이동 속도 계산
         Vector2 diagonalVelocity = diagonalDirection.normalized * thorwingspeed;
@@ -92,7 +107,7 @@ public class Pattern12 : MonoBehaviour
         {
             yield return null;
         }
-
+        */
         Destroy(newthorstem);
         Destroy(gameObject);
     }
