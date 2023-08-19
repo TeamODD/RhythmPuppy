@@ -29,9 +29,11 @@ public class Menu_Background2_Alpha : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (meAlpha.color.a == 255 || meAlpha.color.a == 0) return; 
+
         for (int i = 0; i < childCount; i++)
         {
-            ImgAlpha[i].color = meAlpha.color;
+            ImgAlpha[i].color = new Color(ImgAlpha[i].color.r, ImgAlpha[i].color.g, ImgAlpha[i].color.b, meAlpha.color.a);
         }
     }
 }
