@@ -16,15 +16,12 @@ public class Player : MonoBehaviour
         ShootCancel,
     }
 
-    [Header("�⺻ ����")]
-    [Tooltip("ü��")] public int health;
-
-    [Tooltip("���¹̳�")] public float stamina;
-
-    [SerializeField, Tooltip("�⺻ �̵��ӵ�")]
+    [Header("basic status")]
+    public int health;
+    public float stamina;
     float speed;
 
-    [Header("����")]
+    [Header("Jump")]
     [SerializeField, Tooltip("���� �Է� �� y������ ���� ��(Force)")]
     float jumpForce;
 
@@ -191,6 +188,7 @@ public class Player : MonoBehaviour
         float dir = Input.GetAxisRaw("Horizontal");
         if (dir == 0) yield break;
 
+        stamina -= 20f;
         anim.SetTrigger("Dash");
         if (invincibilityCoroutine != null) StopCoroutine(invincibilityCoroutine);
         invincibilityCoroutine = StartCoroutine(activateInvincibility(dashTime));
