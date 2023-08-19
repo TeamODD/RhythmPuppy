@@ -19,18 +19,12 @@ namespace World_2
         private IEnumerator runPattern()
         {
             float r = Random.Range(-8f, 8f);
-            GameObject o = Instantiate(paw);
-            o.transform.position = new Vector3(r, o.transform.position.y, o.transform.position.z);
-            o.transform.SetParent(ObstacleManager.transform);
-            o.SetActive(true);
-            for (int i=10; -110<=i; i -= 1)
-            {
-                o.transform.Rotate(new Vector3(0, 0, -1));
-                yield return new WaitForEndOfFrame();
-            }
+            GameObject paw = Instantiate(this.paw);
+            paw.transform.position = new Vector3(r, paw.transform.position.y, paw.transform.position.z);
+            paw.transform.SetParent(ObstacleManager.transform);
+            paw.SetActive(true);
 
-            yield return new WaitForSeconds(0.5f);
-            Destroy(o);
+            while(paw != null) yield return new WaitForSeconds(0.5f);
             Destroy(gameObject);
 
             yield break;

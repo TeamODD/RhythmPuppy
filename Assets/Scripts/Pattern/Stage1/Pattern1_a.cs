@@ -38,7 +38,7 @@ public class Pattern1_a : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Player"))
         {
-            col.gameObject.GetComponent<Player>().getDamage(1);
+            col.gameObject.SendMessage("getDamage");
             Destroy(gameObject);
         }
         Debug.Log("hi");

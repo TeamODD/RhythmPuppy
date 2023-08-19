@@ -28,13 +28,12 @@ public abstract class PatternBase : MonoBehaviour
 
     public abstract void bindPatternAction();
 
-    void OnEnable()
+    void Awake()
     {
-        bindPatternAction();
-        setPatternAction();
+        init();
     }
 
-    void Start()
+    void OnEnable()
     {
         musicManager = GameObject.FindGameObjectWithTag("MusicManager").GetComponent<AudioSource>();
         musicManager.clip = BGM;
@@ -57,11 +56,18 @@ public abstract class PatternBase : MonoBehaviour
         
     }
 
+    public void init()
+    {
+        SortTimelineArraysByTime();
+        bindPatternAction();
+        setPatternAction();
+    }
+
     public void setPatternAction()
     {
-        foreach (Playlist p in playlist)
+        for (int i = 0; i < playlist.Length; i++)
         {
-            p.defineAction(bind[p.ToString()]);
+            playlist[i].defineAction(bind[playlist[i].ToString()]);
         }
     }
 

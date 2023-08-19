@@ -1,230 +1,183 @@
-using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
+using static UnityEngine.GraphicsBuffer;
 
 public class Player : MonoBehaviour
 {
-    [Header("±âº» Á¤º¸")]
-    [Tooltip("Ã¼·Â")] public int health;
+    enum PlayerAction
+    {
+        Dash,
+        Jump,
+        Shoot,
+        ShootCancel,
+    }
 
-    [Tooltip("½ºÅÂ¹Ì³ª")] public float stamina;
+    [Header("ï¿½âº» ï¿½ï¿½ï¿½ï¿½")]
+    [Tooltip("Ã¼ï¿½ï¿½")] public int health;
 
-    [SerializeField, Tooltip("±âº» ÀÌµ¿¼Óµµ")]
+    [Tooltip("ï¿½ï¿½ï¿½Â¹Ì³ï¿½")] public float stamina;
+
+    [SerializeField, Tooltip("ï¿½âº» ï¿½Ìµï¿½ï¿½Óµï¿½")]
     float speed;
 
-    [Header("¼¼ºÎ Á¤º¸")]
-    [SerializeField, Tooltip("Á¡ÇÁ ÀÔ·Â ½Ã yÃàÀ¸·Î ¹ÞÀ» Èû(Force)")]
+    [Header("ï¿½ï¿½ï¿½ï¿½")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(Force)")]
     float jumpForce;
 
-    [SerializeField, Tooltip("´ë½Ã ÀÔ·Â ½Ã xÃàÀ¸·Î ¹ÞÀ» Èû(Force)")]
+    [Header("ï¿½ï¿½ï¿½")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(Force)")]
     float dashForce;
 
-    [SerializeField, Tooltip("´ë½Ã ¼Ò¸ð ½Ã°£")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ ï¿½Ã°ï¿½")]
     float dashTime;
 
-    [SerializeField, Tooltip("´ë½Ã Á¾·á ÈÄ Àç»ç¿ë ´ë±â½Ã°£")]
-    float dashCooldown;
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã°ï¿½")]
+    float dashCooltime;
 
-    [Header("Åõ»çÃ¼ ¿ÀºêÁ§Æ®")]
-    [SerializeField] GameObject projectile;
-
-    [Header("¸ñ ¿ÀºêÁ§Æ®")]
-    [SerializeField] GameObject neck;
-
-    [SerializeField, Tooltip("Åõ»çÃ¼ ¹ß»ç ½Ã Àû¿ëµÇ´Â Èû(Force)")]
-    float shootForce;
-
-    [SerializeField, Tooltip("¹ß»ç Á¾·á ÈÄ Àç»ç¿ë ´ë±â½Ã°£")]
-    float shootCooldown;
-
+    GameObject uiCanvas, projectile, mark, head, neck;
     Rigidbody2D rig2D;
-    Rigidbody2D projectileRig2D;
+    CompositeCollider2D col2D;
+    SpriteRenderer[] spriteList;
     Animator anim;
-    bool onDash, onJump, onShoot, onCancel;
-    bool isProjectileFlying, isShootCooldown;
-    Vector3 mousePos;
-    Vector3 neckPos;
-    HPManager hpManager;
 
-    void Start()
+    bool onFired;
+    float headCorrectFactor;
+    Coroutine dashCoroutine, dashCooldownCoroutine, invincibilityCoroutine;
+    
+
+    void Awake()
     {
-        rig2D = GetComponent<Rigidbody2D>();
-        projectileRig2D = projectile.GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-        onDash = onJump = onShoot = onCancel = false;
-        isProjectileFlying = false;
-        isShootCooldown = false;
-        hpManager = FindObjectOfType<HPManager>();
-
-        rig2D.gravityScale = 1;
-        hpManager.updateHP(health);
+        init();
     }
 
     void Update()
     {
-        mousePos = updateMousePos();
-        neckPos = transform.position + new Vector3(0.7f, 1.2f, 0);
-        headToMousePos();
+        checkJumpStatus();
 
         if (Input.GetButtonDown("Dash"))
         {
-            if (!onDash)
-                onDash = true;
+            if (dashCoroutine == null && dashCooldownCoroutine == null)
+            {
+                dashCoroutine = StartCoroutine(dash());
+            }
         }
         if (Input.GetButtonDown("Jump"))
         {
-            onJump = true;
+            jump();
         }
         if (Input.GetButtonDown("Shoot"))
         {
-            onShoot = true;
+            if (!onFired) shoot();
+            else teleport();
         }
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("ShootCancel"))
         {
-            if (isProjectileFlying)
-                onCancel = true;
+            if (onFired)
+            {
+                shootCancel();
+            }
         }
-
-
     }
 
     void FixedUpdate()
     {
+        flipBody();
+        move(); 
+        RaycastHit2D raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.up, 1f);
+        /*if(raycast.collider != null) Debug.Log(raycast.collider.gameObject.name);*/
+    }
 
-        checkJumpStatus();
-        if (isProjectileFlying) fixProjectilePos();
-        /*if (anim.GetBool("bDash"))
-            return;*/
+    void LateUpdate()
+    {
+        fixProjectilePos();
+        fixPlayerPosition();
+    }
 
-        if (onDash && !anim.GetBool("bDash"))
+    void OnCollisionEnter2D(Collision2D c)
+    {
+        GameObject o = c.gameObject;
+        if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
         {
-            dash();
+            StartCoroutine(hitEvent());
         }
+    }
 
-        if (onJump)
-        {
-            onJump = false;
-            jump();
-        }
+    public void init()
+    {
+        uiCanvas = GameObject.Find("UICanvas");
+        projectile = transform.Find("Projectile").gameObject;
+        mark = transform.Find("Mark").gameObject;
+        head = transform.Find("Head").gameObject;
+        neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
-        if (onShoot && !isShootCooldown)
-        {
-            onShoot = false;
-            shoot(mousePos - neckPos);
-        }
-        else if (onCancel && isProjectileFlying)
-        {
-            onCancel = false;
-            shootCancel();
-        }
+        rig2D = GetComponent<Rigidbody2D>();
+        col2D = GetComponent<CompositeCollider2D>();
+        spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
+        anim = GetComponent<Animator>();
 
-        Vector2 currentPosition = transform.position;
-        Vector2 previousPosition = currentPosition - (Time.deltaTime * (Vector2)transform.right); // 1ÇÁ·¹ÀÓ Àü ÁÂÇ¥
+        onFired = false;
+        dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
+        headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
 
-        if (Vector2.Distance(currentPosition, previousPosition) > 0.03)
-            anim.SetBool("IsWalking", true);
-        else
-            anim.SetBool("IsWalking", false);
 
-        move();
+        anim.ResetTrigger("Jump");
+        anim.SetInteger("JumpCount", 0);
+    }
+
+    public void activateMark()
+    {
+        mark.SendMessage("activate");
+    }
+
+    public void inactivateMark()
+    {
+        mark.SendMessage("inactivate");
     }
 
     private void move()
     {
-        float h = Input.GetAxis("Horizontal");
-
-        transform.Translate(new Vector3(h * speed * Time.fixedDeltaTime, 0, 0));
-
-        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
-        if (pos.x <= 0f) pos.x = 0f;
-        if (1f <= pos.x) pos.x = 1f;
-        if (pos.y <= 0f) pos.y = 0f;
-        if (1f <= pos.y) pos.y = 1f;
-        transform.position = Camera.main.ViewportToWorldPoint(pos);
+        float xInput = Input.GetAxis("Horizontal");
+        if (xInput.Equals(0))
+        {
+            anim.SetBool("bAxisInput", false);
+        }
+        else
+        {
+            anim.SetBool("bAxisInput", true);
+            transform.Translate(new Vector3(xInput * speed * Time.fixedDeltaTime, 0, 0));
+        }
     }
 
     private void jump()
     {
-        if (!anim.GetBool("bJump"))
+        int count = anim.GetInteger("JumpCount");
+        switch (count)
         {
-            anim.SetBool("bJump", true);
-            rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
-            rig2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+            case 0:
+            case 1:
+                anim.SetTrigger("Jump");
+                anim.SetInteger("JumpCount", count + 1);
+                rig2D.velocity = new Vector2(rig2D.velocity.x, jumpForce);
+                break;
+            default:
+                break;
         }
-        else if (!anim.GetBool("bDoubleJump"))
-        {
-            anim.SetBool("bDoubleJump", true);
-            rig2D.velocity = new Vector2(rig2D.velocity.x, 0);
-            rig2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
-        }
-        // else { }         // ÀÌ¹Ì 2´Ü Á¡ÇÁ±îÁö ÇÑ °æ¿ì
-    }
-
-    private void dash()
-    {
-        float dir = Input.GetAxisRaw("Horizontal");
-        if (dir == 0) return;
-        StartCoroutine(dashCoroutine(dir));
-    }
-
-    private IEnumerator dashCoroutine(float dir)
-    {
-        anim.SetBool("bDash", true);
-        rig2D.velocity = new Vector2(dir * dashForce, 0);
-        rig2D.gravityScale = 0f;
-
-        yield return new WaitForSeconds(dashTime);
-        rig2D.velocity = new Vector2(0, 0);
-        rig2D.gravityScale = 1f;
-
-        yield return new WaitForSeconds(dashCooldown);
-        anim.SetBool("bDash", false);
-        onDash = false;
-    }
-
-    private void shoot(Vector3 m)
-    {
-        if (!isProjectileFlying)
-        {
-            isProjectileFlying = true;
-            projectileRig2D.velocity = new Vector2(m.normalized.x, m.normalized.y) * shootForce;
-            return;
-        }
-        else
-        {
-            projectileRig2D.velocity = Vector2.zero;
-            transform.position = projectile.transform.position;
-            anim.SetBool("bDoubleJump", false);
-            isProjectileFlying = false;
-        }
-        StartCoroutine(shootCoolDownCoroutine());
-    }
-
-    private void shootCancel()
-    {
-        onCancel = false;
-        projectileRig2D.velocity = Vector2.zero;
-        isProjectileFlying = false;
-        StartCoroutine(shootCoolDownCoroutine());
-    }
-
-    private IEnumerator shootCoolDownCoroutine()
-    {
-        isShootCooldown = true;
-        yield return new WaitForSeconds(shootCooldown);
-        isShootCooldown = false;
     }
 
     private bool isJump()
     {
-        RaycastHit2D ray2D = Physics2D.Raycast(transform.position, Vector3.down, 1, LayerMask.GetMask("Ground"));
+        RaycastHit2D ray2D = Physics2D.Raycast(transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        const float margin = 0.05f;
 
-        if (Mathf.Abs(rig2D.velocity.y) < 0.01f)
+        if (Mathf.Abs(rig2D.velocity.y) < margin)
         {
             if (ray2D.collider != null)
             {
-                if (ray2D.distance < 0.7f)
+                if (ray2D.distance < margin)
                 {
                     return false;
                 }
@@ -233,98 +186,202 @@ public class Player : MonoBehaviour
         return true;
     }
 
+    private IEnumerator dash()
+    {
+        float dir = Input.GetAxisRaw("Horizontal");
+        if (dir == 0) yield break;
+
+        anim.SetTrigger("Dash");
+        if (invincibilityCoroutine != null) StopCoroutine(invincibilityCoroutine);
+        invincibilityCoroutine = StartCoroutine(activateInvincibility(dashTime));
+        rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
+        rig2D.gravityScale = 0f;
+
+        yield return new WaitForSeconds(dashTime);
+        rig2D.velocity = new Vector2(0, rig2D.velocity.y);
+        rig2D.gravityScale = 1f;
+        dashCooldownCoroutine = StartCoroutine(dashCooldown());
+        dashCoroutine = null;
+    }
+
+    private IEnumerator dashCooldown()
+    {
+        yield return new WaitForSeconds(dashCooltime);
+        anim.ResetTrigger("Dash");
+        dashCooldownCoroutine = null;
+    }
+
+    private void shoot()
+    {
+        if (!isProjectileOnScreen()) return;
+        projectile.SendMessage("shoot");
+        onFired = true;
+    }
+
+    private void teleport()
+    {
+        int count = anim.GetInteger("JumpCount");
+        Vector3 pos = projectile.transform.position;
+        projectile.SendMessage("stop");
+        projectile.transform.position = neck.transform.position;
+        transform.position = pos;
+        if (2 <= count)
+            anim.SetInteger("JumpCount", count - 1);
+        onFired = false;
+    }
+
+    private void shootCancel()
+    {
+        projectile.SendMessage("stop");
+        projectile.transform.position = neck.transform.position;
+        onFired = false;
+    }
+
     private void checkJumpStatus()
     {
-        if (isJump())
+        if(isJump())
         {
-            anim.SetBool("bJump", true);
+            if (anim.GetInteger("JumpCount").Equals(0))
+            {
+                anim.SetInteger("JumpCount", 1);
+                anim.SetTrigger("Jump");
+            }
         }
         else
         {
-            anim.SetBool("bJump", false);
-            anim.SetBool("bDoubleJump", false);
+            anim.SetInteger("JumpCount", 0);
+            anim.ResetTrigger("Jump");
         }
+    }
+
+    private void fixPlayerPosition()
+    {
+        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+        if (pos.x <= 0f) pos.x = 0f;
+        if (1f <= pos.x) pos.x = 1f;
+        if (pos.y <= 0f) pos.y = 0f;
+        if (1f <= pos.y) pos.y = 1f;
+        transform.position = Camera.main.ViewportToWorldPoint(pos);
     }
 
     private void fixProjectilePos()
     {
+        if (!onFired) return;
+
         Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
-        bool isFixed = false;
+        Vector3 copy = pos;
 
-        if (pos.x <= 0f)
-        {
-            pos.x = 0f;
-            isFixed = true;
-        }
-        if (1f <= pos.x)
-        {
-            pos.x = 1f;
-            isFixed = true;
-        }
-        if (pos.y <= 0f)
-        {
-            pos.y = 0f;
-            isFixed = true;
-        }
-        if (1f <= pos.y)
-        {
-            pos.y = 1f;
-            isFixed = true;
-        }
+        if (pos.x <= 0f) pos.x = 0f;
+        if (1f <= pos.x) pos.x = 1f;
+        if (pos.y <= 0f) pos.y = 0f;
+        if (1f <= pos.y) pos.y = 1f;
 
-        if (isFixed)
+        if (!pos.Equals(copy))
         {
-            projectileRig2D.velocity = Vector2.zero;
+            projectile.SendMessage("stop");
             projectile.transform.position = Camera.main.ViewportToWorldPoint(pos);
         }
     }
 
-    private Vector3 updateMousePos()
+    private bool isProjectileOnScreen()
     {
-        return Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+        Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
+
+        if (pos.x <= 0f || 1f <= pos.x || pos.y <= 0f || 1f <= pos.y) return false;
+        return true;
     }
 
-    private void headToMousePos()
+    /** Flip body if corgi is heading behind or moving to behind. */
+    private void flipBody()
     {
-        /* head rotation */
-        Vector3 neckDir = (mousePos - neckPos).normalized;
-        neck.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(neckDir.x, neckDir.y) * Mathf.Rad2Deg * -1 + 120);
+        const float detailCorrFactor = 16f;
+        Vector3 flip = transform.localScale;
 
-        /* projectile rotation */
-        if (!isProjectileFlying)
+        float rot = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
+        rot = 0 <= rot ? rot % 360 : rot % 360 + 360;
+        if (110 < rot && rot < 250)
         {
-            Vector3 projectileDir = (mousePos - neckPos);
-            if (0.4f < projectileDir.magnitude)
-                projectileDir = projectileDir.normalized * 0.4f;
-
-            projectile.transform.position = neckPos + projectileDir;
+            flip.x = flip.x * -1;
         }
+        else if (70 < rot && rot < 290)
+        {
+            int xInput = (int)Input.GetAxisRaw("Horizontal");
+            switch (xInput)
+            {
+                case -1:
+                    flip.x = Mathf.Abs(flip.x) * -1;
+                    break;
+                case 1:
+                    flip.x = Mathf.Abs(flip.x);
+                    break;
+            }
+        }
+
+        transform.localScale = flip;
     }
 
-    public void getDamage(int damage)
+    private IEnumerator ignoreCollision(Collision2D target)
     {
-        health -= damage;
-        hpManager.updateHP(health);
+        /*Physics2D.IgnoreLayerCollision(gameObject.layer, target.gameObject.layer, true);*/
+        Debug.Log(string.Format("[{0}] {1}", Time.time, "ignore true"));
+        yield return new WaitForSeconds(2f);
+        /*Physics2D.IgnoreLayerCollision(gameObject.layer, target.gameObject.layer, false);*/
+        Debug.Log(string.Format("[{0}] {1}", Time.time, "ignore false"));
+        Physics2D.IgnoreCollision(col2D, target.collider, false);
+    }
+
+    public void getDamage()
+    {
+        if (invincibilityCoroutine != null) return;
+
+        /*StartCoroutine(hitEvent());*/
+    }
+
+    private IEnumerator hitEvent()
+    {
+        if (invincibilityCoroutine != null) yield break;
+
+        const float duration = 1.5f;
+        invincibilityCoroutine = StartCoroutine(activateInvincibility(duration));
+
+        uiCanvas.SendMessage("hitEffect");
+        head.SendMessage("setSadFace");
+
+        health--;
         if (health < 0)
         {
-            Debug.Log("ÇÃ·¹ÀÌ¾î°¡ »ç¸ÁÇÏ¿´½À´Ï´Ù.");
-            GameObject gameprogress = GameObject.Find("GameProgress");
-            gameprogress.GetComponent<GameProgress>().CheckingWhereToBack();
-
-            GameObject gameplayermanager = GameObject.Find("GamePlayManager");
-            gameplayermanager.GetComponent<GameRestart>().onRestart();
-
-
+            head.SendMessage("setDeadFace");
+            anim.SetTrigger("Death");
             gameObject.SetActive(false);
         }
+
+        yield return new WaitForSeconds(duration);
+        head.SendMessage("setNormalFace");
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private IEnumerator activateInvincibility(float duration)
     {
-        if (collision.gameObject.CompareTag("Obstacles"))
+        int obsLayer = LayerMask.NameToLayer("Obstacle");
+
+        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, true);
+        setAlpha(0.6f);
+        yield return new WaitForSeconds(duration);
+        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, false);
+        setAlpha(1f);
+        invincibilityCoroutine = null; 
+    }
+
+    private void setAlpha(float a)
+    {
+        const int exceptSortingIndex = 100;
+        Color c;
+
+        for(int i=0; i< spriteList.Length; i++)
         {
-            getDamage(10);
-            Debug.Log("Àå¾Ö¹° Ãæµ¹ÀÌ °¨ÁöµÇ¾ú½À´Ï´Ù.");
+            if (spriteList[i].sortingOrder.Equals(exceptSortingIndex)) continue;
+            c = spriteList[i].color;
+            c.a = a;
+            spriteList[i].color = c;
         }
     }
 }

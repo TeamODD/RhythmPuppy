@@ -68,6 +68,24 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
+    - startAt: 32.2
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 34.2
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 42.2
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
     - startAt: 80.1
       detail:
         endAt: 0
@@ -113,6 +131,12 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
+    - startAt: 35.5
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 3
+        repeatDelayTime: 4
     - startAt: 83.4
       detail:
         endAt: 0
@@ -170,6 +194,18 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
+    - startAt: 48.2
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 52.2
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 5
+        repeatDelayTime: 2
     - startAt: 64.1
       detail:
         endAt: 0
@@ -221,6 +257,18 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
+    - startAt: 50.2
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 58.2
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
     - startAt: 66.1
       detail:
         endAt: 0
@@ -237,6 +285,12 @@ MonoBehaviour:
     type: 0
     timeline:
     - startAt: 0.6
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 14
+        repeatDelayTime: 1
+    - startAt: 46.7
       detail:
         endAt: 0
         duration: 0
@@ -263,6 +317,12 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
+    - startAt: 46.4
+      detail:
+        endAt: 64.2
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
   - prefab: {fileID: 7938996007636120948, guid: 9b0da4571f3617c4db72596f97e2b226, type: 3}
     type: 0
     timeline:
@@ -275,6 +335,12 @@ MonoBehaviour:
     - startAt: 47.7
       detail:
         endAt: 80.1
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 47.7
+      detail:
+        endAt: 64.2
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
@@ -329,6 +395,12 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
+    - startAt: 48.2
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 8
+        repeatDelayTime: 2
     - startAt: 64.1
       detail:
         endAt: 0
