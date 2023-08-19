@@ -16,26 +16,26 @@ public class Player : MonoBehaviour
         ShootCancel,
     }
 
-    [Header("±âº» ½ºÅÈ")]
-    [Tooltip("Ã¼·Â")] public int health;
+    [Header("ï¿½âº» ï¿½ï¿½ï¿½ï¿½")]
+    [Tooltip("Ã¼ï¿½ï¿½")] public int health;
 
-    [Tooltip("½ºÅÂ¹Ì³ª")] public float stamina;
+    [Tooltip("ï¿½ï¿½ï¿½Â¹Ì³ï¿½")] public float stamina;
 
-    [SerializeField, Tooltip("±âº» ÀÌµ¿¼Óµµ")]
+    [SerializeField, Tooltip("ï¿½âº» ï¿½Ìµï¿½ï¿½Óµï¿½")]
     float speed;
 
-    [Header("Á¡ÇÁ")]
-    [SerializeField, Tooltip("Á¡ÇÁ ÀÔ·Â ½Ã yÃàÀ¸·Î ¹ÞÀ» Èû(Force)")]
+    [Header("ï¿½ï¿½ï¿½ï¿½")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(Force)")]
     float jumpForce;
 
-    [Header("´ë½Ã")]
-    [SerializeField, Tooltip("´ë½Ã ÀÔ·Â ½Ã xÃàÀ¸·Î ¹ÞÀ» Èû(Force)")]
+    [Header("ï¿½ï¿½ï¿½")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(Force)")]
     float dashForce;
 
-    [SerializeField, Tooltip("´ë½Ã ¼Ò¸ð ½Ã°£")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ ï¿½Ã°ï¿½")]
     float dashTime;
 
-    [SerializeField, Tooltip("´ë½Ã Á¾·á ÈÄ Àç»ç¿ë ´ë±â½Ã°£")]
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã°ï¿½")]
     float dashCooltime;
 
     GameObject uiCanvas, projectile, mark, head, neck;
@@ -109,9 +109,9 @@ public class Player : MonoBehaviour
     public void init()
     {
         uiCanvas = GameObject.Find("UICanvas");
-        projectile = transform.Find("Åõ»çÃ¼").gameObject;
-        mark = transform.Find("Ç¥½Ä").gameObject;
-        head = transform.Find("¸Ó¸®").gameObject;
+        projectile = transform.Find("ï¿½ï¿½ï¿½ï¿½Ã¼").gameObject;
+        mark = transform.Find("Ç¥ï¿½ï¿½").gameObject;
+        head = transform.Find("ï¿½Ó¸ï¿½").gameObject;
         neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
         rig2D = GetComponent<Rigidbody2D>();

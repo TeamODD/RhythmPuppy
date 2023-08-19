@@ -69,14 +69,14 @@ public class Pattern888aaa : MonoBehaviour
 
             if (currentIndex < previousXPositions.Length)
             {
-                xPos = Random.Range(-8.33f, 8.33f);
+                xPos = Random.Range(-8.3007f, 8.3007f);
                 previousXPositions[currentIndex] = xPos;
             }
             else
             {
                 do
                 {
-                    xPos = Random.Range(-8.33f, 8.33f);
+                    xPos = Random.Range(-8.3007f, 8.3007f);
                 } while (IsWithinRangeOfPreviousXPositions(xPos));
                 previousXPositions[currentIndex % previousXPositions.Length] = xPos;
             }
@@ -86,7 +86,7 @@ public class Pattern888aaa : MonoBehaviour
 
             //경고 오브젝트 생성
 
-            yPos = -4.5f;
+            yPos = -3.555f;
 
             StartCoroutine(SpawnWeasel(xPos, yPos));
         }
@@ -98,10 +98,7 @@ public class Pattern888aaa : MonoBehaviour
         GameObject newWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        if (warningRenderer != null)
-        {
-            warningRenderer.sortingOrder = int.MaxValue;
-        }
+        newWarning.transform.rotation = Quaternion.Euler(0f, 0f, -90f);
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         Color originalColor = warningRenderer.color;
@@ -135,13 +132,13 @@ public class Pattern888aaa : MonoBehaviour
         // 경고 오브젝트 제거
         Destroy(newWarning);
 
-        Vector3 spawnPosition = new Vector3(xPos, -6f, 0f);
+        Vector3 spawnPosition = new Vector3(xPos, -5.03f, 0f); //후보 -6f, -5.03f
 
         GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * weaselSpeed;
 
-        while (newWeasel.transform.position.y < -5f)    
+        while (newWeasel.transform.position.y < -3.963f)    
         {
             yield return null;
         }

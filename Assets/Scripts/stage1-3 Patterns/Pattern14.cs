@@ -2,44 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pattern101010 : MonoBehaviour
+public class Pattern14 : MonoBehaviour
 {
     [SerializeField]
-    private GameObject chestnut;
-    [SerializeField]
-    private GameObject chestnutProjectile;
+    private GameObject flyingSquirrel;
     [SerializeField]
     private GameObject warning;
     [SerializeField]
-    private GameObject chestnutbomb;
-    [SerializeField]
-    private float chestnutSpeed;
-    [SerializeField]
-    private float splinterSpeed;
-    [SerializeField]
-    private float splinterInterval;
+    private float squirrelSpeed = 4f;
 
     private void OnEnable()
     {
-        StartCoroutine(DropChestnuts());
+        StartCoroutine(SpawnFlyingSquirrels());
     }
 
     private void OnDisable()
     {
-        StopCoroutine(DropChestnuts());
+        StopCoroutine(SpawnFlyingSquirrels());
     }
 
-    private IEnumerator DropChestnuts()
+    private IEnumerator SpawnFlyingSquirrels()
     {
+        // 날다람쥐가 시작하는 위치를 랜덤으로 선택합니다.
+        float xPos;
+        float yPos = 4.293f;
 
-        float xPos = Random.Range(-8.124f, 8.124f);
-        Vector3 chestnutPosition = new Vector3(xPos, 4.201f, 0f);
+        if (Random.Range(0, 2) == 0) // 왼쪽 위에서 시작
+            xPos = -8.16f;
 
-        // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(xPos, 4.327f, 0f);
+        else // 오른쪽 위에서 시작
+            xPos = 8.16f;
+
+        Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
+
+        float scaleX = newWarning.transform.localScale.x;
+        float scaleY = newWarning.transform.localScale.y;
+        float scaleZ = newWarning.transform.localScale.z;
+        if (xPos == -8.16f) // 왼쪽 위에서 시작
+        {
+            newWarning.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
+        }
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         Color originalColor = warningRenderer.color;
@@ -73,42 +78,26 @@ public class Pattern101010 : MonoBehaviour
         // 경고 오브젝트 제거
         Destroy(newWarning);
 
-        // ChestNut 오브젝트 생성
-        GameObject newChestnut = Instantiate(chestnut, chestnutPosition, Quaternion.identity);
-        Rigidbody2D chestnutRigidbody = newChestnut.GetComponent<Rigidbody2D>();
-        chestnutRigidbody.velocity = Vector2.down * chestnutSpeed;
+        Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);
 
-        yield return new WaitForSeconds(0.5f);
+        // 대각선 방향을 설정합니다.
+        Vector2 direction = (xPos < 0f ? Vector2.right : Vector2.left) + Vector2.down;
 
-        ExplodeChestnut(newChestnut.transform.position);
-        Destroy(newChestnut);
-        yield return null;
-    }
+        // 장애물을 생성하고 속도와 방향을 설정합니다.
+        GameObject newSquirrel = Instantiate(flyingSquirrel, spawnPosition, Quaternion.identity);
+        Rigidbody2D squirrelRigidbody = newSquirrel.GetComponent<Rigidbody2D>();
 
-    private void ExplodeChestnut(Vector3 position)
-    {
-        GameObject ChestNutBomb = Instantiate(chestnutbomb, position, Quaternion.identity);
-        Destroy(ChestNutBomb, 0.2f);
+        scaleX = newSquirrel.transform.localScale.x;
+        scaleY = newSquirrel.transform.localScale.y;
+        scaleZ = newSquirrel.transform.localScale.z;
 
-        for (int i = 0; i < 8; i++)
+        if (xPos == -8.16f) // 왼쪽 위에서 시작
         {
-            float angle = i * splinterInterval;
-            float x = Mathf.Cos(angle * Mathf.Deg2Rad);
-            float y = Mathf.Sin(angle * Mathf.Deg2Rad);
-
-            Vector3 splinterDirection = new Vector3(x, y, 0f).normalized;
-            GameObject newSplinter = Instantiate(chestnutProjectile, position, Quaternion.identity);
-
-            MovementTransform2D movementComponent = newSplinter.GetComponent<MovementTransform2D>();
-            movementComponent.MoveTo(splinterDirection * splinterSpeed);
-
-            float angleInDegrees = Mathf.Atan2(splinterDirection.y, splinterDirection.x) * Mathf.Rad2Deg;
-            newSplinter.transform.rotation = Quaternion.Euler(0f, 0f, angleInDegrees - 90f); // -90도 회전
-
-            StartCoroutine(DestroyIfOutOfBounds(newSplinter));
-
-            Destroy(gameObject, 6f);
+            newSquirrel.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
         }
+        squirrelRigidbody.velocity = direction.normalized * squirrelSpeed;
+
+        yield return StartCoroutine(DestroyIfOutOfBounds(newSquirrel));
     }
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
@@ -119,6 +108,7 @@ public class Pattern101010 : MonoBehaviour
             if (!IsWithinMapBounds(obj.transform.position))
             {
                 Destroy(obj);
+                Destroy(gameObject);
                 yield break;
             }
             yield return null;

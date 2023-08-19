@@ -112,14 +112,14 @@ public class Pattern888bbb : MonoBehaviour
             }
             if (currentIndex < previousXPositions.Length)
             {
-                xPos = Random.Range(-8.33f, 8.33f);
+                xPos = Random.Range(-8.3007f, 8.3007f);
                 previousXPositions[currentIndex] = xPos;
             }
             else
             {
                 do
                 {
-                    xPos = Random.Range(-8.33f, 8.33f);
+                    xPos = Random.Range(-8.3007f, 8.3007f);
                 } while (IsWithinRangeOfPreviousXPositions(xPos));
                 previousXPositions[currentIndex % previousXPositions.Length] = xPos;
             }
@@ -162,10 +162,7 @@ public class Pattern888bbb : MonoBehaviour
         GameObject newWarning = Instantiate(weaselwarning, warningPosition, Quaternion.identity);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        if (warningRenderer != null)
-        {
-            warningRenderer.sortingOrder = int.MaxValue;
-        }
+        newWarning.transform.rotation = Quaternion.Euler(0f, 0f, -90f);
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         Color originalColor = warningRenderer.color;
@@ -205,7 +202,7 @@ public class Pattern888bbb : MonoBehaviour
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * weaselspeed;
 
-        while (newWeasel.transform.position.y < -4.6f)
+        while (newWeasel.transform.position.y < -3.963f)
         {
             yield return null;
         }
@@ -227,6 +224,7 @@ public class Pattern888bbb : MonoBehaviour
         GameObject newWarning = Instantiate(weaselwarning, warningPosition, Quaternion.identity);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
+        newWarning.transform.rotation = Quaternion.Euler(0f, 0f, -90f);
         if (warningRenderer != null)
         {
             warningRenderer.sortingOrder = int.MaxValue;
