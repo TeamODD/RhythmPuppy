@@ -73,15 +73,11 @@ public class Pattern777bbb : MonoBehaviour
     private IEnumerator showwarning1(float xPos)
     {
         // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(xPos, 4.5f, 0f);
+        Vector3 warningPosition = new Vector3(xPos, -0.8f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
-        //경고 오브젝트를 맨 뒤로 보냄
+        
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        if (warningRenderer != null)
-        {
-            warningRenderer.sortingOrder = int.MaxValue;
-        }
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         Color originalColor = warningRenderer.color;
@@ -164,14 +160,10 @@ public class Pattern777bbb : MonoBehaviour
     private IEnumerator showwarning2(float xPos)
     {
         // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(xPos, 4.5f, 0f);
+        Vector3 warningPosition = new Vector3(xPos, -0.8f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        if (warningRenderer != null)
-        {
-            warningRenderer.sortingOrder = int.MaxValue;
-        }
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         Color originalColor = warningRenderer.color;

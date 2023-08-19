@@ -46,12 +46,9 @@ public class Pattern666 : MonoBehaviour
     private IEnumerator RunPattern()
     {
         //오른쪽 위치에서만 시작
-        float startX = 8.38f; //9.44f, 8.38f
-        float startY = 0;
-        Vector3 startPos = new Vector3(startX, startY, 0f);
 
         // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(startX, startY, 0f);
+        Vector3 warningPosition = new Vector3(7.49f, -0.58f, 0f);
         GameObject warning = Instantiate(thornStemWarning, warningPosition, Quaternion.identity);
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
@@ -88,6 +85,10 @@ public class Pattern666 : MonoBehaviour
         Destroy(warning);
 
         // 가시 줄기 생성
+        float startX = 8.38f; //9.44f, 8.38f
+        float startY = 0;
+        Vector3 startPos = new Vector3(startX, startY, 0f);
+
         currentStem = Instantiate(thornStem, startPos, Quaternion.identity);
         Rigidbody2D stemRigidbody = currentStem.GetComponent<Rigidbody2D>();
 

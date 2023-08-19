@@ -10,6 +10,7 @@ TagManager:
   - ObstacleManager
   - MusicManager
   - LampLight
+  - Obstacles
   layers:
   - Default
   - TransparentFX
