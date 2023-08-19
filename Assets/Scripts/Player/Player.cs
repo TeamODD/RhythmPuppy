@@ -109,9 +109,9 @@ public class Player : MonoBehaviour
     public void init()
     {
         uiCanvas = GameObject.Find("UICanvas");
-        projectile = transform.Find("����ü").gameObject;
-        mark = transform.Find("ǥ��").gameObject;
-        head = transform.Find("�Ӹ�").gameObject;
+        projectile = transform.Find("Projectile").gameObject;
+        mark = transform.Find("Mark").gameObject;
+        head = transform.Find("Head").gameObject;
         neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
         rig2D = GetComponent<Rigidbody2D>();

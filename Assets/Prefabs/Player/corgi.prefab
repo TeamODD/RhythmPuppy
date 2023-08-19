@@ -2738,7 +2738,7 @@ GameObject:
   - component: {fileID: 1403333294193367485}
   - component: {fileID: 7005682745333229705}
   m_Layer: 2
-  m_Name: "\uBA38\uB9AC"
+  m_Name: Head
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4005,7 +4005,7 @@ GameObject:
   - component: {fileID: 2041517139093749241}
   - component: {fileID: 1633186847950344812}
   m_Layer: 2
-  m_Name: "\uD45C\uC2DD"
+  m_Name: Mark
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4593,7 +4593,7 @@ GameObject:
   - component: {fileID: 118608097}
   - component: {fileID: 8433857165118217412}
   m_Layer: 7
-  m_Name: "\uD22C\uC0AC\uCCB4"
+  m_Name: Projectile
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
