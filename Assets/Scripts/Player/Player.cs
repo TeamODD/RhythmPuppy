@@ -1,3 +1,4 @@
+using Autodesk.Fbx;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,21 +20,33 @@ public class Player : MonoBehaviour
     [Header("basic status")]
     public int health;
     public float stamina;
+    [SerializeField]
+    float staminaGen;
+    [SerializeField]
     float speed;
 
     [Header("Jump")]
-    [SerializeField, Tooltip("���� �Է� �� y������ ���� ��(Force)")]
+    [SerializeField]
     float jumpForce;
 
-    [Header("���")]
-    [SerializeField, Tooltip("��� �Է� �� x������ ���� ��(Force)")]
+    [Header("Dash")]
+    [SerializeField]
     float dashForce;
-
-    [SerializeField, Tooltip("��� �Ҹ� �ð�")]
-    float dashTime;
-
-    [SerializeField, Tooltip("��� ���� �� ���� ���ð�")]
+    [SerializeField]
+    float dashDuration;
+    [SerializeField]
     float dashCooltime;
+    [SerializeField]
+    float dashStaminaCost;
+    [SerializeField]
+    float dashEvasionGen;
+
+    [Header("Shoot")]
+    [SerializeField]
+    float shootStaminaCost;
+    [SerializeField]
+    float shootCancelStaminaGen;
+
 
     GameObject uiCanvas, projectile, mark, head, neck;
     Rigidbody2D rig2D;
@@ -44,6 +57,8 @@ public class Player : MonoBehaviour
     bool onFired;
     float headCorrectFactor;
     Coroutine dashCoroutine, dashCooldownCoroutine, invincibilityCoroutine;
+
+    WaitForSeconds collisionDelayTime;
     
 
     void Awake()
@@ -54,6 +69,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         checkJumpStatus();
+        passiveStaminaGen();
 
         if (Input.GetButtonDown("Dash"))
         {
@@ -84,14 +100,11 @@ public class Player : MonoBehaviour
     {
         flipBody();
         move(); 
-        RaycastHit2D raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.up, 1f);
-        /*if(raycast.collider != null) Debug.Log(raycast.collider.gameObject.name);*/
     }
 
     void LateUpdate()
     {
-        fixProjectilePos();
-        fixPlayerPosition();
+        fixPositionIntoScreen();
     }
 
     void OnCollisionEnter2D(Collision2D c)
@@ -99,9 +112,25 @@ public class Player : MonoBehaviour
         GameObject o = c.gameObject;
         if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
         {
-            StartCoroutine(hitEvent());
+            /*if (!isCollisionVisibleOnTheScreen(c)) return;*/
+            StartCoroutine(delayCollision(c.collider));
+
+            if (dashCoroutine != null) evade();
+            else StartCoroutine(hitEvent());
         }
     }
+
+    /*void OnTriggerEnter2D(Collider2D c)
+    {
+        GameObject o = c.gameObject;
+        if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
+        {
+            StartCoroutine(delayCollision(c));
+
+            if (dashCoroutine != null) evade();
+            else StartCoroutine(hitEvent());
+        }
+    }*/
 
     public void init()
     {
@@ -116,10 +145,11 @@ public class Player : MonoBehaviour
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
+        collisionDelayTime = new WaitForSeconds(0.5f);
+
         onFired = false;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
-
 
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
@@ -133,6 +163,12 @@ public class Player : MonoBehaviour
     public void inactivateMark()
     {
         mark.SendMessage("inactivate");
+    }
+
+    private void passiveStaminaGen()
+    {
+        float s = staminaGen * Time.deltaTime;
+        stamina = 100 < stamina + s ? 100 : stamina + s;
     }
 
     private void move()
@@ -185,21 +221,31 @@ public class Player : MonoBehaviour
 
     private IEnumerator dash()
     {
+        if (stamina < dashStaminaCost)
+        {
+            Debug.Log("not enough stamina!");
+            yield break;
+        }
         float dir = Input.GetAxisRaw("Horizontal");
         if (dir == 0) yield break;
 
-        stamina -= 20f;
+        stamina -= dashStaminaCost;
         anim.SetTrigger("Dash");
-        if (invincibilityCoroutine != null) StopCoroutine(invincibilityCoroutine);
-        invincibilityCoroutine = StartCoroutine(activateInvincibility(dashTime));
         rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
         rig2D.gravityScale = 0f;
 
-        yield return new WaitForSeconds(dashTime);
+        yield return new WaitForSeconds(dashDuration);
+        setAlpha(1f);
         rig2D.velocity = new Vector2(0, rig2D.velocity.y);
         rig2D.gravityScale = 1f;
         dashCooldownCoroutine = StartCoroutine(dashCooldown());
         dashCoroutine = null;
+    }
+
+    private void evade()
+    {
+        Debug.Log(string.Format("[{0}] {1}", Time.time, "회피!"));
+        stamina = 100 < stamina + dashEvasionGen ? 100 : stamina + dashEvasionGen;
     }
 
     private IEnumerator dashCooldown()
@@ -211,8 +257,14 @@ public class Player : MonoBehaviour
 
     private void shoot()
     {
+        if (stamina < shootStaminaCost)
+        {
+            Debug.Log("not enough stamina!");
+            return;
+        }
         if (!isProjectileOnScreen()) return;
         projectile.SendMessage("shoot");
+        stamina -= shootStaminaCost;
         onFired = true;
     }
 
@@ -231,6 +283,7 @@ public class Player : MonoBehaviour
     private void shootCancel()
     {
         projectile.SendMessage("stop");
+        stamina = 100 < stamina + shootCancelStaminaGen ? 100 : stamina + shootCancelStaminaGen;
         projectile.transform.position = neck.transform.position;
         onFired = false;
     }
@@ -252,7 +305,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void fixPlayerPosition()
+    private void fixPositionIntoScreen()
     {
         Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
         if (pos.x <= 0f) pos.x = 0f;
@@ -260,25 +313,6 @@ public class Player : MonoBehaviour
         if (pos.y <= 0f) pos.y = 0f;
         if (1f <= pos.y) pos.y = 1f;
         transform.position = Camera.main.ViewportToWorldPoint(pos);
-    }
-
-    private void fixProjectilePos()
-    {
-        if (!onFired) return;
-
-        Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
-        Vector3 copy = pos;
-
-        if (pos.x <= 0f) pos.x = 0f;
-        if (1f <= pos.x) pos.x = 1f;
-        if (pos.y <= 0f) pos.y = 0f;
-        if (1f <= pos.y) pos.y = 1f;
-
-        if (!pos.Equals(copy))
-        {
-            projectile.SendMessage("stop");
-            projectile.transform.position = Camera.main.ViewportToWorldPoint(pos);
-        }
     }
 
     private bool isProjectileOnScreen()
@@ -316,23 +350,6 @@ public class Player : MonoBehaviour
         }
 
         transform.localScale = flip;
-    }
-
-    private IEnumerator ignoreCollision(Collision2D target)
-    {
-        /*Physics2D.IgnoreLayerCollision(gameObject.layer, target.gameObject.layer, true);*/
-        Debug.Log(string.Format("[{0}] {1}", Time.time, "ignore true"));
-        yield return new WaitForSeconds(2f);
-        /*Physics2D.IgnoreLayerCollision(gameObject.layer, target.gameObject.layer, false);*/
-        Debug.Log(string.Format("[{0}] {1}", Time.time, "ignore false"));
-        Physics2D.IgnoreCollision(col2D, target.collider, false);
-    }
-
-    public void getDamage()
-    {
-        if (invincibilityCoroutine != null) return;
-
-        /*StartCoroutine(hitEvent());*/
     }
 
     private IEnumerator hitEvent()
@@ -381,5 +398,22 @@ public class Player : MonoBehaviour
             c.a = a;
             spriteList[i].color = c;
         }
+    }
+
+    private IEnumerator delayCollision(Collider2D c)
+    {
+        Physics2D.IgnoreCollision(col2D, c, true);
+        yield return collisionDelayTime;
+        Physics2D.IgnoreCollision(col2D, c, false);
+    }
+
+    private bool isCollisionVisibleOnTheScreen(Collision2D c)
+    {
+        Vector2 point = c.GetContact(0).point;
+        RaycastHit2D rayhit = Physics2D.Raycast(point, Vector2.up, 1f);
+        Debug.Log(string.Format("[{0}] {1}", Time.time, rayhit.rigidbody.gameObject.name));
+        if (rayhit.rigidbody != null && rayhit.rigidbody.Equals(c.rigidbody)) 
+            return true;
+        return false;
     }
 }

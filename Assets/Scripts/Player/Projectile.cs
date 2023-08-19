@@ -23,7 +23,7 @@ public class Projectile : MonoBehaviour
 
     GameObject player;
     Transform neck, head;
-    Vector2 dir;
+    Vector3 dir;
     Coroutine cooldownCoroutine;
     ProjectileData data;
 
@@ -34,17 +34,27 @@ public class Projectile : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (dir.Equals(Vector2.zero))
-            fixPosition();
+        if (dir.Equals(Vector3.zero))
+        {
+            if (transform.parent != null)
+                headToMousePos();
+        }
         else
-            transform.Translate(dir * shootForce * Time.fixedDeltaTime);
+        {
+            transform.Translate(dir * shootForce * Time.fixedDeltaTime, Space.World);
+        }
+    }
+
+    void LateUpdate()
+    {
+        fixPositionIntoScreen();
     }
 
     void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.CompareTag("Ground"))
         {
-            dir = Vector2.zero;
+            dir = Vector3.zero;
         }
     }
 
@@ -53,7 +63,7 @@ public class Projectile : MonoBehaviour
         player = transform.parent.gameObject;
         neck = player.transform.Find("bone_2/neck");
         head = player.transform.Find("bone_2/neck/head");
-        dir = Vector2.zero;
+        dir = Vector3.zero;
         cooldownCoroutine = null;
 
         float rad, correctFactor;
@@ -65,16 +75,17 @@ public class Projectile : MonoBehaviour
     public void shoot()
     {
         if (cooldownCoroutine != null) return;
-        transform.SetParent(null);
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        dir = (mousePos - transform.position).normalized;
+        transform.SetParent(null);
+        Vector3 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        dir.z = 0;
+        this.dir = dir.normalized;
     }
 
     public void stop()
     {
         transform.SetParent(player.transform);
-        dir = Vector2.zero;
+        dir = Vector3.zero;
         cooldownCoroutine = StartCoroutine(runShootCooldown());
     }
 
@@ -84,14 +95,29 @@ public class Projectile : MonoBehaviour
         cooldownCoroutine = null;
     }
 
-    private void fixPosition()
+    private void headToMousePos()
     {
-        float angle, rot;
-        angle = head.localRotation.eulerAngles.z;
-        rot = neck.localRotation.eulerAngles.z + head.localRotation.eulerAngles.z + data.correctFactor;
+        float rot = neck.localRotation.eulerAngles.z + head.localRotation.eulerAngles.z + data.correctFactor;
 
         Vector3 dir = (Quaternion.Euler(0, 0, rot) * Vector3.right).normalized;
         if (player.transform.localScale.x < 0) dir.x *= -1;
         transform.position = neck.position + dir * data.rad;
+    }
+
+    private void fixPositionIntoScreen()
+    {
+        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+        Vector3 copy = pos;
+
+        if (pos.x <= 0f) pos.x = 0f;
+        if (1f <= pos.x) pos.x = 1f;
+        if (pos.y <= 0f) pos.y = 0f;
+        if (1f <= pos.y) pos.y = 1f;
+
+        if (!pos.Equals(copy))
+        {
+            dir = Vector3.zero;
+            transform.position = Camera.main.ViewportToWorldPoint(pos);
+        }
     }
 }
