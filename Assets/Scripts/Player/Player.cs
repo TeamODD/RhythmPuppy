@@ -42,7 +42,6 @@ public class Player : MonoBehaviour
     Rigidbody2D rig2D;
     CompositeCollider2D col2D;
     SpriteRenderer[] spriteList;
-    HPManager hpManager;
     Animator anim;
 
     bool onFired;
@@ -118,7 +117,6 @@ public class Player : MonoBehaviour
         rig2D = GetComponent<Rigidbody2D>();
         col2D = GetComponent<CompositeCollider2D>();
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
-        hpManager = FindObjectOfType<HPManager>();
         anim = GetComponent<Animator>();
 
         onFired = false;
@@ -128,8 +126,6 @@ public class Player : MonoBehaviour
 
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
-
-        hpManager.updateHP(health);
     }
 
     public void activateMark()
@@ -352,7 +348,6 @@ public class Player : MonoBehaviour
         head.SendMessage("setSadFace");
 
         health--;
-        hpManager.updateHP(health);
         if (health < 0)
         {
             head.SendMessage("setDeadFace");
