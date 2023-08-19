@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
+using static UnityEngine.GraphicsBuffer;
 
 public class Player : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class Player : MonoBehaviour
 
     GameObject uiCanvas, projectile, mark, head, neck;
     Rigidbody2D rig2D;
-    PolygonCollider2D col2D;
+    CompositeCollider2D col2D;
     SpriteRenderer[] spriteList;
     HPManager hpManager;
     Animator anim;
@@ -102,8 +103,7 @@ public class Player : MonoBehaviour
         GameObject o = c.gameObject;
         if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
         {
-            /*StartCoroutine(ignoreCollision(o.layer));*/
-            getDamage();
+            StartCoroutine(hitEvent());
         }
     }
 
@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
         neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
         rig2D = GetComponent<Rigidbody2D>();
-        col2D = GetComponent<PolygonCollider2D>();
+        col2D = GetComponent<CompositeCollider2D>();
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         hpManager = FindObjectOfType<HPManager>();
         anim = GetComponent<Animator>();
@@ -324,22 +324,27 @@ public class Player : MonoBehaviour
         transform.localScale = flip;
     }
 
-    private IEnumerator ignoreCollision(int target)
+    private IEnumerator ignoreCollision(Collision2D target)
     {
-        Physics2D.IgnoreLayerCollision(gameObject.layer, target, true);
-        yield return new WaitForSeconds(1f);
-        Physics2D.IgnoreLayerCollision(gameObject.layer, target, false);
+        /*Physics2D.IgnoreLayerCollision(gameObject.layer, target.gameObject.layer, true);*/
+        Debug.Log(string.Format("[{0}] {1}", Time.time, "ignore true"));
+        yield return new WaitForSeconds(2f);
+        /*Physics2D.IgnoreLayerCollision(gameObject.layer, target.gameObject.layer, false);*/
+        Debug.Log(string.Format("[{0}] {1}", Time.time, "ignore false"));
+        Physics2D.IgnoreCollision(col2D, target.collider, false);
     }
 
     public void getDamage()
     {
         if (invincibilityCoroutine != null) return;
 
-        StartCoroutine(hitEvent());
+        /*StartCoroutine(hitEvent());*/
     }
 
     private IEnumerator hitEvent()
     {
+        if (invincibilityCoroutine != null) yield break;
+
         const float duration = 1.5f;
         invincibilityCoroutine = StartCoroutine(activateInvincibility(duration));
 
@@ -361,8 +366,12 @@ public class Player : MonoBehaviour
 
     private IEnumerator activateInvincibility(float duration)
     {
+        int obsLayer = LayerMask.NameToLayer("Obstacle");
+
+        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, true);
         setAlpha(0.6f);
         yield return new WaitForSeconds(duration);
+        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, false);
         setAlpha(1f);
         invincibilityCoroutine = null; 
     }
