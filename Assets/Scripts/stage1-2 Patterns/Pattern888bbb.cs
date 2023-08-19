@@ -267,7 +267,7 @@ public class Pattern888bbb : MonoBehaviour
 
         Rigidbody2D weaselRigidbody = weaselObject.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * 5f;
-        while (weaselObject.transform.position.y < -4.5f)
+        while (weaselObject.transform.position.y < -3.963f)
         {
             yield return null;
         }
