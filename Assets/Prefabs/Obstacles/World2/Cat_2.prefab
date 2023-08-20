@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -169728772944436887}
   - component: {fileID: 2461109716114216631}
   - component: {fileID: -6635177375780692517}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Cat_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,8 +73,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1789110185
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: b82c188bbdad26d46898cc1a388d7d11, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

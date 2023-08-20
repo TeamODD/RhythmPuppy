@@ -137,7 +137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 39435398}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: L_Manhole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,7 +288,7 @@ GameObject:
   m_Component:
   - component: {fileID: 79748936}
   - component: {fileID: 79748937}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -391,7 +391,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 238916317}
-  - {fileID: 1720074865}
   m_Father: {fileID: 324388242}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -405,7 +404,7 @@ GameObject:
   m_Component:
   - component: {fileID: 207529645}
   m_Layer: 0
-  m_Name: GroundObjects
+  m_Name: BackgroundObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -448,7 +447,7 @@ GameObject:
   m_Component:
   - component: {fileID: 238916317}
   - component: {fileID: 238916318}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Lamp
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -532,7 +531,7 @@ GameObject:
   m_Component:
   - component: {fileID: 279510408}
   - component: {fileID: 279510409}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Lamp
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -1013,7 +1012,7 @@ GameObject:
   m_Component:
   - component: {fileID: 550243249}
   - component: {fileID: 550243250}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Manhole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1225,7 +1224,7 @@ GameObject:
   - component: {fileID: 956622003}
   - component: {fileID: 956622005}
   - component: {fileID: 956622004}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: NighCity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1351,7 +1350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5369d951f7d4624db9d0cdd4752e230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pattern: {fileID: 1434621901715454958, guid: 0157883f8e29a9e4489f0722821c1078, type: 3}
+  pattern: {fileID: 1273078494639283698, guid: 599b16f22b2c1764e9f1bdfd48561f97, type: 3}
   startDelay: 1.5
 --- !u!4 &1155446040
 Transform:
@@ -1382,7 +1381,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1223482093}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: R_Manhole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1421,10 +1420,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1335762293}
   - component: {fileID: 1335762295}
-  - component: {fileID: 1335762294}
   - component: {fileID: 1335762296}
   - component: {fileID: 1335762297}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Garbage1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1451,14 +1449,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.29, y: -1.54}
   m_SizeDelta: {x: 22.98, y: 2.44}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &1335762294
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1335762292}
-  m_CullTransparentMesh: 1
 --- !u!212 &1335762295
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1600,8 +1590,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1369526594}
   - component: {fileID: 1369526595}
+  - component: {fileID: 1369526597}
+  - component: {fileID: 1369526596}
   m_Layer: 9
-  m_Name: Floor
+  m_Name: Ground_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1674,6 +1666,53 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &1369526596
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369526593}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 22.92, y: 4.073672}
+    newSize: {x: 22.92, y: 4.073672}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 22.92, y: 4.073672}
+  m_EdgeRadius: 0
+--- !u!50 &1369526597
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369526593}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1394185941
 GameObject:
   m_ObjectHideFlags: 0
@@ -1684,10 +1723,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1394185942}
   - component: {fileID: 1394185945}
+  - component: {fileID: 1394185947}
   - component: {fileID: 1394185944}
   - component: {fileID: 1394185946}
-  m_Layer: 3
-  m_Name: Ground
+  m_Layer: 9
+  m_Name: Ground_Collider
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1797,7 +1837,7 @@ PlatformEffector2D:
   m_UseColliderMask: 1
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 448
+    m_Bits: 14528
   m_RotationalOffset: 0
   m_UseOneWay: 1
   m_UseOneWayGrouping: 0
@@ -1805,6 +1845,27 @@ PlatformEffector2D:
   m_UseSideFriction: 0
   m_UseSideBounce: 0
   m_SideArc: 1
+--- !u!50 &1394185947
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394185941}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1399307703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1985,7 +2046,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1540175462}
   - component: {fileID: 1540175463}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: NightSky
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2088,7 +2149,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 279510408}
-  - {fileID: 1849641200}
   m_Father: {fileID: 324388242}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2143,100 +2203,6 @@ PolygonCollider2D:
   m_CorrespondingSourceObject: {fileID: 2597106715938327517, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
   m_PrefabInstance: {fileID: 1989851125167521190}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1720074864
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1720074865}
-  - component: {fileID: 1720074866}
-  m_Layer: 9
-  m_Name: Light
-  m_TagString: LampLight
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1720074865
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1720074864}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.4, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 140689683}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!108 &1720074866
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1720074864}
-  m_Enabled: 1
-  serializedVersion: 10
-  m_Type: 2
-  m_Shape: 0
-  m_Color: {r: 1, g: 0.9725491, b: 0, a: 1}
-  m_Intensity: 3
-  m_Range: 4
-  m_SpotAngle: 1
-  m_InnerSpotAngle: 1
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-    m_CullingMatrixOverride:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 1
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 0
-  m_RenderingLayerMask: 1
-  m_Lightmapping: 2
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_UseBoundingSphereOverride: 0
-  m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
 --- !u!60 &1721672948 stripped
 PolygonCollider2D:
   m_CorrespondingSourceObject: {fileID: 7005682745333229705, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
@@ -2320,100 +2286,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5022129265618786827, guid: 0b5ec4a556af36a48af12684878039b0, type: 3}
   m_PrefabInstance: {fileID: 1838838416}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1849641199
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1849641200}
-  - component: {fileID: 1849641201}
-  m_Layer: 9
-  m_Name: Light
-  m_TagString: LampLight
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1849641200
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1849641199}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 2.4, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1610098236}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!108 &1849641201
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1849641199}
-  m_Enabled: 1
-  serializedVersion: 10
-  m_Type: 2
-  m_Shape: 0
-  m_Color: {r: 1, g: 0.9725491, b: 0, a: 1}
-  m_Intensity: 3
-  m_Range: 4
-  m_SpotAngle: 1
-  m_InnerSpotAngle: 1
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-    m_CullingMatrixOverride:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 1
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 0
-  m_RenderingLayerMask: 1
-  m_Lightmapping: 2
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_UseBoundingSphereOverride: 0
-  m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
 --- !u!1 &1866348216
 GameObject:
   m_ObjectHideFlags: 0
@@ -2461,7 +2333,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2110939830}
   - component: {fileID: 2110939831}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Garbage2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2522,7 +2394,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1762480717
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 3c3a78a47712519469b1151b71b19991, type: 3}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
@@ -2545,7 +2417,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2121036601}
   - component: {fileID: 2121036602}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Manhole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2654,6 +2526,10 @@ PrefabInstance:
     - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: dashDuration
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: gravityScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: dashEvasionGen
@@ -2778,6 +2654,10 @@ PrefabInstance:
     - target: {fileID: 1954424302641423539, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_Name
       value: corgi
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954424302641423539, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 1988430544194224844, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_Layer
@@ -12138,6 +12018,10 @@ PrefabInstance:
     - target: {fileID: 7005682745333229705, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_UsedByComposite
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320363692715735965, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7420726660802509281, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_Enabled

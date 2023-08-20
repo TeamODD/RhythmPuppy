@@ -17,13 +17,15 @@ public class Player : MonoBehaviour
         ShootCancel,
     }
 
-    [Header("basic status")]
+    [Header("Basic Status")]
     public int health;
     public float stamina;
     [SerializeField]
     float staminaGen;
     [SerializeField]
     float speed;
+    [SerializeField]
+    float gravityScale;
 
     [Header("Jump")]
     [SerializeField]
@@ -47,6 +49,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     float shootCancelStaminaGen;
 
+    const float G = 9.8f;
 
     GameObject uiCanvas, projectile, mark, head, neck;
     Rigidbody2D rig2D;
@@ -56,10 +59,10 @@ public class Player : MonoBehaviour
 
     bool onFired;
     float headCorrectFactor;
+    Vector3 velocity;
     Coroutine dashCoroutine, dashCooldownCoroutine, invincibilityCoroutine;
 
     WaitForSeconds collisionDelayTime;
-    
 
     void Awake()
     {
@@ -98,8 +101,9 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        velocity = rig2D.velocity;
         flipBody();
-        move(); 
+        move();
     }
 
     void LateUpdate()
@@ -112,8 +116,9 @@ public class Player : MonoBehaviour
         GameObject o = c.gameObject;
         if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
         {
-            /*if (!isCollisionVisibleOnTheScreen(c)) return;*/
+            rig2D.velocity = velocity;
             StartCoroutine(delayCollision(c.collider));
+            if (!isCollisionVisibleOnTheScreen(c)) return;
 
             if (dashCoroutine != null) evade();
             else StartCoroutine(hitEvent());
@@ -145,7 +150,7 @@ public class Player : MonoBehaviour
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
-        collisionDelayTime = new WaitForSeconds(0.5f);
+        collisionDelayTime = new WaitForSeconds(0.2f);
 
         onFired = false;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
@@ -203,18 +208,11 @@ public class Player : MonoBehaviour
 
     private bool isJump()
     {
-        RaycastHit2D ray2D = Physics2D.Raycast(transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
         const float margin = 0.05f;
 
         if (Mathf.Abs(rig2D.velocity.y) < margin)
         {
-            if (ray2D.collider != null)
-            {
-                if (ray2D.distance < margin)
-                {
-                    return false;
-                }
-            }
+            return false;
         }
         return true;
     }
@@ -404,16 +402,47 @@ public class Player : MonoBehaviour
     {
         Physics2D.IgnoreCollision(col2D, c, true);
         yield return collisionDelayTime;
+        if (c == null) yield break;
         Physics2D.IgnoreCollision(col2D, c, false);
     }
 
     private bool isCollisionVisibleOnTheScreen(Collision2D c)
     {
         Vector2 point = c.GetContact(0).point;
-        RaycastHit2D rayhit = Physics2D.Raycast(point, Vector2.up, 1f);
-        Debug.Log(string.Format("[{0}] {1}", Time.time, rayhit.rigidbody.gameObject.name));
-        if (rayhit.rigidbody != null && rayhit.rigidbody.Equals(c.rigidbody)) 
+        LayerMask layerMask = -1;
+        layerMask &= ~LayerMask.GetMask("Player");
+        RaycastHit2D[] hit = Physics2D.RaycastAll(point, Vector2.zero, 0, layerMask);
+        SpriteRenderer sp = null, tmp = null;
+
+        for (int i = 0; i < hit.Length; i++)
+        {
+            tmp = null;
+            hit[i].transform.TryGetComponent(out tmp);
+
+            if (tmp != null)
+            { 
+                if (sp == null || getBiggerSortingOrder(ref tmp, ref sp).Equals(tmp))
+                    sp = tmp;
+            }
+        }
+
+        if (c.transform.Equals(sp.transform))
             return true;
         return false;
+    }
+
+    private ref SpriteRenderer getBiggerSortingOrder(ref SpriteRenderer s1, ref SpriteRenderer s2)
+    {
+        if (s1.sortingLayerID < s2.sortingLayerID)
+            return ref s2;
+        else if (s1.sortingLayerID > s2.sortingLayerID)
+            return ref s1;
+
+        if (s1.sortingOrder < s2.sortingOrder)
+            return ref s2;
+        else if (s1.sortingOrder > s2.sortingOrder)
+            return ref s1;
+
+        return ref s1;
     }
 }

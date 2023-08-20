@@ -7,20 +7,34 @@ namespace Obstacles
 {
     public class Cat_1 : MonoBehaviour
     {
+        [SerializeField] float gravityScale;
         [SerializeField] float force;
 
-        Rigidbody2D rig2D;
+        const float G = 9.8f;
+
+        Vector3 velocity;
+
 
         void Awake()
         {
             init();
         }
 
+        void FixedUpdate()
+        {
+            physicalCalculation();
+        }
+
         public void init()
         {
-            rig2D = GetComponent<Rigidbody2D>();
-            GetComponent<Rigidbody2D>().AddForce(transform.up * force, ForceMode2D.Impulse);
-            rig2D.gravityScale = 1f;
+            velocity = new Vector3(0, force, 0);
         }
+
+        private void physicalCalculation()
+        {
+            transform.Translate(velocity * Time.fixedDeltaTime);
+            velocity.y -= G * Time.fixedDeltaTime * gravityScale;
+        }
+
     }
 }

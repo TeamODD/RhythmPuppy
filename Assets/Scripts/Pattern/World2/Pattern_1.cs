@@ -36,7 +36,7 @@ namespace World_2
                     continue;
                 }
 
-                if (catObjectList[i].transform.position.y < -2f)
+                if (catObjectList[i].transform.position.y < -4f)
                 {
                     Destroy(catObjectList[i]);
                     
