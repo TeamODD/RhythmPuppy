@@ -9,7 +9,7 @@ public class Pattern12 : MonoBehaviour
     [SerializeField]
     private GameObject warning;
     [SerializeField]
-    private float thorwingspeed; //가시덤블을 날리는 속도
+    private float thorwingspeed;
 
     private void OnEnable()
     {
@@ -23,34 +23,19 @@ public class Pattern12 : MonoBehaviour
 
     private IEnumerator pattern()
     {
-        // 경고 오브젝트 생성
         Vector3 warningPosition = new Vector3(-4.56f, -4.49f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
         float randomZRotation = Random.Range(-80f, -40f);
         newWarning.transform.rotation = Quaternion.Euler(0f, 0f, randomZRotation);
 
-
-        float distanceFromDiagonal = 14f * Mathf.Sqrt(2f); // 대각선으로부터의 거리
-
-        // 대각선 방향으로의 이동 벡터 계산
-        Vector3 diagonalDirection = new Vector3(Mathf.Cos(Mathf.Deg2Rad * randomZRotation), Mathf.Sin(Mathf.Deg2Rad * randomZRotation), 0f);
-
-        // 왼쪽 아래에서 시작하는 위치 계산
-        Vector3 thorstemPosition = warningPosition - diagonalDirection * distanceFromDiagonal;
-
-        // 새로운 오브젝트 생성 및 위치, 각도 설정
-        GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.Euler(0f, 0f, randomZRotation));
-
-
-        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
+        
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
         Color originalColor = warningRenderer.color;
         Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
 
-        float totalTime = 0.5f; // 전체 시간 (0.5초)
-        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
-
+        float totalTime = 0.5f; 
+        float fadeInDuration = 0.3f; 
         float elapsedTime = 0f;
 
         while (elapsedTime < totalTime)
@@ -58,42 +43,36 @@ public class Pattern12 : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3초 동안은 완전히 불투명하게 유지
             if (elapsedTime <= fadeInDuration)
             {
                 warningRenderer.color = originalColor;
             }
-            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
-            else //0.3초가 지남
+            else 
             {
-                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
+                float fadeOutDuration = totalTime - fadeInDuration; // 占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙 占시곤옙 (0.2占쏙옙)
                 warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
             }
 
             yield return null;
         }
 
-        // 경고 오브젝트 제거
         Destroy(newWarning);
 
-        /*
+        
         Vector3 thorstemPosition = new Vector3(-18.56f, -18.49f, 0f);
         GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);
 
-        newthorstem.transform.rotation = Quaternion.Euler(0f, 0f, randomZRotation); // 회전 방향 설정
+        newthorstem.transform.rotation = Quaternion.Euler(0f, 0f, randomZRotation); // 회占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
 
         Rigidbody2D newthorstemRigidbody = newthorstem.GetComponent<Rigidbody2D>();
 
-        // 회전된 각도를 사용하여 벡터 회전
         Vector2 diagonalDirection = Quaternion.Euler(0f, 0f, randomZRotation) * Vector2.up;
         
 
-        // 대각선 이동 속도 계산
         Vector2 diagonalVelocity = diagonalDirection.normalized * thorwingspeed;
 
         newthorstemRigidbody.velocity = diagonalVelocity;
 
-        // 자식 오브젝트도 함께 움직이도록 설정
         foreach (Transform childTransform in newthorstem.transform)
         {
             Rigidbody2D childRigidbody = childTransform.GetComponent<Rigidbody2D>();
@@ -107,7 +86,7 @@ public class Pattern12 : MonoBehaviour
         {
             yield return null;
         }
-        */
+        
         Destroy(newthorstem);
         Destroy(gameObject);
     }
