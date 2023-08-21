@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     float speed;
     [SerializeField]
     float gravityScale;
+    public float invincibleDuration;
 
     [Header("Jump")]
     [SerializeField]
@@ -34,8 +35,7 @@ public class Player : MonoBehaviour
     [Header("Dash")]
     [SerializeField]
     float dashForce;
-    [SerializeField]
-    float dashDuration;
+    public float dashDuration;
     [SerializeField]
     float dashCooltime;
     [SerializeField]
@@ -228,9 +228,11 @@ public class Player : MonoBehaviour
         if (dir == 0) yield break;
 
         stamina -= dashStaminaCost;
-        anim.SetTrigger("Dash");
+        setAlpha(0.5f);
         rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
         rig2D.gravityScale = 0f;
+        anim.SetTrigger("Dash");
+        uiCanvas.SendMessage("dashTimerEffect");
 
         yield return new WaitForSeconds(dashDuration);
         setAlpha(1f);
@@ -354,8 +356,7 @@ public class Player : MonoBehaviour
     {
         if (invincibilityCoroutine != null) yield break;
 
-        const float duration = 1.5f;
-        invincibilityCoroutine = StartCoroutine(activateInvincibility(duration));
+        invincibilityCoroutine = StartCoroutine(activateInvincibility());
 
         uiCanvas.SendMessage("hitEffect");
         head.SendMessage("setSadFace");
@@ -368,17 +369,17 @@ public class Player : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(invincibleDuration);
         head.SendMessage("setNormalFace");
     }
 
-    private IEnumerator activateInvincibility(float duration)
+    private IEnumerator activateInvincibility()
     {
         int obsLayer = LayerMask.NameToLayer("Obstacle");
 
         Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, true);
-        setAlpha(0.6f);
-        yield return new WaitForSeconds(duration);
+        setAlpha(0.5f);
+        yield return new WaitForSeconds(invincibleDuration);
         Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, false);
         setAlpha(1f);
         invincibilityCoroutine = null; 
@@ -420,12 +421,12 @@ public class Player : MonoBehaviour
             hit[i].transform.TryGetComponent(out tmp);
 
             if (tmp != null)
-            { 
+            {
                 if (sp == null || getBiggerSortingOrder(ref tmp, ref sp).Equals(tmp))
                     sp = tmp;
             }
         }
-
+        
         if (c.transform.Equals(sp.transform))
             return true;
         return false;
@@ -433,9 +434,9 @@ public class Player : MonoBehaviour
 
     private ref SpriteRenderer getBiggerSortingOrder(ref SpriteRenderer s1, ref SpriteRenderer s2)
     {
-        if (s1.sortingLayerID < s2.sortingLayerID)
+        if (s1.gameObject.layer < s2.gameObject.layer)
             return ref s2;
-        else if (s1.sortingLayerID > s2.sortingLayerID)
+        else if (s1.gameObject.layer > s2.gameObject.layer)
             return ref s1;
 
         if (s1.sortingOrder < s2.sortingOrder)

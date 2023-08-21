@@ -8,6 +8,8 @@ namespace World_2
 {
     public class Pattern_1 : MonoBehaviour
     {
+        [SerializeField] GameObject warningBox;
+        [SerializeField] GameObject warningArrow;
         [SerializeField] PatternType detailType;
         [SerializeField] GameObject cat;
 

@@ -27,11 +27,17 @@ namespace Obstacles
 
         public void init()
         {
+            Vector3 scale;
             player = GameObject.FindGameObjectWithTag("Player");
-            sp = GetComponent<SpriteRenderer>();
-            sp.flipX = false;
+
+            scale = transform.localScale;
             if (player.transform.position.x < transform.position.x)
-                sp.flipX = true;
+                scale.x = Mathf.Abs(scale.x);
+            else
+                scale.x = Mathf.Abs(scale.x) * -1;
+            transform.localScale = scale;
+
+            dir = (player.transform.position - transform.position);
         }
 
         public void setDir(Vector3 dir)
