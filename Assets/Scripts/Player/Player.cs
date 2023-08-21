@@ -24,8 +24,6 @@ public class Player : MonoBehaviour
     float staminaGen;
     [SerializeField]
     float speed;
-    [SerializeField]
-    float gravityScale;
     public float invincibleDuration;
 
     [Header("Jump")]

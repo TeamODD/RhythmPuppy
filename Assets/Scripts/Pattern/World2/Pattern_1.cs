@@ -18,7 +18,7 @@ namespace World_2
         Coroutine coroutine;
         bool isRunning;
 
-        void Start()
+        void Awake()
         {
             isRunning = false;
             ObstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager");
