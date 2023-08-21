@@ -425,7 +425,7 @@ public class Player : MonoBehaviour
             }
         }
         
-        if (c.transform.Equals(sp.transform))
+        if (c.transform != null && sp.transform != null && c.transform.Equals(sp.transform))
             return true;
         return false;
     }

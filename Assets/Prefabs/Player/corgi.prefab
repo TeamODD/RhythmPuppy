@@ -470,7 +470,7 @@ MonoBehaviour:
   stamina: 100
   staminaGen: 4
   speed: 7
-  gravityScale: 1
+  invincibleDuration: 1.5
   jumpForce: 6
   dashForce: 9
   dashDuration: 0.3

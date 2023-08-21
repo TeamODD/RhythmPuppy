@@ -23,6 +23,8 @@ namespace Obstacles
         void FixedUpdate()
         {
             physicalCalculation();
+            if (transform.position.y < -3f)
+                Destroy(gameObject);
         }
 
         public void init()

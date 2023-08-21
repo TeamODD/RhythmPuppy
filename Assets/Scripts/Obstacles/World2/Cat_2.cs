@@ -31,10 +31,9 @@ namespace Obstacles
             player = GameObject.FindGameObjectWithTag("Player");
 
             scale = transform.localScale;
+            scale.x = Mathf.Abs(scale.x);
             if (player.transform.position.x < transform.position.x)
-                scale.x = Mathf.Abs(scale.x);
-            else
-                scale.x = Mathf.Abs(scale.x) * -1;
+                scale.x *= -1;
             transform.localScale = scale;
 
             dir = (player.transform.position - transform.position);
