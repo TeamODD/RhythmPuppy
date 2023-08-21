@@ -20,7 +20,7 @@ namespace World_2
         void Start()
         {
             obstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager");
-            artfMgr = transform.parent.GetComponent<PatternManager>().artfMgr;
+            artfMgr = FindObjectOfType<ArtifactManager>();
 
             StartCoroutine(runPattern());
         }

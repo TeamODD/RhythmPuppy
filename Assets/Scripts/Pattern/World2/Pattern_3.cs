@@ -20,8 +20,8 @@ namespace World_2
         void Start()
         {
             PatternManager patternManager = transform.parent.GetComponent<PatternManager>();
-            artfMgr = patternManager.artfMgr;
-            uiCanvas = patternManager.uiCanvas;
+            artfMgr = FindObjectOfType<ArtifactManager>();
+            uiCanvas = FindObjectOfType<UICanvas>();
 
             StartCoroutine(runPattern());
         }

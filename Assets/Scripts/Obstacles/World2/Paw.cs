@@ -1,14 +1,29 @@
+using Obstacles;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Paw : MonoBehaviour
 {
-    void OnTriggerEnter2D(Collider2D col)
+    [SerializeField] float rotationSpeed;
+
+    float rotated, r;
+
+    void Awake()
     {
-        if (col.gameObject.CompareTag("Player"))
-        {
-            col.gameObject.GetComponent<Player>().getDamage(1);
-        }
+        init();
+    }
+
+    void FixedUpdate()
+    {
+        r = rotationSpeed * Time.fixedDeltaTime;
+        transform.Rotate(new Vector3(0, 0, -1 * r));
+        rotated += r;
+        if (140 < rotated) Destroy(gameObject);
+    }
+
+    public void init()
+    {
+        rotated = 0f;
     }
 }

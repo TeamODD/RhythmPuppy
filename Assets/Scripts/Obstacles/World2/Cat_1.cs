@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 namespace Obstacles
@@ -8,24 +9,32 @@ namespace Obstacles
     {
         [SerializeField] float force;
 
-        /*void FixedUpdate()
-        {
-            transform.position += new Vector3(0, speed * Time.fixedDeltaTime, 0);
-        }*/
+        Rigidbody2D rig2D;
 
-        void OnEnable()
+        void Awake()
         {
-            GetComponent<Rigidbody2D>().AddForce(transform.up * force, ForceMode2D.Impulse);
+            init();
         }
 
-        void OnTriggerEnter2D(Collider2D col)
+        /*void OnCollisionEnter2D(Collision2D col)
         {
-            GameObject o = col.transform.parent.gameObject;
-            if (o.gameObject.CompareTag("Player"))
+            Debug.Log("123");
+            GameObject o = col.transform.root.gameObject;
+            Vector2 point = col.GetContact(0).point;
+            RaycastHit2D hit = Physics2D.Raycast(point, transform.forward, 100);
+
+            *//* 고양이가 가려지지 않고 플레이어와 닿았는가? *//*
+            if (transform.Equals(hit.transform) && o.gameObject.CompareTag("Player"))
             {
-                o.gameObject.GetComponent<Player>().getDamage(1);
-                Destroy(gameObject);
+                StartCoroutine(damageEvent(o));
             }
+        }*/
+
+        public void init()
+        {
+            rig2D = GetComponent<Rigidbody2D>();
+            GetComponent<Rigidbody2D>().AddForce(transform.up * force, ForceMode2D.Impulse);
+            rig2D.gravityScale = 1f;
         }
     }
 }

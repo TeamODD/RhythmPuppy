@@ -1,21 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build.Content;
+using TimelineManager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class ButtonAction : MonoBehaviour
 {
-    [SerializeField] GameObject Option;
-    GameObject gameplaymanager;
+    public GameObject target;
+    public GameObject Warning;
+    private int count;
 
-    public void Start()
+    private Pattern1_a Pattern1_a;
+    private float yPosition;
+
+    void Start()
     {
-        gameplaymanager = GameObject.Find("GamePlayManager");
+        //Pattern1_a.BeeMove();
+    }
+    
+    void Awake()
+    {
+        Bee();
+        count = 1;
+    }
+    void Bee()
+    {
+        Instantiate(target);
+        Instantiate(Warning);
+        
+        count++;
+        Invoke("Bee", 0.5f);
+    }
+    void Update()
+    {
+        
     }
 
     public void onContinue()
     {
-        Option.SetActive(false);
-        gameplaymanager.GetComponent<GamePasue>().ResumeGame();
+        //Option.SetActive(false);
+
+        if (count == 32)
+            CancelInvoke("Bee");
     }
+    //처음 두 마리 붙어서 나옴(가로)
 }

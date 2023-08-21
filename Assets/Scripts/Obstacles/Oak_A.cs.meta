@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/Obstacles/Oak_A.cs.meta
 guid: 09f0f8af4e9e3ec40845c3b5cf8540fc
+========
+guid: 867958dc23ed39d4297c87e0b11bc481
+>>>>>>>> dev:Assets/Scripts/Pattern/PatternManager.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

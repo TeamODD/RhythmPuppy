@@ -44,20 +44,25 @@ namespace TimelineManager
 
         public IEnumerator Run()
         {
-            int i = 0, j = 0;
+            float delay = 0;
+            int i = 0, j = 0, repeat;
+
             for (; i < timeline.Length; i++)
             {
                 if (i == 0)
-                    yield return new WaitForSeconds(timeline[i].startAt);
+                    delay = timeline[i].startAt;
                 else
-                    yield return new WaitForSeconds(timeline[i].startAt - timeline[i-1].startAt + ((j-1) * timeline[i-1].detail.repeatDelayTime));
-
-                j = 0;
+                    delay = timeline[i].startAt - timeline[i - 1].startAt + ((j - 1) * timeline[i - 1].detail.repeatDelayTime);
+                yield return new WaitForSeconds(delay);
+                
                 // it loops at least once
-                while (j < timeline[i].detail.repeatNo + 1)
+                repeat = timeline[i].detail.repeatNo;
+                if (repeat == 0) repeat = 1;
+                j = 0;
+                while (true)
                 {
                     PatternAction(this, timeline[i]);
-                    if (timeline[i].detail.repeatNo <= ++j) break;
+                    if (repeat <= ++j) break;
                     yield return new WaitForSeconds(timeline[i].detail.repeatDelayTime);
                 }
             }

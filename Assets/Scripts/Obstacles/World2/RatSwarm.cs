@@ -9,15 +9,13 @@ namespace Obstacles
         [SerializeField] float speed;
         [SerializeField] float runtime;
 
+        GameObject player;
         float cooltime, dir;
         bool cooldown;
-        GameObject player;
 
-        void OnEnable()
+        void Awake()
         {
-            cooldown = true;
-            player = GameObject.FindGameObjectWithTag("Player");
-            StartCoroutine(runCooldown());
+            init();
         }
 
         void FixedUpdate()
@@ -30,14 +28,12 @@ namespace Obstacles
             }
         }
 
-        void OnTriggerEnter2D(Collider2D col)
+        public void init()
         {
-            GameObject o = col.transform.parent.gameObject;
-            if (o.gameObject.CompareTag("Player"))
-            {
-                o.gameObject.GetComponent<Player>().getDamage(1);
-                Destroy(gameObject);
-            }
+            player = GameObject.FindGameObjectWithTag("Player");
+            cooldown = true;
+
+            StartCoroutine(runCooldown());
         }
 
         public void setCooltime(float cooltime)

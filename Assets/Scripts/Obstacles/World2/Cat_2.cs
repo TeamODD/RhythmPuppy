@@ -8,12 +8,13 @@ namespace Obstacles
     {
         [SerializeField] float speed;
 
-        private GameObject player;
-        private Vector3 dir;
+        GameObject player;
+        SpriteRenderer sp;
+        Vector3 dir;
 
-        void OnEnable()
+        void Awake()
         {
-            player = GameObject.FindGameObjectWithTag("Player");
+            init();
         }
 
         void FixedUpdate()
@@ -24,14 +25,13 @@ namespace Obstacles
                 Destroy(gameObject);
         }
 
-        void OnTriggerEnter2D(Collider2D col)
+        public void init()
         {
-            GameObject o = col.transform.parent.gameObject;
-            if (o.gameObject.CompareTag("Player"))
-            {
-                o.gameObject.GetComponent<Player>().getDamage(1);
-                Destroy(gameObject);
-            }
+            player = GameObject.FindGameObjectWithTag("Player");
+            sp = GetComponent<SpriteRenderer>();
+            sp.flipX = false;
+            if (player.transform.position.x < transform.position.x)
+                sp.flipX = true;
         }
 
         public void setDir(Vector3 dir)
