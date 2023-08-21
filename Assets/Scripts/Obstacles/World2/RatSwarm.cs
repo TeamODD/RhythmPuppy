@@ -10,12 +10,21 @@ namespace Obstacles
         [SerializeField] float runtime;
 
         GameObject player;
+        SpriteRenderer sp;
         float cooltime, dir;
         bool cooldown;
 
         void Awake()
         {
             init();
+        }
+
+        void Update()
+        {
+            if (transform.position.x < player.transform.position.x)
+                sp.flipX = true;
+            else
+                sp.flipX = false;
         }
 
         void FixedUpdate()
@@ -31,6 +40,7 @@ namespace Obstacles
         public void init()
         {
             player = GameObject.FindGameObjectWithTag("Player");
+            sp = GetComponent<SpriteRenderer>();
             cooldown = true;
 
             StartCoroutine(runCooldown());
