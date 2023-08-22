@@ -47,11 +47,14 @@ public class Player : MonoBehaviour
     [SerializeField]
     float shootCancelStaminaGen;
 
+    [Header("Hitbox Object")]
+    [SerializeField]
+    Collider2D hitbox;
+
     const float G = 9.8f;
 
     GameObject uiCanvas, projectile, mark, head, neck;
     Rigidbody2D rig2D;
-    CompositeCollider2D col2D;
     SpriteRenderer[] spriteList;
     Animator anim;
 
@@ -111,8 +114,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D c)
     {
-        GameObject o = c.gameObject;
-        if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
+        if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
             rig2D.velocity = velocity;
             StartCoroutine(delayCollision(c.collider));
@@ -123,17 +125,14 @@ public class Player : MonoBehaviour
         }
     }
 
-    /*void OnTriggerEnter2D(Collider2D c)
+    void OnTriggerEnter2D(Collider2D c)
     {
-        GameObject o = c.gameObject;
-        if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
+        if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
-            StartCoroutine(delayCollision(c));
-
             if (dashCoroutine != null) evade();
             else StartCoroutine(hitEvent());
         }
-    }*/
+    }
 
     public void init()
     {
@@ -144,7 +143,6 @@ public class Player : MonoBehaviour
         neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
         rig2D = GetComponent<Rigidbody2D>();
-        col2D = GetComponent<CompositeCollider2D>();
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
@@ -399,10 +397,10 @@ public class Player : MonoBehaviour
 
     private IEnumerator delayCollision(Collider2D c)
     {
-        Physics2D.IgnoreCollision(col2D, c, true);
+        Physics2D.IgnoreCollision(hitbox, c, true);
         yield return collisionDelayTime;
         if (c == null) yield break;
-        Physics2D.IgnoreCollision(col2D, c, false);
+        Physics2D.IgnoreCollision(hitbox, c, false);
     }
 
     private bool isCollisionVisibleOnTheScreen(Collision2D c)
@@ -425,7 +423,7 @@ public class Player : MonoBehaviour
             }
         }
         
-        if (c.transform != null && sp.transform != null && c.transform.Equals(sp.transform))
+        if (c != null && sp != null && c.transform.Equals(sp.transform))
             return true;
         return false;
     }
