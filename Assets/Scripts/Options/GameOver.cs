@@ -7,14 +7,97 @@ public class GameOver : MonoBehaviour
     [SerializeField]
     GameObject BlackBackground;
     [SerializeField]
-    GameObject SpotLight;
+    float OpeningSpeed;
     [SerializeField]
-    GameObject RestartArrow;
+    GameObject Restart;
     [SerializeField]
-    GameObject ExitToMenuArrow;
+    GameObject ExitToMenu;
+    [SerializeField]
+    float fadeDuration;
 
     private void OnEnable()
     {
+        StartCoroutine(GameoverSetting1());
+        StartCoroutine(GameoverSetting2());
+
+        foreach (GameObject obj in new GameObject[] { Restart, ExitToMenu })
+        {
+            SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
+            Color originalColor = spriteRenderer.color;
+            spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.anyKeyDown)
+        {
+            Debug.Log("게임오버 창 강제 스킵");
+
+            BlackBackground.SetActive(false);
+            StopCoroutine(GameoverSetting2());
+
+            foreach (GameObject obj in new GameObject[] { Restart, ExitToMenu })
+            {
+                SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
+                Color originalColor = spriteRenderer.color;
+                spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+            }
+        }
+    }
+
+    private IEnumerator GameoverSetting1()
+    {
+        BlackBackground.SetActive(true);
+        Rigidbody2D bbgRigidbody = BlackBackground.GetComponent<Rigidbody2D>();
+        bbgRigidbody.velocity = Vector2.down * OpeningSpeed;
+
+        while (BlackBackground.transform.position.y >= -11)
+        {
+            yield return null;
+        }
+
+        bbgRigidbody.velocity = Vector2.zero;
+        BlackBackground.SetActive(false);
+        StartCoroutine(GameoverSetting2());
+    }
+
+    private IEnumerator GameoverSetting2() //검은색 커튼에 맞춰 모습을 드러내는 1안과, 검은색 커튼이 완전히 내려간 뒤 모습을 드러내는 2안이 존재.
+    {
+        while (BlackBackground.transform.position.y >= -5.67f)
+        {
+            yield return null;
+        }
+        StartCoroutine(FadeInObjects(Restart));
         
+        while (BlackBackground.transform.position.y >= -7.58f)
+        {
+            yield return null;
+        }
+        StartCoroutine(FadeInObjects(ExitToMenu));
+        
+        yield return null;
+    }
+
+    private IEnumerator FadeInObjects(GameObject obj)
+    {
+        SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
+        Color originalColor = spriteRenderer.color;
+
+        float startTime = Time.time; // 시작 시간 저장
+
+        while (Time.time - startTime < fadeDuration) // 경과 시간이 fadeDuration보다 작을 때까지 반복
+        {
+            float elapsedTime = Time.time - startTime; // 경과 시간 계산
+            float t = Mathf.Clamp01(elapsedTime / fadeDuration);
+
+            Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(0f, 1f, t));
+            spriteRenderer.color = newColor;
+
+            yield return null;
+        }
+
+        // 알파 값을 정확하게 1로 설정하여 완전히 불투명하게 만듭니다.
+        spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
     }
 }
