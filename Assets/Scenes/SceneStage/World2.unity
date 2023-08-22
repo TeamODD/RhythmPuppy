@@ -1202,7 +1202,7 @@ MonoBehaviour:
   obstacleManager: {fileID: 515140143}
   warningBox: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
   warningArrow: {fileID: 4833175003564764285, guid: 1ba767352fb096447bdb87fccc5a66b9, type: 3}
-  pattern: {fileID: 1434621901715454958, guid: 0157883f8e29a9e4489f0722821c1078, type: 3}
+  pattern: {fileID: 301684448673772372, guid: 93739551ab2ea0b41a8a80386b051420, type: 3}
   startDelay: 1.5
   overlayCanvas: {fileID: 0}
   worldSpaceCanvas: {fileID: 0}
