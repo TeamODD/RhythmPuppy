@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BGM: {fileID: 8300000, guid: 7c627e27a8a4ce743a2ebe064539d77d, type: 3}
-  startDelay: 0.5
+  startDelay: 1
   playlist:
   - prefab: {fileID: 1273078494639283698, guid: 599b16f22b2c1764e9f1bdfd48561f97, type: 3}
     type: 1
@@ -204,8 +204,20 @@ MonoBehaviour:
       detail:
         endAt: 0
         duration: 0
-        repeatNo: 5
+        repeatNo: 3
         repeatDelayTime: 2
+    - startAt: 60.2
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
+    - startAt: 62.2
+      detail:
+        endAt: 0
+        duration: 0
+        repeatNo: 0
+        repeatDelayTime: 0
     - startAt: 64.1
       detail:
         endAt: 0
@@ -290,7 +302,7 @@ MonoBehaviour:
         duration: 0
         repeatNo: 14
         repeatDelayTime: 1
-    - startAt: 46.7
+    - startAt: 32.7
       detail:
         endAt: 0
         duration: 0
@@ -317,12 +329,6 @@ MonoBehaviour:
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0
-    - startAt: 46.4
-      detail:
-        endAt: 64.2
-        duration: 0
-        repeatNo: 0
-        repeatDelayTime: 0
   - prefab: {fileID: 7938996007636120948, guid: 9b0da4571f3617c4db72596f97e2b226, type: 3}
     type: 0
     timeline:
@@ -335,12 +341,6 @@ MonoBehaviour:
     - startAt: 47.7
       detail:
         endAt: 80.1
-        duration: 0
-        repeatNo: 0
-        repeatDelayTime: 0
-    - startAt: 47.7
-      detail:
-        endAt: 64.2
         duration: 0
         repeatNo: 0
         repeatDelayTime: 0

@@ -11,41 +11,30 @@ namespace World_2
         [SerializeField] PatternType detailType;
         [SerializeField] GameObject cat;
 
-        GameObject ObstacleManager;
+        PatternManager patternManager;
+        Transform obstacleManager;
         List<GameObject> catObjectList;
-        Coroutine coroutine;
-        bool isRunning;
+        GameObject warningBox;
+        WaitForSeconds warnDelay;
 
-        void Start()
+        void Awake()
         {
-            isRunning = false;
-            ObstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager");
+            patternManager = transform.parent.GetComponent<PatternManager>();
+            obstacleManager = patternManager.obstacleManager;
             catObjectList = new List<GameObject>();
+            warningBox = patternManager.warningBox;
+            warnDelay = new WaitForSeconds(1f);
 
             runPattern();
         }
 
-        void FixedUpdate()
+        void Update()
         {
-            if (!isRunning) return;
-            if (catObjectList.Count <= 0) Destroy(gameObject);
+            if (catObjectList.Count <= 0) return;
+
             for (int i = 0; i < catObjectList.Count; i++)
             {
-                if (catObjectList[i] == null)
-                {
-                    continue;
-                }
-
-                if (catObjectList[i].transform.position.y < -2f)
-                {
-                    Destroy(catObjectList[i]);
-                    
-                    catObjectList[i] = null;
-                }
-                else
-                { 
-                    return;
-                }
+                if (catObjectList[i] != null) return;
             }
             Destroy(gameObject);
         }
@@ -55,22 +44,21 @@ namespace World_2
             switch(detailType)
             {
                 case PatternType.a:
-                    coroutine = StartCoroutine(runPatternA());
+                    StartCoroutine(runPatternA());
                     break;
 
                 case PatternType.b:
-                    coroutine = StartCoroutine(runPatternB());
+                    StartCoroutine(runPatternB());
                     break;
 
                 case PatternType.c:
-                    coroutine = StartCoroutine(runPatternC());
+                    StartCoroutine(runPatternC());
                     break;
 
                 case PatternType.d:
-                    coroutine = StartCoroutine(runPatternD());
+                    StartCoroutine(runPatternD());
                     break;
             }
-            isRunning = true;
         }
 
         public void setDetailType(PatternType detail)
@@ -78,26 +66,34 @@ namespace World_2
             this.detailType = detail;
         }
 
-        private GameObject createCat()
+        private IEnumerator createObjects()
         {
             float r = Random.Range(-8f, 8f);
 
-            GameObject o = Instantiate(cat) as GameObject;
-            o.transform.SetParent(ObstacleManager.transform);
-            o.transform.position = new Vector3(r, o.transform.position.y, 0);
+            warn(r);
+            yield return warnDelay;
+            createCat(r);
+        }
+
+        private GameObject createCat(float x)
+        {
+            GameObject o = Instantiate(cat);
+            o.transform.SetParent(obstacleManager);
+            o.transform.position = new Vector3(x, o.transform.position.y, 0);
             o.SetActive(true);
+            catObjectList.Add(o);
             return o;
         }
 
         private IEnumerator runPatternA()
         {
-            catObjectList.Add(createCat());
+            StartCoroutine(createObjects());
 
-            for(int i=0; i<catObjectList.Count; i++)
+            for (int i=0; i<catObjectList.Count; i++)
             {
                 if(catObjectList[i] != null)
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null ;
                     i = -1;
                 }
             }
@@ -106,11 +102,11 @@ namespace World_2
 
         private IEnumerator runPatternB()
         {
-            catObjectList.Add(createCat());
+            StartCoroutine(createObjects());
             yield return new WaitForSeconds(0.4f);
-            catObjectList.Add(createCat());
+            StartCoroutine(createObjects());
             yield return new WaitForSeconds(0.3f);
-            catObjectList.Add(createCat());
+            StartCoroutine(createObjects());
 
             for (int i = 0; i < catObjectList.Count; i++)
             {
@@ -125,9 +121,9 @@ namespace World_2
 
         private IEnumerator runPatternC()
         {
-            catObjectList.Add(createCat());
+            StartCoroutine(createObjects());
             yield return new WaitForSeconds(0.5f);
-            catObjectList.Add(createCat());
+            StartCoroutine(createObjects());
 
             for (int i = 0; i < catObjectList.Count; i++)
             {
@@ -142,11 +138,11 @@ namespace World_2
 
         private IEnumerator runPatternD()
         {
-            catObjectList.Add(createCat());
+            StartCoroutine(createObjects());
             yield return new WaitForSeconds(0.5f);
-            catObjectList.Add(createCat());
+            StartCoroutine(createObjects());
             yield return new WaitForSeconds(0.7f);
-            catObjectList.Add(createCat());
+            StartCoroutine(createObjects());
 
             for (int i = 0; i < catObjectList.Count; i++)
             {
@@ -157,6 +153,17 @@ namespace World_2
                 }
             }
             yield break;
+        }
+
+        private void warn(float x)
+        {
+            Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, 0));
+
+            GameObject o = Instantiate(warningBox);
+            o.transform.SetParent(patternManager.overlayCanvas);
+            o.transform.position = v;
+            o.transform.localScale = new Vector3(300, 1080, 0);
+            o.SetActive(true);
         }
     }
 }

@@ -52,16 +52,17 @@ namespace TimelineManager
                 if (i == 0)
                     delay = timeline[i].startAt;
                 else
-                    delay = timeline[i].startAt - timeline[i - 1].startAt + ((j - 1) * timeline[i - 1].detail.repeatDelayTime);
+                    delay = timeline[i].startAt - (timeline[i - 1].startAt + ((j - 1) * timeline[i - 1].detail.repeatDelayTime));
                 yield return new WaitForSeconds(delay);
                 
                 // it loops at least once
                 repeat = timeline[i].detail.repeatNo;
+
                 if (repeat == 0) repeat = 1;
                 j = 0;
                 while (true)
                 {
-                    PatternAction(this, timeline[i]);
+                    PatternAction(this, timeline[i]); 
                     if (repeat <= ++j) break;
                     yield return new WaitForSeconds(timeline[i].detail.repeatDelayTime);
                 }

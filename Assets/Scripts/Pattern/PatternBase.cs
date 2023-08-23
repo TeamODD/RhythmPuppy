@@ -79,6 +79,11 @@ public abstract class PatternBase : MonoBehaviour
         {
             coroutineArray[i] = StartCoroutine(playlist[i].Run());
         }
+        Invoke("playMusic", 1f);
+    }
+
+    private void playMusic()
+    {
         musicManager.Play();
     }
 }

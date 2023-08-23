@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5329384350201769646}
   - component: {fileID: 1718972921304314639}
   - component: {fileID: 862064476796714555}
-  - component: {fileID: 8267694354638222258}
+  - component: {fileID: -7251798016247377483}
   - component: {fileID: 2159445128545598675}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Cat_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,8 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e59010cd8ed6cb408b27bf69a1d9640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravityScale: 1.3
   force: 10
---- !u!50 &8267694354638222258
+--- !u!50 &-7251798016247377483
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -108,7 +109,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4005571409586596380}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0

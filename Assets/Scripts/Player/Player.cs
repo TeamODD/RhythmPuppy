@@ -1,3 +1,4 @@
+using Autodesk.Fbx;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,38 +17,51 @@ public class Player : MonoBehaviour
         ShootCancel,
     }
 
-    [Header("�⺻ ����")]
-    [Tooltip("ü��")] public int health;
-
-    [Tooltip("���¹̳�")] public float stamina;
-
-    [SerializeField, Tooltip("�⺻ �̵��ӵ�")]
+    [Header("Basic Status")]
+    public int health;
+    public float stamina;
+    [SerializeField]
+    float staminaGen;
+    [SerializeField]
     float speed;
+    public float invincibleDuration;
 
-    [Header("����")]
-    [SerializeField, Tooltip("���� �Է� �� y������ ���� ��(Force)")]
+    [Header("Jump")]
+    [SerializeField]
     float jumpForce;
 
-    [Header("���")]
-    [SerializeField, Tooltip("��� �Է� �� x������ ���� ��(Force)")]
+    [Header("Dash")]
+    [SerializeField]
     float dashForce;
-
-    [SerializeField, Tooltip("��� �Ҹ� �ð�")]
-    float dashTime;
-
-    [SerializeField, Tooltip("��� ���� �� ���� ���ð�")]
+    public float dashDuration;
+    [SerializeField]
     float dashCooltime;
+    [SerializeField]
+    float dashStaminaCost;
+    [SerializeField]
+    float dashEvasionGen;
+
+    [Header("Shoot")]
+    [SerializeField]
+    float shootStaminaCost;
+    [SerializeField]
+    float shootCancelStaminaGen;
+
+
+    const float G = 9.8f;
 
     GameObject uiCanvas, projectile, mark, head, neck;
+    Collider2D hitbox;
     Rigidbody2D rig2D;
-    CompositeCollider2D col2D;
     SpriteRenderer[] spriteList;
     Animator anim;
 
     bool onFired;
     float headCorrectFactor;
+    Vector3 velocity;
     Coroutine dashCoroutine, dashCooldownCoroutine, invincibilityCoroutine;
-    
+
+    WaitForSeconds invincibleDelay, dashDelay;
 
     void Awake()
     {
@@ -57,6 +71,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         checkJumpStatus();
+        passiveStaminaGen();
 
         if (Input.GetButtonDown("Dash"))
         {
@@ -85,24 +100,37 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        velocity = rig2D.velocity;
         flipBody();
-        move(); 
-        RaycastHit2D raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.up, 1f);
-        /*if(raycast.collider != null) Debug.Log(raycast.collider.gameObject.name);*/
+        move();
     }
 
     void LateUpdate()
     {
-        fixProjectilePos();
-        fixPlayerPosition();
+        fixPositionIntoScreen();
     }
 
     void OnCollisionEnter2D(Collision2D c)
     {
-        GameObject o = c.gameObject;
-        if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
+        if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
-            StartCoroutine(hitEvent());
+            rig2D.velocity = velocity;
+            /*StartCoroutine(delayCollision(c.collider));*/
+            if (!isCollisionVisibleOnTheScreen(c)) return;
+
+            if (dashCoroutine != null) evade(c.collider);
+            else StartCoroutine(hitEvent());
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D c)
+    {
+        if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
+        {
+            /*StartCoroutine(delayCollision(c));*/
+
+            if (dashCoroutine != null) evade(c);
+            else StartCoroutine(hitEvent());
         }
     }
 
@@ -115,14 +143,16 @@ public class Player : MonoBehaviour
         neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
         rig2D = GetComponent<Rigidbody2D>();
-        col2D = GetComponent<CompositeCollider2D>();
+        hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
+
+        invincibleDelay = new WaitForSeconds(invincibleDuration);
+        dashDelay = new WaitForSeconds(dashDuration);
 
         onFired = false;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
-
 
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
@@ -136,6 +166,12 @@ public class Player : MonoBehaviour
     public void inactivateMark()
     {
         mark.SendMessage("inactivate");
+    }
+
+    private void passiveStaminaGen()
+    {
+        float s = staminaGen * Time.deltaTime;
+        stamina = 100 < stamina + s ? 100 : stamina + s;
     }
 
     private void move()
@@ -170,38 +206,45 @@ public class Player : MonoBehaviour
 
     private bool isJump()
     {
-        RaycastHit2D ray2D = Physics2D.Raycast(transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
         const float margin = 0.05f;
 
         if (Mathf.Abs(rig2D.velocity.y) < margin)
         {
-            if (ray2D.collider != null)
-            {
-                if (ray2D.distance < margin)
-                {
-                    return false;
-                }
-            }
+            return false;
         }
         return true;
     }
 
     private IEnumerator dash()
     {
+        if (stamina < dashStaminaCost)
+        {
+            Debug.Log("not enough stamina!");
+            yield break;
+        }
         float dir = Input.GetAxisRaw("Horizontal");
         if (dir == 0) yield break;
 
-        anim.SetTrigger("Dash");
-        if (invincibilityCoroutine != null) StopCoroutine(invincibilityCoroutine);
-        invincibilityCoroutine = StartCoroutine(activateInvincibility(dashTime));
+        stamina -= dashStaminaCost;
+        setAlpha(0.5f);
         rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
         rig2D.gravityScale = 0f;
+        anim.SetTrigger("Dash");
+        uiCanvas.SendMessage("dashTimerEffect");
 
-        yield return new WaitForSeconds(dashTime);
+        yield return new WaitForSeconds(dashDuration);
+        setAlpha(1f);
         rig2D.velocity = new Vector2(0, rig2D.velocity.y);
         rig2D.gravityScale = 1f;
         dashCooldownCoroutine = StartCoroutine(dashCooldown());
         dashCoroutine = null;
+    }
+
+    private void evade(Collider2D c)
+    {
+        Debug.Log(string.Format("[{0}] {1}", Time.time, "회피!"));
+        stamina = 100 < stamina + dashEvasionGen ? 100 : stamina + dashEvasionGen;
+        StartCoroutine(delayCollision(c, dashDelay));
     }
 
     private IEnumerator dashCooldown()
@@ -213,8 +256,14 @@ public class Player : MonoBehaviour
 
     private void shoot()
     {
+        if (stamina < shootStaminaCost)
+        {
+            Debug.Log("not enough stamina!");
+            return;
+        }
         if (!isProjectileOnScreen()) return;
         projectile.SendMessage("shoot");
+        stamina -= shootStaminaCost;
         onFired = true;
     }
 
@@ -233,6 +282,7 @@ public class Player : MonoBehaviour
     private void shootCancel()
     {
         projectile.SendMessage("stop");
+        stamina = 100 < stamina + shootCancelStaminaGen ? 100 : stamina + shootCancelStaminaGen;
         projectile.transform.position = neck.transform.position;
         onFired = false;
     }
@@ -254,7 +304,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void fixPlayerPosition()
+    private void fixPositionIntoScreen()
     {
         Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
         if (pos.x <= 0f) pos.x = 0f;
@@ -262,25 +312,6 @@ public class Player : MonoBehaviour
         if (pos.y <= 0f) pos.y = 0f;
         if (1f <= pos.y) pos.y = 1f;
         transform.position = Camera.main.ViewportToWorldPoint(pos);
-    }
-
-    private void fixProjectilePos()
-    {
-        if (!onFired) return;
-
-        Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
-        Vector3 copy = pos;
-
-        if (pos.x <= 0f) pos.x = 0f;
-        if (1f <= pos.x) pos.x = 1f;
-        if (pos.y <= 0f) pos.y = 0f;
-        if (1f <= pos.y) pos.y = 1f;
-
-        if (!pos.Equals(copy))
-        {
-            projectile.SendMessage("stop");
-            projectile.transform.position = Camera.main.ViewportToWorldPoint(pos);
-        }
     }
 
     private bool isProjectileOnScreen()
@@ -320,29 +351,11 @@ public class Player : MonoBehaviour
         transform.localScale = flip;
     }
 
-    private IEnumerator ignoreCollision(Collision2D target)
-    {
-        /*Physics2D.IgnoreLayerCollision(gameObject.layer, target.gameObject.layer, true);*/
-        Debug.Log(string.Format("[{0}] {1}", Time.time, "ignore true"));
-        yield return new WaitForSeconds(2f);
-        /*Physics2D.IgnoreLayerCollision(gameObject.layer, target.gameObject.layer, false);*/
-        Debug.Log(string.Format("[{0}] {1}", Time.time, "ignore false"));
-        Physics2D.IgnoreCollision(col2D, target.collider, false);
-    }
-
-    public void getDamage()
-    {
-        if (invincibilityCoroutine != null) return;
-
-        /*StartCoroutine(hitEvent());*/
-    }
-
     private IEnumerator hitEvent()
     {
         if (invincibilityCoroutine != null) yield break;
 
-        const float duration = 1.5f;
-        invincibilityCoroutine = StartCoroutine(activateInvincibility(duration));
+        invincibilityCoroutine = StartCoroutine(activateInvincibility());
 
         uiCanvas.SendMessage("hitEffect");
         head.SendMessage("setSadFace");
@@ -355,18 +368,20 @@ public class Player : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(invincibleDuration);
         head.SendMessage("setNormalFace");
     }
 
-    private IEnumerator activateInvincibility(float duration)
+    private IEnumerator activateInvincibility()
     {
-        int obsLayer = LayerMask.NameToLayer("Obstacle");
+        /*int obsLayer = LayerMask.NameToLayer("Obstacle");
 
-        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, true);
-        setAlpha(0.6f);
-        yield return new WaitForSeconds(duration);
-        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, false);
+        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, true);*/
+        hitbox.enabled = false;
+        setAlpha(0.5f);
+        yield return invincibleDelay;
+        /*Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, false);*/
+        hitbox.enabled = true;
         setAlpha(1f);
         invincibilityCoroutine = null; 
     }
@@ -383,5 +398,53 @@ public class Player : MonoBehaviour
             c.a = a;
             spriteList[i].color = c;
         }
+    }
+
+    private IEnumerator delayCollision(Collider2D c, WaitForSeconds delay)
+    {
+        Physics2D.IgnoreCollision(hitbox, c, true);
+        yield return delay;
+        if (c == null) yield break;
+        Physics2D.IgnoreCollision(hitbox, c, false);
+    }
+
+    private bool isCollisionVisibleOnTheScreen(Collision2D c)
+    {
+        Vector2 point = c.GetContact(0).point;
+        LayerMask layerMask = -1;
+        layerMask &= ~LayerMask.GetMask("Player");
+        RaycastHit2D[] hit = Physics2D.RaycastAll(point, Vector2.zero, 0, layerMask);
+        SpriteRenderer sp = null, tmp = null;
+
+        for (int i = 0; i < hit.Length; i++)
+        {
+            tmp = null;
+            hit[i].transform.TryGetComponent(out tmp);
+
+            if (tmp != null)
+            {
+                if (sp == null || getBiggerSortingOrder(ref tmp, ref sp).Equals(tmp))
+                    sp = tmp;
+            }
+        }
+        
+        if (c != null && sp != null && c.transform.Equals(sp.transform))
+            return true;
+        return false;
+    }
+
+    private ref SpriteRenderer getBiggerSortingOrder(ref SpriteRenderer s1, ref SpriteRenderer s2)
+    {
+        if (s1.gameObject.layer < s2.gameObject.layer)
+            return ref s2;
+        else if (s1.gameObject.layer > s2.gameObject.layer)
+            return ref s1;
+
+        if (s1.sortingOrder < s2.sortingOrder)
+            return ref s2;
+        else if (s1.sortingOrder > s2.sortingOrder)
+            return ref s1;
+
+        return ref s1;
     }
 }

@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class UICanvas : MonoBehaviour
 {
-    [SerializeField] GameObject screenEffect;
-
-    GameObject darkObj, redObj;
-    Image dark, red;
+    Player player;
+    Transform overlayCanvas, worldSpaceCanvas;
+    Transform darkEffect, redEffect, dashTimer, hitTimer;
+    Image darkImage, redImage, dashTimerImage, hitTimerImage;
     Color c;
 
     void Awake()
@@ -18,57 +18,81 @@ public class UICanvas : MonoBehaviour
 
     public void init()
     {
-        darkObj = Instantiate(screenEffect);
-        darkObj.transform.SetParent(transform);
-        dark = darkObj.GetComponent<Image>();
-        dark.color = new Color(0, 0, 0, 0);
+        player = FindObjectOfType<Player>();
+        overlayCanvas = transform.Find("OverlayCanvas");
+        worldSpaceCanvas = transform.Find("WorldSpaceCanvas");
 
-        redObj = Instantiate(screenEffect);
-        redObj.transform.SetParent(transform);
-        red = redObj.GetComponent<Image>();
-        red.color = new Color(255, 0, 0, 0);
+        darkEffect = overlayCanvas.Find("DarkEffect");
+        darkImage = darkEffect.GetComponent<Image>();
+        redEffect = overlayCanvas.Find("RedEffect");
+        redImage= redEffect.GetComponent<Image>();
+        dashTimer = worldSpaceCanvas.Find("DashTimer");
+        dashTimerImage = dashTimer.GetComponent<Image>();
+        hitTimer = worldSpaceCanvas.Find("HitTimer");
+        hitTimerImage = hitTimer.GetComponent<Image>();
     }
 
     public void enableDarkEffect()
     {
-        c = dark.color;
-        c.a = 0.8f;
-        dark.color = c;
+        setImageAlpha(ref darkImage, 0.8f);
     }
 
     public void disableDarkEffect()
     {
-        c = dark.color;
-        c.a = 0f;
-        dark.color = c;
+        setImageAlpha(ref darkImage, 0f);
     }
 
     public void hitEffect()
     {
-        c = red.color;
-        c.a = 0.8f;
-        red.color = c;
+        setImageAlpha(ref redImage, 1f);
         StartCoroutine(runHitEffect());
+        StartCoroutine(runTimer(hitTimerImage, player.invincibleDuration));
     }
 
     private IEnumerator runHitEffect()
     {
-        c = red.color;
-        c.a = 0f;
-        red.color = c;
-        while(c.a < 0.6f)
+        float a = 0f;
+        setImageAlpha(ref redImage, a);
+
+        while (c.a < 0.6f)
         {
-            c.a += 0.1f;
-            red.color = c;
+            a += 0.1f;
+            setImageAlpha(ref redImage, a);
             yield return new WaitForSeconds(0.02f);
         }
+        a = 1f;
         yield return new WaitForSeconds(0.1f);
         while (0 < c.a)
         {
-            c.a -= 0.1f;
-            red.color = c;
+            a -= 0.1f;
+            setImageAlpha(ref redImage, a);
             yield return new WaitForSeconds(0.02f);
         }
-        c.a = 0;
+        a = 0f;
+        setImageAlpha(ref redImage, a);
+    }
+
+    public void dashTimerEffect()
+    {
+        StartCoroutine(runTimer(dashTimerImage, player.dashDuration));
+    }
+
+    private IEnumerator runTimer(Image timer, float t)
+    {
+        timer.fillAmount = 1;
+
+        while(0 < timer.fillAmount)
+        {
+            timer.fillAmount -= Time.deltaTime / t;
+            yield return null;
+        }
+        timer.fillAmount = 0;
+    }
+
+    private void setImageAlpha(ref Image i, float a)
+    {
+        c = i.color;
+        c.a = a;
+        i.color = c;
     }
 }

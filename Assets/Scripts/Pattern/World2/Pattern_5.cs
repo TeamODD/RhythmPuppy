@@ -14,13 +14,17 @@ namespace World_2
         [SerializeField] float cooltime;
         [SerializeField] float duration;
 
-        GameObject obstacleManager;
+        PatternManager patternManager;
+        Transform obstacleManager;
         ArtifactManager artfMgr;
+        WaitForSeconds warnDelay;
 
         void Start()
         {
-            obstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager");
+            patternManager = transform.parent.GetComponent<PatternManager>();
+            obstacleManager = patternManager.obstacleManager;
             artfMgr = FindObjectOfType<ArtifactManager>();
+            warnDelay = new WaitForSeconds(1f);
 
             StartCoroutine(runPattern());
         }
@@ -38,23 +42,30 @@ namespace World_2
         private IEnumerator runPattern()
         {
             bool r = Random.Range(0, 2) == 0 ? true : false;
+
+            warn(r);
+
+            yield return warnDelay;
+
             GameObject o = Instantiate(ratSwarm);
-            o.transform.SetParent(obstacleManager.transform);
+            o.transform.SetParent(obstacleManager);
             o.GetComponent<RatSwarm>().setCooltime(cooltime);
+            Vector2 pos = new Vector2(0, o.transform.position.y);
             // set spawn position of ratSwarm
             if (r)
             {
                 // Right
-                o.transform.position = new Vector3(7, o.transform.position.y, o.transform.position.z);
-                StartCoroutine(shakeManhole(artfMgr.R_Manhole));
+                pos.x = 10f;
+                /*StartCoroutine(shakeManhole(artfMgr.R_Manhole));*/
             }
             else
             {
                 // Left
-                o.transform.position = new Vector3(-7, o.transform.position.y, o.transform.position.z);
+                pos.x = -10f;
                 o.GetComponent<SpriteRenderer>().flipX = true;
-                StartCoroutine(shakeManhole(artfMgr.L_Manhole));
+                /*StartCoroutine(shakeManhole(artfMgr.L_Manhole));*/
             }
+            o.transform.position = pos;
             o.SetActive(true);
 
             yield return new WaitForSeconds(duration);
@@ -98,6 +109,22 @@ namespace World_2
 
             manhole.rotation = Quaternion.Euler(0, 0, 0);
             yield break;
+        }
+
+        private void warn(bool dir)
+        {
+            Vector2 pos = new Vector2(0, -3.6f + 0.2f);
+            if (dir)
+                pos.x = 10f;
+            else
+                pos.x = -10f;
+            pos = Camera.main.WorldToScreenPoint(pos);
+
+            GameObject o = Instantiate(patternManager.warningBox);
+            o.transform.SetParent(patternManager.overlayCanvas);
+            o.transform.position = pos;
+            o.transform.localScale = new Vector3(700, 150, 0);
+            o.SetActive(true);
         }
     }
 }
