@@ -47,13 +47,11 @@ public class Player : MonoBehaviour
     [SerializeField]
     float shootCancelStaminaGen;
 
-    [Header("Hitbox Object")]
-    [SerializeField]
-    Collider2D hitbox;
 
     const float G = 9.8f;
 
     GameObject uiCanvas, projectile, mark, head, neck;
+    Collider2D hitbox;
     Rigidbody2D rig2D;
     SpriteRenderer[] spriteList;
     Animator anim;
@@ -63,7 +61,7 @@ public class Player : MonoBehaviour
     Vector3 velocity;
     Coroutine dashCoroutine, dashCooldownCoroutine, invincibilityCoroutine;
 
-    WaitForSeconds collisionDelayTime;
+    WaitForSeconds invincibleDelay, dashDelay;
 
     void Awake()
     {
@@ -117,10 +115,10 @@ public class Player : MonoBehaviour
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
             rig2D.velocity = velocity;
-            StartCoroutine(delayCollision(c.collider));
+            /*StartCoroutine(delayCollision(c.collider));*/
             if (!isCollisionVisibleOnTheScreen(c)) return;
 
-            if (dashCoroutine != null) evade();
+            if (dashCoroutine != null) evade(c.collider);
             else StartCoroutine(hitEvent());
         }
     }
@@ -129,7 +127,9 @@ public class Player : MonoBehaviour
     {
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
-            if (dashCoroutine != null) evade();
+            /*StartCoroutine(delayCollision(c));*/
+
+            if (dashCoroutine != null) evade(c);
             else StartCoroutine(hitEvent());
         }
     }
@@ -143,10 +143,12 @@ public class Player : MonoBehaviour
         neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
         rig2D = GetComponent<Rigidbody2D>();
+        hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
-        collisionDelayTime = new WaitForSeconds(0.2f);
+        invincibleDelay = new WaitForSeconds(invincibleDuration);
+        dashDelay = new WaitForSeconds(dashDuration);
 
         onFired = false;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
@@ -238,10 +240,11 @@ public class Player : MonoBehaviour
         dashCoroutine = null;
     }
 
-    private void evade()
+    private void evade(Collider2D c)
     {
         Debug.Log(string.Format("[{0}] {1}", Time.time, "회피!"));
         stamina = 100 < stamina + dashEvasionGen ? 100 : stamina + dashEvasionGen;
+        StartCoroutine(delayCollision(c, dashDelay));
     }
 
     private IEnumerator dashCooldown()
@@ -371,12 +374,14 @@ public class Player : MonoBehaviour
 
     private IEnumerator activateInvincibility()
     {
-        int obsLayer = LayerMask.NameToLayer("Obstacle");
+        /*int obsLayer = LayerMask.NameToLayer("Obstacle");
 
-        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, true);
+        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, true);*/
+        hitbox.enabled = false;
         setAlpha(0.5f);
-        yield return new WaitForSeconds(invincibleDuration);
-        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, false);
+        yield return invincibleDelay;
+        /*Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, false);*/
+        hitbox.enabled = true;
         setAlpha(1f);
         invincibilityCoroutine = null; 
     }
@@ -395,10 +400,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    private IEnumerator delayCollision(Collider2D c)
+    private IEnumerator delayCollision(Collider2D c, WaitForSeconds delay)
     {
         Physics2D.IgnoreCollision(hitbox, c, true);
-        yield return collisionDelayTime;
+        yield return delay;
         if (c == null) yield break;
         Physics2D.IgnoreCollision(hitbox, c, false);
     }
