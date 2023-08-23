@@ -16,7 +16,6 @@ public class GameProgress : MonoBehaviour
     public GameObject fullsavepoint2;
     public GameObject fullsavepoint3;
 
-
     private float musicLength;
     private Vector3 initialPlayerBudgePosition;
     private float targetDistance; // 이동할 거리

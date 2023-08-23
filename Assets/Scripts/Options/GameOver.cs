@@ -15,6 +15,8 @@ public class GameOver : MonoBehaviour
     [SerializeField]
     float fadeDuration;
 
+    bool IsSettingsDone = false;
+
     private void OnEnable()
     {
         StartCoroutine(GameoverSetting1());
@@ -30,10 +32,8 @@ public class GameOver : MonoBehaviour
 
     private void Update()
     {
-        if (Input.anyKeyDown)
+        if (Input.anyKeyDown && !IsSettingsDone)
         {
-            Debug.Log("게임오버 창 강제 스킵");
-
             BlackBackground.SetActive(false);
             StopCoroutine(GameoverSetting2());
 
@@ -59,7 +59,6 @@ public class GameOver : MonoBehaviour
 
         bbgRigidbody.velocity = Vector2.zero;
         BlackBackground.SetActive(false);
-        StartCoroutine(GameoverSetting2());
     }
 
     private IEnumerator GameoverSetting2() //검은색 커튼에 맞춰 모습을 드러내는 1안과, 검은색 커튼이 완전히 내려간 뒤 모습을 드러내는 2안이 존재.
@@ -77,6 +76,8 @@ public class GameOver : MonoBehaviour
         StartCoroutine(FadeInObjects(ExitToMenu));
         
         yield return null;
+
+        IsSettingsDone = true;
     }
 
     private IEnumerator FadeInObjects(GameObject obj)
