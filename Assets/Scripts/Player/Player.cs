@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.U2D.Animation;
 using static UnityEngine.GraphicsBuffer;
 
@@ -81,6 +82,12 @@ public class Player : MonoBehaviour
                 shootCancel();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.F1) && Input.GetKeyDown(KeyCode.F12))
+        {
+            Debug.Log("플레이어 사망 입력이 감지되었습니다.");
+            health = 0;
+        }
     }
 
     void FixedUpdate()
@@ -100,7 +107,7 @@ public class Player : MonoBehaviour
     void OnCollisionEnter2D(Collision2D c)
     {
         GameObject o = c.gameObject;
-        if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
+        if (LayerMask.NameToLayer("Obstacles").Equals(o.layer))
         {
             StartCoroutine(hitEvent());
         }
@@ -348,11 +355,14 @@ public class Player : MonoBehaviour
         head.SendMessage("setSadFace");
 
         health--;
-        if (health < 0)
+        if (health < 0) //플레이어 사망 시
         {
             head.SendMessage("setDeadFace");
             anim.SetTrigger("Death");
             gameObject.SetActive(false);
+
+            Time.timeScale = 0f;
+            SceneManager.LoadScene("GameOver", LoadSceneMode.Additive);
         }
 
         yield return new WaitForSeconds(duration);

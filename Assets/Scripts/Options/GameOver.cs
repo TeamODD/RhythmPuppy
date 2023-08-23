@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOver : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class GameOver : MonoBehaviour
     [SerializeField]
     GameObject ExitToMenu;
     [SerializeField]
+    GameObject RestartArrow;
+    [SerializeField]
+    GameObject ExitToMenuArrow;
+    [SerializeField]
     float fadeDuration;
 
     bool IsSettingsDone = false;
@@ -22,11 +27,11 @@ public class GameOver : MonoBehaviour
         StartCoroutine(GameoverSetting1());
         StartCoroutine(GameoverSetting2());
 
-        foreach (GameObject obj in new GameObject[] { Restart, ExitToMenu })
+        foreach (GameObject obj in new GameObject[] { Restart, ExitToMenu, RestartArrow, ExitToMenuArrow })
         {
-            SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
-            Color originalColor = spriteRenderer.color;
-            spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+            Image image = obj.GetComponent<Image>();
+            Color originalColor = image.color;
+            image.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
         }
     }
 
@@ -37,11 +42,11 @@ public class GameOver : MonoBehaviour
             BlackBackground.SetActive(false);
             StopCoroutine(GameoverSetting2());
 
-            foreach (GameObject obj in new GameObject[] { Restart, ExitToMenu })
+            foreach (GameObject obj in new GameObject[] { Restart, ExitToMenu, RestartArrow, ExitToMenuArrow })
             {
-                SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
-                Color originalColor = spriteRenderer.color;
-                spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+                Image image = obj.GetComponent<Image>();
+                Color originalColor = image.color;
+                image.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
             }
         }
     }
@@ -68,12 +73,14 @@ public class GameOver : MonoBehaviour
             yield return null;
         }
         StartCoroutine(FadeInObjects(Restart));
+        StartCoroutine(FadeInObjects(RestartArrow));
         
         while (BlackBackground.transform.position.y >= -7.58f)
         {
             yield return null;
         }
         StartCoroutine(FadeInObjects(ExitToMenu));
+        StartCoroutine (FadeInObjects(ExitToMenuArrow));    
         
         yield return null;
 
@@ -82,8 +89,8 @@ public class GameOver : MonoBehaviour
 
     private IEnumerator FadeInObjects(GameObject obj)
     {
-        SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
-        Color originalColor = spriteRenderer.color;
+        Image image = obj.GetComponent<Image>();
+        Color originalColor = image.color;
 
         float startTime = Time.time; // 시작 시간 저장
 
@@ -93,12 +100,12 @@ public class GameOver : MonoBehaviour
             float t = Mathf.Clamp01(elapsedTime / fadeDuration);
 
             Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(0f, 1f, t));
-            spriteRenderer.color = newColor;
+            image.color = newColor;
 
             yield return null;
         }
 
         // 알파 값을 정확하게 1로 설정하여 완전히 불투명하게 만듭니다.
-        spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+        image.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
     }
 }

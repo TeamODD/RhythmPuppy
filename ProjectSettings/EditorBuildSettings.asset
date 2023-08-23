@@ -30,6 +30,12 @@ EditorBuildSettings:
     path: Assets/Scenes/SceneStage/SceneStage3.unity
     guid: 75a87d16761c8b4409416097d5a4dae3
   - enabled: 1
+    path: Assets/Scenes/Credit.unity
+    guid: 0ec2b8bc0657ad845b4476c847ce9ec3
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: 9313280089dee334288b8c2a9c350472
+  - enabled: 1
     path: Assets/Scenes/Option_Stage.unity
     guid: b7c7e6e261247e043a9d2ecbc09f16c5
   - enabled: 1
