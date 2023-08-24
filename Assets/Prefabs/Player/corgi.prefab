@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fea06dff84fb9c345b186cba27ed90fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 4
   stamina: 100
   staminaGen: 4
   speed: 7
@@ -415,7 +415,6 @@ MonoBehaviour:
   dashEvasionGen: 30
   shootStaminaCost: 30
   shootCancelStaminaGen: 15
-  hitbox: {fileID: 5806245442616127260}
 --- !u!95 &-2501150029612411199
 Animator:
   serializedVersion: 5

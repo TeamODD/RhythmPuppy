@@ -6,6 +6,23 @@ public class HPManager : MonoBehaviour
 {
     [SerializeField] List<GameObject> state;
 
+    Player player;
+
+    void Awake()
+    {
+        init();
+    }
+
+    void Update()
+    {
+        updateHP(player.health);
+    }
+
+    void init()
+    {
+        player = FindObjectOfType<Player>();
+    }
+
     public void updateHP(int hp)
     {
         if (hp < 0) hp = 0;

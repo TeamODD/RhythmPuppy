@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.U2D.Animation;
 using static UnityEngine.GraphicsBuffer;
 
@@ -47,17 +48,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     float shootCancelStaminaGen;
 
-
-    const float G = 9.8f;
-
+    AudioSource audioSource;
     GameObject uiCanvas, projectile, mark, head, neck;
     Collider2D hitbox;
     Rigidbody2D rig2D;
     SpriteRenderer[] spriteList;
     Animator anim;
 
-    bool onFired;
-    float headCorrectFactor;
+    bool onFired, isAlive;
+    float headCorrectFactor, deathCount;
     Vector3 velocity;
     Coroutine dashCoroutine, dashCooldownCoroutine, invincibilityCoroutine;
 
@@ -70,6 +69,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (!isAlive) return;
         checkJumpStatus();
         passiveStaminaGen();
 
@@ -86,8 +86,9 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown("Shoot"))
         {
-            if (!onFired) shoot();
-            else teleport();
+            StartCoroutine(hitEvent());
+            /*if (!onFired) shoot();
+            else teleport();*/
         }
         if (Input.GetButtonDown("ShootCancel"))
         {
@@ -100,6 +101,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!isAlive) return;
         velocity = rig2D.velocity;
         flipBody();
         move();
@@ -107,6 +109,7 @@ public class Player : MonoBehaviour
 
     void LateUpdate()
     {
+        if (!isAlive) return;
         fixPositionIntoScreen();
     }
 
@@ -136,6 +139,7 @@ public class Player : MonoBehaviour
 
     public void init()
     {
+        audioSource = FindObjectOfType<AudioSource>();
         uiCanvas = GameObject.Find("UICanvas");
         projectile = transform.Find("Projectile").gameObject;
         mark = transform.Find("Mark").gameObject;
@@ -151,8 +155,10 @@ public class Player : MonoBehaviour
         dashDelay = new WaitForSeconds(dashDuration);
 
         onFired = false;
+        isAlive = true;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
+        deathCount = 0;
 
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
@@ -363,13 +369,72 @@ public class Player : MonoBehaviour
         health--;
         if (health < 0)
         {
-            head.SendMessage("setDeadFace");
-            anim.SetTrigger("Death");
-            gameObject.SetActive(false);
+            deathCount++;
+            StopAllCoroutines();
+            StartCoroutine(deathAction());
+
         }
 
         yield return new WaitForSeconds(invincibleDuration);
         head.SendMessage("setNormalFace");
+    }
+
+    private IEnumerator deathAction()
+    {
+        GameObject patternManager, obstacleManager;
+
+        audioSource.Stop();
+        setAlpha(1);
+        isAlive = false;
+        head.SendMessage("setDeadFace");
+        uiCanvas.SendMessage("disablePlayerUI");
+        anim.SetTrigger("Death");
+
+        GameObject.Find("MusicManager").SetActive(false);
+        patternManager = GameObject.Find("PatternManager");
+        for (int i=0; i< patternManager.transform.childCount; i++)
+        {
+            Destroy(patternManager.transform.GetChild(i).gameObject);
+        }
+        obstacleManager = GameObject.Find("ObstacleManager");
+        for (int i = 0; i < obstacleManager.transform.childCount; i++)
+        {
+            Destroy(obstacleManager.transform.GetChild(i).gameObject);
+        }
+
+        yield return new WaitForSeconds(2f);
+        uiCanvas.SendMessage("fadeIn");
+
+        yield return new WaitForSeconds(2f);
+        if (deathCount < 3)
+        {
+            // load to current save
+
+            head.SendMessage("revive");
+            uiCanvas.SendMessage("enablePlayerUI");
+            if (audioSource.time < audioSource.clip.length * 0.25f)         // 0%~24.99...%
+                audioSource.time = 0;
+            else if (audioSource.time < audioSource.clip.length * 0.5f)     // 25%~49.99...% 
+                audioSource.time = audioSource.time / audioSource.clip.length * 0.25f;
+            else if (audioSource.time < audioSource.clip.length * 0.75f)     // 50%~74.99...% 
+                audioSource.time = audioSource.time / audioSource.clip.length * 0.5f;
+            else
+                audioSource.time = audioSource.time / audioSource.clip.length * 0.75f;
+            patternManager.SendMessage("run");
+
+            /*
+             * 1. 진행바를 최근 세이브 지점으로 이동 [ok]
+             * 2. 실행됐던 패턴을 n초 구간부터 다시 실행 (PatternManager.cs 수정해야할듯)
+             * 3. 플레이어 표정 바꾸고 Head.cs의 isAlive를 true로 수정 [ok]
+             * 4. 플레이어 리지드바디 다시 켜기?
+             * 
+             * */
+        }
+        else
+        {
+            // 게임오버 씬으로 변경
+            SceneManager.LoadScene("GameOver");
+        }
     }
 
     private IEnumerator activateInvincibility()

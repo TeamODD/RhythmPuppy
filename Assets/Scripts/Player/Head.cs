@@ -20,6 +20,7 @@ public class Head : MonoBehaviour
     SpriteRenderer sp;
     Transform player, neck, head;
     float correctFactor;
+    bool isAlive;
 
     void Awake()
     {
@@ -28,7 +29,8 @@ public class Head : MonoBehaviour
 
     void Update()
     {
-        headToMousePos();
+        if (isAlive) 
+            headToMousePos();
     }
 
     public void init()
@@ -38,6 +40,7 @@ public class Head : MonoBehaviour
         neck = GetComponent<SpriteSkin>().rootBone;
         head = neck.Find("head");
         correctFactor = neck.rotation.eulerAngles.z + head.rotation.eulerAngles.z;
+        isAlive = true;
     }
 
     private void headToMousePos()
@@ -71,6 +74,13 @@ public class Head : MonoBehaviour
 
     public void setDeadFace()
     {
+        isAlive = false;
         sp.sprite = face.dead;
+        neck.transform.rotation = Quaternion.Euler(0, 0, 49f);
+    }
+
+    public void revive()
+    {
+        isAlive = true;
     }
 }

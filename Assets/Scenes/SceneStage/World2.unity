@@ -1164,11 +1164,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!4 &1100533629 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1338004346022117870, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-  m_PrefabInstance: {fileID: 1246941123297099201}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1155446038
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,11 +1193,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5369d951f7d4624db9d0cdd4752e230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiCanvas: {fileID: 1100533629}
+  uiCanvas: {fileID: 279097305588628527}
   obstacleManager: {fileID: 515140143}
   warningBox: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
   warningArrow: {fileID: 4833175003564764285, guid: 1ba767352fb096447bdb87fccc5a66b9, type: 3}
-  pattern: {fileID: 7938996007636120948, guid: 9b0da4571f3617c4db72596f97e2b226, type: 3}
+  pattern: {fileID: 1434621901715454958, guid: 0157883f8e29a9e4489f0722821c1078, type: 3}
   startDelay: 1.5
   overlayCanvas: {fileID: 0}
   worldSpaceCanvas: {fileID: 0}
@@ -2166,7 +2161,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &1246941123297099201
+--- !u!4 &279097305588628527 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1338004346022117870, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+  m_PrefabInstance: {fileID: 432321342120708656}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &432321342120708656
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -2242,6 +2242,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: health
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 853321459083148496, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_RootOrder
       value: 4

@@ -7,7 +7,7 @@ public class UICanvas : MonoBehaviour
 {
     Player player;
     Transform overlayCanvas, worldSpaceCanvas;
-    Transform darkEffect, redEffect, dashTimer, hitTimer;
+    Transform darkEffect, redEffect, dashTimer, hitTimer, progressBar;
     Image darkImage, redImage, dashTimerImage, hitTimerImage;
     Color c;
 
@@ -30,6 +30,8 @@ public class UICanvas : MonoBehaviour
         dashTimerImage = dashTimer.GetComponent<Image>();
         hitTimer = worldSpaceCanvas.Find("HitTimer");
         hitTimerImage = hitTimer.GetComponent<Image>();
+
+        progressBar = overlayCanvas.Find("ProgressBar");
     }
 
     public void enableDarkEffect()
@@ -40,6 +42,42 @@ public class UICanvas : MonoBehaviour
     public void disableDarkEffect()
     {
         setImageAlpha(ref darkImage, 0f);
+    }
+
+    public void fadeIn()
+    {
+        StartCoroutine(runFadeIn());
+    }
+
+    private IEnumerator runFadeIn()
+    {
+        float a = 0;
+
+        while (a < 1)
+        {
+            setImageAlpha(ref darkImage, a);
+            a += Time.deltaTime;
+            yield return null;
+        }
+        setImageAlpha(ref darkImage, 1);
+    }
+
+    public void fadeOut()
+    {
+        StartCoroutine(runFadeOut());
+    }
+
+    private IEnumerator runFadeOut()
+    {
+        float a = 1;
+
+        while (0 < a)
+        {
+            setImageAlpha(ref darkImage, a);
+            a -= Time.deltaTime;
+            yield return null;
+        }
+        setImageAlpha(ref darkImage, 0);
     }
 
     public void hitEffect()
@@ -94,5 +132,15 @@ public class UICanvas : MonoBehaviour
         c = i.color;
         c.a = a;
         i.color = c;
+    }
+
+    public void disablePlayerUI()
+    {
+        worldSpaceCanvas.gameObject.SetActive(false);
+    }
+
+    public void enablePlayerUI()
+    {
+        worldSpaceCanvas.gameObject.SetActive(true);
     }
 }

@@ -35,25 +35,23 @@ public abstract class PatternBase : MonoBehaviour
 
     void OnEnable()
     {
-        musicManager = GameObject.FindGameObjectWithTag("MusicManager").GetComponent<AudioSource>();
+        musicManager = FindObjectOfType<AudioSource>();
         musicManager.clip = BGM;
         Invoke("runPlaylist", startDelay);
     }
 
     void Update()
     {
-        if (musicManager.isPlaying) 
+        if (!musicManager.isPlaying) return;
+
+        int i;
+        for (i = 0; i < coroutineArray.Length; i++)
         {
-            int i;
-            for (i = 0; i < coroutineArray.Length; i++)
-            {
-                if (coroutineArray[i] != null)
-                    break;
-            }
-            if (i == coroutineArray.Length)
-                Destroy(gameObject);
+            if (coroutineArray[i] != null)
+                break;
         }
-        
+        if (i == coroutineArray.Length)
+            Destroy(gameObject);
     }
 
     public void init()

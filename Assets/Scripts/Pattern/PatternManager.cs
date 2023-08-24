@@ -11,6 +11,7 @@ public class PatternManager : MonoBehaviour
 
     [HideInInspector]
     public Transform overlayCanvas, worldSpaceCanvas;
+    AudioSource audioSource;
 
     void Awake()
     {
@@ -21,10 +22,12 @@ public class PatternManager : MonoBehaviour
     {
         overlayCanvas = uiCanvas.Find("OverlayCanvas");
         worldSpaceCanvas = uiCanvas.Find("WorldSpaceCanvas");
-        Invoke("runPattern", startDelay);
+        audioSource = FindObjectOfType<AudioSource>();
+
+        Invoke("run", startDelay);
     }
 
-    private void runPattern()
+    public void run()
     {
         GameObject o = Instantiate(pattern);
         o.transform.SetParent(transform);
