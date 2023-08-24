@@ -77,7 +77,7 @@ public class GameProgress : MonoBehaviour
         float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, initialPlayerBudgePosition.x + targetDistance, normalizedPosition);
         Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
 
-        playerbudge.transform.position = newPosition; Debug.Log(newPosition);
+        playerbudge.transform.position = newPosition;
 
         if (currentMusicPosition >= musicLength)
         {
