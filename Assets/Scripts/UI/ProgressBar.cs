@@ -5,26 +5,21 @@ using UnityEngine.UI;
 
 public class ProgressBar : MonoBehaviour
 {
+    [SerializeField] float[] savePointTime;
+
     AudioSource musicAudioSource;
     Coroutine initAudioSource;
 
     Image fillImage;
-    GameObject playerbudge;
-    GameObject puppybudge;
+    GameObject playerbudge, puppybudge;
     RectTransform gameprogressguage;
-    GameObject emptysavepoint1;
-    GameObject emptysavepoint2;
-    GameObject emptysavepoint3;
-    GameObject fullsavepoint1;
-    GameObject fullsavepoint2;
-    GameObject fullsavepoint3;
+    GameObject[] emptysavepoint;
+    GameObject[] fullsavepoint;
 
-    private float musicLength;
-    private Vector3 initialPlayerBudgePosition;
-    private float targetDistance; // 이동할 거리
-    private bool isarrivecheckpoint1 = false;
-    private bool isarrivecheckpoint2 = false;
-    private bool isarrivecheckpoint3 = false;
+    float musicLength;
+    Vector3 initialPlayerBudgePosition;
+    float targetDistance; // 이동할 거리
+    bool[] isarrivecheckpoint;
 
     private float checkpointTime;
 
@@ -34,13 +29,17 @@ public class ProgressBar : MonoBehaviour
         playerbudge = transform.Find("MovingPlayerBudge").gameObject;
         puppybudge = transform.Find("PuppyBudge").gameObject;
 
-        emptysavepoint1 = transform.Find("EmptySavePoint1").gameObject;
-        emptysavepoint2 = transform.Find("EmptySavePoint2").gameObject;
-        emptysavepoint3 = transform.Find("EmptySavePoint3").gameObject;
+        emptysavepoint = new GameObject[3];
+        emptysavepoint[0] = transform.Find("EmptySavePoint1").gameObject;
+        emptysavepoint[1] = transform.Find("EmptySavePoint2").gameObject;
+        emptysavepoint[2] = transform.Find("EmptySavePoint3").gameObject;
 
-        fullsavepoint1 = transform.Find("FullSavePoint1").gameObject;
-        fullsavepoint2 = transform.Find("FullSavePoint2").gameObject;
-        fullsavepoint3 = transform.Find("FullSavePoint3").gameObject;
+        fullsavepoint = new GameObject[3];
+        fullsavepoint[0] = transform.Find("FullSavePoint1").gameObject;
+        fullsavepoint[1] = transform.Find("FullSavePoint2").gameObject;
+        fullsavepoint[2] = transform.Find("FullSavePoint3").gameObject;
+
+        isarrivecheckpoint = new bool[3] { false, false, false };
 
         gameprogressguage = transform.Find("FullSavePoint3").GetComponent<RectTransform>();
         initAudioSource = StartCoroutine(init());
@@ -76,6 +75,16 @@ public class ProgressBar : MonoBehaviour
         
         musicLength = musicAudioSource.clip.length;  //158.6678f 
         initAudioSource = null;
+
+        for (int i = 0; i < savePointTime.Length; i++)
+        {
+            float normalizedPosition = Mathf.Clamp01(savePointTime[i] / musicLength);
+            float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, puppybudge.transform.position.x, normalizedPosition);
+            Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
+
+            emptysavepoint[i].transform.position = newPosition;
+            fullsavepoint[i].transform.position = newPosition;
+        }
     }
 
     private void MovePlayerBudge(float currentMusicPosition)
@@ -95,47 +104,40 @@ public class ProgressBar : MonoBehaviour
 
     private void SavePointChecking(float fillAmount)
     {
-        float checkpoint1Threshold = 0.25f; // 25% 세이브 포인트 임계값
-        float checkpoint2Threshold = 0.50f; // 50% 세이브 포인트 임계값
-        float checkpoint3Threshold = 0.75f; // 75% 세이브 포인트 임계값
-
-        // 25% 지점 체크
-        if (fillAmount >= checkpoint1Threshold)
+        if (fillAmount >= savePointTime[0])
         {
-            emptysavepoint1.SetActive(false);
-            fullsavepoint1.SetActive(true);
-            isarrivecheckpoint1 = true;
+            emptysavepoint[0].SetActive(false);
+            fullsavepoint[0].SetActive(true);
+            isarrivecheckpoint[0] = true;
         }
         else
         {
-            emptysavepoint1.SetActive(true);
-            fullsavepoint1.SetActive(false);
+            emptysavepoint[0].SetActive(true);
+            fullsavepoint[0].SetActive(false);
         }
 
-        // 50% 지점 체크
-        if (fillAmount >= checkpoint2Threshold)
+        if (fillAmount >= savePointTime[1])
         {
-            emptysavepoint2.SetActive(false);
-            fullsavepoint2.SetActive(true);
-            isarrivecheckpoint2 = true;
+            emptysavepoint[1].SetActive(false);
+            fullsavepoint[1].SetActive(true);
+            isarrivecheckpoint[1] = true;
         }
         else
         {
-            emptysavepoint2.SetActive(true);
-            fullsavepoint2.SetActive(false);
+            emptysavepoint[1].SetActive(true);
+            fullsavepoint[1].SetActive(false);
         }
 
-        // 75% 지점 체크
-        if (fillAmount >= checkpoint3Threshold)
+        if (fillAmount >= savePointTime[2])
         {
-            emptysavepoint3.SetActive(false);
-            fullsavepoint3.SetActive(true);
-            isarrivecheckpoint3 = true;
+            emptysavepoint[2].SetActive(false);
+            fullsavepoint[2].SetActive(true);
+            isarrivecheckpoint[2] = true;
         }
         else
         {
-            emptysavepoint3.SetActive(true);
-            fullsavepoint3.SetActive(false);
+            emptysavepoint[2].SetActive(true);
+            fullsavepoint[2].SetActive(false);
         }
     }
 
@@ -143,15 +145,15 @@ public class ProgressBar : MonoBehaviour
     {
         float checkpointTime = 0f;
 
-        if (isarrivecheckpoint3)
+        if (isarrivecheckpoint[2])
         {
             checkpointTime = musicLength * 0.75f;
         }
-        else if (isarrivecheckpoint2)
+        else if (isarrivecheckpoint[1])
         {
             checkpointTime = musicLength * 0.50f;
         }
-        else if (isarrivecheckpoint1)
+        else if (isarrivecheckpoint[0])
         {
             checkpointTime = musicLength * 0.25f;
         }

@@ -2225,6 +2225,46 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 396497991}
+    - target: {fileID: 3605880567802146765, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: savePoint.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: savePoint.Array.data[0]
+      value: 14.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: savePoint.Array.data[1]
+      value: 46.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: savePoint.Array.data[2]
+      value: 80.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: savePointTime.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: savePointTime.Array.data[0]
+      value: 14.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: savePointTime.Array.data[1]
+      value: 46.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: savePointTime.Array.data[2]
+      value: 80.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605880568876841161, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6279042797299042890, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

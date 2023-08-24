@@ -17,6 +17,7 @@ public class Head : MonoBehaviour
     [SerializeField] Face face;
     [SerializeField] Sprite sweat;
 
+    EventManager eventManager;
     SpriteRenderer sp;
     Transform player, neck, head;
     float correctFactor;
@@ -27,20 +28,23 @@ public class Head : MonoBehaviour
         init();
     }
 
-    void Update()
-    {
-        if (isAlive) 
-            headToMousePos();
-    }
-
     public void init()
     {
+        eventManager = FindObjectOfType<EventManager>();
         player = transform.parent;
         sp = GetComponent<SpriteRenderer>();
         neck = GetComponent<SpriteSkin>().rootBone;
         head = neck.Find("head");
         correctFactor = neck.rotation.eulerAngles.z + head.rotation.eulerAngles.z;
         isAlive = true;
+
+        eventManager.playerHitEvent += playerHitEvent;
+    }
+
+    void Update()
+    {
+        if (isAlive) 
+            headToMousePos();
     }
 
     private void headToMousePos()
@@ -82,5 +86,10 @@ public class Head : MonoBehaviour
     public void revive()
     {
         isAlive = true;
+    }
+
+    private void playerHitEvent()
+    {
+
     }
 }

@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
     Rigidbody2D rig2D;
     SpriteRenderer[] spriteList;
     Animator anim;
+    EventManager eventManager;
 
     bool onFired, isAlive;
     float headCorrectFactor, deathCount;
@@ -65,6 +66,43 @@ public class Player : MonoBehaviour
     void Awake()
     {
         init();
+    }
+
+    public void init()
+    {
+        audioSource = FindObjectOfType<AudioSource>();
+        uiCanvas = GameObject.Find("UICanvas");
+        projectile = transform.Find("Projectile").gameObject;
+        mark = transform.Find("Mark").gameObject;
+        head = transform.Find("Head").gameObject;
+        neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
+
+        rig2D = GetComponent<Rigidbody2D>();
+        hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
+        spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+        eventManager = FindObjectOfType<EventManager>();
+        initEventManager();
+
+        invincibleDelay = new WaitForSeconds(invincibleDuration);
+        dashDelay = new WaitForSeconds(dashDuration);
+
+        onFired = false;
+        isAlive = true;
+        dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
+        headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
+        deathCount = 0;
+
+        anim.ResetTrigger("Jump");
+        anim.SetInteger("JumpCount", 0);
+
+        eventManager.playerHitEvent += playerHitEvent;
+        eventManager.deathEvent += deathEvent;
+        eventManager.reviveEvent += reviveEvent;
+    }
+
+    void initEventManager()
+    {
     }
 
     void Update()
@@ -122,7 +160,7 @@ public class Player : MonoBehaviour
             if (!isCollisionVisibleOnTheScreen(c)) return;
 
             if (dashCoroutine != null) evade(c.collider);
-            else StartCoroutine(hitEvent());
+            else eventManager.playerHitEvent();
         }
     }
 
@@ -135,33 +173,6 @@ public class Player : MonoBehaviour
             if (dashCoroutine != null) evade(c);
             else StartCoroutine(hitEvent());
         }
-    }
-
-    public void init()
-    {
-        audioSource = FindObjectOfType<AudioSource>();
-        uiCanvas = GameObject.Find("UICanvas");
-        projectile = transform.Find("Projectile").gameObject;
-        mark = transform.Find("Mark").gameObject;
-        head = transform.Find("Head").gameObject;
-        neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
-
-        rig2D = GetComponent<Rigidbody2D>();
-        hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
-        spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
-        anim = GetComponent<Animator>();
-
-        invincibleDelay = new WaitForSeconds(invincibleDuration);
-        dashDelay = new WaitForSeconds(dashDuration);
-
-        onFired = false;
-        isAlive = true;
-        dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
-        headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
-        deathCount = 0;
-
-        anim.ResetTrigger("Jump");
-        anim.SetInteger("JumpCount", 0);
     }
 
     public void activateMark()
@@ -357,6 +368,11 @@ public class Player : MonoBehaviour
         transform.localScale = flip;
     }
 
+    private void playerHitEvent()
+    {
+        hitE
+    }
+
     private IEnumerator hitEvent()
     {
         if (invincibilityCoroutine != null) yield break;
@@ -369,14 +385,19 @@ public class Player : MonoBehaviour
         health--;
         if (health < 0)
         {
-            deathCount++;
-            StopAllCoroutines();
-            StartCoroutine(deathAction());
+            eventManager.deathEvent();
 
         }
 
         yield return new WaitForSeconds(invincibleDuration);
         head.SendMessage("setNormalFace");
+    }
+
+    private void deathEvent()
+    {
+        deathCount++;
+        StopAllCoroutines();
+        StartCoroutine(deathAction());
     }
 
     private IEnumerator deathAction()
@@ -408,33 +429,25 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(2f);
         if (deathCount < 3)
         {
-            // load to current save
-
-            head.SendMessage("revive");
-            uiCanvas.SendMessage("enablePlayerUI");
-            if (audioSource.time < audioSource.clip.length * 0.25f)         // 0%~24.99...%
-                audioSource.time = 0;
-            else if (audioSource.time < audioSource.clip.length * 0.5f)     // 25%~49.99...% 
-                audioSource.time = audioSource.time / audioSource.clip.length * 0.25f;
-            else if (audioSource.time < audioSource.clip.length * 0.75f)     // 50%~74.99...% 
-                audioSource.time = audioSource.time / audioSource.clip.length * 0.5f;
-            else
-                audioSource.time = audioSource.time / audioSource.clip.length * 0.75f;
-            patternManager.SendMessage("run");
-
-            /*
-             * 1. 진행바를 최근 세이브 지점으로 이동 [ok]
-             * 2. 실행됐던 패턴을 n초 구간부터 다시 실행 (PatternManager.cs 수정해야할듯)
-             * 3. 플레이어 표정 바꾸고 Head.cs의 isAlive를 true로 수정 [ok]
-             * 4. 플레이어 리지드바디 다시 켜기?
-             * 
-             * */
+            eventManager.reviveEvent();
         }
         else
         {
             // 게임오버 씬으로 변경
             SceneManager.LoadScene("GameOver");
         }
+    }
+
+    private void reviveEvent()
+    {
+        /*
+         * 1. 진행바를 최근 세이브 지점으로 이동 [ok]
+         * 2. 실행됐던 패턴을 n초 구간부터 다시 실행 (PatternManager.cs 수정해야할듯)
+         * 3. 플레이어 표정 바꾸고 Head.cs의 isAlive를 true로 수정 [ok]
+         * 4. 플레이어 리지드바디 다시 켜기?
+         * */
+        head.SendMessage("revive");
+        uiCanvas.SendMessage("enablePlayerUI");
     }
 
     private IEnumerator activateInvincibility()

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UICanvas : MonoBehaviour
 {
     Player player;
+    EventManager eventManager;
     Transform overlayCanvas, worldSpaceCanvas;
     Transform darkEffect, redEffect, dashTimer, hitTimer, progressBar;
     Image darkImage, redImage, dashTimerImage, hitTimerImage;
@@ -19,6 +20,7 @@ public class UICanvas : MonoBehaviour
     public void init()
     {
         player = FindObjectOfType<Player>();
+        eventManager = FindObjectOfType<EventManager>();
         overlayCanvas = transform.Find("OverlayCanvas");
         worldSpaceCanvas = transform.Find("WorldSpaceCanvas");
 
@@ -137,6 +139,7 @@ public class UICanvas : MonoBehaviour
     public void disablePlayerUI()
     {
         worldSpaceCanvas.gameObject.SetActive(false);
+        disableDarkEffect();
     }
 
     public void enablePlayerUI()
