@@ -61,14 +61,16 @@ public class Pattern12 : MonoBehaviour
         }
 
         // 경고 오브젝트 제거
-        //Destroy(newWarning);
+        Destroy(newWarning);
 
-        float thorstemPosX = -18.56f;
-        float thorstemPosY = Mathf.Tan(Mathf.Deg2Rad * -randomZRotation) * (thorstemPosX -(-4.56f)) - 4.49f;
+        float tanValue = Mathf.Tan(Mathf.Deg2Rad * (90 + randomZRotation));
+        float thorstemPosX = -20f;
+        float thorstemPosY = -4.49f + (thorstemPosX + 4.56f) * tanValue;
+
         Debug.Log(Mathf.Tan(Mathf.Deg2Rad * -randomZRotation));
         Debug.Log(thorstemPosY);
 
-        Vector3 thorstemPosition = new Vector3(-18.56f, thorstemPosY, 0f);
+        Vector3 thorstemPosition = new Vector3(thorstemPosX, thorstemPosY, 0f);
         GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);
 
         newthorstem.transform.rotation = Quaternion.Euler(0f, 0f, randomZRotation); // 회전 방향 설정
@@ -98,7 +100,7 @@ public class Pattern12 : MonoBehaviour
             yield return null;
         }
 
-        //Destroy(newthorstem);
-        //Destroy(gameObject);
+        Destroy(newthorstem);
+        Destroy(gameObject);
     }
 }

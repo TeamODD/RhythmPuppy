@@ -96,24 +96,15 @@ public class Pattern13 : MonoBehaviour
             }
         }
 
-        
+        newthorstem.transform.Rotate(Vector3.back * swingspeed * Time.deltaTime);
 
-        float targetAngle = 240; // 목표 회전 각도 (90도)
-        float rotationSpeed = targetAngle / rotationDuration; // 초당 회전 각도 계산
-
-        float rotationElapsedTime = 0f;
-
-        while (rotationElapsedTime < rotationDuration)
+        while (newthorstem.transform.rotation.eulerAngles.z > 250f)
         {
-            float rotationAmount = rotationSpeed * Time.deltaTime;
-            newthorstem.transform.Rotate(Vector3.back * rotationAmount);
-
-            rotationElapsedTime += Time.deltaTime;
-
-            Debug.Log(rotationElapsedTime);
-
+            newthorstem.transform.Rotate(Vector3.back * swingspeed * Time.deltaTime);
             yield return null;
         }
+
+        Destroy(newthorstem);
         Destroy(gameObject);
     }
 }
