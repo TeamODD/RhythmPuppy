@@ -15,7 +15,7 @@ public class Pattern1_b : MonoBehaviour
     void Awake()
     {
         time = 0;
-        yPosition = Random.Range(-2.5f, 3.5f);
+        yPosition = Random.Range(-1.3f, 3.5f);
     }
     void Start()
     {

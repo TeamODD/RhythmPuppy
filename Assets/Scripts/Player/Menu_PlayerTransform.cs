@@ -15,10 +15,14 @@ public class Menu_PlayerTransform : MonoBehaviour
     public CanvasGroup LoadingCanvas;
     public AudioSource volume;
     public UnityEvent PlayerOnPoint;
+    public UnityEvent Loading;
+    public Animator animator;
+    public GameObject corgiLoading;
 
     private Vector3 endPoint;
     private Vector3 currentPosition;
     public static int currentIndex;
+    public static int clearIndex;
     [SerializeField]
     private float speed;
     private float time;
@@ -26,9 +30,16 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Start()
     {
-        
+        if (PlayerPrefs.HasKey("clearIndex"))
+        {
+            clearIndex = PlayerPrefs.GetInt("clearIndex");
+        } else
+        {
+            clearIndex = 30;
+        }
         onInputDelay = false;
         currentIndex = 0;
+        
         currentPosition = transform.position; //플레이어 현재 위치
     }
 
@@ -38,46 +49,43 @@ public class Menu_PlayerTransform : MonoBehaviour
     }
     void OnTriggerExit2D(Collider2D other)
     {
-        Point();
+        if (currentIndex < 7)
+            PlaySelectSound.instance.World1_Walking();
+        else
+            PlaySelectSound.instance.World2_Walking();
     }
 
     void FixedUpdate()
     {
+        int offset = 1;
         time += Time.deltaTime;
         if (onInputDelay) return;
 
         if (Input.GetKeyDown(KeyCode.D))
         {
+            if (waypoints.Length == currentIndex + offset || currentIndex + offset > clearIndex) return;
             ++currentIndex;
             onInputDelay = true; //연타 방지
-            if (waypoints.Length < currentIndex)
-            {
-                currentIndex--;
-                onInputDelay = false;
-                return;
-            }
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
+            animator.SetBool("WalkBool", true);
             StartCoroutine(move("Forward"));
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
+            if (0 == currentIndex) return;
             --currentIndex;
             onInputDelay = true;
-            if (0 > currentIndex)
-            {
-                currentIndex++;
-                onInputDelay = false;
-                return;
-            }
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex + 1, "disappear");
+            animator.SetBool("WalkBool", true);
+            //좌우반전 구현 필요
             StartCoroutine(move("Back"));
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
             onInputDelay = true;
+            PlaySelectSound.instance.MenuSelectSound();
             StartCoroutine(LoadingScene());
-            
         }
     }
 
@@ -88,7 +96,6 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     IEnumerator move(string s)
     {
-        Vector3 velocity = Vector3.zero;
         float offset = 0.01f;
         
         switch(s)
@@ -113,6 +120,7 @@ public class Menu_PlayerTransform : MonoBehaviour
                 break;
         }
         transform.position = endPoint;
+        animator.SetBool("WalkBool", false);
 
         yield break;
     }
@@ -127,9 +135,11 @@ public class Menu_PlayerTransform : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         LoadingScreenSprite.color = new Color(0, 0, 0, 1);
+        Loading.Invoke();
         LoadingCanvas.alpha = 1;
         AudioListener.GetComponent<AudioListener>().enabled = false;
         volume.enabled = false;
+        corgiLoading.gameObject.SetActive(true);
         PlaySelectSound.instance.StartLoading("SceneStage" + currentIndex/2, LoadingScreen);
         yield break;
     }

@@ -1,0 +1,132 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+
+
+public class GameClear : MonoBehaviour
+{
+    private Vector3 PuppyTransform;
+    private SpriteRenderer Puppy;
+    public Sprite HappyPuppy;
+    private Collider2D Collider;
+    [SerializeField]
+    private GameObject corgi;
+    private Vector3 CorgiTransform;
+    [SerializeField]
+    private GameObject corgiEnd;
+    [SerializeField]
+    private SpriteRenderer spot1;
+    [SerializeField]
+    private SpriteRenderer spot2;
+    [SerializeField]
+    private GameObject heart;
+    [SerializeField]
+    private SpriteRenderer heartAlpha;
+    [SerializeField]
+    private GameObject LoadingScreen;
+    [SerializeField]
+    private SpriteRenderer ScreenAlpha;
+
+    public static bool clear;
+    
+
+    void Start()
+    {
+        clear = false;
+        Collider = gameObject.GetComponent<CircleCollider2D>();
+        PuppyTransform = gameObject.transform.position;
+        Puppy = gameObject.GetComponent<SpriteRenderer>();
+        CorgiTransform = corgi.transform.position;
+        StartCoroutine(CommingOut());
+    }
+
+    IEnumerator CommingOut()
+    {
+        float speed = 0.1f;
+        yield return new WaitForSeconds(5f);
+        while(gameObject.transform.position.x > 3.5f)
+        {
+            gameObject.transform.position -= new Vector3(speed, 0, 0);
+            yield return new WaitForFixedUpdate();
+        }
+        clear = true;
+        yield break;
+    }   
+    IEnumerator Moving()
+    {
+        float alpha = 0;
+        gameObject.transform.position = new Vector3(3,-3.25f,0);
+        corgi.SetActive(false);
+        corgiEnd.transform.position = new Vector3(-3,-4.3f,0);
+        yield return new WaitForSeconds(1f);
+        while(gameObject.transform.position.x > 1)
+        {
+            gameObject.transform.position += new Vector3(-0.02f, 0, 0);
+            corgiEnd.transform.position += new Vector3(0.02f, 0, 0);
+            yield return new WaitForFixedUpdate();
+        }
+        /*corgi.transform.position = new Vector3(-1,-4.3f,0);
+        corgi.GetComponent<Player>().enabled = false;
+        corgi.GetComponent<Animator>().enabled = false;*/
+        while (spot1.color.a < 1)
+        {
+            spot1.color = new Color(1, 1, 1, alpha);
+            spot2.color = new Color(1, 1, 1, alpha);
+            heartAlpha.color = new Color(1, 1, 1, alpha);
+            heart.transform.position += new Vector3(0, 0.02f, 0);
+            alpha += 0.01f;
+            yield return new WaitForEndOfFrame();
+        }
+        alpha = 0;
+        yield return new WaitForSeconds(5f);
+        while (ScreenAlpha.color.a < 1)
+        {
+            ScreenAlpha.color = new Color(0, 0, 0, alpha);
+            alpha += 0.02f;
+            yield return new WaitForFixedUpdate();
+        }
+
+        Save();
+        
+        DontDestroyOnLoad(LoadingScreen);
+        yield return new WaitForSeconds(2f); //2초후 로딩
+        Debug.Log("Loading..");
+        var mAsymcOperation = SceneManager.LoadSceneAsync("SceneMenu_01", LoadSceneMode.Additive);
+        Debug.Log("Loading Complete");
+        yield return mAsymcOperation;
+        LoadingScreen.transform.position = new Vector3(0, 0, 0);
+        LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
+        Debug.Log("FadeOut");
+        mAsymcOperation = SceneManager.UnloadSceneAsync("SceneStage1");
+        Debug.Log("UnLoad Default Scene");
+        yield return mAsymcOperation;
+    }
+
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Clear();
+    }
+    void Clear()
+    {
+        Puppy.sprite = HappyPuppy;
+        StartCoroutine(Moving());
+    }
+
+    void Save() //클리어 스테이지 인덱스 저장 함수
+    {
+        if (Menu_PlayerTransform.clearIndex > 4) return;
+        Menu_PlayerTransform.clearIndex = 4;
+        PlayerPrefs.SetInt("clearIndex", 4);
+    }
+
+    void FixedUpdate()
+    {
+        if (clear)
+        {
+            Collider.enabled = true;
+        }
+    }
+}
