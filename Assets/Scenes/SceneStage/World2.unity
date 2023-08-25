@@ -1066,6 +1066,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc27276ead8e6f4c8f5e83eb14b30db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  savePointTime: []
 --- !u!1 &956622002
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,7 +1194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5369d951f7d4624db9d0cdd4752e230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiCanvas: {fileID: 279097305588628527}
+  uiCanvas: {fileID: 1688394822462671838}
   obstacleManager: {fileID: 515140143}
   warningBox: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
   warningArrow: {fileID: 4833175003564764285, guid: 1ba767352fb096447bdb87fccc5a66b9, type: 3}
@@ -2161,12 +2162,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!4 &279097305588628527 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1338004346022117870, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-  m_PrefabInstance: {fileID: 432321342120708656}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &432321342120708656
+--- !u!1001 &664177933212231856
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -2225,46 +2221,6 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 396497991}
-    - target: {fileID: 3605880567802146765, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-      propertyPath: savePoint.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-      propertyPath: savePoint.Array.data[0]
-      value: 14.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-      propertyPath: savePoint.Array.data[1]
-      value: 46.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-      propertyPath: savePoint.Array.data[2]
-      value: 80.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-      propertyPath: savePointTime.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-      propertyPath: savePointTime.Array.data[0]
-      value: 14.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-      propertyPath: savePointTime.Array.data[1]
-      value: 46.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3605880568092419518, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-      propertyPath: savePointTime.Array.data[2]
-      value: 80.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3605880568876841161, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6279042797299042890, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -2275,6 +2231,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+--- !u!4 &1688394822462671838 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1338004346022117870, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+  m_PrefabInstance: {fileID: 664177933212231856}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1989851125167521190
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2283,8 +2244,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: maxHP
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: health
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: maxStamina
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 853321459083148496, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_RootOrder

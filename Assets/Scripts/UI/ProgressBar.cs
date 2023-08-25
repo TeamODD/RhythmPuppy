@@ -5,60 +5,79 @@ using UnityEngine.UI;
 
 public class ProgressBar : MonoBehaviour
 {
-    [SerializeField] float[] savePointTime;
+    [SerializeField] GameObject emptySavePointPrefab;
+    [SerializeField] GameObject fullSavePointPrefab;
 
     AudioSource musicAudioSource;
-    Coroutine initAudioSource;
+    Coroutine initCoroutine;
 
+    EventManager eventManager;
     Image fillImage;
     GameObject playerbudge, puppybudge;
-    RectTransform gameprogressguage;
-    GameObject[] emptysavepoint;
-    GameObject[] fullsavepoint;
 
-    float musicLength;
+    float musicLength, currentTime;
     Vector3 initialPlayerBudgePosition;
-    float targetDistance; // 이동할 거리
-    bool[] isarrivecheckpoint;
+    GameObject[] emptySavePoint, fullSavePoint;
 
-    private float checkpointTime;
+    /*private float checkpointTime;*/
 
     private void Awake()
     {
+        initCoroutine = StartCoroutine(init());
+    }
+
+    private IEnumerator init()
+    {
+        eventManager = FindObjectOfType<EventManager>();
         fillImage = transform.Find("GameProgressGuage").GetComponent<Image>();
         playerbudge = transform.Find("MovingPlayerBudge").gameObject;
         puppybudge = transform.Find("PuppyBudge").gameObject;
 
-        emptysavepoint = new GameObject[3];
-        emptysavepoint[0] = transform.Find("EmptySavePoint1").gameObject;
-        emptysavepoint[1] = transform.Find("EmptySavePoint2").gameObject;
-        emptysavepoint[2] = transform.Find("EmptySavePoint3").gameObject;
-
-        fullsavepoint = new GameObject[3];
-        fullsavepoint[0] = transform.Find("FullSavePoint1").gameObject;
-        fullsavepoint[1] = transform.Find("FullSavePoint2").gameObject;
-        fullsavepoint[2] = transform.Find("FullSavePoint3").gameObject;
-
-        isarrivecheckpoint = new bool[3] { false, false, false };
-
-        gameprogressguage = transform.Find("FullSavePoint3").GetComponent<RectTransform>();
-        initAudioSource = StartCoroutine(init());
-
         initialPlayerBudgePosition = playerbudge.transform.position;
-        targetDistance = gameprogressguage.rect.width;
+
+        eventManager.rewindEvent += rewindEvent;
+        eventManager.deathEvent += deathEvent;
+
+        fillImage.fillAmount = 0;
+        musicAudioSource = FindObjectOfType<AudioSource>();
+
+        while (musicAudioSource.clip == null) yield return null;
         
+        musicLength = musicAudioSource.clip.length;  //158.6678f 
+
+        emptySavePoint = new GameObject[eventManager.savePointTime.Length];
+        fullSavePoint = new GameObject[eventManager.savePointTime.Length];
+        for (int i = 0; i < eventManager.savePointTime.Length; i++)
+        {
+            float normalizedPosition = Mathf.Clamp01(eventManager.savePointTime[i] / musicLength);
+            float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, puppybudge.transform.position.x, normalizedPosition);
+            Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
+
+            emptySavePoint[i] = Instantiate(emptySavePointPrefab);
+            emptySavePoint[i].transform.SetParent(transform);
+            emptySavePoint[i].transform.localScale = Vector3.one;
+            emptySavePoint[i].SetActive(true);
+            emptySavePoint[i].transform.position = newPosition;
+            fullSavePoint[i] = Instantiate(fullSavePointPrefab);
+            fullSavePoint[i].transform.SetParent(transform);
+            fullSavePoint[i].transform.localScale = Vector3.one;
+            fullSavePoint[i].SetActive(false);
+            fullSavePoint[i].transform.position = newPosition;
+        }
+
+        initCoroutine = null;
     }
 
     private void Update()
     {
-        if (initAudioSource != null || !musicAudioSource.isPlaying) return;
+        if (initCoroutine != null || !musicAudioSource.isPlaying) return;
 
         float currentMusicPosition = musicAudioSource.time;
 
         float fillAmount = currentMusicPosition / musicLength;
         fillImage.fillAmount = fillAmount;
 
-        if (fillAmount >= 1)
+        if (1 <= fillAmount)
         {
             fillAmount = 1;
         }
@@ -67,114 +86,56 @@ public class ProgressBar : MonoBehaviour
         SavePointChecking(fillAmount);
     }
 
-    private IEnumerator init()
-    {
-        fillImage.fillAmount = 0;
-        musicAudioSource = FindObjectOfType<AudioSource>();
-        while (musicAudioSource.clip == null) yield return null;
-        
-        musicLength = musicAudioSource.clip.length;  //158.6678f 
-        initAudioSource = null;
-
-        for (int i = 0; i < savePointTime.Length; i++)
-        {
-            float normalizedPosition = Mathf.Clamp01(savePointTime[i] / musicLength);
-            float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, puppybudge.transform.position.x, normalizedPosition);
-            Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
-
-            emptysavepoint[i].transform.position = newPosition;
-            fullsavepoint[i].transform.position = newPosition;
-        }
-    }
 
     private void MovePlayerBudge(float currentMusicPosition)
     {
         float normalizedPosition = Mathf.Clamp01(currentMusicPosition / musicLength);
         float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, puppybudge.transform.position.x, normalizedPosition);
-        /*float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, initialPlayerBudgePosition.x + targetDistance, normalizedPosition)*/;
         Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
 
         playerbudge.transform.position = newPosition;
 
-        if (currentMusicPosition >= musicLength)
+        if (1 <= normalizedPosition)
         {
-            playerbudge.transform.position = new Vector3(initialPlayerBudgePosition.x + targetDistance, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
+            playerbudge.transform.position = new Vector3(puppybudge.transform.position.x, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
         }
     }
 
     private void SavePointChecking(float fillAmount)
     {
-        if (fillAmount >= savePointTime[0])
+        for (int i = 0; i < eventManager.savePointTime.Length; i++)
         {
-            emptysavepoint[0].SetActive(false);
-            fullsavepoint[0].SetActive(true);
-            isarrivecheckpoint[0] = true;
-        }
-        else
-        {
-            emptysavepoint[0].SetActive(true);
-            fullsavepoint[0].SetActive(false);
-        }
-
-        if (fillAmount >= savePointTime[1])
-        {
-            emptysavepoint[1].SetActive(false);
-            fullsavepoint[1].SetActive(true);
-            isarrivecheckpoint[1] = true;
-        }
-        else
-        {
-            emptysavepoint[1].SetActive(true);
-            fullsavepoint[1].SetActive(false);
-        }
-
-        if (fillAmount >= savePointTime[2])
-        {
-            emptysavepoint[2].SetActive(false);
-            fullsavepoint[2].SetActive(true);
-            isarrivecheckpoint[2] = true;
-        }
-        else
-        {
-            emptysavepoint[2].SetActive(true);
-            fullsavepoint[2].SetActive(false);
+            if (eventManager.savePointTime[i] <= musicAudioSource.time)
+            {
+                emptySavePoint[i].SetActive(false);
+                fullSavePoint[i].SetActive(true);
+            }
+            else
+            {
+                emptySavePoint[i].SetActive(true);
+                fullSavePoint[i].SetActive(false);
+            }
         }
     }
 
-    public void CheckingWhereToBack()
+    private void rewindEvent()
     {
-        float checkpointTime = 0f;
-
-        if (isarrivecheckpoint[2])
+        for (int i = 0; i < eventManager.savePointTime.Length; i++)
         {
-            checkpointTime = musicLength * 0.75f;
-        }
-        else if (isarrivecheckpoint[1])
-        {
-            checkpointTime = musicLength * 0.50f;
-        }
-        else if (isarrivecheckpoint[0])
-        {
-            checkpointTime = musicLength * 0.25f;
-        }
+            if (eventManager.savePointTime[i] <= currentTime) continue;
 
-        PlayerPrefs.SetFloat("checkpointTime", checkpointTime);
-
-        SettingCheckPoint();
+            if (i == 0)
+                musicAudioSource.time = 0;
+            else
+                musicAudioSource.time = eventManager.savePointTime[i-1];
+            return;
+        }
+        musicAudioSource.time = eventManager.savePointTime[eventManager.savePointTime.Length-1];
     }
 
-    public void SettingCheckPoint()
+    private void deathEvent()
     {
-        // 플레이어 뱃지의 위치 설정
-        float normalizedPosition = Mathf.Clamp01(checkpointTime / musicLength);
-        float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, initialPlayerBudgePosition.x + targetDistance, normalizedPosition);
-        Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
-        playerbudge.transform.position = newPosition;
-
-        // 음악 재생 위치 설정
-        musicAudioSource.time = checkpointTime;
-
-        // fillImage 업데이트 (필요한 경우)
-        fillImage.fillAmount = checkpointTime / musicLength;
+        currentTime = musicAudioSource.time;
+        musicAudioSource.Stop();
     }
 }

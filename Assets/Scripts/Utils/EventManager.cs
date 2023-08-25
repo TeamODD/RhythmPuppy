@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
+    [HideInInspector]
+    public float[] savePointTime;
     public delegate void PlayerHitEvent();
     public delegate void DeathEvent();
+    public delegate void RewindEvent();
     public delegate void ReviveEvent();
 
     public PlayerHitEvent playerHitEvent;
     public DeathEvent deathEvent;
+    public RewindEvent rewindEvent;
     public ReviveEvent reviveEvent;
 
     AudioSource audioSource;
@@ -23,25 +27,5 @@ public class EventManager : MonoBehaviour
     {
         audioSource = FindObjectOfType<AudioSource>();
 
-        reviveEvent += loadCurrentSave;
-    }
-
-    private void loadCurrentSave()
-    {
-        if (audioSource.time < audioSource.clip.length * 0.25f)         // 0%~24.99...%
-            audioSource.time = 0;
-        else if (audioSource.time < audioSource.clip.length * 0.5f)     // 25%~49.99...% 
-            audioSource.time = audioSource.time / audioSource.clip.length * 0.25f;
-        else if (audioSource.time < audioSource.clip.length * 0.75f)     // 50%~74.99...% 
-            audioSource.time = audioSource.time / audioSource.clip.length * 0.5f;
-        else
-            audioSource.time = audioSource.time / audioSource.clip.length * 0.75f;
-    }
-
-    public void revive()
-    {
-        loadCurrentSave();
-
-        reviveEvent();
     }
 }

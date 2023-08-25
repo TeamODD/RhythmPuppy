@@ -11,7 +11,7 @@ public class PatternManager : MonoBehaviour
 
     [HideInInspector]
     public Transform overlayCanvas, worldSpaceCanvas;
-    AudioSource audioSource;
+    EventManager eventManager;
 
     void Awake()
     {
@@ -20,9 +20,12 @@ public class PatternManager : MonoBehaviour
 
     public void init()
     {
+        eventManager = FindObjectOfType<EventManager>();
         overlayCanvas = uiCanvas.Find("OverlayCanvas");
         worldSpaceCanvas = uiCanvas.Find("WorldSpaceCanvas");
-        audioSource = FindObjectOfType<AudioSource>();
+
+        eventManager.deathEvent += deathEvent;
+        eventManager.reviveEvent += reviveEvent;
 
         Invoke("run", startDelay);
     }
@@ -32,5 +35,23 @@ public class PatternManager : MonoBehaviour
         GameObject o = Instantiate(pattern);
         o.transform.SetParent(transform);
         o.SetActive(true);
+    }
+
+    private void deathEvent()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
+
+        for (int i = 0; i < obstacleManager.childCount; i++)
+        {
+            Destroy(obstacleManager.GetChild(i).gameObject);
+        }
+    }
+
+    private void reviveEvent()
+    {
+        run();
     }
 }

@@ -19,9 +19,11 @@ public class Head : MonoBehaviour
 
     EventManager eventManager;
     SpriteRenderer sp;
-    Transform player, neck, head;
+    Player player;
+    Transform neck, head;
     float correctFactor;
     bool isAlive;
+    WaitForSeconds invincibleDelay;
 
     void Awake()
     {
@@ -31,14 +33,17 @@ public class Head : MonoBehaviour
     public void init()
     {
         eventManager = FindObjectOfType<EventManager>();
-        player = transform.parent;
+        player = FindObjectOfType<Player>();
         sp = GetComponent<SpriteRenderer>();
         neck = GetComponent<SpriteSkin>().rootBone;
         head = neck.Find("head");
         correctFactor = neck.rotation.eulerAngles.z + head.rotation.eulerAngles.z;
         isAlive = true;
+        invincibleDelay = new WaitForSeconds(player.invincibleDuration);
 
         eventManager.playerHitEvent += playerHitEvent;
+        eventManager.deathEvent += deathEvent;
+        eventManager.reviveEvent += reviveEvent;
     }
 
     void Update()
@@ -57,7 +62,7 @@ public class Head : MonoBehaviour
         rot = 0 < dir.y ? Vector2.Angle(dir, Vector2.right) : 360f - Vector3.Angle(dir, Vector2.right);
 
         headRot = rot + correctFactor;
-        if (player.localScale.x < 0) headRot = rot + (180 - correctFactor);
+        if (player.transform.localScale.x < 0) headRot = rot + (180 - correctFactor);
         neck.transform.rotation = Quaternion.Euler(0, 0, headRot);
     }
 
@@ -78,7 +83,6 @@ public class Head : MonoBehaviour
 
     public void setDeadFace()
     {
-        isAlive = false;
         sp.sprite = face.dead;
         neck.transform.rotation = Quaternion.Euler(0, 0, 49f);
     }
@@ -86,10 +90,31 @@ public class Head : MonoBehaviour
     public void revive()
     {
         isAlive = true;
+        setNormalFace();
     }
 
     private void playerHitEvent()
     {
+        StartCoroutine(hitAction());
+    }
 
+    private IEnumerator hitAction()
+    {
+        setSadFace();
+        yield return invincibleDelay;
+        setNormalFace();
+    }
+
+    private void deathEvent()
+    {
+        isAlive = false;
+        StopAllCoroutines();
+        setDeadFace();
+    }
+
+    private void reviveEvent()
+    {
+        setNormalFace();
+        isAlive = true;
     }
 }

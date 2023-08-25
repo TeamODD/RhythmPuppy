@@ -15,7 +15,7 @@ public class HPManager : MonoBehaviour
 
     void Update()
     {
-        updateHP(player.health);
+        updateHP();
     }
 
     void init()
@@ -23,8 +23,9 @@ public class HPManager : MonoBehaviour
         player = FindObjectOfType<Player>();
     }
 
-    public void updateHP(int hp)
+    public void updateHP()
     {
+        int hp = (int)player.currentHP;
         if (hp < 0) hp = 0;
         else if (state.Count <= hp) hp = state.Count - 1; 
 

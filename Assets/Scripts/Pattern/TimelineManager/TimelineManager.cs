@@ -42,7 +42,7 @@ namespace TimelineManager
             return type == PatternType.None ? prefab.name : prefab.name + type.ToString();
         }
 
-        public IEnumerator Run()
+        public IEnumerator Run(float startTime)
         {
             float delay = 0;
             int i = 0, j = 0, repeat;
@@ -53,7 +53,6 @@ namespace TimelineManager
                     delay = timeline[i].startAt;
                 else
                     delay = timeline[i].startAt - (timeline[i - 1].startAt + ((j - 1) * timeline[i - 1].detail.repeatDelayTime));
-                yield return new WaitForSeconds(delay);
                 
                 // it loops at least once
                 repeat = timeline[i].detail.repeatNo;
@@ -62,7 +61,11 @@ namespace TimelineManager
                 j = 0;
                 while (true)
                 {
-                    PatternAction(this, timeline[i]); 
+                    if (startTime <= timeline[i].startAt + j * timeline[i].detail.repeatDelayTime)
+                    {
+                        yield return new WaitForSeconds(delay);
+                        PatternAction(this, timeline[i]);
+                    }
                     if (repeat <= ++j) break;
                     yield return new WaitForSeconds(timeline[i].detail.repeatDelayTime);
                 }

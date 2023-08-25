@@ -7,6 +7,7 @@ using World_2;
 
 public abstract class PatternBase : MonoBehaviour
 {
+    [SerializeField] float[] savePointTime;
     [SerializeField] AudioClip BGM;
     [SerializeField] float startDelay;
     [PlaylistElementName()]
@@ -14,7 +15,8 @@ public abstract class PatternBase : MonoBehaviour
     protected Playlist[] playlist;
     protected Dictionary<string, Action<Playlist, Timeline>> bind = new Dictionary<string, Action<Playlist, Timeline>>();
 
-    AudioSource musicManager;
+    EventManager eventManager;
+    AudioSource audioSource;
     Coroutine[] coroutineArray;
 
     [ContextMenu("Sort Timeline Arrays by Time")]
@@ -33,16 +35,25 @@ public abstract class PatternBase : MonoBehaviour
         init();
     }
 
-    void OnEnable()
+    public void init()
     {
-        musicManager = FindObjectOfType<AudioSource>();
-        musicManager.clip = BGM;
-        Invoke("runPlaylist", startDelay);
+        eventManager = FindObjectOfType<EventManager>();
+        audioSource = FindObjectOfType<AudioSource>();
+        if (audioSource.clip == null)
+            audioSource.clip = BGM;
+        eventManager.savePointTime = savePointTime;
+
+
+        SortTimelineArraysByTime();
+        bindPatternAction();
+        setPatternAction();
+
+        runPlaylist();
     }
 
     void Update()
     {
-        if (!musicManager.isPlaying) return;
+        if (!audioSource.isPlaying) return;
 
         int i;
         for (i = 0; i < coroutineArray.Length; i++)
@@ -52,13 +63,6 @@ public abstract class PatternBase : MonoBehaviour
         }
         if (i == coroutineArray.Length)
             Destroy(gameObject);
-    }
-
-    public void init()
-    {
-        SortTimelineArraysByTime();
-        bindPatternAction();
-        setPatternAction();
     }
 
     public void setPatternAction()
@@ -72,16 +76,18 @@ public abstract class PatternBase : MonoBehaviour
     private void runPlaylist()
     {
         coroutineArray = new Coroutine[playlist.Length];
+        float t = audioSource.time;
 
         for (int i = 0; i < playlist.Length; i++)
         {
-            coroutineArray[i] = StartCoroutine(playlist[i].Run());
+            coroutineArray[i] = StartCoroutine(playlist[i].Run(t));
         }
-        Invoke("playMusic", 1f);
+        StartCoroutine(playMusic());
     }
 
-    private void playMusic()
+    private IEnumerator playMusic()
     {
-        musicManager.Play();
+        yield return new WaitForSeconds(1f);
+        audioSource.Play();
     }
 }

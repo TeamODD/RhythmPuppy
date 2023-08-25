@@ -19,8 +19,8 @@ public class Player : MonoBehaviour
     }
 
     [Header("Basic Status")]
-    public int health;
-    public float stamina;
+    public int maxHP;
+    public float maxStamina;
     [SerializeField]
     float staminaGen;
     [SerializeField]
@@ -56,7 +56,9 @@ public class Player : MonoBehaviour
     Animator anim;
     EventManager eventManager;
 
+
     bool onFired, isAlive;
+    [HideInInspector] public float currentHP, currentStamina;
     float headCorrectFactor, deathCount;
     Vector3 velocity;
     Coroutine dashCoroutine, dashCooldownCoroutine, invincibilityCoroutine;
@@ -82,7 +84,6 @@ public class Player : MonoBehaviour
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
         eventManager = FindObjectOfType<EventManager>();
-        initEventManager();
 
         invincibleDelay = new WaitForSeconds(invincibleDuration);
         dashDelay = new WaitForSeconds(dashDuration);
@@ -92,6 +93,8 @@ public class Player : MonoBehaviour
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
         deathCount = 0;
+        currentHP = maxHP;
+        currentStamina = maxStamina;
 
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
@@ -99,10 +102,6 @@ public class Player : MonoBehaviour
         eventManager.playerHitEvent += playerHitEvent;
         eventManager.deathEvent += deathEvent;
         eventManager.reviveEvent += reviveEvent;
-    }
-
-    void initEventManager()
-    {
     }
 
     void Update()
@@ -124,9 +123,9 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown("Shoot"))
         {
-            StartCoroutine(hitEvent());
-            /*if (!onFired) shoot();
-            else teleport();*/
+            /*eventManager.playerHitEvent();*/
+            if (!onFired) shoot();
+            else teleport();
         }
         if (Input.GetButtonDown("ShootCancel"))
         {
@@ -134,6 +133,15 @@ public class Player : MonoBehaviour
             {
                 shootCancel();
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.U))    // direct hit on player
+        {
+            if (invincibilityCoroutine == null) eventManager.playerHitEvent();
+        }
+        if (Input.GetKeyDown(KeyCode.I))     // developer mode (inactive hitbox)
+        {
+            hitbox.enabled = false;
         }
     }
 
@@ -156,11 +164,10 @@ public class Player : MonoBehaviour
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
             rig2D.velocity = velocity;
-            /*StartCoroutine(delayCollision(c.collider));*/
             if (!isCollisionVisibleOnTheScreen(c)) return;
 
             if (dashCoroutine != null) evade(c.collider);
-            else eventManager.playerHitEvent();
+            else if (invincibilityCoroutine == null) eventManager.playerHitEvent();
         }
     }
 
@@ -168,10 +175,8 @@ public class Player : MonoBehaviour
     {
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
-            /*StartCoroutine(delayCollision(c));*/
-
             if (dashCoroutine != null) evade(c);
-            else StartCoroutine(hitEvent());
+            else if (invincibilityCoroutine == null) eventManager.playerHitEvent();
         }
     }
 
@@ -188,7 +193,7 @@ public class Player : MonoBehaviour
     private void passiveStaminaGen()
     {
         float s = staminaGen * Time.deltaTime;
-        stamina = 100 < stamina + s ? 100 : stamina + s;
+        currentStamina = 100 < currentStamina + s ? 100 : currentStamina + s;
     }
 
     private void move()
@@ -234,7 +239,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator dash()
     {
-        if (stamina < dashStaminaCost)
+        if (currentStamina < dashStaminaCost)
         {
             Debug.Log("not enough stamina!");
             yield break;
@@ -242,7 +247,7 @@ public class Player : MonoBehaviour
         float dir = Input.GetAxisRaw("Horizontal");
         if (dir == 0) yield break;
 
-        stamina -= dashStaminaCost;
+        currentStamina -= dashStaminaCost;
         setAlpha(0.5f);
         rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
         rig2D.gravityScale = 0f;
@@ -260,7 +265,7 @@ public class Player : MonoBehaviour
     private void evade(Collider2D c)
     {
         Debug.Log(string.Format("[{0}] {1}", Time.time, "회피!"));
-        stamina = 100 < stamina + dashEvasionGen ? 100 : stamina + dashEvasionGen;
+        currentStamina = 100 < currentStamina + dashEvasionGen ? 100 : currentStamina + dashEvasionGen;
         StartCoroutine(delayCollision(c, dashDelay));
     }
 
@@ -273,14 +278,14 @@ public class Player : MonoBehaviour
 
     private void shoot()
     {
-        if (stamina < shootStaminaCost)
+        if (currentStamina < shootStaminaCost)
         {
             Debug.Log("not enough stamina!");
             return;
         }
         if (!isProjectileOnScreen()) return;
         projectile.SendMessage("shoot");
-        stamina -= shootStaminaCost;
+        currentStamina -= shootStaminaCost;
         onFired = true;
     }
 
@@ -299,7 +304,7 @@ public class Player : MonoBehaviour
     private void shootCancel()
     {
         projectile.SendMessage("stop");
-        stamina = 100 < stamina + shootCancelStaminaGen ? 100 : stamina + shootCancelStaminaGen;
+        currentStamina = 100 < currentStamina + shootCancelStaminaGen ? 100 : currentStamina + shootCancelStaminaGen;
         projectile.transform.position = neck.transform.position;
         onFired = false;
     }
@@ -370,95 +375,66 @@ public class Player : MonoBehaviour
 
     private void playerHitEvent()
     {
-        hitE
-    }
-
-    private IEnumerator hitEvent()
-    {
-        if (invincibilityCoroutine != null) yield break;
-
-        invincibilityCoroutine = StartCoroutine(activateInvincibility());
-
-        uiCanvas.SendMessage("hitEffect");
-        head.SendMessage("setSadFace");
-
-        health--;
-        if (health < 0)
+        currentHP--;
+        if (currentHP < 0)
         {
+            deathCount++;
             eventManager.deathEvent();
-
+            return;
         }
-
-        yield return new WaitForSeconds(invincibleDuration);
-        head.SendMessage("setNormalFace");
+        invincibilityCoroutine = StartCoroutine(activateInvincibility());
     }
 
     private void deathEvent()
     {
-        deathCount++;
         StopAllCoroutines();
         StartCoroutine(deathAction());
     }
 
     private IEnumerator deathAction()
     {
-        GameObject patternManager, obstacleManager;
-
-        audioSource.Stop();
-        setAlpha(1);
         isAlive = false;
-        head.SendMessage("setDeadFace");
-        uiCanvas.SendMessage("disablePlayerUI");
+        hitbox.enabled = false;
+        setAlpha(1);
         anim.SetTrigger("Death");
 
-        GameObject.Find("MusicManager").SetActive(false);
-        patternManager = GameObject.Find("PatternManager");
-        for (int i=0; i< patternManager.transform.childCount; i++)
-        {
-            Destroy(patternManager.transform.GetChild(i).gameObject);
-        }
-        obstacleManager = GameObject.Find("ObstacleManager");
-        for (int i = 0; i < obstacleManager.transform.childCount; i++)
-        {
-            Destroy(obstacleManager.transform.GetChild(i).gameObject);
-        }
+        yield return new WaitForSeconds(5f);
 
-        yield return new WaitForSeconds(2f);
-        uiCanvas.SendMessage("fadeIn");
-
-        yield return new WaitForSeconds(2f);
         if (deathCount < 3)
         {
+            eventManager.rewindEvent();
             eventManager.reviveEvent();
         }
         else
         {
-            // 게임오버 씬으로 변경
             SceneManager.LoadScene("GameOver");
         }
     }
 
     private void reviveEvent()
     {
-        /*
-         * 1. 진행바를 최근 세이브 지점으로 이동 [ok]
-         * 2. 실행됐던 패턴을 n초 구간부터 다시 실행 (PatternManager.cs 수정해야할듯)
-         * 3. 플레이어 표정 바꾸고 Head.cs의 isAlive를 true로 수정 [ok]
-         * 4. 플레이어 리지드바디 다시 켜기?
-         * */
-        head.SendMessage("revive");
-        uiCanvas.SendMessage("enablePlayerUI");
+        currentHP = maxHP;
+        currentStamina = maxStamina;
+        isAlive = true;
+        hitbox.enabled = true;
+        dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
+        setAlpha(1);
+        anim.ResetTrigger("Death");
+        anim.SetTrigger("Revive");
+        StartCoroutine(reviveEventCoroutine());
+    }
+
+    private IEnumerator reviveEventCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+        anim.ResetTrigger("Revive");
     }
 
     private IEnumerator activateInvincibility()
     {
-        /*int obsLayer = LayerMask.NameToLayer("Obstacle");
-
-        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, true);*/
         hitbox.enabled = false;
         setAlpha(0.5f);
         yield return invincibleDelay;
-        /*Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, false);*/
         hitbox.enabled = true;
         setAlpha(1f);
         invincibilityCoroutine = null; 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static EventManager;
 
 public class UICanvas : MonoBehaviour
 {
@@ -34,6 +35,10 @@ public class UICanvas : MonoBehaviour
         hitTimerImage = hitTimer.GetComponent<Image>();
 
         progressBar = overlayCanvas.Find("ProgressBar");
+
+        eventManager.playerHitEvent += playerHitEvent;
+        eventManager.deathEvent += deathEvent;
+        eventManager.reviveEvent += reviveEvent;
     }
 
     public void enableDarkEffect()
@@ -82,7 +87,7 @@ public class UICanvas : MonoBehaviour
         setImageAlpha(ref darkImage, 0);
     }
 
-    public void hitEffect()
+    public void playerHitEvent()
     {
         setImageAlpha(ref redImage, 1f);
         StartCoroutine(runHitEffect());
@@ -136,14 +141,23 @@ public class UICanvas : MonoBehaviour
         i.color = c;
     }
 
-    public void disablePlayerUI()
+    private void deathEvent()
+    {
+        StopAllCoroutines();
+        StartCoroutine(deathEventCoroutine());
+    }
+
+    private IEnumerator deathEventCoroutine()
     {
         worldSpaceCanvas.gameObject.SetActive(false);
         disableDarkEffect();
+        yield return new WaitForSeconds(2f);
+        fadeIn();
     }
 
-    public void enablePlayerUI()
+    private void reviveEvent()
     {
         worldSpaceCanvas.gameObject.SetActive(true);
+        fadeOut();
     }
 }
