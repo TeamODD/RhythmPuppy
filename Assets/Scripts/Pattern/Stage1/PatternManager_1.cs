@@ -186,7 +186,9 @@ public class PatternManager_1 : MonoBehaviour
         Instantiate(Warning_4);
     }
 
-    void Update()
+
+
+    void FixedUpdate()
     {
         //32회 실행시 호출 중단
         if (count_1_a == 32)

@@ -14,8 +14,8 @@ public class PlaySelectSound : MonoBehaviour
     private float time;
 
     public AudioSource audioSourceSelect;
-    public AudioClip audioClipSelect;
-
+    public AudioClip[] audioClipSelect;
+    public AudioClip[] Walking;
 
     public static PlaySelectSound instance;
 
@@ -31,7 +31,21 @@ public class PlaySelectSound : MonoBehaviour
 
     public void SelectSound()
     {
-        audioSourceSelect.PlayOneShot(audioClipSelect);
+        theAudio.PlayOneShot(audioClipSelect[0]);
+    }
+    public void MenuSelectSound()
+    {
+        theAudio.PlayOneShot(audioClipSelect[1]);
+    }
+    public void World1_Walking()
+    {
+        theAudio.clip = Walking[0];
+        theAudio.Play();
+    }
+    public void World2_Walking()
+    {
+        theAudio.clip = Walking[1];
+        theAudio.Play();
     }
     public void ChangeMusic()
     {
@@ -52,14 +66,18 @@ public class PlaySelectSound : MonoBehaviour
 
     public IEnumerator asd(string NextScene, GameObject LoadingScreen)
     {
-        LoadingScreen.transform.SetParent(null);
+        LoadingScreen.transform.SetParent(null, false); //worldpositionstays bool 인자 false로
         DontDestroyOnLoad(LoadingScreen);
         yield return new WaitForSeconds(2f); //2초후 로딩
+        Debug.Log("Loading..");
         var mAsymcOperation = SceneManager.LoadSceneAsync(NextScene, LoadSceneMode.Additive);
+        Debug.Log("Loading Complete");
         yield return mAsymcOperation;
         LoadingScreen.transform.position = new Vector3(0, 0, 0);
         LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
+        Debug.Log("FadeOut");
         mAsymcOperation = SceneManager.UnloadSceneAsync("SceneMenu_01");
+        Debug.Log("UnLoad Default Scene");
         yield return mAsymcOperation;
 
     }
