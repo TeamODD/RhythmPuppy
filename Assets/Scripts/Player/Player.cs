@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.U2D.Animation;
+using static EventManager.PlayerEvent;
 using static UnityEngine.GraphicsBuffer;
 
 public class Player : MonoBehaviour
@@ -47,9 +48,13 @@ public class Player : MonoBehaviour
     float shootStaminaCost;
     [SerializeField]
     float shootCancelStaminaGen;
+    [Tooltip("투사체 발사 시 적용되는 힘(Force)")]
+    public float shootForce;
+    [Tooltip("발사 종료 후 재사용 대기시간")]
+    public float shootCooltime;
 
-    AudioSource audioSource;
-    GameObject uiCanvas, projectile, mark, head, neck;
+    Camera mainCamera;
+    GameObject projectile, head, neck;
     Collider2D hitbox;
     Rigidbody2D rig2D;
     SpriteRenderer[] spriteList;
@@ -61,9 +66,9 @@ public class Player : MonoBehaviour
     [HideInInspector] public float currentHP, currentStamina;
     float headCorrectFactor, deathCount;
     Vector3 velocity;
-    Coroutine dashCoroutine, dashCooldownCoroutine, invincibilityCoroutine;
+    Coroutine dashCoroutine, dashCooldownCoroutine, shootCooldownCoroutine, invincibilityCoroutine;
 
-    WaitForSeconds invincibleDelay, dashDelay;
+    WaitForSeconds invincibleDelay, dashDelay, dashCooldownDelay, shootCooldownDelay;
 
     void Awake()
     {
@@ -72,10 +77,8 @@ public class Player : MonoBehaviour
 
     public void init()
     {
-        audioSource = FindObjectOfType<AudioSource>();
-        uiCanvas = GameObject.Find("UICanvas");
+        mainCamera = Camera.main;
         projectile = transform.Find("Projectile").gameObject;
-        mark = transform.Find("Mark").gameObject;
         head = transform.Find("Head").gameObject;
         neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
 
@@ -87,10 +90,11 @@ public class Player : MonoBehaviour
 
         invincibleDelay = new WaitForSeconds(invincibleDuration);
         dashDelay = new WaitForSeconds(dashDuration);
+        dashCooldownDelay = new WaitForSeconds(dashCooltime);
 
         onFired = false;
         isAlive = true;
-        dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
+        dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = shootCooldownCoroutine = null;
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
         deathCount = 0;
         currentHP = maxHP;
@@ -102,6 +106,10 @@ public class Player : MonoBehaviour
         eventManager.playerHitEvent += playerHitEvent;
         eventManager.deathEvent += deathEvent;
         eventManager.reviveEvent += reviveEvent;
+        eventManager.playerEvent.dashEvent += dashEvent;
+        eventManager.playerEvent.shootEvent += shootEvent;
+        eventManager.playerEvent.teleportEvent += teleportEvent;
+        eventManager.playerEvent.shootCancelEvent += shootCancelEvent;
     }
 
     void Update()
@@ -112,10 +120,10 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Dash"))
         {
-            if (dashCoroutine == null && dashCooldownCoroutine == null)
-            {
-                dashCoroutine = StartCoroutine(dash());
-            }
+            if (currentStamina < dashStaminaCost)
+                    Debug.Log("not enough stamina!");
+            else if (!Input.GetAxisRaw("Horizontal").Equals(0) && dashCoroutine == null && dashCooldownCoroutine == null)
+                eventManager.playerEvent.dashEvent();
         }
         if (Input.GetButtonDown("Jump"))
         {
@@ -123,16 +131,22 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown("Shoot"))
         {
-            /*eventManager.playerHitEvent();*/
-            if (!onFired) shoot();
-            else teleport();
+            if (!onFired)
+            {
+                if (currentStamina < shootStaminaCost)
+                    Debug.Log("not enough stamina!");
+                else if (shootCooldownCoroutine == null)
+                    eventManager.playerEvent.shootEvent();
+            }
+            else
+            {
+                eventManager.playerEvent.teleportEvent();
+            }
         }
         if (Input.GetButtonDown("ShootCancel"))
         {
             if (onFired)
-            {
-                shootCancel();
-            }
+                eventManager.playerEvent.shootCancelEvent();
         }
 
         if (Input.GetKeyDown(KeyCode.U))    // direct hit on player
@@ -180,20 +194,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void activateMark()
-    {
-        mark.SendMessage("activate");
-    }
-
-    public void inactivateMark()
-    {
-        mark.SendMessage("inactivate");
-    }
-
     private void passiveStaminaGen()
     {
         float s = staminaGen * Time.deltaTime;
-        currentStamina = 100 < currentStamina + s ? 100 : currentStamina + s;
+        currentStamina = maxStamina < currentStamina + s ? maxStamina : currentStamina + s;
     }
 
     private void move()
@@ -237,24 +241,23 @@ public class Player : MonoBehaviour
         return true;
     }
 
-    private IEnumerator dash()
+    private void dashEvent()
     {
-        if (currentStamina < dashStaminaCost)
-        {
-            Debug.Log("not enough stamina!");
-            yield break;
-        }
         float dir = Input.GetAxisRaw("Horizontal");
-        if (dir == 0) yield break;
+        if (dir == 0) return;
 
         currentStamina -= dashStaminaCost;
+        dashCoroutine = StartCoroutine(dash(dir));
+    }
+
+    private IEnumerator dash(float dir)
+    {
         setAlpha(0.5f);
         rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
         rig2D.gravityScale = 0f;
         anim.SetTrigger("Dash");
-        uiCanvas.SendMessage("dashTimerEffect");
 
-        yield return new WaitForSeconds(dashDuration);
+        yield return dashDelay;
         setAlpha(1f);
         rig2D.velocity = new Vector2(0, rig2D.velocity.y);
         rig2D.gravityScale = 1f;
@@ -265,48 +268,46 @@ public class Player : MonoBehaviour
     private void evade(Collider2D c)
     {
         Debug.Log(string.Format("[{0}] {1}", Time.time, "회피!"));
-        currentStamina = 100 < currentStamina + dashEvasionGen ? 100 : currentStamina + dashEvasionGen;
+        currentStamina = maxStamina < currentStamina + dashEvasionGen ? maxStamina : currentStamina + dashEvasionGen;
         StartCoroutine(delayCollision(c, dashDelay));
     }
 
     private IEnumerator dashCooldown()
     {
-        yield return new WaitForSeconds(dashCooltime);
+        yield return dashCooldownDelay;
         anim.ResetTrigger("Dash");
         dashCooldownCoroutine = null;
     }
 
-    private void shoot()
+    private void shootEvent()
     {
-        if (currentStamina < shootStaminaCost)
-        {
-            Debug.Log("not enough stamina!");
-            return;
-        }
-        if (!isProjectileOnScreen()) return;
-        projectile.SendMessage("shoot");
         currentStamina -= shootStaminaCost;
         onFired = true;
+        shootCooldownCoroutine = StartCoroutine(runShootCooldown());
     }
 
-    private void teleport()
+    private IEnumerator runShootCooldown()
+    {
+        yield return shootCooldownDelay;
+        shootCooldownCoroutine = null;
+    }
+
+    private void teleportEvent()
     {
         int count = anim.GetInteger("JumpCount");
         Vector3 pos = projectile.transform.position;
-        projectile.SendMessage("stop");
-        projectile.transform.position = neck.transform.position;
         transform.position = pos;
         if (2 <= count)
             anim.SetInteger("JumpCount", count - 1);
         onFired = false;
     }
 
-    private void shootCancel()
+    private void shootCancelEvent()
     {
-        projectile.SendMessage("stop");
-        currentStamina = 100 < currentStamina + shootCancelStaminaGen ? 100 : currentStamina + shootCancelStaminaGen;
+        currentStamina = maxStamina < currentStamina + shootCancelStaminaGen ? maxStamina : currentStamina + shootCancelStaminaGen;
         projectile.transform.position = neck.transform.position;
         onFired = false;
+        shootCooldownCoroutine = StartCoroutine(runShootCooldown());
     }
 
     private void checkJumpStatus()
@@ -328,20 +329,12 @@ public class Player : MonoBehaviour
 
     private void fixPositionIntoScreen()
     {
-        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+        Vector3 pos = mainCamera.WorldToViewportPoint(transform.position);
         if (pos.x <= 0f) pos.x = 0f;
         if (1f <= pos.x) pos.x = 1f;
         if (pos.y <= 0f) pos.y = 0f;
         if (1f <= pos.y) pos.y = 1f;
-        transform.position = Camera.main.ViewportToWorldPoint(pos);
-    }
-
-    private bool isProjectileOnScreen()
-    {
-        Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
-
-        if (pos.x <= 0f || 1f <= pos.x || pos.y <= 0f || 1f <= pos.y) return false;
-        return true;
+        transform.position = mainCamera.ViewportToWorldPoint(pos);
     }
 
     /** Flip body if corgi is heading behind or moving to behind. */
@@ -473,9 +466,7 @@ public class Player : MonoBehaviour
         for (int i = 0; i < hit.Length; i++)
         {
             tmp = null;
-            hit[i].transform.TryGetComponent(out tmp);
-
-            if (tmp != null)
+            if (hit[i].transform.TryGetComponent(out tmp))
             {
                 if (sp == null || getBiggerSortingOrder(ref tmp, ref sp).Equals(tmp))
                     sp = tmp;
@@ -489,14 +480,16 @@ public class Player : MonoBehaviour
 
     private ref SpriteRenderer getBiggerSortingOrder(ref SpriteRenderer s1, ref SpriteRenderer s2)
     {
-        if (s1.gameObject.layer < s2.gameObject.layer)
+        int s1Layer = s1.gameObject.layer, s2Layer = s2.gameObject.layer, s1SortingOrder = s1.sortingOrder, s2SortingOrder = s2.sortingOrder;
+        
+        if (s1Layer < s2Layer)
             return ref s2;
-        else if (s1.gameObject.layer > s2.gameObject.layer)
+        else if (s1Layer > s2Layer)
             return ref s1;
 
-        if (s1.sortingOrder < s2.sortingOrder)
+        if (s1SortingOrder < s2SortingOrder)
             return ref s2;
-        else if (s1.sortingOrder > s2.sortingOrder)
+        else if (s1SortingOrder > s2SortingOrder)
             return ref s1;
 
         return ref s1;

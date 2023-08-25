@@ -20,9 +20,9 @@ public class Pattern_6 : MonoBehaviour
 
     private IEnumerator runPattern()
     {
-        player.SendMessage("activateMark");
+        patternManager.eventManager.playerEvent.markActivationEvent();
         yield return new WaitForSeconds(1f);
-        player.SendMessage("inactivateMark");
+        patternManager.eventManager.playerEvent.markInactivationEvent();
 
         float r = Random.Range(-8f, 8f);
         GameObject catObject = Instantiate(cat);

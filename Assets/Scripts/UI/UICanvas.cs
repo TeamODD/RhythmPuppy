@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using static EventManager;
+using static EventManager.PlayerEvent;
 
 public class UICanvas : MonoBehaviour
 {
@@ -39,6 +40,7 @@ public class UICanvas : MonoBehaviour
         eventManager.playerHitEvent += playerHitEvent;
         eventManager.deathEvent += deathEvent;
         eventManager.reviveEvent += reviveEvent;
+        eventManager.playerEvent.dashEvent += dashEvent;
     }
 
     public void enableDarkEffect()
@@ -117,7 +119,7 @@ public class UICanvas : MonoBehaviour
         setImageAlpha(ref redImage, a);
     }
 
-    public void dashTimerEffect()
+    public void dashEvent()
     {
         StartCoroutine(runTimer(dashTimerImage, player.dashDuration));
     }

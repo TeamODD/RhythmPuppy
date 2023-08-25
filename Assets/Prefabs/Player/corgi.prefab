@@ -402,8 +402,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fea06dff84fb9c345b186cba27ed90fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 4
-  stamina: 100
+  maxHP: 4
+  maxStamina: 100
   staminaGen: 4
   speed: 7
   invincibleDuration: 1.5
@@ -415,6 +415,10 @@ MonoBehaviour:
   dashEvasionGen: 30
   shootStaminaCost: 30
   shootCancelStaminaGen: 15
+  shootForce: 12
+  shootCooltime: 1
+  currentHP: 0
+  currentStamina: 0
 --- !u!95 &-2501150029612411199
 Animator:
   serializedVersion: 5
@@ -2255,8 +2259,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 376c8792cc9c35449b0758adb2add85b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootForce: 12
-  shootCooldown: 0.3
 --- !u!50 &118608097
 Rigidbody2D:
   serializedVersion: 4

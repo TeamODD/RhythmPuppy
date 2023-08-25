@@ -2,8 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*[CreateAssetMenu(menuName="Event Manager")]*/
 public class EventManager : MonoBehaviour
 {
+    public struct PlayerEvent
+    {
+        public delegate void MarkActivationEvent();
+        public delegate void MarkInactivationEvent();
+        public delegate void DashEvent();
+        public delegate void ShootEvent();
+        public delegate void TeleportEvent();
+        public delegate void ShootCancelEvent();
+
+        public MarkActivationEvent markActivationEvent;
+        public MarkInactivationEvent markInactivationEvent;
+        public DashEvent dashEvent;
+        public ShootEvent shootEvent;
+        public TeleportEvent teleportEvent;
+        public ShootCancelEvent shootCancelEvent;
+    }
+
     [HideInInspector]
     public float[] savePointTime;
     public delegate void PlayerHitEvent();
@@ -16,16 +34,5 @@ public class EventManager : MonoBehaviour
     public RewindEvent rewindEvent;
     public ReviveEvent reviveEvent;
 
-    AudioSource audioSource;
-
-    void Awake()
-    {
-        init();
-    }
-
-    private void init()
-    {
-        audioSource = FindObjectOfType<AudioSource>();
-
-    }
+    public PlayerEvent playerEvent;
 }

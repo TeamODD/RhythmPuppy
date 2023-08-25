@@ -11,7 +11,7 @@ public class PatternManager : MonoBehaviour
 
     [HideInInspector]
     public Transform overlayCanvas, worldSpaceCanvas;
-    EventManager eventManager;
+    [HideInInspector] public EventManager eventManager;
 
     void Awake()
     {

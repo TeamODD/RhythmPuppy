@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static EventManager.PlayerEvent;
 
 public class Projectile : MonoBehaviour
 {
@@ -15,21 +16,35 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    [SerializeField, Tooltip("투사체 발사 시 적용되는 힘(Force)")]
-    float shootForce;
-
-    [SerializeField, Tooltip("발사 종료 후 재사용 대기시간")]
-    float shootCooldown;
-
-    GameObject player;
+    EventManager eventManager;
+    Camera mainCamera;
+    Player player;
     Transform neck, head;
     Vector3 dir;
-    Coroutine cooldownCoroutine;
     ProjectileData data;
 
     void Awake()
     {
         init();
+    }
+
+    public void init()
+    {
+        eventManager = FindObjectOfType<EventManager>();
+        mainCamera = Camera.main;
+        player = transform.parent.GetComponent<Player>();
+        neck = player.transform.Find("bone_2/neck");
+        head = player.transform.Find("bone_2/neck/head");
+        dir = Vector3.zero;
+
+        float rad, correctFactor;
+        rad = (neck.position - transform.position).magnitude;
+        correctFactor = 16f;
+        data = new ProjectileData(rad, correctFactor);
+
+        eventManager.playerEvent.shootEvent += shootEvent;
+        eventManager.playerEvent.teleportEvent += stop;
+        eventManager.playerEvent.shootCancelEvent += stop;
     }
 
     void FixedUpdate()
@@ -41,7 +56,7 @@ public class Projectile : MonoBehaviour
         }
         else
         {
-            transform.Translate(dir * shootForce * Time.fixedDeltaTime, Space.World);
+            transform.Translate(dir * player.shootForce * Time.fixedDeltaTime, Space.World);
         }
     }
 
@@ -58,26 +73,10 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    public void init()
+    public void shootEvent()
     {
-        player = transform.parent.gameObject;
-        neck = player.transform.Find("bone_2/neck");
-        head = player.transform.Find("bone_2/neck/head");
-        dir = Vector3.zero;
-        cooldownCoroutine = null;
-
-        float rad, correctFactor;
-        rad = (neck.position - transform.position).magnitude;
-        correctFactor = 16f;
-        data = new ProjectileData(rad, correctFactor);
-    }
-
-    public void shoot()
-    {
-        if (cooldownCoroutine != null) return;
-
         transform.SetParent(null);
-        Vector3 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        Vector3 dir = mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         dir.z = 0;
         this.dir = dir.normalized;
     }
@@ -86,13 +85,6 @@ public class Projectile : MonoBehaviour
     {
         transform.SetParent(player.transform);
         dir = Vector3.zero;
-        cooldownCoroutine = StartCoroutine(runShootCooldown());
-    }
-
-    private IEnumerator runShootCooldown()
-    {
-        yield return new WaitForSeconds(shootCooldown);
-        cooldownCoroutine = null;
     }
 
     private void headToMousePos()
@@ -106,7 +98,7 @@ public class Projectile : MonoBehaviour
 
     private void fixPositionIntoScreen()
     {
-        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+        Vector3 pos = mainCamera.WorldToViewportPoint(transform.position);
         Vector3 copy = pos;
 
         if (pos.x <= 0f) pos.x = 0f;
@@ -117,7 +109,7 @@ public class Projectile : MonoBehaviour
         if (!pos.Equals(copy))
         {
             dir = Vector3.zero;
-            transform.position = Camera.main.ViewportToWorldPoint(pos);
+            transform.position = mainCamera.ViewportToWorldPoint(pos);
         }
     }
 }
