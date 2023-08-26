@@ -37,11 +37,6 @@ namespace TimelineManager
             }
         }
 
-        public override string ToString()
-        {
-            return type == PatternType.None ? prefab.name : prefab.name + type.ToString();
-        }
-
         public IEnumerator Run(float startTime)
         {
             float delay = 0;

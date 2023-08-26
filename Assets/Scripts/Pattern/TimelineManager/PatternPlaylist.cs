@@ -6,12 +6,25 @@ using UnityEngine;
 
 namespace TimelineManager
 {
-    [Serializable, CreateAssetMenu(menuName="Create New Playlist")]
+    public enum PatternType
+    {
+        pattern1a,
+        pattern1b,
+        pattern1c,
+        pattern1d,
+        pattern2,
+        pattern3,
+        pattern5,
+        pattern6,
+    }
+
+    [Serializable, CreateAssetMenu(menuName="Create New Pattern Playlist")]
     public class PatternPlaylist : ScriptableObject
     {
         public GameObject prefab;
         [TimelineElementTitle()]
         public Timeline[] timeline;
+        public PatternType type;
 
         Action<PatternPlaylist, Timeline> PatternAction;
 

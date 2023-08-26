@@ -4,6 +4,7 @@ using UnityEngine;
 
 using TimelineManager;
 using Cysharp.Threading.Tasks;
+using Stage_2;
 
 public class PatternManager : MonoBehaviour
 {
@@ -72,11 +73,13 @@ public class PatternManager : MonoBehaviour
 
     private void run()
     {
+        Stage_2_1 s = new Stage_2_1(transform);
         playlistCoroutine = new Coroutine[playlist.Length];
         float t = audioSource.time;
 
         for (int i = 0; i < playlist.Length; i++)
         {
+            s.setPatternAction(ref playlist[i]);
             playlistCoroutine[i] = StartCoroutine(playlist[i].Run(t));
         }
         playMusic().Forget();
@@ -84,7 +87,7 @@ public class PatternManager : MonoBehaviour
 
     private async UniTask playMusic()
     {
-        await UniTask.Delay(System.TimeSpan.FromSeconds(startDelayTime));
+        await UniTask.Delay(System.TimeSpan.FromSeconds(1));
         audioSource.Play();
     }
 }
