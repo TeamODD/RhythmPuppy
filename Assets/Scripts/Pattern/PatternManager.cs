@@ -2,39 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using TimelineManager;
+using Cysharp.Threading.Tasks;
+
 public class PatternManager : MonoBehaviour
 {
-    public Transform uiCanvas, obstacleManager;
-    public GameObject warningBox, warningArrow;
-    [SerializeField] GameObject pattern;
-    [SerializeField] float startDelay;
+    [SerializeField] AudioClip BGM;
+    [SerializeField] float[] savePointTime;
+    [SerializeField] PatternPlaylist[] playlist;
+    [SerializeField] float startDelayTime;
 
+    [HideInInspector] 
+    public EventManager eventManager;
     [HideInInspector]
-    public Transform overlayCanvas, worldSpaceCanvas;
-    [HideInInspector] public EventManager eventManager;
+    public Transform obstacleManager;
+    AudioSource audioSource;
+    Coroutine[] playlistCoroutine;
 
     void Awake()
     {
-        init();
+        init().Forget();
     }
 
-    public void init()
+    private async UniTask init()
     {
         eventManager = FindObjectOfType<EventManager>();
-        overlayCanvas = uiCanvas.Find("OverlayCanvas");
-        worldSpaceCanvas = uiCanvas.Find("WorldSpaceCanvas");
+        audioSource = FindObjectOfType<AudioSource>();
+        obstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager").transform;
+
+        if (audioSource.clip == null)
+            audioSource.clip = BGM;
+        eventManager.savePointTime = savePointTime;
 
         eventManager.deathEvent += deathEvent;
         eventManager.reviveEvent += reviveEvent;
 
-        Invoke("run", startDelay);
-    }
+        SortTimelineArraysByTime();
 
-    public void run()
-    {
-        GameObject o = Instantiate(pattern);
-        o.transform.SetParent(transform);
-        o.SetActive(true);
+        await UniTask.Delay(System.TimeSpan.FromSeconds(startDelayTime));
+        run();
     }
 
     private void deathEvent()
@@ -53,5 +59,32 @@ public class PatternManager : MonoBehaviour
     private void reviveEvent()
     {
         run();
+    }
+
+    [ContextMenu("Sort Timeline Arrays by Time")]
+    public void SortTimelineArraysByTime()
+    {
+        for (int i = 0; i < playlist.Length; i++)
+        {
+            playlist[i].sortTimeline();
+        }
+    }
+
+    private void run()
+    {
+        playlistCoroutine = new Coroutine[playlist.Length];
+        float t = audioSource.time;
+
+        for (int i = 0; i < playlist.Length; i++)
+        {
+            playlistCoroutine[i] = StartCoroutine(playlist[i].Run(t));
+        }
+        playMusic().Forget();
+    }
+
+    private async UniTask playMusic()
+    {
+        await UniTask.Delay(System.TimeSpan.FromSeconds(startDelayTime));
+        audioSource.Play();
     }
 }

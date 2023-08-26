@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfd37f3b1c9d90a43ad70f0f0f93d69e, type: 3}
+  m_Name: Pattern_1a
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1273078494639283698, guid: 635b8b9bad47a454f83769fd4116f4c8, type: 3}
+  timeline:
+  - startAt: 0.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 2.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 10.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 32.2
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 34.2
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 42.2
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 80.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 82.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 90.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 96.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0

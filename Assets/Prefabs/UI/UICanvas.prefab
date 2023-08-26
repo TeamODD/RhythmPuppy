@@ -454,6 +454,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f0a1e47bfec41649aa442be6888ea37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  warningBoxPrefab: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
+  warningArrowPrefab: {fileID: 4833175003564764285, guid: 1ba767352fb096447bdb87fccc5a66b9, type: 3}
 --- !u!1 &1338004347152322597
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfd37f3b1c9d90a43ad70f0f0f93d69e, type: 3}
+  m_Name: Pattern_6
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 5713159027828826166, guid: a2754807d97924c41a609b4a4e247837, type: 3}
+  type: 0
+  timeline:
+  - startAt: 16.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 18.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 20.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 22.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 24.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 26.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 28.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 30.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 48.2
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 8
+      repeatDelayTime: 2
+  - startAt: 64.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 66.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 68.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 70.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 72.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 74.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 76.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0
+  - startAt: 78.1
+    detail:
+      endAt: 0
+      duration: 0
+      repeatNo: 0
+      repeatDelayTime: 0

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TimelineManager;
 using UnityEngine;
-using World_2;
 
 public abstract class PatternBase : MonoBehaviour
 {
@@ -19,14 +18,6 @@ public abstract class PatternBase : MonoBehaviour
     AudioSource audioSource;
     Coroutine[] coroutineArray;
 
-    [ContextMenu("Sort Timeline Arrays by Time")]
-    public void SortTimelineArraysByTime()
-    {
-        for (int i = 0; i < playlist.Length; i++)
-        {
-            playlist[i].sortTimeline();
-        }
-    }
 
     public abstract void bindPatternAction();
 
@@ -42,7 +33,6 @@ public abstract class PatternBase : MonoBehaviour
         if (audioSource.clip == null)
             audioSource.clip = BGM;
         eventManager.savePointTime = savePointTime;
-
 
         SortTimelineArraysByTime();
         bindPatternAction();
@@ -73,6 +63,14 @@ public abstract class PatternBase : MonoBehaviour
         }
     }
 
+    [ContextMenu("Sort Timeline Arrays by Time")]
+    public void SortTimelineArraysByTime()
+    {
+        for (int i = 0; i < playlist.Length; i++)
+        {
+            playlist[i].sortTimeline();
+        }
+    }
     private void runPlaylist()
     {
         coroutineArray = new Coroutine[playlist.Length];
