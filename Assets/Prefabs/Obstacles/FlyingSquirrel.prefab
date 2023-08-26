@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4443983558943044523}
   - component: {fileID: 428196896667213564}
   - component: {fileID: 8943530461220357902}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: FlyingSquirrel
   m_TagString: Obstacles
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9053794863086088157}
   - component: {fileID: -3371959960327829144}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: FlyingSquirrel
   m_TagString: Obstacles
   m_Icon: {fileID: 0}

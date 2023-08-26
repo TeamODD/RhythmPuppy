@@ -12,7 +12,7 @@ public class KeyBoardAction : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!Option.activeSelf)
+            if (!Option.activeSelf) //false
             {
                 Option.SetActive(true); 
                 musicsource.Play();

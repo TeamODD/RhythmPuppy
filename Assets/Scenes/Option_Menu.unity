@@ -538,6 +538,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 150638249}
   m_CullTransparentMesh: 1
+--- !u!1 &170463992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 170463993}
+  - component: {fileID: 170463994}
+  m_Layer: 0
+  m_Name: OptionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &170463993
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170463992}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.14574589, y: 2.0148714, z: -0.050832868}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &170463994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170463992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b273139f2a35e041affb6d2637225f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCameraToturnOff: {fileID: 1619815478}
+  eventSystemToturnOff: {fileID: 1293656988}
 --- !u!1 &233853008
 GameObject:
   m_ObjectHideFlags: 0
@@ -549,7 +595,7 @@ GameObject:
   - component: {fileID: 233853010}
   - component: {fileID: 233853009}
   m_Layer: 0
-  m_Name: SF Source
+  m_Name: Sfx Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1348,7 +1394,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicsource: {fileID: 1199596090}
-  btnsource: {fileID: 233853009}
+  sfxsource: {fileID: 233853009}
   MusicVolumeText: {fileID: 1777242646}
   SoundVolumeText: {fileID: 446335397}
 --- !u!1 &828256376
@@ -2080,10 +2126,9 @@ GameObject:
   - component: {fileID: 1293656991}
   - component: {fileID: 1293656990}
   - component: {fileID: 1293656989}
-  - component: {fileID: 1293656992}
   m_Layer: 0
   m_Name: EventSystem
-  m_TagString: Untagged
+  m_TagString: EventSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2138,19 +2183,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1293656992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293656988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab3bb17786c62744e884faf45e78e90e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Option: {fileID: 0}
 --- !u!1 &1339497976
 GameObject:
   m_ObjectHideFlags: 0
@@ -2479,7 +2511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicsource: {fileID: 1199596090}
-  btnsource: {fileID: 233853009}
+  sfxsource: {fileID: 233853009}
   MusicVolumeText: {fileID: 1777242646}
   SoundVolumeText: {fileID: 446335397}
 --- !u!1 &1694202090

@@ -7,6 +7,6 @@ public class GotoOption : MonoBehaviour
 {   
     public void GoOption()
     {
-        SceneManager.LoadScene("Option_Menu");
+        SceneManager.LoadScene("Option_Menu", LoadSceneMode.Additive);
     }
 }

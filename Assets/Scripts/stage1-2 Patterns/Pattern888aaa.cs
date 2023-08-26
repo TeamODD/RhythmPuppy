@@ -86,7 +86,7 @@ public class Pattern888aaa : MonoBehaviour
 
             //경고 오브젝트 생성
 
-            yPos = -3.555f;
+            yPos = -4.154f;
 
             StartCoroutine(SpawnWeasel(xPos, yPos));
         }
@@ -132,7 +132,7 @@ public class Pattern888aaa : MonoBehaviour
         // 경고 오브젝트 제거
         Destroy(newWarning);
 
-        Vector3 spawnPosition = new Vector3(xPos, -5.03f, 0f); //후보 -6f, -5.03f
+        Vector3 spawnPosition = new Vector3(xPos, -6.06f, 0f); //후보 -6f, -5.03f
 
         GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();

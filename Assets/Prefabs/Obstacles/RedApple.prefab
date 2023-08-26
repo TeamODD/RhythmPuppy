@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5420789708811694992}
   - component: {fileID: 6946264026490756385}
   - component: {fileID: 8522841166424691266}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RedApple
   m_TagString: Obstacles
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1615292575271563024}
   - component: {fileID: -2075743908196917628}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RedApple
   m_TagString: Obstacles
   m_Icon: {fileID: 0}

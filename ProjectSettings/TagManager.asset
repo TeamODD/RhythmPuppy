@@ -9,6 +9,10 @@ TagManager:
   - PatternManager
   - ObstacleManager
   - MusicManager
+  - Obstacles
+  - EventSystem
+  - Music
+  - Sound
   layers:
   - Default
   - TransparentFX
