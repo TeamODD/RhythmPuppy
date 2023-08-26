@@ -28,8 +28,15 @@ public class GameClear : MonoBehaviour
     private GameObject LoadingScreen;
     [SerializeField]
     private SpriteRenderer ScreenAlpha;
+    [SerializeField]
+    private SpriteRenderer Rank;
+    [SerializeField]
+    private Sprite[] RankImgs;
+    [SerializeField]
+    private CanvasGroup canvas;
 
     public static bool clear;
+    private int deathcount;
     
 
     void Start()
@@ -45,7 +52,8 @@ public class GameClear : MonoBehaviour
     IEnumerator CommingOut()
     {
         float speed = 0.1f;
-        yield return new WaitForSeconds(5f);
+        //노래 끝나고 3초 후 퍼피 등장
+        yield return new WaitForSeconds(123f);
         while(gameObject.transform.position.x > 3.5f)
         {
             gameObject.transform.position -= new Vector3(speed, 0, 0);
@@ -80,6 +88,17 @@ public class GameClear : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         alpha = 0;
+        //여기까지 암전, 하트가 나오도록.
+        Rank.sprite = RankImgs[deathcount];
+        while (Rank.color.a < 1)
+        {
+            Rank.color = new Color(1, 1, 1, alpha);
+            canvas.alpha = alpha;
+            alpha += 0.01f;
+            yield return new WaitForFixedUpdate();
+        }
+        alpha = 0;
+        //여기까지 랭크가 나오도록.
         yield return new WaitForSeconds(5f);
         while (ScreenAlpha.color.a < 1)
         {
@@ -87,6 +106,7 @@ public class GameClear : MonoBehaviour
             alpha += 0.02f;
             yield return new WaitForFixedUpdate();
         }
+        //로딩창 등장
 
         Save();
         
@@ -111,6 +131,7 @@ public class GameClear : MonoBehaviour
     }
     void Clear()
     {
+        deathcount = (int)GameObject.Find("corgi").GetComponent<Player>().deathCount;
         Puppy.sprite = HappyPuppy;
         StartCoroutine(Moving());
     }
@@ -120,6 +141,7 @@ public class GameClear : MonoBehaviour
         if (Menu_PlayerTransform.clearIndex > 4) return;
         Menu_PlayerTransform.clearIndex = 4;
         PlayerPrefs.SetInt("clearIndex", 4);
+        PlayerPrefs.SetInt("1-1", deathcount);
     }
 
     void FixedUpdate()

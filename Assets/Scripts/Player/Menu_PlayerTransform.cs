@@ -22,6 +22,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     private Vector3 endPoint;
     private Vector3 currentPosition;
     public static int currentIndex;
+    public static int savingIndex;
     public static int clearIndex;
     [SerializeField]
     private float speed;
@@ -30,6 +31,10 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Start()
     {
+        if (savingIndex != 0)
+        {
+            gameObject.transform.position = waypoints[savingIndex];
+        }
         if (PlayerPrefs.HasKey("clearIndex"))
         {
             clearIndex = PlayerPrefs.GetInt("clearIndex");
@@ -55,7 +60,7 @@ public class Menu_PlayerTransform : MonoBehaviour
             PlaySelectSound.instance.World2_Walking();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         int offset = 1;
         time += Time.deltaTime;
@@ -65,6 +70,7 @@ public class Menu_PlayerTransform : MonoBehaviour
         {
             if (waypoints.Length == currentIndex + offset || currentIndex + offset > clearIndex) return;
             ++currentIndex;
+            savingIndex = currentIndex;
             onInputDelay = true; //연타 방지
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
             animator.SetBool("WalkBool", true);
@@ -73,6 +79,7 @@ public class Menu_PlayerTransform : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             if (0 == currentIndex) return;
+            savingIndex = currentIndex;
             --currentIndex;
             onInputDelay = true;
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex + 1, "disappear");

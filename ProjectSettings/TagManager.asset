@@ -9,6 +9,7 @@ TagManager:
   - PatternManager
   - ObstacleManager
   - MusicManager
+  - Obstacles
   layers:
   - Default
   - TransparentFX
@@ -25,7 +26,7 @@ TagManager:
   - Projectile
   - Player
   - PlayerHitbox
-  - 
+  - puppy
   - 
   - 
   - 
