@@ -1,31 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LoadingFadeOut : MonoBehaviour
 {
-    private float time;
     [SerializeField]
     private SpriteRenderer Loading;
+    bool isSceneLoaded;
+    float a;
+
+    void Awake()
+    {
+        a = 1f;
+        isSceneLoaded = false;
+    }
+
+    void Update()
+    {
+        if (!isSceneLoaded) return;
+        if (a <= 0) Destroy(gameObject);
+
+        Loading.color = new Color(0, 0, 0, a);
+        a -= Time.deltaTime * 0.3f;
+    }
 
     public void FadeOut()
     {
-        StartCoroutine(FadeOutI());
+        isSceneLoaded = true;
     }
 
-    public IEnumerator FadeOutI()
+    /*public IEnumerator FadeOutI()
     {
-        Destroy(gameObject, 3f);
-        time = 0;
-        while (time < 1f)
-        {
-            Loading.color = new Color(0, 0, 0, 1 - time);
-            yield return new WaitForFixedUpdate();
-        }
-        yield break;
-    }
-    void Update()
-    {
-        time += Time.deltaTime;
-    }
+        WaitUntil w = new WaitUntil(() => !operation.isDone);
+        yield return w;
+        c = null;
+    }*/
 }

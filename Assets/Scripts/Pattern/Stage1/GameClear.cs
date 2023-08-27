@@ -110,15 +110,15 @@ public class GameClear : MonoBehaviour
         //로딩창 등장
 
         Save();
-        
+
         DontDestroyOnLoad(LoadingScreen);
         yield return new WaitForSeconds(2f); //2초후 로딩
         Debug.Log("Loading..");
-        var mAsymcOperation = SceneManager.LoadSceneAsync("SceneMenu_01", LoadSceneMode.Additive);
+        var mAsymcOperation = SceneManager.LoadSceneAsync("SceneMenu_01", LoadSceneMode.Single);
         Debug.Log("Loading Complete");
+        LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
         yield return mAsymcOperation;
         LoadingScreen.transform.position = new Vector3(0, 0, 0);
-        LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
         Debug.Log("FadeOut");
         mAsymcOperation = SceneManager.UnloadSceneAsync("SceneStage1");
         Debug.Log("UnLoad Default Scene");

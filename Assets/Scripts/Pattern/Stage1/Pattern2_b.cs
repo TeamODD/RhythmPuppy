@@ -10,9 +10,12 @@ public class Pattern2_b : MonoBehaviour
     private float power;
     // private float RotateSpeed;
     private float time;
+    EventManager eventManager;
 
     void Awake()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += deathEvent;
         time = 0;
     }
     void Start()
@@ -32,5 +35,11 @@ public class Pattern2_b : MonoBehaviour
             gameObject.transform.position += new Vector3(power * -1, 0, 0) * Time.deltaTime;
             //gameObject.transform.Rotate(0, 0, Time.deltaTime * RotateSpeed, Space.Self);
         }
+    }
+
+    void deathEvent()
+    {
+        eventManager.deathEvent -= deathEvent;
+        Destroy(gameObject);
     }
 }

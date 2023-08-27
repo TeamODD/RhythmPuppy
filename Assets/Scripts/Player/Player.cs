@@ -371,7 +371,7 @@ public class Player : MonoBehaviour
     private void playerHitEvent()
     {
         currentHP--;
-        if (currentHP < 0)
+        if (currentHP <= 0)
         {
             deathCount++;
             eventManager.deathEvent();
@@ -395,9 +395,9 @@ public class Player : MonoBehaviour
 
         yield return new WaitForSeconds(5f);
 
-        if (deathCount < 3)
+        if (deathCount <= 3)
         {
-            eventManager.rewindEvent(); //에러
+            eventManager.rewindEvent();
             eventManager.reviveEvent();
         }
         else

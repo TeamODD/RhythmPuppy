@@ -12,9 +12,12 @@ public class Pattern3 : MonoBehaviour
 
     public Sprite changeImg;
     public SpriteRenderer thisImg;
+    EventManager eventManager;
 
     void Awake()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += deathEvent;
         time = 0;
     }
     void Start()
@@ -46,5 +49,11 @@ public class Pattern3 : MonoBehaviour
     void ChangeImg()
     {
         thisImg.sprite = changeImg;
+    }
+
+    void deathEvent()
+    {
+        eventManager.deathEvent -= deathEvent;
+        Destroy(gameObject);
     }
 }

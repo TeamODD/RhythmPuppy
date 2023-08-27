@@ -45,6 +45,8 @@ public class UICanvas : MonoBehaviour
         eventManager.playerEvent.dashEvent += dashEvent;
         eventManager.lampOnEvent += disableDarkEffect;
         eventManager.lampOffEvent += enableDarkEffect;
+        eventManager.fadeInEvent += fadeIn;
+        eventManager.fadeOutEvent += fadeOut;
         eventManager.warnWithBox += warnWithBox;
     }
 
@@ -156,16 +158,20 @@ public class UICanvas : MonoBehaviour
 
     private IEnumerator deathEventCoroutine()
     {
+        hitTimerImage.fillAmount = 0;
+        setImageAlpha(ref redImage, 0);
+        setImageAlpha(ref darkImage, 0);
         worldSpaceCanvas.gameObject.SetActive(false);
-        disableDarkEffect();
         yield return new WaitForSeconds(2f);
-        fadeIn();
+        eventManager.fadeInEvent();
     }
 
     private void reviveEvent()
     {
         worldSpaceCanvas.gameObject.SetActive(true);
-        fadeOut();
+        hitTimerImage.fillAmount = 0;
+        setImageAlpha(ref redImage, 0);
+        eventManager.fadeOutEvent();
     }
 
     public void warnWithBox(Vector3 pos, Vector3 size)

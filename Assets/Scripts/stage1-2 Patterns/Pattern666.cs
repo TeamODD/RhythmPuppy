@@ -1,6 +1,9 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static EventManager;
 
 public class Pattern666 : MonoBehaviour
 {
@@ -14,15 +17,25 @@ public class Pattern666 : MonoBehaviour
     private bool isPatternRunning = false;
     private GameObject currentStem;
     float time;
+    EventManager eventManager;
+    List<GameObject> objects;
 
     private void OnEnable()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += StopPattern;
+        objects = new List<GameObject>();
         StartPattern();
     }
 
     private void OnDisable()
     {
         StopPattern();
+    }
+
+    private void OnDestroy()
+    {
+        eventManager.deathEvent -= StopPattern;
     }
 
     private void StartPattern()
@@ -39,21 +52,29 @@ public class Pattern666 : MonoBehaviour
         isPatternRunning = false;
         if (currentStem != null)
         {
+            objects.Remove(currentStem);
             Destroy(currentStem);
             currentStem = null;
         }
         StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 
     private IEnumerator RunPattern()
     {
-        //¿À¸¥ÂÊ À§Ä¡¿¡¼­¸¸ ½ÃÀÛ
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        // °æ°í ¿ÀºêÁ§Æ® »ý¼º
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         Vector3 warningPosition = new Vector3(8.297f, 2.28f, 0f);
         GameObject warning = Instantiate(thornStemWarning, warningPosition, Quaternion.identity);
+        objects.Add(warning);
 
-        // °æ°í ¿ÀºêÁ§Æ®¿Í ÀÚ½Ä ¿ÀºêÁ§Æ®ÀÇ Sprite Renderer ¹è¿­ ¾ò±â
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Sprite Renderer ï¿½è¿­ ï¿½ï¿½ï¿½
         SpriteRenderer[] warningRenderers = warning.GetComponentsInChildren<SpriteRenderer>();
 
         Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
@@ -91,20 +112,23 @@ public class Pattern666 : MonoBehaviour
             yield return null;
         }
 
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+        objects.Remove(warning);
         Destroy(warning);
 
-        // °¡½Ã ÁÙ±â »ý¼º
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ù±ï¿½ ï¿½ï¿½ï¿½ï¿½
         float startX = 8.38f; //9.44f, 8.38f
         float startY = 2.58f;
         Vector3 startPos = new Vector3(startX, startY, 0f);
 
         currentStem = Instantiate(thornStem, startPos, Quaternion.identity);
+        objects.Add(currentStem);
         Rigidbody2D stemRigidbody = currentStem.GetComponent<Rigidbody2D>();
 
-        // ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         if (startX < 0f)
             stemRigidbody.velocity = Vector2.right * stemSpeed;
-        // ¿ÞÂÊÀ¸·Î ÀÌµ¿
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         else
             stemRigidbody.velocity = Vector2.left * stemSpeed;
 
@@ -116,12 +140,13 @@ public class Pattern666 : MonoBehaviour
     {
         while (isPatternRunning)
         {
-            // ¸Ê ¹ÛÀ¸·Î ³ª°¥ °æ¿ì ¿ÀºêÁ§Æ®¸¦ ÆÄ±«ÇÕ´Ï´Ù.
+            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½Õ´Ï´ï¿½.
             if (!IsWithinMapBounds(obj.transform.position))
             {
+                objects.Remove(obj);
                 Destroy(obj);
                 currentStem = null;
-                Destroy(gameObject);
+                StopPattern();
                 yield break;
             }
             yield return null;
@@ -136,5 +161,21 @@ public class Pattern666 : MonoBehaviour
         float maxY = 5f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
+    }
+    async UniTask delayRemoval(GameObject o, float t)
+    {
+        await UniTask.Delay(System.TimeSpan.FromSeconds(t));
+        objects.Remove(o);
+    }
+
+    void deathEvent()
+    {
+        StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 }
