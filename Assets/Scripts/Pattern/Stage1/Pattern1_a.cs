@@ -34,7 +34,7 @@ public class Pattern1_a : MonoBehaviour
         
     }
     //재욱 형님 코드 가지고 온 거(플레이어 충돌 코드 같길래 붙여넣기만 함, 수정 안 함)
-    void OnCollisionEnter2D(Collision2D col)
+    /*void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Player"))
         {
@@ -42,5 +42,5 @@ public class Pattern1_a : MonoBehaviour
             Destroy(gameObject);
         }
         Debug.Log("hi");
-    }
+    }*/
 }

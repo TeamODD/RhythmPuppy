@@ -70,11 +70,11 @@ public class PlaySelectSound : MonoBehaviour
         DontDestroyOnLoad(LoadingScreen);
         yield return new WaitForSeconds(2f); //2초후 로딩
         Debug.Log("Loading..");
-        var mAsymcOperation = SceneManager.LoadSceneAsync(NextScene, LoadSceneMode.Additive);
+        var mAsymcOperation = SceneManager.LoadSceneAsync(NextScene, LoadSceneMode.Single);
         Debug.Log("Loading Complete");
+        LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
         yield return mAsymcOperation;
         LoadingScreen.transform.position = new Vector3(0, 0, 0);
-        LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
         Debug.Log("FadeOut");
         mAsymcOperation = SceneManager.UnloadSceneAsync("SceneMenu_01");
         Debug.Log("UnLoad Default Scene");

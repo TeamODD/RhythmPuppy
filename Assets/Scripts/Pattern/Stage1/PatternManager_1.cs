@@ -5,6 +5,10 @@ using UnityEngine;
 public class PatternManager_1 : MonoBehaviour
 {
     [SerializeField]
+    float[] savePointTime;
+    [SerializeField] 
+    AudioClip music;
+    [SerializeField]
     private GameObject Bee_1_a;
     [SerializeField]
     private GameObject Warning_1_a;
@@ -29,7 +33,7 @@ public class PatternManager_1 : MonoBehaviour
     [SerializeField]
     private GameObject Warning_4;
 
-
+    EventManager eventManager;
     private int count_1_a;
     private int count_1_b;
     private int count_3;
@@ -37,6 +41,8 @@ public class PatternManager_1 : MonoBehaviour
 
     void Awake()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.savePointTime = savePointTime;
         count_1_a = 0;
         count_1_b = 0;
         count_3 = 0;
