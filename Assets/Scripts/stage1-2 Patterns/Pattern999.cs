@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
@@ -26,7 +28,7 @@ public class Pattern999 : MonoBehaviour
     private IEnumerator SpawnFlyingSquirrels()
     {
         // 날다람쥐가 시작하는 위치를 랜덤으로 선택합니다.
-        float xPos;
+        float xPos = 0;
         float yPos = 4.293f;
 
         if (Random.Range(0, 2) == 0) // 왼쪽 위에서 시작
@@ -38,8 +40,6 @@ public class Pattern999 : MonoBehaviour
         Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
-        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-
         float scaleX = newWarning.transform.localScale.x;
         float scaleY = newWarning.transform.localScale.y;
         float scaleZ = newWarning.transform.localScale.z;
@@ -48,36 +48,44 @@ public class Pattern999 : MonoBehaviour
             newWarning.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
         }
 
-        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
-        Color originalColor = warningRenderer.color;
-        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        // 경고 오브젝트와 자식 오브젝트의 Sprite Renderer 배열 얻기
+        SpriteRenderer[] warningRenderers = newWarning.GetComponentsInChildren<SpriteRenderer>();
 
-        float totalTime = 0.5f; // 전체 시간 (0.5초)
-        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
+        Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+        foreach (SpriteRenderer renderer in warningRenderers)
+        {
+            renderer.color = targetColor;
+        }
 
+        float totalTime = 0.25f;
         float elapsedTime = 0f;
-
         while (elapsedTime < totalTime)
         {
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3초 동안은 완전히 불투명하게 유지
-            if (elapsedTime <= fadeInDuration)
+            foreach (SpriteRenderer renderer in warningRenderers)
             {
-                warningRenderer.color = originalColor;
-            }
-            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
-            else //0.3초가 지남
-            {
-                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
-                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+                renderer.color = Color.Lerp(targetColor, Color.red, t);
             }
 
             yield return null;
         }
 
-        // 경고 오브젝트 제거
+        elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(Color.red, targetColor, t);
+            }
+
+            yield return null;
+        }
+
         Destroy(newWarning);
 
         Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);

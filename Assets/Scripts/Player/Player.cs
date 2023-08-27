@@ -403,7 +403,7 @@ public class Player : MonoBehaviour
         else
         {
             Debug.Log("게임오버 씬이 열렸습니다.");
-            SceneManager.LoadScene("GameOver");
+            SceneManager.LoadScene("GameOver", LoadSceneMode.Additive);
         }
     }
 
