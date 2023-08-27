@@ -64,7 +64,8 @@ public class Player : MonoBehaviour
 
     bool onFired, isAlive;
     [HideInInspector] public float currentHP, currentStamina;
-    float headCorrectFactor, deathCount;
+    float headCorrectFactor;
+    [HideInInspector] public float deathCount;
     Vector3 velocity;
     Coroutine dashCoroutine, dashCooldownCoroutine, shootCooldownCoroutine, invincibilityCoroutine;
 
@@ -91,6 +92,7 @@ public class Player : MonoBehaviour
         invincibleDelay = new WaitForSeconds(invincibleDuration);
         dashDelay = new WaitForSeconds(dashDuration);
         dashCooldownDelay = new WaitForSeconds(dashCooltime);
+        shootCooldownDelay = new WaitForSeconds(shootCooltime);
 
         onFired = false;
         isAlive = true;

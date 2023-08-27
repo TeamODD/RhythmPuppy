@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class ProgressBar : MonoBehaviour
     Image fillImage;
     GameObject playerbudge, puppybudge;
 
-    float musicLength, currentTime;
+    float musicLength;
     Vector3 initialPlayerBudgePosition;
     GameObject[] emptySavePoint, fullSavePoint;
 
@@ -35,8 +36,10 @@ public class ProgressBar : MonoBehaviour
 
         initialPlayerBudgePosition = playerbudge.transform.position;
 
-        eventManager.rewindEvent += rewindEvent;
+        eventManager.gameStartEvent += gameStartEvent;
         eventManager.deathEvent += deathEvent;
+        eventManager.rewindEvent += rewindEvent;
+        eventManager.reviveEvent += gameStartEvent;
 
         fillImage.fillAmount = 0;
         musicAudioSource = FindObjectOfType<AudioSource>();
@@ -118,11 +121,22 @@ public class ProgressBar : MonoBehaviour
         }
     }
 
+    private void gameStartEvent()
+    {
+        playMusic().Forget();
+    }
+
+    private async UniTask playMusic()
+    {
+        await UniTask.Delay(System.TimeSpan.FromSeconds(1));
+        musicAudioSource.Play();
+    }
+
     private void rewindEvent()
     {
         for (int i = 0; i < eventManager.savePointTime.Length; i++)
         {
-            if (eventManager.savePointTime[i] <= currentTime) continue;
+            if (eventManager.savePointTime[i] <= musicAudioSource.time) continue;
 
             if (i == 0)
                 musicAudioSource.time = 0;
@@ -135,7 +149,6 @@ public class ProgressBar : MonoBehaviour
 
     private void deathEvent()
     {
-        currentTime = musicAudioSource.time;
-        musicAudioSource.Stop();
+        musicAudioSource.Pause();
     }
 }

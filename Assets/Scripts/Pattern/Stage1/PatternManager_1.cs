@@ -29,6 +29,7 @@ public class PatternManager_1 : MonoBehaviour
     [SerializeField]
     private GameObject Warning_4;
 
+
     private int count_1_a;
     private int count_1_b;
     private int count_3;

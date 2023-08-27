@@ -45,6 +45,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Option_Menu.unity
     guid: 2f48c05d2bc2c334b944b7d2addd4f68
   - enabled: 1
-    path: Assets/Scenes/SceneStage/World2.unity
+    path: Assets/Scenes/SceneStage/Stage2.unity
     guid: b24ea44e3f23ab344af6b2eb87c3afa5
   m_configObjects: {}

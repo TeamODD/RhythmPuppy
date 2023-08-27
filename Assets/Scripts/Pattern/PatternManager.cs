@@ -2,56 +2,102 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Patterns;
+using Cysharp.Threading.Tasks;
+using Stage_2;
+using static EventManager;
+using UnityEngine.SceneManagement;
+
 public class PatternManager : MonoBehaviour
 {
-    public Transform uiCanvas, obstacleManager;
-    public GameObject warningBox, warningArrow;
-    [SerializeField] GameObject pattern;
-    [SerializeField] float startDelay;
+    private enum StageType
+    {
+        Tutorial,
+        Stage_1_1,
+        Stage_1_2,
+        Stage_2_1,
+        Stage_2_2,
+    }
 
-    [HideInInspector]
-    public Transform overlayCanvas, worldSpaceCanvas;
-    [HideInInspector] public EventManager eventManager;
+    [SerializeField] StageType stageType;
+    [SerializeField] Stage_2_1 stage_2_1;
+    [SerializeField] float startDelayTime;
+
+    [HideInInspector] 
+    public EventManager eventManager;
+    PatternManager patternManager;
+    AudioSource audioSource;
+    List<Coroutine> coroutineList;
 
     void Awake()
     {
-        init();
+        init().Forget();
     }
 
-    public void init()
+    private async UniTask init()
     {
         eventManager = FindObjectOfType<EventManager>();
-        overlayCanvas = uiCanvas.Find("OverlayCanvas");
-        worldSpaceCanvas = uiCanvas.Find("WorldSpaceCanvas");
+        patternManager = GetComponent<PatternManager>();
+        audioSource = FindObjectOfType<AudioSource>();
+        coroutineList = new List<Coroutine>();
+        setStageInfo();
 
+
+        eventManager.gameStartEvent += gameStartEvent;
         eventManager.deathEvent += deathEvent;
-        eventManager.reviveEvent += reviveEvent;
+        eventManager.reviveEvent += gameStartEvent;
 
-        Invoke("run", startDelay);
+        await UniTask.Delay(System.TimeSpan.FromSeconds(startDelayTime));
+        eventManager.gameStartEvent();
     }
 
-    public void run()
+    private void setStageInfo()
     {
-        GameObject o = Instantiate(pattern);
-        o.transform.SetParent(transform);
-        o.SetActive(true);
+        AudioClip clip = null;
+        switch(stageType)
+        {
+            case StageType.Tutorial:
+                break;
+            case StageType.Stage_1_1:
+                break;
+            case StageType.Stage_1_2:
+                break;
+            case StageType.Stage_2_1:
+                clip = stage_2_1.music;
+                stage_2_1.init(patternManager, eventManager);
+                eventManager.savePointTime = stage_2_1.savePointTime;
+                break;
+            case StageType.Stage_2_2:
+                break;
+        }
+        audioSource.clip = clip;
+    }
+
+    private void gameStartEvent()
+    {
+        switch (stageType)
+        {
+            case StageType.Tutorial:
+                break;
+            case StageType.Stage_1_1:
+                break;
+            case StageType.Stage_1_2:
+                break;
+            case StageType.Stage_2_1:
+                stage_2_1.Run(audioSource.time, out coroutineList);
+                break;
+            case StageType.Stage_2_2:
+                break;
+        }
     }
 
     private void deathEvent()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        int i;
+        for (i = 0; i < coroutineList.Count; i++)
         {
-            Destroy(transform.GetChild(i).gameObject);
+            StopCoroutine(coroutineList[i]);
         }
-
-        for (int i = 0; i < obstacleManager.childCount; i++)
-        {
-            Destroy(obstacleManager.GetChild(i).gameObject);
-        }
-    }
-
-    private void reviveEvent()
-    {
-        run();
+        coroutineList.Clear();
     }
 }

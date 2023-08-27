@@ -7,6 +7,8 @@ using static EventManager.PlayerEvent;
 
 public class UICanvas : MonoBehaviour
 {
+    [SerializeField] GameObject warningBoxPrefab, warningArrowPrefab;
+
     Player player;
     EventManager eventManager;
     Transform overlayCanvas, worldSpaceCanvas;
@@ -41,6 +43,9 @@ public class UICanvas : MonoBehaviour
         eventManager.deathEvent += deathEvent;
         eventManager.reviveEvent += reviveEvent;
         eventManager.playerEvent.dashEvent += dashEvent;
+        eventManager.lampOnEvent += disableDarkEffect;
+        eventManager.lampOffEvent += enableDarkEffect;
+        eventManager.warnWithBox += warnWithBox;
     }
 
     public void enableDarkEffect()
@@ -161,5 +166,14 @@ public class UICanvas : MonoBehaviour
     {
         worldSpaceCanvas.gameObject.SetActive(true);
         fadeOut();
+    }
+
+    public void warnWithBox(Vector3 pos, Vector3 size)
+    {
+        GameObject o = Instantiate(warningBoxPrefab);
+        o.transform.SetParent(overlayCanvas);
+        o.transform.position = pos;
+        o.transform.localScale = size;
+        o.SetActive(true);
     }
 }
