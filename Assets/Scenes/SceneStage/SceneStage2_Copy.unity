@@ -926,30 +926,14 @@ MonoBehaviour:
   weasel: {fileID: 9001390689507493206, guid: 868c5b0fa6abfea48a1bd181cf319265, type: 3}
   weaselwarning: {fileID: 1202030098}
   weaselspeed: 5
-  firstPositions:
-  - {x: -7.5, y: -5, z: 0}
-  - {x: -5, y: -5, z: 0}
-  - {x: -2.5, y: -5, z: 0}
-  - {x: 0, y: -5, z: 0}
-  - {x: 2.5, y: -5, z: 0}
-  - {x: 5, y: -5, z: 0}
-  - {x: 7.5, y: -5, z: 0}
-  secondPositions:
-  - {x: -7.5, y: -3, z: 0}
-  - {x: -5, y: -3, z: 0}
-  - {x: -2.5, y: -3, z: 0}
-  - {x: 0, y: -3, z: 0}
-  - {x: 2.5, y: -3, z: 0}
-  - {x: 5, y: -3, z: 0}
-  - {x: 7.5, y: -3, z: 0}
-  warningPositions:
-  - {x: -7.5, y: -4.55, z: 0}
-  - {x: -5, y: -4.55, z: 0}
-  - {x: -2.5, y: -4.55, z: 0}
-  - {x: 0, y: -4.55, z: 0}
-  - {x: 2.5, y: -4.55, z: 0}
-  - {x: 5, y: -4.55, z: 0}
-  - {x: 7.5, y: -4.55, z: 0}
+  secondweaselTimings:
+  - 2.1
+  - 2.2
+  - 2.6
+  - 2.8
+  - 3.1
+  - 3.4
+  - 3.8
 --- !u!4 &447917172
 Transform:
   m_ObjectHideFlags: 0
@@ -1260,6 +1244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stage1_2BGM: {fileID: 330115481}
+  EventSystem: {fileID: 448613970}
 --- !u!114 &537546945
 MonoBehaviour:
   m_ObjectHideFlags: 0

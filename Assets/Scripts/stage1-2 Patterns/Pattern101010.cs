@@ -1,7 +1,5 @@
-using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Pattern101010 : MonoBehaviour
@@ -21,25 +19,14 @@ public class Pattern101010 : MonoBehaviour
     [SerializeField]
     private float splinterInterval;
 
-    EventManager eventManager;
-    List<GameObject> objects;
-
     private void OnEnable()
     {
-        eventManager = FindObjectOfType<EventManager>();
-        eventManager.deathEvent += deathEvent;
-        objects = new List<GameObject>();
         StartCoroutine(DropChestnuts());
     }
 
     private void OnDisable()
     {
         StopCoroutine(DropChestnuts());
-    }
-
-    private void OnDestroy()
-    {
-        eventManager.deathEvent -= deathEvent;
     }
 
     private IEnumerator DropChestnuts()
@@ -51,53 +38,55 @@ public class Pattern101010 : MonoBehaviour
         // 경고 오브젝트 생성
         Vector3 warningPosition = new Vector3(xPos, 4.327f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
-        objects.Add(newWarning);
 
-        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
+        // 경고 오브젝트와 자식 오브젝트의 Sprite Renderer 배열 얻기
+        SpriteRenderer[] warningRenderers = newWarning.GetComponentsInChildren<SpriteRenderer>();
 
-        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
-        Color originalColor = warningRenderer.color;
-        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+        foreach (SpriteRenderer renderer in warningRenderers)
+        {
+            renderer.color = targetColor;
+        }
 
-        float totalTime = 0.5f; // 전체 시간 (0.5초)
-        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
-
+        float totalTime = 0.25f;
         float elapsedTime = 0f;
-
         while (elapsedTime < totalTime)
         {
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3초 동안은 완전히 불투명하게 유지
-            if (elapsedTime <= fadeInDuration)
+            foreach (SpriteRenderer renderer in warningRenderers)
             {
-                warningRenderer.color = originalColor;
-            }
-            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
-            else //0.3초가 지남
-            {
-                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
-                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+                renderer.color = Color.Lerp(targetColor, Color.red, t);
             }
 
             yield return null;
         }
 
-        // 경고 오브젝트 제거
-        objects.Remove(newWarning);
+        elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(Color.red, targetColor, t);
+            }
+
+            yield return null;
+        }
+
         Destroy(newWarning);
 
         // ChestNut 오브젝트 생성
         GameObject newChestnut = Instantiate(chestnut, chestnutPosition, Quaternion.identity);
-        objects.Add(newChestnut);
         Rigidbody2D chestnutRigidbody = newChestnut.GetComponent<Rigidbody2D>();
         chestnutRigidbody.velocity = Vector2.down * chestnutSpeed;
 
         yield return new WaitForSeconds(0.5f);
 
         ExplodeChestnut(newChestnut.transform.position);
-        objects.Remove(newChestnut);
         Destroy(newChestnut);
         yield return null;
     }
@@ -105,9 +94,7 @@ public class Pattern101010 : MonoBehaviour
     private void ExplodeChestnut(Vector3 position)
     {
         GameObject ChestNutBomb = Instantiate(chestnutbomb, position, Quaternion.identity);
-        delayRemoval(ChestNutBomb, 0.2f).Forget();
         Destroy(ChestNutBomb, 0.2f);
-
 
         for (int i = 0; i < 8; i++)
         {
@@ -137,7 +124,6 @@ public class Pattern101010 : MonoBehaviour
             // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
             if (!IsWithinMapBounds(obj.transform.position))
             {
-                objects.Remove(obj);
                 Destroy(obj);
                 yield break;
             }
@@ -153,22 +139,5 @@ public class Pattern101010 : MonoBehaviour
         float maxY = 5f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
-    }
-
-    async UniTask delayRemoval(GameObject o, float t)
-    {
-        await UniTask.Delay(System.TimeSpan.FromSeconds(t));
-        objects.Remove(o);
-    }
-
-    void deathEvent()
-    {
-        StopAllCoroutines();
-        for (int i = 0; i < objects.Count; i++)
-        {
-            Destroy(objects[i]);
-        }
-        objects.Clear();
-        Destroy(gameObject);
     }
 }
