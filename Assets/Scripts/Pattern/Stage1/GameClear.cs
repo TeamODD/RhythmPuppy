@@ -37,6 +37,7 @@ public class GameClear : MonoBehaviour
 
     public static bool clear;
     private int deathcount;
+    private bool S_Rank_True;
     
 
     void Start()
@@ -46,14 +47,16 @@ public class GameClear : MonoBehaviour
         PuppyTransform = gameObject.transform.position;
         Puppy = gameObject.GetComponent<SpriteRenderer>();
         CorgiTransform = corgi.transform.position;
-        StartCoroutine(CommingOut());
     }
-
-    IEnumerator CommingOut()
+    public void CommingOutFunc(float WaitTime, float StartTime)
+    {
+        StartCoroutine(CommingOut(WaitTime, StartTime));
+    }
+    IEnumerator CommingOut(float WaitTime, float StartTime)
     {
         float speed = 0.1f;
         //노래 끝나고 3초 후 퍼피 등장
-        yield return new WaitForSeconds(123f);
+        yield return new WaitForSeconds(WaitTime - StartTime + 3f);
         while(gameObject.transform.position.x > 3.5f)
         {
             gameObject.transform.position -= new Vector3(speed, 0, 0);
@@ -90,6 +93,8 @@ public class GameClear : MonoBehaviour
         alpha = 0;
         //여기까지 암전, 하트가 나오도록.
         Rank.sprite = RankImgs[deathcount];
+        if (S_Rank_True == true)
+            Rank.sprite = RankImgs[3];
         //health 관련해서 S 판정 내는 if문 작성하기
         while (Rank.color.a < 1)
         {
@@ -132,6 +137,7 @@ public class GameClear : MonoBehaviour
     }
     void Clear()
     {
+        S_Rank_True = GameObject.Find("corgi").GetComponent<Player>().S_Rank_True;
         deathcount = (int)GameObject.Find("corgi").GetComponent<Player>().deathCount;
         Puppy.sprite = HappyPuppy;
         StartCoroutine(Moving());
@@ -142,6 +148,11 @@ public class GameClear : MonoBehaviour
         if (Menu_PlayerTransform.clearIndex > 4) return;
         Menu_PlayerTransform.clearIndex = 4;
         PlayerPrefs.SetInt("clearIndex", 4);
+        if(S_Rank_True == true)
+        {
+            PlayerPrefs.SetInt("1-1", 3);
+            return;
+        }
         PlayerPrefs.SetInt("1-1", deathcount);
     }
 

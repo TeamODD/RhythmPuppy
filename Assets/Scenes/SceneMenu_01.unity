@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7444986
 Transform:
   m_ObjectHideFlags: 0
@@ -169,10 +169,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RankImgs:
-  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
   - {fileID: 21300000, guid: f27d95408b81caf40a2d1f471c4ccbf2, type: 3}
   - {fileID: 21300000, guid: dcd22c0d676ef694ca0284c9529043e0, type: 3}
   - {fileID: 21300000, guid: 97880fdc031a7684e94cb559693fa0f2, type: 3}
+  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
 --- !u!212 &7444988
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -524,10 +524,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RankImgs:
-  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
   - {fileID: 21300000, guid: f27d95408b81caf40a2d1f471c4ccbf2, type: 3}
   - {fileID: 21300000, guid: dcd22c0d676ef694ca0284c9529043e0, type: 3}
   - {fileID: 21300000, guid: 97880fdc031a7684e94cb559693fa0f2, type: 3}
+  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
 --- !u!212 &61052749
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -905,10 +905,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RankImgs:
-  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
   - {fileID: 21300000, guid: f27d95408b81caf40a2d1f471c4ccbf2, type: 3}
   - {fileID: 21300000, guid: dcd22c0d676ef694ca0284c9529043e0, type: 3}
   - {fileID: 21300000, guid: 97880fdc031a7684e94cb559693fa0f2, type: 3}
+  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
 --- !u!212 &129738359
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1473,6 +1473,7 @@ MonoBehaviour:
   LoadingScreenSprite: {fileID: 1757639632}
   LoadingScreen: {fileID: 1757639630}
   LoadingCanvas: {fileID: 1022991764}
+  DefaultCanvas: {fileID: 775263190}
   volume: {fileID: 1941490225}
   PlayerOnPoint:
     m_PersistentCalls:
@@ -4462,11 +4463,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -5482,10 +5483,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RankImgs:
-  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
   - {fileID: 21300000, guid: f27d95408b81caf40a2d1f471c4ccbf2, type: 3}
   - {fileID: 21300000, guid: dcd22c0d676ef694ca0284c9529043e0, type: 3}
   - {fileID: 21300000, guid: 97880fdc031a7684e94cb559693fa0f2, type: 3}
+  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
 --- !u!212 &1159538385
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5636,10 +5637,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RankImgs:
-  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
   - {fileID: 21300000, guid: f27d95408b81caf40a2d1f471c4ccbf2, type: 3}
   - {fileID: 21300000, guid: dcd22c0d676ef694ca0284c9529043e0, type: 3}
   - {fileID: 21300000, guid: 97880fdc031a7684e94cb559693fa0f2, type: 3}
+  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
 --- !u!1 &1207484602
 GameObject:
   m_ObjectHideFlags: 0
@@ -9069,10 +9070,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RankImgs:
-  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
   - {fileID: 21300000, guid: f27d95408b81caf40a2d1f471c4ccbf2, type: 3}
   - {fileID: 21300000, guid: dcd22c0d676ef694ca0284c9529043e0, type: 3}
   - {fileID: 21300000, guid: 97880fdc031a7684e94cb559693fa0f2, type: 3}
+  - {fileID: 21300000, guid: c3bb0ab3fca4128498830df492974a50, type: 3}
 --- !u!212 &2118725696
 SpriteRenderer:
   m_ObjectHideFlags: 0

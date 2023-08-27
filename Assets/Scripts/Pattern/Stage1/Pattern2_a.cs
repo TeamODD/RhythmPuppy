@@ -8,8 +8,6 @@ public class Pattern2_a : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField]
     private float power;
-    [SerializeField]
-    private float RotateSpeed;
     private float time;
     EventManager eventManager;
 
@@ -32,7 +30,6 @@ public class Pattern2_a : MonoBehaviour
                 gameObject.transform.position += new Vector3(0, power * -1, 0) * Time.deltaTime;
             }
             gameObject.transform.position += new Vector3(power * -1.3f, 0, 0) * Time.deltaTime;
-            //gameObject.transform.Rotate(0, 0, Time.deltaTime * RotateSpeed, Space.Self);
         }
     }
 
