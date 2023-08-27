@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 636348560700519678}
   - component: {fileID: 163350448932550567}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: JumpWeasel
   m_TagString: Obstacles
   m_Icon: {fileID: 0}
@@ -65,7 +65,7 @@ GameObject:
   - component: {fileID: 8763429559949198547}
   - component: {fileID: 5642212848639440190}
   - component: {fileID: 6699101400594262300}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: "\uB808\uC774\uC5B4 2"
   m_TagString: Obstacles
   m_Icon: {fileID: 0}

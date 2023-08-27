@@ -55,7 +55,7 @@ public class Menu_PlayerTransform : MonoBehaviour
             PlaySelectSound.instance.World2_Walking();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         int offset = 1;
         time += Time.deltaTime;

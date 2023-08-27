@@ -396,11 +396,12 @@ public class Player : MonoBehaviour
 
         if (deathCount < 3)
         {
-            eventManager.rewindEvent();
+            eventManager.rewindEvent(); //에러
             eventManager.reviveEvent();
         }
         else
         {
+            Debug.Log("게임오버 씬이 열렸습니다.");
             SceneManager.LoadScene("GameOver");
         }
     }
