@@ -58,7 +58,7 @@ public class PlaySelectSound : MonoBehaviour
         theAudio.Play();
     }
 
-    //로딩 함수 싱글톤에 넣어놨습니다.
+    //메뉴에서의 로딩 함수 싱글톤에 넣어놨습니다.
     public void StartLoading(string NextScene, GameObject LoadingScreen)
     {
         StartCoroutine(asd(NextScene, LoadingScreen));
@@ -69,15 +69,11 @@ public class PlaySelectSound : MonoBehaviour
         LoadingScreen.transform.SetParent(null, false); //worldpositionstays bool 인자 false로
         DontDestroyOnLoad(LoadingScreen);
         yield return new WaitForSeconds(2f); //2초후 로딩
-        Debug.Log("Loading..");
         var mAsymcOperation = SceneManager.LoadSceneAsync(NextScene, LoadSceneMode.Single);
-        Debug.Log("Loading Complete");
         LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
         yield return mAsymcOperation;
         LoadingScreen.transform.position = new Vector3(0, 0, 0);
-        Debug.Log("FadeOut");
         mAsymcOperation = SceneManager.UnloadSceneAsync("SceneMenu_01");
-        Debug.Log("UnLoad Default Scene");
         yield return mAsymcOperation;
 
     }
