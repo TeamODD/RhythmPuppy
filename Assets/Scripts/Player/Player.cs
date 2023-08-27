@@ -66,6 +66,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public float currentHP, currentStamina;
     float headCorrectFactor;
     [HideInInspector] public float deathCount;
+    [HideInInspector] public bool S_Rank_True;
     Vector3 velocity;
     Coroutine dashCoroutine, dashCooldownCoroutine, shootCooldownCoroutine, invincibilityCoroutine;
 
@@ -99,6 +100,7 @@ public class Player : MonoBehaviour
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = shootCooldownCoroutine = null;
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
         deathCount = 0;
+        S_Rank_True = true;
         currentHP = maxHP;
         currentStamina = maxStamina;
 
@@ -371,6 +373,7 @@ public class Player : MonoBehaviour
     private void playerHitEvent()
     {
         currentHP--;
+        S_Rank_True = false;
         if (currentHP <= 0)
         {
             deathCount++;

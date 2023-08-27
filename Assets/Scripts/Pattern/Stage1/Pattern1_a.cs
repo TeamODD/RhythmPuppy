@@ -27,7 +27,7 @@ public class Pattern1_a : MonoBehaviour
     // FixedUpdate로 변경해야 할 수도 있음.
     void FixedUpdate()
     {
-        time += 1f * Time.deltaTime;
+        time += Time.deltaTime;
         if (time > 1f)
         {
             transform.position += new Vector3(speed * dir, 0, 0) * Time.fixedDeltaTime;

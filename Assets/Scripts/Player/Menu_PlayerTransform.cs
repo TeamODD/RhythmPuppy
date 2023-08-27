@@ -13,6 +13,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     public SpriteRenderer LoadingScreenSprite;
     public GameObject LoadingScreen;
     public CanvasGroup LoadingCanvas;
+    public CanvasGroup DefaultCanvas;
     public AudioSource volume;
     public UnityEvent PlayerOnPoint;
     public UnityEvent Loading;
@@ -24,6 +25,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     public static int currentIndex;
     public static int savingIndex;
     public static int clearIndex;
+    private string SceneName;
     [SerializeField]
     private float speed;
     private float time;
@@ -134,23 +136,47 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     IEnumerator LoadingScene()
     {
+        DefaultCanvas.alpha = 0;
+        Loading.Invoke();
         time = 0;
         while (time < 1f)
         {
             LoadingScreenSprite.color = new Color(0, 0, 0, time);
+            LoadingCanvas.alpha = time;
             volume.volume = 1f - time;
             yield return new WaitForFixedUpdate();
         }
         LoadingScreenSprite.color = new Color(0, 0, 0, 1);
-        Loading.Invoke();
         LoadingCanvas.alpha = 1;
+        
         AudioListener.GetComponent<AudioListener>().enabled = false;
         volume.enabled = false;
         corgiLoading.gameObject.SetActive(true);
-        PlaySelectSound.instance.StartLoading("SceneStage" + currentIndex/2, LoadingScreen);
+        GetSceneString();
+        PlaySelectSound.instance.StartLoading(SceneName, LoadingScreen);
         yield break;
     }
-
+    void GetSceneString()
+    {
+        switch(currentIndex)
+        {
+            case 1: SceneName = "Tutorials";
+                break;
+            case 2: SceneName = "SceneStage1_1";
+                break;
+            case 4:
+                SceneName = "SceneStage1_2";
+                break;
+            case 6:
+                SceneName = "SceneStage1_3";
+                break;
+            case 8:
+                SceneName = "SceneStage2_1";
+                break;
+            case 10:
+                break;
+        }
+    }
     void InputDelay()
     {
         onInputDelay = false;
