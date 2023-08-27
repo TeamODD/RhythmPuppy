@@ -16,6 +16,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     public CanvasGroup DefaultCanvas;
     public AudioSource volume;
     public UnityEvent PlayerOnPoint;
+    public UnityEvent PlayerOnPointExceptMusicChange;
     public UnityEvent Loading;
     public Animator animator;
     public GameObject corgiLoading;
@@ -33,10 +34,9 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Start()
     {
-        if (savingIndex != 0)
-        {
-            gameObject.transform.position = waypoints[savingIndex];
-        }
+        Time.timeScale = 1f;
+        onInputDelay = false;
+
         if (PlayerPrefs.HasKey("clearIndex"))
         {
             clearIndex = PlayerPrefs.GetInt("clearIndex");
@@ -44,8 +44,16 @@ public class Menu_PlayerTransform : MonoBehaviour
         {
             clearIndex = 30;
         }
-        onInputDelay = false;
-        currentIndex = 0;
+
+        if (savingIndex != 0)
+        {
+            gameObject.transform.position = waypoints[savingIndex];
+            currentIndex = savingIndex;
+            if(savingIndex >= 7)
+                BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
+        }
+        else
+            currentIndex = 0;
         
         currentPosition = transform.position; //플레이어 현재 위치
     }
@@ -56,6 +64,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     }
     void OnTriggerExit2D(Collider2D other)
     {
+        PlayerOnPointExceptMusicChange.Invoke();
         if (currentIndex < 7)
             PlaySelectSound.instance.World1_Walking();
         else
@@ -72,7 +81,6 @@ public class Menu_PlayerTransform : MonoBehaviour
         {
             if (waypoints.Length == currentIndex + offset || currentIndex + offset > clearIndex) return;
             ++currentIndex;
-            savingIndex = currentIndex;
             onInputDelay = true; //연타 방지
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
             animator.SetBool("WalkBool", true);
@@ -81,7 +89,6 @@ public class Menu_PlayerTransform : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             if (0 == currentIndex) return;
-            savingIndex = currentIndex;
             --currentIndex;
             onInputDelay = true;
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex + 1, "disappear");
@@ -92,6 +99,8 @@ public class Menu_PlayerTransform : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
+            GetSceneString();
+            if (SceneName == null) return;
             onInputDelay = true;
             PlaySelectSound.instance.MenuSelectSound();
             StartCoroutine(LoadingScene());
@@ -100,6 +109,7 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Point()
     {
+        savingIndex = currentIndex;
         PlayerOnPoint.Invoke();
     }
 
@@ -152,7 +162,6 @@ public class Menu_PlayerTransform : MonoBehaviour
         AudioListener.GetComponent<AudioListener>().enabled = false;
         volume.enabled = false;
         corgiLoading.gameObject.SetActive(true);
-        GetSceneString();
         PlaySelectSound.instance.StartLoading(SceneName, LoadingScreen);
         yield break;
     }
@@ -174,6 +183,9 @@ public class Menu_PlayerTransform : MonoBehaviour
                 SceneName = "SceneStage2_1";
                 break;
             case 10:
+                break;
+            default:
+                SceneName = null;
                 break;
         }
     }
