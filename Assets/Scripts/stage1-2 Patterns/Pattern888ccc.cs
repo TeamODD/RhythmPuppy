@@ -85,7 +85,7 @@ public class Pattern888ccc : MonoBehaviour
 
             //경고 오브젝트 생성
 
-            yPos = -3.25f;
+            yPos = -3.7209f;
 
             StartCoroutine(SpawnWeasel(xPos, yPos));
         }
@@ -136,7 +136,7 @@ public class Pattern888ccc : MonoBehaviour
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * weaselSpeed;
 
-        while (newWeasel.transform.position.y < -2.5f)
+        while (newWeasel.transform.position.y < -3.76f)
         {
             yield return null;
         }

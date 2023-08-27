@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Pattern999 : MonoBehaviour
 {
@@ -82,7 +83,7 @@ public class Pattern999 : MonoBehaviour
         Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);
 
         // 대각선 방향을 설정합니다.
-        Vector2 direction = (xPos < 0f ? Vector2.right : Vector2.left) + Vector2.down;
+        
 
         // 장애물을 생성하고 속도와 방향을 설정합니다.
         GameObject newSquirrel = Instantiate(flyingSquirrel, spawnPosition, Quaternion.identity);
@@ -92,10 +93,14 @@ public class Pattern999 : MonoBehaviour
         scaleY = newSquirrel.transform.localScale.y;
         scaleZ = newSquirrel.transform.localScale.z;
 
+        Vector2 targetPosition = new Vector2(-9f, 0f);
         if (xPos == -8.16f) // 왼쪽 위에서 시작
         {
             newSquirrel.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
+            targetPosition = new Vector2(9f, 0f);
         }
+
+        Vector2 direction = (targetPosition - new Vector2(xPos, yPos)).normalized;
         squirrelRigidbody.velocity = direction.normalized * squirrelSpeed;
 
         yield return StartCoroutine(DestroyIfOutOfBounds(newSquirrel));
