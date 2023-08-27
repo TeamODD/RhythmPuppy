@@ -9,8 +9,10 @@ public class GotoOption : MonoBehaviour
 
     public void GoOption()
     {
+        isPaused = true;
         SceneManager.LoadScene("Option_Menu", LoadSceneMode.Additive);
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
