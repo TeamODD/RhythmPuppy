@@ -159,6 +159,10 @@ public class Player : MonoBehaviour
         {
             hitbox.enabled = false;
         }
+        if (Input.GetKeyDown(KeyCode.O))     // developer mode (inactive hitbox)
+        {
+            eventManager.deathEvent();
+        }
     }
 
     void FixedUpdate()

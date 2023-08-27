@@ -29,7 +29,6 @@ public class HPManager : MonoBehaviour
         if (hp < 0) hp = 0;
         else if (state.Count < hp) hp = state.Count;
 
-        hp -= 1;
         for (int i = 0; i < state.Count; i++)
         {
             if (i == hp) state[i].SetActive(true);

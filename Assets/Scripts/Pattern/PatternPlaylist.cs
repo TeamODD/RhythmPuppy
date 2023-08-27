@@ -60,14 +60,14 @@ namespace Patterns
                 {
                     repeatDelayTime = timeline[i].repeatDelayTime;
                     repeatDelay = new WaitForSeconds(repeatDelayTime);
+                    bool isFirstAction = true;
                     for (j = 0; j < repeat; j++)
                     {
                         if (timeline[i].startAt + j * repeatDelayTime < startTime) continue;
-                        delay = new WaitForSeconds(delayTime + j * repeatDelayTime - startTime);
-                        if (delay != null)
+                        if (isFirstAction)
                         {
-                            yield return delay;
-                            delay = null;
+                            yield return new WaitForSeconds(delayTime + j * repeatDelayTime - startTime);
+                            isFirstAction = false;
                         }
                         else
                         {

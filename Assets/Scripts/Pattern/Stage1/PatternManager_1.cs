@@ -243,52 +243,112 @@ public class PatternManager_1 : MonoBehaviour
     }
     IEnumerator Pattern4(float waitTime, float startTime)
     {
-        yield return new WaitForSeconds(waitTime);
         WaitForSeconds delay_0_5 = new WaitForSeconds(0.5f);
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5;
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5;
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5;
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return new WaitForSeconds(0.7f);
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //3
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //3.5
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //4
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //4.5
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //5
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return new WaitForSeconds(1f); //6
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //6.5
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //7
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //7.5
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return new WaitForSeconds(0.1f);
-        Instantiate(Apple);
-        Instantiate(Warning_4);
+        float currentTime = waitTime - startTime;
+        if (0 <= currentTime)
+        {
+            yield return new WaitForSeconds(currentTime);
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5;
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5;
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5;
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.7f;
+        if (0 <= currentTime)
+        {
+            yield return new WaitForSeconds(0.7f);
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 1;
+        if (0 <= currentTime)
+        {
+            yield return new WaitForSeconds(1f); 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.1f;
+        if (0 <= currentTime)
+        {
+            yield return new WaitForSeconds(0.1f);
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
     }
 
     private void deathEvent()

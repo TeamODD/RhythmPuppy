@@ -402,21 +402,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fea06dff84fb9c345b186cba27ed90fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 4
+  maxHP: 3
   maxStamina: 100
   staminaGen: 4
   speed: 7
   invincibleDuration: 1.5
   jumpForce: 6
-  dashForce: 9
-  dashDuration: 0.3
-  dashCooltime: 0.6
+  dashForce: 6
+  dashDuration: 0.4
+  dashCooltime: 0.1
   dashStaminaCost: 20
   dashEvasionGen: 30
   shootStaminaCost: 30
   shootCancelStaminaGen: 15
   shootForce: 12
-  shootCooltime: 1
+  shootCooltime: 0.1
   currentHP: 0
   currentStamina: 0
   deathCount: 0

@@ -11,11 +11,15 @@ namespace Stage_2
     {
         public Sprite lampOn;
         public Sprite lampOff;
-        public List<GameObject> lampList;
-        public Transform L_Manhole;
-        public Transform R_Manhole;
+        public GameObject lampPrefab;
+        public GameObject manholePrefab;
 
+        [HideInInspector]
+        public List<GameObject> lampList;
+        [HideInInspector]
+        public List<GameObject> manholeList;
         EventManager eventManager;
+        SpriteRenderer sp;
 
         void Awake() 
         {
@@ -24,16 +28,43 @@ namespace Stage_2
 
         void init()
         {
+            lampList = new List<GameObject>();
+            GameObject o;
             eventManager = FindObjectOfType<EventManager>();
             eventManager.lampOnEvent += lampOnEvent;
             eventManager.lampOffEvent += lampOffEvent;
+
+            o = Instantiate(lampPrefab);
+            o.transform.position = new Vector3(-7, 0, 0);
+            lampList.Add(o);
+            o = Instantiate(lampPrefab);
+            o.transform.position = new Vector3(7, 0, 0);
+            lampList.Add(o);
+
+            /*o = Instantiate(manholePrefab);
+            o.transform.position = new Vector3(-4.5f, 0, 0);
+            manholeList.Add(o);
+            o = Instantiate(manholePrefab);
+            o.transform.position = new Vector3(4.5f, 0, 0);
+            manholeList.Add(o);*/
         }
 
         private void lampOnEvent()
         {
             for (int i = 0; i < lampList.Count; i++)
             {
-                lampList[i].GetComponent<SpriteRenderer>().sprite = lampOn;
+                if (lampList[i] == null)
+                {
+                    lampList.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    if (lampList[i].transform.GetChild(0).TryGetComponent<SpriteRenderer>(out sp))
+                    {
+                        sp.sprite = lampOn;
+                    }
+                }
             }
         }
 
@@ -41,11 +72,22 @@ namespace Stage_2
         {
             for (int i = 0; i < lampList.Count; i++)
             {
-                lampList[i].GetComponent<SpriteRenderer>().sprite = lampOff;
+                if (lampList[i] == null)
+                {
+                    lampList.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    if (lampList[i].transform.GetChild(0).TryGetComponent<SpriteRenderer>(out sp))
+                    {
+                        sp.sprite = lampOff;
+                    }
+                }
             }
         }
 
-        private IEnumerator shakeManhole(Transform manhole)
+        /*private IEnumerator shakeManhole(Transform manhole)
         {
             float angle = 60f;
             int i = 0, delta = 30;
@@ -81,6 +123,6 @@ namespace Stage_2
 
             manhole.rotation = Quaternion.Euler(0, 0, 0);
             yield break;
-        }
+        }*/
     }
 }
