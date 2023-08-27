@@ -14,10 +14,11 @@ namespace Stage_2
 
         [SerializeField] Type type;
         [SerializeField] float width;
+        [SerializeField] bool doNotCopyThisObject;
 
+        bool isCopied;
         RectTransform rectTransform;
         float speed;
-        bool isCopied;
         Vector3 v;
 
         void Awake()
@@ -42,8 +43,8 @@ namespace Stage_2
         void FixedUpdate()
         {
             transform.position += -v * Time.deltaTime;
-            if (!isCopied && transform.position.x < 0) copy();
-            if (transform.position.x < -15f) Destroy(gameObject);
+            if (!doNotCopyThisObject && !isCopied && transform.position.x < 0) copy();
+            if (transform.position.x < -width * 1.5f) Destroy(gameObject);
         }
 
         private void copy()

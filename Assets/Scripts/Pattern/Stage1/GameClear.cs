@@ -38,25 +38,30 @@ public class GameClear : MonoBehaviour
     public static bool clear;
     private int deathcount;
     private bool S_Rank_True;
+    EventManager eventManager;
     
 
     void Start()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.clearEvent += Clear;
         clear = false;
         Collider = gameObject.GetComponent<CircleCollider2D>();
         PuppyTransform = gameObject.transform.position;
         Puppy = gameObject.GetComponent<SpriteRenderer>();
         CorgiTransform = corgi.transform.position;
     }
-    public void CommingOutFunc(float WaitTime, float StartTime)
+    /*public void CommingOutFunc(float WaitTime, float StartTime)*/
+    public void CommingOutFunc()
     {
-        StartCoroutine(CommingOut(WaitTime, StartTime));
+        StartCoroutine(CommingOut());
     }
-    IEnumerator CommingOut(float WaitTime, float StartTime)
+    /*IEnumerator CommingOut(float WaitTime, float StartTime)*/
+    IEnumerator CommingOut()
     {
         float speed = 0.1f;
         //노래 끝나고 3초 후 퍼피 등장
-        yield return new WaitForSeconds(WaitTime - StartTime + 3f);
+        /*yield return new WaitForSeconds(WaitTime - StartTime + 3f);*/
         while(gameObject.transform.position.x > 3.5f)
         {
             gameObject.transform.position -= new Vector3(speed, 0, 0);
@@ -131,10 +136,10 @@ public class GameClear : MonoBehaviour
     }
 
 
-    void OnTriggerEnter2D(Collider2D other)
+    /*void OnTriggerEnter2D(Collider2D other)
     {
         Clear();
-    }
+    }*/
     void Clear()
     {
         S_Rank_True = GameObject.Find("corgi").GetComponent<Player>().S_Rank_True;

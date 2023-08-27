@@ -9,6 +9,8 @@ using UnityEngine.U2D.Animation;
 using static EventManager.PlayerEvent;
 using static UnityEngine.GraphicsBuffer;
 
+using SceneData;
+
 public class Player : MonoBehaviour
 {
     enum PlayerAction
@@ -67,7 +69,7 @@ public class Player : MonoBehaviour
     float headCorrectFactor;
     [HideInInspector] public float deathCount;
     [HideInInspector] public bool S_Rank_True;
-    Vector3 velocity;
+    Vector3 velocity, currentPosition;
     Coroutine dashCoroutine, dashCooldownCoroutine, shootCooldownCoroutine, invincibilityCoroutine;
 
     WaitForSeconds invincibleDelay, dashDelay, dashCooldownDelay, shootCooldownDelay;
@@ -108,6 +110,7 @@ public class Player : MonoBehaviour
         anim.SetInteger("JumpCount", 0);
 
         eventManager.playerHitEvent += playerHitEvent;
+        eventManager.clearEvent += clearEvent;
         eventManager.deathEvent += deathEvent;
         eventManager.reviveEvent += reviveEvent;
         eventManager.playerEvent.dashEvent += dashEvent;
@@ -171,6 +174,7 @@ public class Player : MonoBehaviour
     {
         if (!isAlive) return;
         velocity = rig2D.velocity;
+        currentPosition = transform.position;
         flipBody();
         move();
     }
@@ -186,6 +190,7 @@ public class Player : MonoBehaviour
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
             rig2D.velocity = velocity;
+            transform.position = currentPosition;
             if (!isCollisionVisibleOnTheScreen(c)) return;
 
             if (dashCoroutine != null) evade(c.collider);
@@ -409,8 +414,8 @@ public class Player : MonoBehaviour
         }
         else
         {
-            Debug.Log("게임오버 씬이 열렸습니다.");
-            SceneManager.LoadScene("GameOver", LoadSceneMode.Additive);
+            Debug.Log("load gameover scene");
+            SceneManager.LoadScene(SceneInfo.getSceneName(SceneName.GAMEOVER), LoadSceneMode.Single);
         }
     }
 
@@ -468,8 +473,7 @@ public class Player : MonoBehaviour
     private bool isCollisionVisibleOnTheScreen(Collision2D c)
     {
         Vector2 point = c.GetContact(0).point;
-        LayerMask layerMask = -1;
-        layerMask &= ~LayerMask.GetMask("Player");
+        LayerMask layerMask = LayerMask.GetMask("Ground") | LayerMask.GetMask("Obstacle");
         RaycastHit2D[] hit = Physics2D.RaycastAll(point, Vector2.zero, 0, layerMask);
         SpriteRenderer sp = null, tmp = null;
 
@@ -482,7 +486,6 @@ public class Player : MonoBehaviour
                     sp = tmp;
             }
         }
-        
         if (c != null && sp != null && c.transform.Equals(sp.transform))
             return true;
         return false;
@@ -491,11 +494,10 @@ public class Player : MonoBehaviour
     private ref SpriteRenderer getBiggerSortingOrder(ref SpriteRenderer s1, ref SpriteRenderer s2)
     {
         int s1Layer = s1.gameObject.layer, s2Layer = s2.gameObject.layer, s1SortingOrder = s1.sortingOrder, s2SortingOrder = s2.sortingOrder;
-        
-        if (s1Layer < s2Layer)
-            return ref s2;
-        else if (s1Layer > s2Layer)
+        if (LayerMask.LayerToName(s1Layer).Equals("Ground"))
             return ref s1;
+        else if (LayerMask.LayerToName(s2Layer).Equals("Ground"))
+            return ref s2;
 
         if (s1SortingOrder < s2SortingOrder)
             return ref s2;
@@ -503,5 +505,10 @@ public class Player : MonoBehaviour
             return ref s1;
 
         return ref s1;
+    }
+
+    private void clearEvent()
+    {
+        /* 이벤트를 정의해주세요 */
     }
 }

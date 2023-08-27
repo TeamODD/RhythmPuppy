@@ -8,6 +8,7 @@ using Patterns;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static EventManager;
 
 namespace Stage_2
 {
@@ -64,18 +65,18 @@ namespace Stage_2
 
             int i = 0;
             await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i++]));
-            eventManager.lampOffEvent();
+            eventManager.isLampOn = false;
             while (i < startDelay.Length)
             {
                 await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i] - startDelay[i - 1]));
                 i++;
-                eventManager.lampOnEvent();
+                eventManager.isLampOn = true;
                 await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i] - startDelay[i - 1]));
                 i++;
-                eventManager.lampOffEvent();
+                eventManager.isLampOn = false;
             }
             await UniTask.Delay(System.TimeSpan.FromSeconds(duration));
-            eventManager.lampOnEvent();
+            eventManager.isLampOn = true;
         }
 
         public void deathEvent()
