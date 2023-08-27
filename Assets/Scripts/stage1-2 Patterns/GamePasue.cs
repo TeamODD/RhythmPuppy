@@ -7,6 +7,8 @@ public class GamePasue : MonoBehaviour
 {
     private bool isPaused = false;
     public AudioSource stage1_2BGM;
+    [SerializeField]
+    GameObject EventSystem;
 
     private void Start()
     {
@@ -39,11 +41,12 @@ public class GamePasue : MonoBehaviour
         Time.timeScale = 0f; // 시간 경과를 멈춥니다.
         isPaused = true;
 
+        EventSystem.SetActive(false);
+
         // 음악을 일시정지합니다.
         if (stage1_2BGM != null && stage1_2BGM.isPlaying)
         {
             stage1_2BGM.Pause();
-            
         }
 
         // Option_Stage 씬을 로드합니다.
@@ -56,6 +59,8 @@ public class GamePasue : MonoBehaviour
     {
         Time.timeScale = 1f; // 시간 경과를 정상적으로 진행합니다.
         isPaused = false;
+
+        EventSystem.SetActive(true);
 
         // 음악을 다시 재생합니다.
         if (stage1_2BGM != null && !stage1_2BGM.isPlaying)

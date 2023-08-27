@@ -159,6 +159,11 @@ public class Player : MonoBehaviour
         {
             hitbox.enabled = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.F1) || Input.GetKeyDown(KeyCode.F12))
+        {
+
+        }
     }
 
     void FixedUpdate()
