@@ -11,9 +11,12 @@ public class Pattern2_a : MonoBehaviour
     [SerializeField]
     private float RotateSpeed;
     private float time;
+    EventManager eventManager;
 
     void Start()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += deathEvent;
         rb = gameObject.GetComponent<Rigidbody2D>();
         time = 0;
         Destroy(gameObject, 4.2f);
@@ -31,5 +34,11 @@ public class Pattern2_a : MonoBehaviour
             gameObject.transform.position += new Vector3(power * -1.3f, 0, 0) * Time.deltaTime;
             //gameObject.transform.Rotate(0, 0, Time.deltaTime * RotateSpeed, Space.Self);
         }
+    }
+
+    private void deathEvent()
+    {
+        eventManager.deathEvent -= deathEvent;
+        Destroy(gameObject);
     }
 }

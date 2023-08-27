@@ -1,8 +1,10 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
+using static EventManager;
 
 public class Pattern999 : MonoBehaviour
 {
@@ -13,8 +15,14 @@ public class Pattern999 : MonoBehaviour
     [SerializeField]
     private float squirrelSpeed = 4f;
 
+    EventManager eventManager;
+    List<GameObject> objects;
+
     private void OnEnable()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += deathEvent;
+        objects = new List<GameObject>();
         StartCoroutine(SpawnFlyingSquirrels());
     }
 
@@ -23,37 +31,43 @@ public class Pattern999 : MonoBehaviour
         StopCoroutine(SpawnFlyingSquirrels());
     }
 
+    private void OnDestroy()
+    {
+        eventManager.deathEvent -= deathEvent;
+    }
+
     private IEnumerator SpawnFlyingSquirrels()
     {
-        // ³¯´Ù¶÷Áã°¡ ½ÃÀÛÇÏ´Â À§Ä¡¸¦ ·£´ýÀ¸·Î ¼±ÅÃÇÕ´Ï´Ù.
+        // ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½ã°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
         float xPos;
         float yPos = 4.293f;
 
-        if (Random.Range(0, 2) == 0) // ¿ÞÂÊ À§¿¡¼­ ½ÃÀÛ
+        if (Random.Range(0, 2) == 0) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             xPos = -8.16f;
             
-        else // ¿À¸¥ÂÊ À§¿¡¼­ ½ÃÀÛ
+        else // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             xPos = 8.16f;
 
         Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
+        objects.Add(newWarning);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
 
         float scaleX = newWarning.transform.localScale.x;
         float scaleY = newWarning.transform.localScale.y;
         float scaleZ = newWarning.transform.localScale.z;
-        if (xPos == -8.16f) // ¿ÞÂÊ À§¿¡¼­ ½ÃÀÛ
+        if (xPos == -8.16f) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
             newWarning.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
         }
 
-        // °æ°í ¿ÀºêÁ§Æ®°¡ 0.5ÃÊ¿¡ °ÉÃÄ¼­ Åõ¸íÇØÁöµµ·Ï ¾ËÆÄ°ª Á¶Á¤
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ 0.5ï¿½Ê¿ï¿½ ï¿½ï¿½ï¿½Ä¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½
         Color originalColor = warningRenderer.color;
         Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
 
-        float totalTime = 0.5f; // ÀüÃ¼ ½Ã°£ (0.5ÃÊ)
-        float fadeInDuration = 0.3f; // 0.3ÃÊ µ¿¾ÈÀº ¿ÏÀüÈ÷ ºÒÅõ¸íÇÏ°Ô À¯Áö
+        float totalTime = 0.5f; // ï¿½ï¿½Ã¼ ï¿½Ã°ï¿½ (0.5ï¿½ï¿½)
+        float fadeInDuration = 0.3f; // 0.3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         float elapsedTime = 0f;
 
@@ -62,31 +76,33 @@ public class Pattern999 : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3ÃÊ µ¿¾ÈÀº ¿ÏÀüÈ÷ ºÒÅõ¸íÇÏ°Ô À¯Áö
+            // 0.3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (elapsedTime <= fadeInDuration)
             {
                 warningRenderer.color = originalColor;
             }
-            // ±× ÀÌÈÄ 0.2ÃÊ µ¿¾È¿¡´Â ºü¸£°Ô Åõ¸íÇØÁöµµ·Ï ¾ËÆÄ°ª Á¶Á¤
-            else //0.3ÃÊ°¡ Áö³²
+            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 0.2ï¿½ï¿½ ï¿½ï¿½ï¿½È¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½
+            else //0.3ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
             {
-                float fadeOutDuration = totalTime - fadeInDuration; // Åõ¸íÇØÁö´Â ½Ã°£ (0.2ÃÊ)
+                float fadeOutDuration = totalTime - fadeInDuration; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ (0.2ï¿½ï¿½)
                 warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
             }
 
             yield return null;
         }
 
-        // °æ°í ¿ÀºêÁ§Æ® Á¦°Å
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+        objects.Remove(newWarning);
         Destroy(newWarning);
 
         Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);
 
-        // ´ë°¢¼± ¹æÇâÀ» ¼³Á¤ÇÕ´Ï´Ù.
+        // ï¿½ë°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
         
 
-        // Àå¾Ö¹°À» »ý¼ºÇÏ°í ¼Óµµ¿Í ¹æÇâÀ» ¼³Á¤ÇÕ´Ï´Ù.
+        // ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
         GameObject newSquirrel = Instantiate(flyingSquirrel, spawnPosition, Quaternion.identity);
+        objects.Add(newSquirrel);
         Rigidbody2D squirrelRigidbody = newSquirrel.GetComponent<Rigidbody2D>();
 
         scaleX = newSquirrel.transform.localScale.x;
@@ -94,7 +110,7 @@ public class Pattern999 : MonoBehaviour
         scaleZ = newSquirrel.transform.localScale.z;
 
         Vector2 targetPosition = new Vector2(-9f, 0f);
-        if (xPos == -8.16f) // ¿ÞÂÊ À§¿¡¼­ ½ÃÀÛ
+        if (xPos == -8.16f) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
             newSquirrel.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
             targetPosition = new Vector2(9f, 0f);
@@ -110,9 +126,10 @@ public class Pattern999 : MonoBehaviour
     {
         while (true)
         {
-            // ¸Ê ¹ÛÀ¸·Î ³ª°¥ °æ¿ì ¿ÀºêÁ§Æ®¸¦ ÆÄ±«ÇÕ´Ï´Ù.
+            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½Õ´Ï´ï¿½.
             if (!IsWithinMapBounds(obj.transform.position))
             {
+                objects.Remove(obj);
                 Destroy(obj);
                 Destroy(gameObject);
                 yield break;
@@ -129,5 +146,21 @@ public class Pattern999 : MonoBehaviour
         float maxY = 5f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
+    }
+    async UniTask delayRemoval(GameObject o, float t)
+    {
+        await UniTask.Delay(System.TimeSpan.FromSeconds(t));
+        objects.Remove(o);
+    }
+
+    void deathEvent()
+    {
+        StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 }

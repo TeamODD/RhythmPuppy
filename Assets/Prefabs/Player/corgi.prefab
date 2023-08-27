@@ -419,6 +419,7 @@ MonoBehaviour:
   shootCooltime: 1
   currentHP: 0
   currentStamina: 0
+  deathCount: 0
 --- !u!95 &-2501150029612411199
 Animator:
   serializedVersion: 5

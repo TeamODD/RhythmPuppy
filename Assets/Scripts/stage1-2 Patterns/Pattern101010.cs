@@ -1,5 +1,7 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Pattern101010 : MonoBehaviour
@@ -19,14 +21,25 @@ public class Pattern101010 : MonoBehaviour
     [SerializeField]
     private float splinterInterval;
 
+    EventManager eventManager;
+    List<GameObject> objects;
+
     private void OnEnable()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += deathEvent;
+        objects = new List<GameObject>();
         StartCoroutine(DropChestnuts());
     }
 
     private void OnDisable()
     {
         StopCoroutine(DropChestnuts());
+    }
+
+    private void OnDestroy()
+    {
+        eventManager.deathEvent -= deathEvent;
     }
 
     private IEnumerator DropChestnuts()
@@ -38,6 +51,7 @@ public class Pattern101010 : MonoBehaviour
         // 경고 오브젝트 생성
         Vector3 warningPosition = new Vector3(xPos, 4.327f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
+        objects.Add(newWarning);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
 
@@ -71,16 +85,19 @@ public class Pattern101010 : MonoBehaviour
         }
 
         // 경고 오브젝트 제거
+        objects.Remove(newWarning);
         Destroy(newWarning);
 
         // ChestNut 오브젝트 생성
         GameObject newChestnut = Instantiate(chestnut, chestnutPosition, Quaternion.identity);
+        objects.Add(newChestnut);
         Rigidbody2D chestnutRigidbody = newChestnut.GetComponent<Rigidbody2D>();
         chestnutRigidbody.velocity = Vector2.down * chestnutSpeed;
 
         yield return new WaitForSeconds(0.5f);
 
         ExplodeChestnut(newChestnut.transform.position);
+        objects.Remove(newChestnut);
         Destroy(newChestnut);
         yield return null;
     }
@@ -88,7 +105,9 @@ public class Pattern101010 : MonoBehaviour
     private void ExplodeChestnut(Vector3 position)
     {
         GameObject ChestNutBomb = Instantiate(chestnutbomb, position, Quaternion.identity);
+        delayRemoval(ChestNutBomb, 0.2f).Forget();
         Destroy(ChestNutBomb, 0.2f);
+
 
         for (int i = 0; i < 8; i++)
         {
@@ -118,6 +137,7 @@ public class Pattern101010 : MonoBehaviour
             // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
             if (!IsWithinMapBounds(obj.transform.position))
             {
+                objects.Remove(obj);
                 Destroy(obj);
                 yield break;
             }
@@ -133,5 +153,22 @@ public class Pattern101010 : MonoBehaviour
         float maxY = 5f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
+    }
+
+    async UniTask delayRemoval(GameObject o, float t)
+    {
+        await UniTask.Delay(System.TimeSpan.FromSeconds(t));
+        objects.Remove(o);
+    }
+
+    void deathEvent()
+    {
+        StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 }

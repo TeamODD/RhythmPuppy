@@ -8,9 +8,12 @@ public class Pattern4 : MonoBehaviour
     [SerializeField]
     private float speed;
     public static float xPosition;
+    EventManager eventManager;
 
     void Awake()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += deathEvent;
         xPosition = Random.Range(-8.5f, 8.5f);
     }
     void Start()
@@ -25,5 +28,11 @@ public class Pattern4 : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    void deathEvent()
+    {
+        eventManager.deathEvent -= deathEvent;
+        Destroy(gameObject);
     }
 }

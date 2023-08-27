@@ -12,7 +12,6 @@ public class Warning1_a : MonoBehaviour
         time = 0;
         gameObject.transform.position = new Vector3(9f, yPosition, 0);
         GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, 0);
-
     }
 
     // Update is called once per frame

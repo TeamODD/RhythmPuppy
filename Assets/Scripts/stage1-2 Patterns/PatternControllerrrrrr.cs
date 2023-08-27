@@ -2,9 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static EventManager;
 
 public class PatternControllerrrrrr : MonoBehaviour
 {
+    [SerializeField]
+    AudioClip music;
+    [SerializeField]
+    float[] savePointTime;
     [SerializeField]
     private GameObject pattern6;
     [SerializeField]
@@ -22,7 +27,7 @@ public class PatternControllerrrrrr : MonoBehaviour
     [SerializeField]
     private GameObject pattern10;
     [SerializeField]
-    private GameObject gameprogress;
+    /*private GameObject gameprogress;*/
 
     private List<float> pattern6Timings = new List<float>
     {
@@ -87,14 +92,35 @@ public class PatternControllerrrrrr : MonoBehaviour
     };
 
     private float startTime;
-    private float savePointTime;
+    /*private float savePointTime;*/
+    EventManager eventManager;
+    AudioSource audioSource;
 
     private void Start()
     {
-        Checkingsavepoint();
-        gameprogress.GetComponent<GameProgress>().SettingCheckPoint();
+        eventManager = FindObjectOfType<EventManager>();
+        audioSource = FindObjectOfType<AudioSource>();
+        audioSource.clip = music;
+        eventManager.savePointTime = savePointTime;
+        eventManager.deathEvent += deathEvent;
+        eventManager.gameStartEvent += run;
+        eventManager.reviveEvent += run;
+
+        eventManager.gameStartEvent();
 
         // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
+        pattern6.SetActive(false);
+        pattern7a.SetActive(false);
+        pattern7b.SetActive(false);
+        pattern8a.SetActive(false);
+        pattern8b.SetActive(false);
+        pattern8c.SetActive(false);
+        pattern9.SetActive(false);
+        pattern10.SetActive(false);
+        /*Checkingsavepoint();*/
+        /*gameprogress.GetComponent<GameProgress>().SettingCheckPoint();*/
+
+        /*// 패턴1, 패턴2, 패턴3 스크립트를 비활성화
         pattern6.SetActive(false);
         pattern7a.SetActive(false);
         pattern7b.SetActive(false);
@@ -112,7 +138,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         StartCoroutine(RunPattern8b());
         StartCoroutine(RunPattern8c());
         StartCoroutine(RunPattern9());
-        StartCoroutine(RunPattern10());
+        StartCoroutine(RunPattern10());*/
         // 추가 패턴 실행 메서드들도 필요에 따라 추가
     }
 
@@ -145,7 +171,7 @@ public class PatternControllerrrrrr : MonoBehaviour
     }
     */
 
-    private void OnDisable()
+    /*private void OnDisable()
     {
         StopCoroutine(RunPattern6());
         StopCoroutine(RunPattern7a());
@@ -155,9 +181,24 @@ public class PatternControllerrrrrr : MonoBehaviour
         StopCoroutine(RunPattern8c());
         StopCoroutine(RunPattern9());
         StopCoroutine(RunPattern10());
+    }*/
+    void run()
+    {
+        startTime = audioSource.time;
+
+        // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
+
+        StartCoroutine(RunPattern6());
+        StartCoroutine(RunPattern7a());
+        StartCoroutine(RunPattern7b());
+        StartCoroutine(RunPattern8a());
+        StartCoroutine(RunPattern8b());
+        StartCoroutine(RunPattern8c());
+        StartCoroutine(RunPattern9());
+        StartCoroutine(RunPattern10());
     }
 
-    private void Checkingsavepoint() //현재 GameProgress에서 음악 구간과 진행도 바는 설정해주는 상황
+    /*private void Checkingsavepoint() //현재 GameProgress에서 음악 구간과 진행도 바는 설정해주는 상황
     {
         float  checkpointTime = PlayerPrefs.GetFloat("checkpointTime");
        
@@ -177,19 +218,19 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             startTime = Time.time - 119.0008f;
         }
-    }
+    }*/
 
-    private float GetElapsedTime()
+    /*private float GetElapsedTime()
     {
         float elapsedTime = Time.time - startTime;
         float roundedElapsedTime = Mathf.Round(elapsedTime * 10f) / 10f; // 소수 첫째 자리까지 반올림
         return roundedElapsedTime;
-    }
+    }*/
 
-    private void Update()
+    /*private void Update()
     {
         //Debug.Log("GetElapsedTime : " + GetElapsedTime());
-    }
+    }*/
 
     private IEnumerator RunPattern6()
     {
@@ -197,21 +238,22 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern6Timings[i];
 
-            if (timing < GetElapsedTime())
+            /*if (timing < GetElapsedTime())*/
+            if (timing < startTime)
             {
                 continue;
             }
 
-            while (GetElapsedTime() != timing)
+            /*while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
-            }
+            }*/
+            yield return new WaitForSeconds(timing - audioSource.time);
             // 패턴을 복제하고 활성화
             GameObject newPattern6 = Instantiate(pattern6, pattern6.transform.position, pattern6.transform.rotation);
             newPattern6.SetActive(true);
         }
-        yield return null;
     }
 
     private IEnumerator RunPattern7a()
@@ -220,21 +262,22 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7aTimings[i];
 
-            if (timing < GetElapsedTime())
+            /*if (timing < GetElapsedTime())*/
+            if (timing < startTime)
             {
                 continue;
             }
 
-            while (GetElapsedTime() != timing)
+            /*while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
-            }
+            }*/
+            yield return new WaitForSeconds(timing - audioSource.time);
             // 패턴을 복제하고 활성화
             GameObject newPattern7a = Instantiate(pattern7a, pattern7a.transform.position, pattern7a.transform.rotation);
             newPattern7a.SetActive(true);
         }
-        yield return null;
     }
     private IEnumerator RunPattern7b()
     {
@@ -242,21 +285,22 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern7bTimings[i];
 
-            if (timing < GetElapsedTime())  
+            /*if (timing < GetElapsedTime())  */
+            if (timing < startTime)
             {
                 continue;
             }
 
-            while (GetElapsedTime() != timing)
+            /*while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
-            }
+            }*/
+            yield return new WaitForSeconds(timing - audioSource.time);
             // 패턴을 복제하고 활성화
             GameObject newPattern7b = Instantiate(pattern7b, pattern7b.transform.position, pattern7b.transform.rotation);
             newPattern7b.SetActive(true);
         }
-        yield return null;
     }
 
     private IEnumerator RunPattern8a()
@@ -265,21 +309,22 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8aTimings[i];
 
-            if (timing < GetElapsedTime())
+            /*if (timing < GetElapsedTime())*/
+            if ( timing < startTime)
             {
                 continue;
             }
 
-            while (GetElapsedTime() != timing)
+            /*while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
-            }
+            }*/
+            yield return new WaitForSeconds(timing - audioSource.time);
             // 패턴을 복제하고 활성화
             GameObject newPattern8a = Instantiate(pattern8a, pattern8a.transform.position, pattern8a.transform.rotation);
             newPattern8a.SetActive(true);
         }
-        yield return null;
     }
 
     private IEnumerator RunPattern8b()
@@ -288,21 +333,22 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8bTimings[i];
 
-            if (timing < GetElapsedTime())
+            /*if (timing < GetElapsedTime())*/
+            if ( timing < startTime)
             {
                 continue;
             }
 
-            while (GetElapsedTime() != timing)
+            /*while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
-            }
+            }*/
+            yield return new WaitForSeconds(timing - audioSource.time);
             // 패턴을 복제하고 활성화
             GameObject newPattern8b = Instantiate(pattern8b, pattern8b.transform.position, pattern8b.transform.rotation);
             newPattern8b.SetActive(true);
         }
-        yield return null;
     }
 
     private IEnumerator RunPattern8c()
@@ -311,21 +357,22 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8cTimings[i];
 
-            if (timing < GetElapsedTime())
+            /*if (timing < GetElapsedTime())*/
+            if (timing < startTime)
             {
                 continue;
             }
 
-            while (GetElapsedTime() != timing)
-            {
-                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                yield return null;
-            }
+            /*            while (GetElapsedTime() != timing)
+                        {
+                            // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                            yield return null;
+                        }*/
+            yield return new WaitForSeconds(timing - audioSource.time);
             // 패턴을 복제하고 활성화
             GameObject newPattern8c = Instantiate(pattern8c, pattern8c.transform.position, pattern8c.transform.rotation);
             newPattern8c.SetActive(true);
         }
-        yield return null;
     }
 
     private IEnumerator RunPattern9()
@@ -334,21 +381,22 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern9Timings[i];
 
-            if (timing < GetElapsedTime())
+            /*if (timing < GetElapsedTime())*/
+            if (timing < startTime)
             {
                 continue;
             }
 
-            while (GetElapsedTime() != timing)
+            /*while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
-            }
+            }*/
+            yield return new WaitForSeconds(timing - audioSource.time);
             // 패턴을 복제하고 활성화
             GameObject newPattern9 = Instantiate(pattern9, pattern9.transform.position, pattern9.transform.rotation);
             newPattern9.SetActive(true);
         }
-        yield return null;
     }
 
     private IEnumerator RunPattern10()
@@ -357,20 +405,34 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern10Timings[i];
 
-            if (timing < GetElapsedTime())
+            /*if (timing < GetElapsedTime())*/
+            if (timing < startTime)
             {
                 continue;
             }
 
-            while (GetElapsedTime() != timing)
+            /*while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
                 yield return null;
-            }
+            }*/
+            yield return new WaitForSeconds(timing - audioSource.time);
             // 패턴을 복제하고 활성화
             GameObject newPattern10 = Instantiate(pattern10, pattern10.transform.position, pattern10.transform.rotation);
             newPattern10.SetActive(true);
         }
-        yield return null;
+    }
+
+    void deathEvent()
+    {
+        /*StopCoroutine(RunPattern6());
+        StopCoroutine(RunPattern7a());
+        StopCoroutine(RunPattern7b());
+        StopCoroutine(RunPattern8a());
+        StopCoroutine(RunPattern8b());
+        StopCoroutine(RunPattern8c());
+        StopCoroutine(RunPattern9());
+        StopCoroutine(RunPattern10());*/
+        StopAllCoroutines();
     }
 }

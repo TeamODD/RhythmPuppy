@@ -9,11 +9,14 @@ public class Pattern1_a : MonoBehaviour
     [SerializeField]
     private int dir = -1;
 
+    EventManager eventManager;
     private float time;
     public static float yPosition;
 
     void Awake()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += deathEvent;
         time = 0;
         yPosition = Random.Range(-2f, 4.5f);
     }
@@ -33,8 +36,14 @@ public class Pattern1_a : MonoBehaviour
         }
         
     }
+
+    private void deathEvent()
+    {
+        eventManager.deathEvent -= deathEvent;
+        Destroy(gameObject);
+    }
     //재욱 형님 코드 가지고 온 거(플레이어 충돌 코드 같길래 붙여넣기만 함, 수정 안 함)
-    void OnCollisionEnter2D(Collision2D col)
+    /*void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Player"))
         {
@@ -42,5 +51,5 @@ public class Pattern1_a : MonoBehaviour
             Destroy(gameObject);
         }
         Debug.Log("hi");
-    }
+    }*/
 }
