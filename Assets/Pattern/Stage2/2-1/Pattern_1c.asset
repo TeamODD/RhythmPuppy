@@ -15,96 +15,160 @@ MonoBehaviour:
   prefab: {fileID: 1273078494639283698, guid: 40fd3b78aee8b6b44a6645f80d224056, type: 3}
   timeline:
   - startAt: 16.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 20.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 22.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 24.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 28.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 30.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 48.2
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 52.2
+    endAt: 0
+    duration: 0
+    repeatNo: 3
+    repeatDelayTime: 2
     detail:
       endAt: 0
       duration: 0
       repeatNo: 3
       repeatDelayTime: 2
   - startAt: 60.2
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 62.2
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 64.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 68.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 70.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 72.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 76.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 78.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0

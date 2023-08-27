@@ -1,59 +1,65 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Patterns;
 using UnityEngine;
 
 namespace Stage_2
 {
-    public class Pattern_6 : MonoBehaviour
+    [Serializable]
+    public struct Pattern_6 
     {
-        [SerializeField] GameObject cat;
+        public PatternPlaylist patternPlaylist;
+        public GameObject cat;
 
-        GameObject player;
-        PatternManager patternManager;
-        Transform obstacleManager;
+        EventManager eventManager;
+        Transform parent;
+        Camera mainCamera;
+        CancellationTokenSource cancel;
+        List<GameObject> objectList;
 
-        void Start()
+        public void init(Transform parent, EventManager eventManager, Camera mainCamera)
         {
-            player = GameObject.FindGameObjectWithTag("Player");
-            patternManager = transform.parent.GetComponent<PatternManager>();
-            obstacleManager = patternManager.obstacleManager;
-            StartCoroutine(runPattern());
+            this.parent = parent;
+            this.eventManager = eventManager;
+            this.mainCamera = mainCamera;
+            this.cancel = new CancellationTokenSource();
+            this.objectList = new List<GameObject>();
+            patternPlaylist.init(action);
+            patternPlaylist.sortTimeline();
+
+            eventManager.deathEvent += deathEvent;
         }
 
-        private IEnumerator runPattern()
+        public void action(PatternPlaylist patternPlaylist, Timeline timeline)
         {
-            patternManager.eventManager.playerEvent.markActivationEvent();
-            yield return new WaitForSeconds(1f);
-            patternManager.eventManager.playerEvent.markInactivationEvent();
+            runPattern().Forget();
+        }
 
-            float r = Random.Range(-8f, 8f);
-            GameObject catObject = Instantiate(cat);
-            catObject.transform.SetParent(obstacleManager, false);
+        private async UniTask runPattern()
+        {
+            eventManager.playerEvent.markActivationEvent();
+            await UniTask.Delay(System.TimeSpan.FromSeconds(1));
+            eventManager.playerEvent.markInactivationEvent();
+
+            float r = UnityEngine.Random.Range(-8f, 8f);
+            GameObject catObject = MonoBehaviour.Instantiate(cat);
+            catObject.transform.SetParent(parent, false);
             catObject.transform.position = new Vector3(r, 5, 0);
-            /*Vector3 dir = (player.transform.position - catObject.transform.position);
-            *//*float rot = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;*/
-            /*catObject.transform.rotation = Quaternion.Euler(0, 0, rot);*//*
-            catObject.GetComponent<Obstacles.Cat_2>().setDir(dir);*/
             catObject.SetActive(true);
-
-            Destroy(gameObject);
-            yield break;
+            objectList.Add(catObject);
         }
 
-        /*private void warn(bool dir)
+        public void deathEvent()
         {
-            Vector2 pos = new Vector2(0, -3.6f + 0.2f);
-            if (dir)
-                pos.x = 10f;
-            else
-                pos.x = -10f;
-            pos = Camera.main.WorldToScreenPoint(pos);
-
-            GameObject o = Instantiate(patternManager.warningBox);
-            o.transform.SetParent(patternManager.overlayCanvas);
-            o.transform.position = pos;
-            o.transform.localScale = new Vector3(700, 150, 0);
-            o.SetActive(true);
-        }*/
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                MonoBehaviour.Destroy(objectList[i]);
+            }
+            objectList.Clear();
+            cancel.Cancel();
+        }
     }
 }

@@ -91,6 +91,7 @@ public class Player : MonoBehaviour
         invincibleDelay = new WaitForSeconds(invincibleDuration);
         dashDelay = new WaitForSeconds(dashDuration);
         dashCooldownDelay = new WaitForSeconds(dashCooltime);
+        shootCooldownDelay = new WaitForSeconds(shootCooltime);
 
         onFired = false;
         isAlive = true;

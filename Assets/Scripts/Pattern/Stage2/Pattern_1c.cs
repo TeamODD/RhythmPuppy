@@ -1,79 +1,81 @@
-using System.Collections;
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using Patterns;
+using Unity.VisualScripting;
 using UnityEngine;
-
-using TimelineManager;
 
 namespace Stage_2
 {
-    public class Pattern_1c : MonoBehaviour
+    [Serializable]
+    public struct Pattern_1c 
     {
-        [SerializeField] GameObject cat;
+        public PatternPlaylist patternPlaylist;
+        public GameObject cat;
 
-        PatternManager patternManager;
-        List<GameObject> catObjectList;
-        WaitForSeconds warnDelay;
+        EventManager eventManager;
+        Transform parent;
+        Camera mainCamera;
+        CancellationTokenSource cancel;
+        List<GameObject> objectList;
 
-        void Awake()
+        public void init(Transform parent, EventManager eventManager, Camera mainCamera)
         {
-            patternManager = transform.parent.GetComponent<PatternManager>();
-            catObjectList = new List<GameObject>();
-            warnDelay = new WaitForSeconds(1f);
+            this.parent = parent;
+            this.eventManager = eventManager;
+            this.mainCamera = mainCamera;
+            this.cancel = new CancellationTokenSource();
+            this.objectList = new List<GameObject>();
+            patternPlaylist.init(action);
+            patternPlaylist.sortTimeline();
 
-            StartCoroutine(runPattern());
+            eventManager.deathEvent += deathEvent;
         }
 
-        void Update()
+        public void action(PatternPlaylist patternPlaylist, Timeline timeline)
         {
-            if (catObjectList.Count <= 0) return;
-
-            for (int i = 0; i < catObjectList.Count; i++)
-            {
-                if (catObjectList[i] != null) return;
-            }
-            Destroy(gameObject);
+            runPattern().Forget();
         }
-
-        private IEnumerator createObjects()
+        private async UniTask createObjects()
         {
-            float r = Random.Range(-8f, 8f);
+            float r = UnityEngine.Random.Range(-8f, 8f);
 
             warn(r);
-            yield return warnDelay;
+            await UniTask.Delay(System.TimeSpan.FromSeconds(1));
             createCat(r);
         }
 
-        private GameObject createCat(float x)
+        private void createCat(float x)
         {
-            GameObject o = Instantiate(cat);
-            o.transform.SetParent(patternManager.obstacleManager);
+            GameObject o = MonoBehaviour.Instantiate(cat);
+            o.transform.SetParent(parent);
             o.transform.position = new Vector3(x, o.transform.position.y, 0);
             o.SetActive(true);
-            catObjectList.Add(o);
-            return o;
+            objectList.Add(o);
         }
 
-        private IEnumerator runPattern()
+        private async UniTask runPattern()
         {
-            StartCoroutine(createObjects());
-            yield return new WaitForSeconds(0.5f);
-            StartCoroutine(createObjects());
-
-            for (int i = 0; i < catObjectList.Count; i++)
-            {
-                if (catObjectList[i] != null)
-                {
-                    yield return new WaitForEndOfFrame();
-                    i = -1;
-                }
-            }
-            yield break;
+            createObjects().Forget();
+            await UniTask.Delay(System.TimeSpan.FromSeconds(0.5f));
+            createObjects().Forget();
         }
 
         private void warn(float x)
         {
-            Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, 0));
-            patternManager.eventManager.warnWithBox(v, new Vector3(300, 1080, 0));
+            Vector2 v = mainCamera.WorldToScreenPoint(new Vector2(x, 0));
+            eventManager.warnWithBox(v, new Vector3(300, 1080, 0));
+        }
+
+        public void deathEvent()
+        {
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                MonoBehaviour.Destroy(objectList[i]);
+            }
+            objectList.Clear();
+            cancel.Cancel();
         }
     }
 }

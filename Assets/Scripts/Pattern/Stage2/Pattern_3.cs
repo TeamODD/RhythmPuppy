@@ -1,40 +1,61 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Patterns;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Stage_2
 {
-    public class Pattern_3 : MonoBehaviour
+    [Serializable]
+    public struct Pattern_3
     {
-        [SerializeField]
-        float[] startDelay;
+        public PatternPlaylist patternPlaylist;
+        [SerializeField] float[] startDelay;
         [SerializeField] float duration;
 
         EventManager eventManager;
+        Transform parent;
+        Camera mainCamera;
+        CancellationTokenSource cancel;
 
-        void Start()
+        public void init(Transform parent, EventManager eventManager, Camera mainCamera)
+        { 
+            this.parent = parent;
+            this.eventManager = eventManager;
+            this.mainCamera = mainCamera;
+            this.cancel = new CancellationTokenSource();
+            patternPlaylist.init(action);
+            patternPlaylist.sortTimeline();
+
+            eventManager.deathEvent += deathEvent;
+        }
+
+        public void action(PatternPlaylist patternPlaylist, Timeline timeline)
         {
-            PatternManager patternManager = transform.parent.GetComponent<PatternManager>();
-            eventManager = FindObjectOfType<EventManager>();
+            if (!timeline.duration.Equals(0))
+                setDuration(timeline.duration - startDelay[startDelay.Length - 1]);
+            else if (!timeline.endAt.Equals(0))
+                setDuration(timeline.startAt, timeline.endAt);
 
-            StartCoroutine(runPattern());
+            runPattern(timeline).Forget();
         }
 
         public void setDuration(float duration)
         {
-            this.duration = duration - startDelay.Sum();
+            this.duration = duration - startDelay[startDelay.Length - 1];
         }
 
         public void setDuration(float start, float end)
         {
-            this.duration = end - start;
+            this.duration = end - start - startDelay[startDelay.Length - 1];
         }
 
-        private IEnumerator runPattern()
+        private async UniTask runPattern(Timeline timeline)
         {
             if (startDelay.Length % 2 == 0)
             {
@@ -42,23 +63,24 @@ namespace Stage_2
             }
 
             int i = 0;
-            yield return new WaitForSeconds(startDelay[i++]);
+            await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i++]));
             eventManager.lampOffEvent();
             while (i < startDelay.Length)
             {
-                yield return new WaitForSeconds(startDelay[i] - startDelay[i - 1]);
+                await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i] - startDelay[i - 1]));
                 i++;
                 eventManager.lampOnEvent();
-                yield return new WaitForSeconds(startDelay[i] - startDelay[i - 1]);
+                await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i] - startDelay[i - 1]));
                 i++;
                 eventManager.lampOffEvent();
             }
-            yield return new WaitForSeconds(duration);
+            await UniTask.Delay(System.TimeSpan.FromSeconds(duration));
             eventManager.lampOnEvent();
+        }
 
-            yield return new WaitForSeconds(1);
-            Destroy(gameObject);
-            yield break;
+        public void deathEvent()
+        {
+            cancel.Cancel();
         }
     }
 }

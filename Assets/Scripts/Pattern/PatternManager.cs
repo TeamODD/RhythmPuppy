@@ -2,23 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using TimelineManager;
+using Patterns;
 using Cysharp.Threading.Tasks;
 using Stage_2;
+using static EventManager;
+using UnityEngine.SceneManagement;
 
 public class PatternManager : MonoBehaviour
 {
-    [SerializeField] AudioClip BGM;
-    [SerializeField] float[] savePointTime;
-    [SerializeField] PatternPlaylist[] playlist;
+    private enum StageType
+    {
+        Tutorial,
+        Stage_1_1,
+        Stage_1_2,
+        Stage_2_1,
+        Stage_2_2,
+    }
+
+    [SerializeField] StageType stageType;
+    [SerializeField] Stage_2_1 stage_2_1;
     [SerializeField] float startDelayTime;
 
     [HideInInspector] 
     public EventManager eventManager;
-    [HideInInspector]
-    public Transform obstacleManager;
+    PatternManager patternManager;
     AudioSource audioSource;
-    Coroutine[] playlistCoroutine;
+    List<Coroutine> coroutineList;
 
     void Awake()
     {
@@ -28,66 +37,67 @@ public class PatternManager : MonoBehaviour
     private async UniTask init()
     {
         eventManager = FindObjectOfType<EventManager>();
+        patternManager = GetComponent<PatternManager>();
         audioSource = FindObjectOfType<AudioSource>();
-        obstacleManager = GameObject.FindGameObjectWithTag("ObstacleManager").transform;
+        coroutineList = new List<Coroutine>();
+        setStageInfo();
 
-        if (audioSource.clip == null)
-            audioSource.clip = BGM;
-        eventManager.savePointTime = savePointTime;
 
+        eventManager.gameStartEvent += gameStartEvent;
         eventManager.deathEvent += deathEvent;
-        eventManager.reviveEvent += reviveEvent;
-
-        SortTimelineArraysByTime();
+        eventManager.reviveEvent += gameStartEvent;
 
         await UniTask.Delay(System.TimeSpan.FromSeconds(startDelayTime));
-        run();
+        eventManager.gameStartEvent();
+    }
+
+    private void setStageInfo()
+    {
+        AudioClip clip = null;
+        switch(stageType)
+        {
+            case StageType.Tutorial:
+                break;
+            case StageType.Stage_1_1:
+                break;
+            case StageType.Stage_1_2:
+                break;
+            case StageType.Stage_2_1:
+                clip = stage_2_1.music;
+                stage_2_1.init(patternManager, eventManager);
+                eventManager.savePointTime = stage_2_1.savePointTime;
+                break;
+            case StageType.Stage_2_2:
+                break;
+        }
+        audioSource.clip = clip;
+    }
+
+    private void gameStartEvent()
+    {
+        switch (stageType)
+        {
+            case StageType.Tutorial:
+                break;
+            case StageType.Stage_1_1:
+                break;
+            case StageType.Stage_1_2:
+                break;
+            case StageType.Stage_2_1:
+                stage_2_1.Run(audioSource.time, out coroutineList);
+                break;
+            case StageType.Stage_2_2:
+                break;
+        }
     }
 
     private void deathEvent()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        int i;
+        for (i = 0; i < coroutineList.Count; i++)
         {
-            Destroy(transform.GetChild(i).gameObject);
+            StopCoroutine(coroutineList[i]);
         }
-
-        for (int i = 0; i < obstacleManager.childCount; i++)
-        {
-            Destroy(obstacleManager.GetChild(i).gameObject);
-        }
-    }
-
-    private void reviveEvent()
-    {
-        run();
-    }
-
-    [ContextMenu("Sort Timeline Arrays by Time")]
-    public void SortTimelineArraysByTime()
-    {
-        for (int i = 0; i < playlist.Length; i++)
-        {
-            playlist[i].sortTimeline();
-        }
-    }
-
-    private void run()
-    {
-        Stage_2_1 s = new Stage_2_1(transform);
-        playlistCoroutine = new Coroutine[playlist.Length];
-        float t = audioSource.time;
-
-        for (int i = 0; i < playlist.Length; i++)
-        {
-            s.setPatternAction(ref playlist[i]);
-            playlistCoroutine[i] = StartCoroutine(playlist[i].Run(t));
-        }
-        playMusic().Forget();
-    }
-
-    private async UniTask playMusic()
-    {
-        await UniTask.Delay(System.TimeSpan.FromSeconds(1));
-        audioSource.Play();
+        coroutineList.Clear();
     }
 }

@@ -1,36 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TimelineManager;
+using Patterns;
 using UnityEngine;
 
-namespace TimelineManager
+namespace Patterns
 {
-    public enum PatternType
-    {
-        pattern1a,
-        pattern1b,
-        pattern1c,
-        pattern1d,
-        pattern2,
-        pattern3,
-        pattern5,
-        pattern6,
-    }
-
+    public delegate void PatternAction(PatternPlaylist patternPlaylist, Timeline timeline);
     [Serializable, CreateAssetMenu(menuName="Create New Pattern Playlist")]
     public class PatternPlaylist : ScriptableObject
     {
         public GameObject prefab;
         [TimelineElementTitle()]
         public Timeline[] timeline;
-        public PatternType type;
 
-        Action<PatternPlaylist, Timeline> PatternAction;
+        PatternAction patternAction;
 
-        public void defineAction(Action<PatternPlaylist, Timeline> action)
+        public void init(PatternAction patternAction)
         {
-            PatternAction = action;
+            this.patternAction += patternAction;
         }
 
         public void sortTimeline()
@@ -56,21 +44,21 @@ namespace TimelineManager
 
             for (; i < timeline.Length; i++)
             {
-                repeat = timeline[i].detail.repeatNo;
+                repeat = timeline[i].repeatNo;
                 delayTime = timeline[i].startAt;
                 if (i == 0) delayTime -= startTime;
-                else delayTime -= timeline[i - 1].startAt + ((j - 1) * timeline[i - 1].detail.repeatDelayTime);
+                else delayTime -= timeline[i - 1].startAt + ((j - 1) * timeline[i - 1].repeatDelayTime);
 
                 if (repeat <= 1)
                 {
                     if (timeline[i].startAt < startTime) continue;
                     delay = new WaitForSeconds(delayTime);
                     yield return delay;
-                    PatternAction(this, timeline[i]);
+                    patternAction(this, timeline[i]);
                 }
                 else
                 {
-                    repeatDelayTime = timeline[i].detail.repeatDelayTime;
+                    repeatDelayTime = timeline[i].repeatDelayTime;
                     repeatDelay = new WaitForSeconds(repeatDelayTime);
                     for (j = 0; j < repeat; j++)
                     {
@@ -85,7 +73,7 @@ namespace TimelineManager
                         {
                             yield return repeatDelay;
                         }
-                        PatternAction(this, timeline[i]);
+                        patternAction(this, timeline[i]);
                     }
                 }
             }

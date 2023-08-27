@@ -15,42 +15,70 @@ MonoBehaviour:
   prefab: {fileID: 1273078494639283698, guid: 82d176c519e13b443b9ae00c018a52e9, type: 3}
   timeline:
   - startAt: 3.4
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 7.4
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 11.4
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 35.5
+    endAt: 0
+    duration: 0
+    repeatNo: 3
+    repeatDelayTime: 4
     detail:
       endAt: 0
       duration: 0
       repeatNo: 3
       repeatDelayTime: 4
   - startAt: 83.4
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 87.4
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0
       repeatNo: 0
       repeatDelayTime: 0
   - startAt: 91.4
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
     detail:
       endAt: 0
       duration: 0

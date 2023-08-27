@@ -1,44 +1,72 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Patterns;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Stage_2
 {
-    public class Pattern_2 : MonoBehaviour
+    [Serializable]
+    public struct Pattern_2
     {
-        [SerializeField] GameObject paw;
+        public PatternPlaylist patternPlaylist;
+        public GameObject paw;
 
-        PatternManager patternManager;
-        WaitForSeconds warnDelay;
+        EventManager eventManager;
+        Transform parent;
+        Camera mainCamera;
+        CancellationTokenSource cancel;
+        List<GameObject> objectList;
 
-        void Start()
+        public void init(Transform parent, EventManager eventManager, Camera mainCamera)
         {
-            patternManager = transform.parent.GetComponent<PatternManager>();
-            warnDelay = new WaitForSeconds(1f);
-            StartCoroutine(runPattern());
+            this.parent = parent;
+            this.eventManager = eventManager;
+            this.mainCamera = mainCamera;
+            this.cancel = new CancellationTokenSource();
+            this.objectList = new List<GameObject>();
+            patternPlaylist.init(action);
+            patternPlaylist.sortTimeline();
+
+            eventManager.deathEvent += deathEvent;
         }
 
-        private IEnumerator runPattern()
+        public void action(PatternPlaylist patternPlaylist, Timeline timeline)
         {
-            float r = Random.Range(-8f, 8f);
+            runPattern().Forget();
+        }
+
+        private async UniTask runPattern()
+        {
+            float r = UnityEngine.Random.Range(-8f, 8f);
 
             warn(r);
+            await UniTask.Delay(System.TimeSpan.FromSeconds(1));
 
-            yield return warnDelay;
-            GameObject paw = Instantiate(this.paw);
+            GameObject paw = MonoBehaviour.Instantiate(this.paw);
             paw.transform.position = new Vector3(r, paw.transform.position.y, paw.transform.position.z);
-            paw.transform.SetParent(patternManager.obstacleManager);
+            paw.transform.SetParent(parent);
             paw.SetActive(true);
-
-            while(paw != null) yield return new WaitForSeconds(0.5f);
-            Destroy(gameObject);
-
-            yield break;
+            objectList.Add(paw);
         }
+
         private void warn(float x)
         {
-            Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, -4.3f - 0.5f));
-            patternManager.eventManager.warnWithBox(v, new Vector3(200, 500, 0));
+            Vector2 v = mainCamera.WorldToScreenPoint(new Vector2(x, -4.3f - 0.5f));
+            eventManager.warnWithBox(v, new Vector3(200, 500, 0));
+        }
+
+        public void deathEvent()
+        {
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                MonoBehaviour.Destroy(objectList[i]);
+            }
+            objectList.Clear();
+            cancel.Cancel();
         }
     }
 }

@@ -13,21 +13,32 @@ MonoBehaviour:
   m_Name: Pattern_2
   m_EditorClassIdentifier: 
   prefab: {fileID: 301684448673772372, guid: 93739551ab2ea0b41a8a80386b051420, type: 3}
-  type: 0
   timeline:
   - startAt: 0.6
+    endAt: 0
+    duration: 0
+    repeatNo: 14
+    repeatDelayTime: 1
     detail:
       endAt: 0
       duration: 0
       repeatNo: 14
       repeatDelayTime: 1
   - startAt: 32.7
+    endAt: 0
+    duration: 0
+    repeatNo: 14
+    repeatDelayTime: 1
     detail:
       endAt: 0
       duration: 0
       repeatNo: 14
       repeatDelayTime: 1
   - startAt: 87.6
+    endAt: 0
+    duration: 0
+    repeatNo: 7
+    repeatDelayTime: 1
     detail:
       endAt: 0
       duration: 0

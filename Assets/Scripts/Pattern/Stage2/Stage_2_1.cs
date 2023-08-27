@@ -2,111 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using TimelineManager;
+using Patterns;
 using System;
+using Cysharp.Threading.Tasks;
 
 namespace Stage_2
 {
-    public class Stage_2_1 : MonoBehaviour
+    [Serializable]
+    public struct Stage_2_1
     {
-        Transform patternManager;
+        public AudioClip music;
+        public float[] savePointTime;
+        public Pattern_1a pattern_1a;
+        public Pattern_1b pattern_1b;
+        public Pattern_1c pattern_1c;
+        public Pattern_1d pattern_1d;
+        public Pattern_2 pattern_2;
+        public Pattern_3 pattern_3;
+        public Pattern_5 pattern_5;
+        public Pattern_6 pattern_6;
 
-        public Stage_2_1(Transform patternManager)
+        EventManager eventManager;
+        PatternManager patternManager;
+
+        public void init(PatternManager patternManager, EventManager eventManager)
         {
             this.patternManager = patternManager;
-        }
-        
-        public void setPatternAction(ref PatternPlaylist playlist)
-        {
-            switch(playlist.type)
-            {
-                case PatternType.pattern1a:
-                    playlist.defineAction(runPattern_1a);
-                    return;
-                case PatternType.pattern1b:
-                    playlist.defineAction(runPattern_1b);
-                    return;
-                case PatternType.pattern1c:
-                    playlist.defineAction(runPattern_1c);
-                    return;
-                case PatternType.pattern1d:
-                    playlist.defineAction(runPattern_1d);
-                    return;
-                case PatternType.pattern2:
-                    playlist.defineAction(runPattern_2);
-                    return;
-                case PatternType.pattern3:
-                    playlist.defineAction(runPattern_3);
-                    return;
-                case PatternType.pattern5:
-                    playlist.defineAction(runPattern_5);
-                    return;
-                case PatternType.pattern6:
-                    playlist.defineAction(runPattern_6);
-                    return;
+            this.eventManager = eventManager;
 
-            }
+            pattern_1a.init(patternManager.transform, eventManager, Camera.main);
+            pattern_1b.init(patternManager.transform, eventManager, Camera.main);
+            pattern_1c.init(patternManager.transform, eventManager, Camera.main);
+            pattern_1d.init(patternManager.transform, eventManager, Camera.main);
+            pattern_2.init(patternManager.transform, eventManager, Camera.main);
+            pattern_3.init(patternManager.transform, eventManager, Camera.main);
+            pattern_5.init(patternManager.transform, eventManager, Camera.main);
+            pattern_6.init(patternManager.transform, eventManager, Camera.main);
         }
 
-        private void runPattern_1a(PatternPlaylist p, Timeline t)
+        public void Run(float startTime, out List<Coroutine> coroutineArray)
         {
-            GameObject o = Instantiate(p.prefab);
-            o.transform.SetParent(patternManager);
-            o.SetActive(true);
-        }
-
-        private void runPattern_1b(PatternPlaylist p, Timeline t)
-        {
-            GameObject o = Instantiate(p.prefab);
-            o.transform.SetParent(patternManager);
-            o.SetActive(true);
-        }
-
-        private void runPattern_1c(PatternPlaylist p, Timeline t)
-        {
-            GameObject o = Instantiate(p.prefab);
-            o.transform.SetParent(patternManager);
-            o.SetActive(true);
-        }
-
-        private void runPattern_1d(PatternPlaylist p, Timeline t)
-        {
-            GameObject o = Instantiate(p.prefab);
-            o.transform.SetParent(patternManager);
-            o.SetActive(true);
-        }
-
-        private void runPattern_2(PatternPlaylist p, Timeline t)
-        {
-            GameObject o = Instantiate(p.prefab);
-            o.transform.SetParent(patternManager);
-            o.SetActive(true);
-        }
-
-        private void runPattern_3(PatternPlaylist p, Timeline t)
-        {
-            float duration = 0;
-            GameObject o = Instantiate(p.prefab);
-            o.transform.SetParent(patternManager);
-            if (t.detail.endAt != 0)
-                o.GetComponent<Pattern_3>().setDuration(t.startAt, t.detail.endAt);
-            else if (t.detail.duration != 0)
-                o.GetComponent<Pattern_3>().setDuration(duration);
-            o.SetActive(true);
-        }
-
-        private void runPattern_5(PatternPlaylist p, Timeline t)
-        {
-            GameObject o = Instantiate(p.prefab);
-            o.transform.SetParent(patternManager);
-            o.SetActive(true);
-        }
-
-        private void runPattern_6(PatternPlaylist p, Timeline t)
-        {
-            GameObject o = Instantiate(p.prefab);
-            o.transform.SetParent(patternManager);
-            o.SetActive(true);
+            coroutineArray = new List<Coroutine>();
+            coroutineArray.Add(patternManager.StartCoroutine(pattern_1a.patternPlaylist.Run(startTime)));
+            coroutineArray.Add(patternManager.StartCoroutine(pattern_1b.patternPlaylist.Run(startTime)));
+            coroutineArray.Add(patternManager.StartCoroutine(pattern_1c.patternPlaylist.Run(startTime)));
+            coroutineArray.Add(patternManager.StartCoroutine(pattern_1d.patternPlaylist.Run(startTime)));
+            coroutineArray.Add(patternManager.StartCoroutine(pattern_2.patternPlaylist.Run(startTime)));
+            coroutineArray.Add(patternManager.StartCoroutine(pattern_3.patternPlaylist.Run(startTime)));
+            coroutineArray.Add(patternManager.StartCoroutine(pattern_5.patternPlaylist.Run(startTime)));
+            coroutineArray.Add(patternManager.StartCoroutine(pattern_6.patternPlaylist.Run(startTime)));
         }
     }
 }
