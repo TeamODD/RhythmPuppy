@@ -1,7 +1,9 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static EventManager;
 
 public class Pattern999 : MonoBehaviour
 {
@@ -12,14 +14,25 @@ public class Pattern999 : MonoBehaviour
     [SerializeField]
     private float squirrelSpeed = 4f;
 
+    EventManager eventManager;
+    List<GameObject> objects;
+
     private void OnEnable()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += deathEvent;
+        objects = new List<GameObject>();
         StartCoroutine(SpawnFlyingSquirrels());
     }
 
     private void OnDisable()
     {
         StopCoroutine(SpawnFlyingSquirrels());
+    }
+
+    private void OnDestroy()
+    {
+        eventManager.deathEvent -= deathEvent;
     }
 
     private IEnumerator SpawnFlyingSquirrels()
@@ -36,6 +49,7 @@ public class Pattern999 : MonoBehaviour
 
         Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
+        objects.Add(newWarning);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
 
@@ -77,6 +91,7 @@ public class Pattern999 : MonoBehaviour
         }
 
         // 경고 오브젝트 제거
+        objects.Remove(newWarning);
         Destroy(newWarning);
 
         Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);
@@ -86,6 +101,7 @@ public class Pattern999 : MonoBehaviour
 
         // 장애물을 생성하고 속도와 방향을 설정합니다.
         GameObject newSquirrel = Instantiate(flyingSquirrel, spawnPosition, Quaternion.identity);
+        objects.Add(newSquirrel);
         Rigidbody2D squirrelRigidbody = newSquirrel.GetComponent<Rigidbody2D>();
 
         scaleX = newSquirrel.transform.localScale.x;
@@ -108,6 +124,7 @@ public class Pattern999 : MonoBehaviour
             // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
             if (!IsWithinMapBounds(obj.transform.position))
             {
+                objects.Remove(obj);
                 Destroy(obj);
                 Destroy(gameObject);
                 yield break;
@@ -124,5 +141,21 @@ public class Pattern999 : MonoBehaviour
         float maxY = 5f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
+    }
+    async UniTask delayRemoval(GameObject o, float t)
+    {
+        await UniTask.Delay(System.TimeSpan.FromSeconds(t));
+        objects.Remove(o);
+    }
+
+    void deathEvent()
+    {
+        StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 }

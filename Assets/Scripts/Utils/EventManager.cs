@@ -31,7 +31,8 @@ public class EventManager : MonoBehaviour
     public delegate void ReviveEvent();
     public delegate void LampOnEvent();
     public delegate void LampOffEvent();
-    public delegate void InitSavePointEvent();
+    public delegate void FadeInEvent();
+    public delegate void FadeOutEvent();
     public delegate void WarnWithBox(Vector3 pos, Vector3 size);
 
     public GameStartEvent gameStartEvent;
@@ -41,6 +42,8 @@ public class EventManager : MonoBehaviour
     public ReviveEvent reviveEvent;
     public LampOnEvent lampOnEvent;
     public LampOffEvent lampOffEvent;
+    public FadeInEvent fadeInEvent;
+    public FadeOutEvent fadeOutEvent;
     public WarnWithBox warnWithBox;
 
     public PlayerEvent playerEvent;

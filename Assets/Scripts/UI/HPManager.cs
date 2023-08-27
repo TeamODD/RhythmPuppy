@@ -12,28 +12,28 @@ public class HPManager : MonoBehaviour
     {
         init();
     }
+    void init()
+    {
+        player = FindObjectOfType<Player>();
+    }
 
     void Update()
     {
         updateHP();
     }
 
-    void init()
-    {
-        player = FindObjectOfType<Player>();
-    }
 
     public void updateHP()
     {
         int hp = (int)player.currentHP;
         if (hp < 0) hp = 0;
-        else if (state.Count <= hp) hp = state.Count - 1; 
+        else if (state.Count < hp) hp = state.Count;
 
-        foreach (GameObject o in state)
+        hp -= 1;
+        for (int i = 0; i < state.Count; i++)
         {
-            o.SetActive(false);
+            if (i == hp) state[i].SetActive(true);
+            if (i != hp) state[i].SetActive(false);
         }
-
-        state[hp].SetActive(true);
     }
 }

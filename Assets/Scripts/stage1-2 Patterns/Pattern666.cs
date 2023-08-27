@@ -1,6 +1,9 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static EventManager;
 
 public class Pattern666 : MonoBehaviour
 {
@@ -13,14 +16,25 @@ public class Pattern666 : MonoBehaviour
 
     private bool isPatternRunning = false;
     private GameObject currentStem;
+    EventManager eventManager;
+    List<GameObject> objects;
+
     private void OnEnable()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += StopPattern;
+        objects = new List<GameObject>();
         StartPattern();
     }
 
     private void OnDisable()
     {
         StopPattern();
+    }
+
+    private void OnDestroy()
+    {
+        eventManager.deathEvent -= StopPattern;
     }
 
     private void StartPattern()
@@ -37,10 +51,17 @@ public class Pattern666 : MonoBehaviour
         isPatternRunning = false;
         if (currentStem != null)
         {
+            objects.Remove(currentStem);
             Destroy(currentStem);
             currentStem = null;
         }
         StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 
     private IEnumerator RunPattern()
@@ -50,6 +71,7 @@ public class Pattern666 : MonoBehaviour
         // 경고 오브젝트 생성
         Vector3 warningPosition = new Vector3(8.297f, 2.28f, 0f);
         GameObject warning = Instantiate(thornStemWarning, warningPosition, Quaternion.identity);
+        objects.Add(warning);
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         SpriteRenderer warningRenderer = warning.GetComponent<SpriteRenderer>();
@@ -82,6 +104,7 @@ public class Pattern666 : MonoBehaviour
         }
 
         // 경고 오브젝트 제거
+        objects.Remove(warning);
         Destroy(warning);
 
         // 가시 줄기 생성
@@ -90,6 +113,7 @@ public class Pattern666 : MonoBehaviour
         Vector3 startPos = new Vector3(startX, startY, 0f);
 
         currentStem = Instantiate(thornStem, startPos, Quaternion.identity);
+        objects.Add(currentStem);
         Rigidbody2D stemRigidbody = currentStem.GetComponent<Rigidbody2D>();
 
         // 오른쪽으로 이동
@@ -110,9 +134,10 @@ public class Pattern666 : MonoBehaviour
             // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
             if (!IsWithinMapBounds(obj.transform.position))
             {
+                objects.Remove(obj);
                 Destroy(obj);
                 currentStem = null;
-                Destroy(gameObject);
+                StopPattern();
                 yield break;
             }
             yield return null;
@@ -127,5 +152,21 @@ public class Pattern666 : MonoBehaviour
         float maxY = 5f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
+    }
+    async UniTask delayRemoval(GameObject o, float t)
+    {
+        await UniTask.Delay(System.TimeSpan.FromSeconds(t));
+        objects.Remove(o);
+    }
+
+    void deathEvent()
+    {
+        StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 }

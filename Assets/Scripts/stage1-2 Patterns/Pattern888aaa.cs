@@ -1,6 +1,9 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static EventManager;
 
 public class Pattern888aaa : MonoBehaviour
 {
@@ -22,8 +25,14 @@ public class Pattern888aaa : MonoBehaviour
     float[] previousXPositions = new float[3]; // 이전 3개의 xPos 값을 저장할 배열 선언
     int currentIndex = 0; // 현재 저장할 인덱스를 나타내는 변수 선언
 
+    EventManager eventManager;
+    List<GameObject> objects;
+
     private void OnEnable()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += StopPattern;
+        objects = new List<GameObject>();
         startTime = Time.time;
         StartPattern();
     }
@@ -31,6 +40,11 @@ public class Pattern888aaa : MonoBehaviour
     private void OnDisable()
     {
         StopPattern();
+    }
+
+    private void OnDestroy()
+    {
+        eventManager.deathEvent -= StopPattern;
     }
 
     private void StartPattern()
@@ -48,6 +62,7 @@ public class Pattern888aaa : MonoBehaviour
 
         if (currentWarning != null)
         {
+            objects.Remove(currentWarning); 
             Destroy(currentWarning);
             currentWarning = null;
         }
@@ -66,6 +81,7 @@ public class Pattern888aaa : MonoBehaviour
             }
             // 모든 패턴이 끝날 때쯤에 해당 게임 오브젝트를 삭제합니다.
             Destroy(gameObject, 9.5f);
+            destroySelf(9.5f);
 
             if (currentIndex < previousXPositions.Length)
             {
@@ -96,6 +112,7 @@ public class Pattern888aaa : MonoBehaviour
     {
         Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
         GameObject newWarning = Instantiate(weaselWarning, warningPosition, Quaternion.identity);
+        objects.Add(newWarning);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
         newWarning.transform.rotation = Quaternion.Euler(0f, 0f, -90f);
@@ -130,11 +147,13 @@ public class Pattern888aaa : MonoBehaviour
         }
 
         // 경고 오브젝트 제거
+        objects.Remove(newWarning);
         Destroy(newWarning);
 
         Vector3 spawnPosition = new Vector3(xPos, -6.06f, 0f); //후보 -6f, -5.03f
 
         GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
+        objects.Add(newWeasel);
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * weaselSpeed;
 
@@ -162,6 +181,7 @@ public class Pattern888aaa : MonoBehaviour
             // 맵 밖으로 나갈 경우 오브젝트를 파괴합니다.
             if (!IsWithinMapBounds(obj.transform.position))
             {
+                objects.Remove(obj);
                 Destroy(obj);
                 yield break;
             }
@@ -195,5 +215,21 @@ public class Pattern888aaa : MonoBehaviour
             }
         }
         return false;
+    }
+    IEnumerator destroySelf(float t)
+    {
+        yield return new WaitForSeconds(t);
+        Destroy(gameObject);
+    }
+
+    void deathEvent()
+    {
+        StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 }

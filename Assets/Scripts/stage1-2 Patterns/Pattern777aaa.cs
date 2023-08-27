@@ -1,6 +1,9 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static EventManager;
 
 public class Pattern777aaa : MonoBehaviour
 {
@@ -19,8 +22,14 @@ public class Pattern777aaa : MonoBehaviour
     float[] previousXPositions = new float[3]; // 이전 3개의 xPos 값을 저장할 배열 선언
     int currentIndex = 0; // 현재 저장할 인덱스를 나타내는 변수 선언
 
+    EventManager eventManager;
+    List<GameObject> objects;
+
     private void OnEnable()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.deathEvent += deathEvent;
+        objects = new List<GameObject>();
         startTime = Time.time; // 패턴7a가 활성화될 때 시작 시간 저장
         StartCoroutine(Startpattern());
     }
@@ -28,6 +37,11 @@ public class Pattern777aaa : MonoBehaviour
     private void OnDisable()
     {
         StopCoroutine(Startpattern());
+    }
+
+    private void OnDestroy()
+    {
+        eventManager.deathEvent -= deathEvent;
     }
 
     private IEnumerator Startpattern()
@@ -44,7 +58,7 @@ public class Pattern777aaa : MonoBehaviour
             }
 
             // 패턴이 모두 실행된 순간에 패턴7a 오브젝트를 삭제합니다. * 복제된 스크립트를 삭제하기 위함
-            Destroy(gameObject, 9f);
+            StartCoroutine(destroySelf(9f));
 
 
             if (currentIndex < previousXPositions.Length)
@@ -72,6 +86,7 @@ public class Pattern777aaa : MonoBehaviour
         // 경고 오브젝트 생성
         Vector3 warningPosition = new Vector3(xPos, -0.8f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
+        objects.Add(newWarning);
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
@@ -104,12 +119,14 @@ public class Pattern777aaa : MonoBehaviour
         }
 
         // 경고 오브젝트 제거
+        objects.Remove(newWarning);
         Destroy(newWarning);
 
         Vector3 RedApplePosition = new Vector3(xPos, 4.5f, 0f);
 
         // Chestnut 오브젝트 생성
         GameObject newRedApple = Instantiate(redapple, RedApplePosition, Quaternion.identity);
+        objects.Add(newRedApple);
         Rigidbody2D RedAppleRigidbody = newRedApple.GetComponent<Rigidbody2D>();
         RedAppleRigidbody.velocity = Vector2.down * redappleSpeed;
 
@@ -122,6 +139,7 @@ public class Pattern777aaa : MonoBehaviour
         {
             if (!IsWithinMapBounds(obj.transform.position))
             {
+                objects.Remove(obj);
                 Destroy(obj);
                 yield break;
             }
@@ -155,5 +173,22 @@ public class Pattern777aaa : MonoBehaviour
             }
         }
         return false;
+    }
+    IEnumerator destroySelf(float t)
+    {
+        yield return new WaitForSeconds(t);
+        StopAllCoroutines();
+        Destroy(gameObject);
+    }
+
+    void deathEvent()
+    {
+        StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 }

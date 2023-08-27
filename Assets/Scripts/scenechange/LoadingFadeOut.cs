@@ -10,11 +10,6 @@ public class LoadingFadeOut : MonoBehaviour
     bool isSceneLoaded;
     float a;
 
-    private void OnEnable()
-    {
-        Debug.Log("a");
-    }
-
     void Awake()
     {
         a = 1f;
