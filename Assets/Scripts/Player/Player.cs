@@ -161,6 +161,10 @@ public class Player : MonoBehaviour
         {
             hitbox.enabled = false;
         }
+        if (Input.GetKeyDown(KeyCode.O))     // developer mode (inactive hitbox)
+        {
+            eventManager.deathEvent();
+        }
     }
 
     void FixedUpdate()
@@ -406,7 +410,7 @@ public class Player : MonoBehaviour
         else
         {
             Debug.Log("게임오버 씬이 열렸습니다.");
-            SceneManager.LoadScene("GameOver");
+            SceneManager.LoadScene("GameOver", LoadSceneMode.Additive);
         }
     }
 

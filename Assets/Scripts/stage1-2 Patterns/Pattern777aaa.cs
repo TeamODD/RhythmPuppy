@@ -1,9 +1,6 @@
-using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static EventManager;
 
 public class Pattern777aaa : MonoBehaviour
 {
@@ -22,14 +19,8 @@ public class Pattern777aaa : MonoBehaviour
     float[] previousXPositions = new float[3]; // 이전 3개의 xPos 값을 저장할 배열 선언
     int currentIndex = 0; // 현재 저장할 인덱스를 나타내는 변수 선언
 
-    EventManager eventManager;
-    List<GameObject> objects;
-
     private void OnEnable()
     {
-        eventManager = FindObjectOfType<EventManager>();
-        eventManager.deathEvent += deathEvent;
-        objects = new List<GameObject>();
         startTime = Time.time; // 패턴7a가 활성화될 때 시작 시간 저장
         StartCoroutine(Startpattern());
     }
@@ -37,11 +28,6 @@ public class Pattern777aaa : MonoBehaviour
     private void OnDisable()
     {
         StopCoroutine(Startpattern());
-    }
-
-    private void OnDestroy()
-    {
-        eventManager.deathEvent -= deathEvent;
     }
 
     private IEnumerator Startpattern()
@@ -58,7 +44,7 @@ public class Pattern777aaa : MonoBehaviour
             }
 
             // 패턴이 모두 실행된 순간에 패턴7a 오브젝트를 삭제합니다. * 복제된 스크립트를 삭제하기 위함
-            StartCoroutine(destroySelf(9f));
+            Destroy(gameObject, 9f);
 
 
             if (currentIndex < previousXPositions.Length)
@@ -86,47 +72,51 @@ public class Pattern777aaa : MonoBehaviour
         // 경고 오브젝트 생성
         Vector3 warningPosition = new Vector3(xPos, -0.8f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
-        objects.Add(newWarning);
 
-        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
-        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        Color originalColor = warningRenderer.color;
-        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        // 경고 오브젝트와 자식 오브젝트의 Sprite Renderer 배열 얻기
+        SpriteRenderer[] warningRenderers = newWarning.GetComponentsInChildren<SpriteRenderer>();
 
-        float totalTime = 0.5f; // 전체 시간 (0.5초)
-        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
+        Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+        foreach (SpriteRenderer renderer in warningRenderers)
+        {
+            renderer.color = targetColor;
+        }
 
+        float totalTime = 0.25f;
         float elapsedTime = 0f;
-
         while (elapsedTime < totalTime)
         {
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3초 동안은 완전히 불투명하게 유지
-            if (elapsedTime <= fadeInDuration)
+            foreach (SpriteRenderer renderer in warningRenderers)
             {
-                warningRenderer.color = originalColor;
-            }
-            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
-            else //0.3초가 지남
-            {
-                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
-                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+                renderer.color = Color.Lerp(targetColor, Color.red, t);
             }
 
             yield return null;
         }
 
-        // 경고 오브젝트 제거
-        objects.Remove(newWarning);
+        elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(Color.red, targetColor, t);
+            }
+
+            yield return null;
+        }
+
         Destroy(newWarning);
 
         Vector3 RedApplePosition = new Vector3(xPos, 4.5f, 0f);
 
         // Chestnut 오브젝트 생성
         GameObject newRedApple = Instantiate(redapple, RedApplePosition, Quaternion.identity);
-        objects.Add(newRedApple);
         Rigidbody2D RedAppleRigidbody = newRedApple.GetComponent<Rigidbody2D>();
         RedAppleRigidbody.velocity = Vector2.down * redappleSpeed;
 
@@ -139,7 +129,6 @@ public class Pattern777aaa : MonoBehaviour
         {
             if (!IsWithinMapBounds(obj.transform.position))
             {
-                objects.Remove(obj);
                 Destroy(obj);
                 yield break;
             }
@@ -173,22 +162,5 @@ public class Pattern777aaa : MonoBehaviour
             }
         }
         return false;
-    }
-    IEnumerator destroySelf(float t)
-    {
-        yield return new WaitForSeconds(t);
-        StopAllCoroutines();
-        Destroy(gameObject);
-    }
-
-    void deathEvent()
-    {
-        StopAllCoroutines();
-        for (int i = 0; i < objects.Count; i++)
-        {
-            Destroy(objects[i]);
-        }
-        objects.Clear();
-        Destroy(gameObject);
     }
 }

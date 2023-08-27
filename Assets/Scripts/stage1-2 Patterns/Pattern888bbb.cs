@@ -1,16 +1,14 @@
-using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using static EventManager;
 
 public class Pattern888bbb : MonoBehaviour
 {
     [SerializeField]
-    private GameObject weasel; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    private GameObject weasel; // Á·Á¦ºñ ÇÁ¸®ÆÕ
     [SerializeField]
-    private GameObject weaselwarning; // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+    private GameObject weaselwarning; // °æ°í ¿ÀºêÁ§Æ®
     [SerializeField]
     private float weaselspeed;
 
@@ -46,19 +44,13 @@ public class Pattern888bbb : MonoBehaviour
     private float startTime;
     float xPos;
     float yPos;
-    float[] previousXPositions = new float[3]; // ï¿½ï¿½ï¿½ï¿½ 3ï¿½ï¿½ï¿½ï¿½ xPos ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ ï¿½ï¿½ï¿½ï¿½
-    int currentIndex = 0; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    float[] previousXPositions = new float[3]; // ÀÌÀü 3°³ÀÇ xPos °ªÀ» ÀúÀåÇÒ ¹è¿­ ¼±¾ð
+    //int currentIndex = 0; // ÇöÀç ÀúÀåÇÒ ÀÎµ¦½º¸¦ ³ªÅ¸³»´Â º¯¼ö ¼±¾ð
     private List<GameObject> weaselObjects;
     private bool ReadyToJump = false;
 
-    EventManager eventManager;
-    List<GameObject> objects;
-
     private void OnEnable()
     {
-        eventManager = FindObjectOfType<EventManager>();
-        eventManager.deathEvent += deathEvent;
-        objects = new List<GameObject>();
         startTime = Time.time;
         StartPattern();
     }
@@ -83,7 +75,6 @@ public class Pattern888bbb : MonoBehaviour
 
         if (currentWarning != null)
         {
-            objects.Remove(currentWarning);
             Destroy(currentWarning);
             currentWarning = null;
         }
@@ -92,7 +83,7 @@ public class Pattern888bbb : MonoBehaviour
     private IEnumerator TimingDivider()
     {
         Destroy(gameObject, 10f);
-        weaselObjects = new List<GameObject>(); // ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½ï¿½ï¿½
+        weaselObjects = new List<GameObject>(); // ÃÊ±âÈ­¸¦ ¿©±â¼­ ¼öÇà
         //StartCoroutine(Pattern8bFirst());
         StartCoroutine(Pattern8bSecond());
         StartCoroutine(Pattern8bFly());
@@ -108,7 +99,7 @@ public class Pattern888bbb : MonoBehaviour
 
             while (GetElapsedTime() < timing)
             {
-                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹Ö¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½Ï´ï¿½.
+                // ÇöÀç °æ°ú ½Ã°£ÀÌ ÁöÁ¤µÈ Å¸ÀÌ¹Ö¿¡ µµ´ÞÇÒ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
                 yield return null;
             }
             if (currentIndex < previousXPositions.Length)
@@ -127,7 +118,7 @@ public class Pattern888bbb : MonoBehaviour
 
             currentIndex++;
 
-            //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+            //°æ°í ¿ÀºêÁ§Æ® »ý¼º
 
             yPos = -4.5f;
             StartCoroutine(SpawnWeasel(xPos, yPos));
@@ -158,22 +149,21 @@ public class Pattern888bbb : MonoBehaviour
         StartCoroutine(FlyingWeasels(weaselObjects));
     }
 
-    //2023.08.27 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    //2023.08.27 ÆÐÅÏ Æó±â °áÁ¤
     private IEnumerator SpawnWeasel(float xPos, float yPos)
     {
         Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
         GameObject newWarning = Instantiate(weaselwarning, warningPosition, Quaternion.identity);
-        objects.Add(newWarning);
 
         SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
         newWarning.transform.rotation = Quaternion.Euler(0f, 0f, -90f);
 
-        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ 0.5ï¿½Ê¿ï¿½ ï¿½ï¿½ï¿½Ä¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // °æ°í ¿ÀºêÁ§Æ®°¡ 0.5ÃÊ¿¡ °ÉÃÄ¼­ Åõ¸íÇØÁöµµ·Ï ¾ËÆÄ°ª Á¶Á¤
         Color originalColor = warningRenderer.color;
         Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
 
-        float totalTime = 0.5f; // ï¿½ï¿½Ã¼ ï¿½Ã°ï¿½ (0.5ï¿½ï¿½)
-        float fadeInDuration = 0.3f; // 0.3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
+        float totalTime = 0.5f; // ÀüÃ¼ ½Ã°£ (0.5ÃÊ)
+        float fadeInDuration = 0.3f; // 0.3ÃÊ µ¿¾ÈÀº ¿ÏÀüÈ÷ ºÒÅõ¸íÇÏ°Ô À¯Áö
 
         float elapsedTime = 0f;
 
@@ -182,29 +172,27 @@ public class Pattern888bbb : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
+            // 0.3ÃÊ µ¿¾ÈÀº ¿ÏÀüÈ÷ ºÒÅõ¸íÇÏ°Ô À¯Áö
             if (elapsedTime <= fadeInDuration)
             {
                 warningRenderer.color = originalColor;
             }
-            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 0.2ï¿½ï¿½ ï¿½ï¿½ï¿½È¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½
-            else //0.3ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
+            // ±× ÀÌÈÄ 0.2ÃÊ µ¿¾È¿¡´Â ºü¸£°Ô Åõ¸íÇØÁöµµ·Ï ¾ËÆÄ°ª Á¶Á¤
+            else //0.3ÃÊ°¡ Áö³²
             {
-                float fadeOutDuration = totalTime - fadeInDuration; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ (0.2ï¿½ï¿½)
+                float fadeOutDuration = totalTime - fadeInDuration; // Åõ¸íÇØÁö´Â ½Ã°£ (0.2ÃÊ)
                 warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
             }
 
             yield return null;
         }
 
-        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
-        objects.Remove(newWarning);
+        // °æ°í ¿ÀºêÁ§Æ® Á¦°Å
         Destroy(newWarning);
 
         Vector3 spawnPosition = new Vector3(xPos, -8f, 0f);
 
         GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
-        objects.Add(newWeasel);
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * weaselspeed;
 
@@ -228,49 +216,50 @@ public class Pattern888bbb : MonoBehaviour
     {
         Vector3 warningPosition = warningPositions[i];
         GameObject newWarning = Instantiate(weaselwarning, warningPosition, Quaternion.identity);
-        objects.Add(newWarning);
 
-        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
         newWarning.transform.rotation = Quaternion.Euler(0f, 0f, -90f);
-        if (warningRenderer != null)
+
+        // °æ°í ¿ÀºêÁ§Æ®¿Í ÀÚ½Ä ¿ÀºêÁ§Æ®ÀÇ Sprite Renderer ¹è¿­ ¾ò±â
+        SpriteRenderer[] warningRenderers = newWarning.GetComponentsInChildren<SpriteRenderer>();
+
+        Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+        foreach (SpriteRenderer renderer in warningRenderers)
         {
-            warningRenderer.sortingOrder = int.MaxValue;
+            renderer.color = targetColor;
         }
 
-        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ 0.5ï¿½Ê¿ï¿½ ï¿½ï¿½ï¿½Ä¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½
-        Color originalColor = warningRenderer.color;
-        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
-
-        float totalTime = 0.5f; // ï¿½ï¿½Ã¼ ï¿½Ã°ï¿½ (0.5ï¿½ï¿½)
-        float fadeInDuration = 0.3f; // 0.3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
-
+        float totalTime = 0.25f;
         float elapsedTime = 0f;
-
         while (elapsedTime < totalTime)
         {
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
-            if (elapsedTime <= fadeInDuration)
+            foreach (SpriteRenderer renderer in warningRenderers)
             {
-                warningRenderer.color = originalColor;
-            }
-            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 0.2ï¿½ï¿½ ï¿½ï¿½ï¿½È¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½
-            else //0.3ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
-            {
-                float fadeOutDuration = totalTime - fadeInDuration; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ (0.2ï¿½ï¿½)
-                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+                renderer.color = Color.Lerp(targetColor, Color.red, t);
             }
 
             yield return null;
         }
 
-        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+        elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(Color.red, targetColor, t);
+            }
+
+            yield return null;
+        }
+
         Destroy(newWarning);
 
         GameObject weaselObject = Instantiate(weasel, firstPositions[i], Quaternion.identity);
-        objects.Add(weaselObject);
         weaselObjects.Add(weaselObject);
 
         Rigidbody2D weaselRigidbody = weaselObject.GetComponent<Rigidbody2D>();
@@ -330,10 +319,9 @@ public class Pattern888bbb : MonoBehaviour
     {
         while (true)
         {
-            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½Õ´Ï´ï¿½.
+            // ¸Ê ¹ÛÀ¸·Î ³ª°¥ °æ¿ì ¿ÀºêÁ§Æ®¸¦ ÆÄ±«ÇÕ´Ï´Ù.
             if (!IsWithinMapBounds(obj.transform.position))
             {
-                objects.Remove(obj);
                 Destroy(obj);
                 yield break;
             }
@@ -366,22 +354,5 @@ public class Pattern888bbb : MonoBehaviour
             }
         }
         return false;
-    }
-    async UniTask delayRemoval(GameObject o, float t)
-    {
-        await UniTask.Delay(System.TimeSpan.FromSeconds(t));
-        objects.Remove(o);
-    }
-
-    void deathEvent()
-    {
-        StopAllCoroutines();
-        for (int i = 0; i < objects.Count; i++)
-        {
-            Destroy(objects[i]);
-        }
-        objects.Clear();
-        eventManager.deathEvent -= deathEvent;
-        Destroy(gameObject);
     }
 }
