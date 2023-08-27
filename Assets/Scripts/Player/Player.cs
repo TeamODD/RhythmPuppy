@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
     bool onFired, isAlive;
     [HideInInspector] public float currentHP, currentStamina;
     float headCorrectFactor;
-    public float deathCount;
+    [HideInInspector] public float deathCount;
     Vector3 velocity;
     Coroutine dashCoroutine, dashCooldownCoroutine, shootCooldownCoroutine, invincibilityCoroutine;
 
