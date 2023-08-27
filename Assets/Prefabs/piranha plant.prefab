@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6598958768871231440}
   - component: {fileID: 6598958768871231441}
   - component: {fileID: 6598958768871231445}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: piranha plant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
