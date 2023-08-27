@@ -159,11 +159,6 @@ public class Player : MonoBehaviour
         {
             hitbox.enabled = false;
         }
-
-        if (Input.GetKeyDown(KeyCode.F1) || Input.GetKeyDown(KeyCode.F12))
-        {
-
-        }
     }
 
     void FixedUpdate()
@@ -408,7 +403,7 @@ public class Player : MonoBehaviour
         else
         {
             Debug.Log("게임오버 씬이 열렸습니다.");
-            SceneManager.LoadScene("GameOver", LoadSceneMode.Additive);
+            SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
         }
     }
 

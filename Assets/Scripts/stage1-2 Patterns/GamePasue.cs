@@ -6,14 +6,13 @@ using UnityEngine.SceneManagement;
 public class GamePasue : MonoBehaviour
 {
     private bool isPaused = false;
-    public AudioSource stage1_2BGM;
+    AudioSource stage1_2BGM;
     [SerializeField]
     GameObject EventSystem;
 
     private void Start()
     {
-        // AudioSource 컴포넌트를 가져옵니다. 이 컴포넌트는 해당 게임 오브젝트에 추가되어야 합니다.
-        stage1_2BGM = stage1_2BGM.GetComponent<AudioSource>();
+        stage1_2BGM = GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>();
     }
 
     private void Update()
