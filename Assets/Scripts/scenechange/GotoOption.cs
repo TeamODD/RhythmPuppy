@@ -9,4 +9,9 @@ public class GotoOption : MonoBehaviour
     {
         SceneManager.LoadScene("Option_Menu");
     }
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+            SceneManager.LoadScene("Option_Menu");
+    }
 }

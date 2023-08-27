@@ -90,6 +90,7 @@ public class GameClear : MonoBehaviour
         alpha = 0;
         //여기까지 암전, 하트가 나오도록.
         Rank.sprite = RankImgs[deathcount];
+        //health 관련해서 S 판정 내는 if문 작성하기
         while (Rank.color.a < 1)
         {
             Rank.color = new Color(1, 1, 1, alpha);
