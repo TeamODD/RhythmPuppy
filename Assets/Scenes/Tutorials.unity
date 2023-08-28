@@ -361,7 +361,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1001702043}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5.53, z: 0.10492585}
+  m_LocalPosition: {x: 0, y: -5.08, z: 0.10492585}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -517,7 +517,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 853321459083148496, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4
+      value: -3.5
       objectReference: {fileID: 0}
     - target: {fileID: 853321459083148496, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_LocalPosition.z
@@ -909,6 +909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   savePointTime: []
+  isLampOn: 0
 --- !u!4 &1834953072
 Transform:
   m_ObjectHideFlags: 0

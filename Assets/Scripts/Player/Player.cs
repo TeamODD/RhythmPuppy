@@ -415,6 +415,11 @@ public class Player : MonoBehaviour
         else
         {
             Debug.Log("load gameover scene");
+
+            Scene currentScene = SceneManager.GetActiveScene();
+            string sceneName = currentScene.name;
+            PlayerPrefs.SetString("PlayingSceneName", sceneName);
+
             SceneManager.LoadScene(SceneInfo.getSceneName(SceneName.GAMEOVER), LoadSceneMode.Single);
         }
     }

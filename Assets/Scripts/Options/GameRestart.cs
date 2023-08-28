@@ -7,17 +7,21 @@ public class GameRestart : MonoBehaviour
 {
     public void onRestart()
     {
-        string currentSceneName = SceneManager.GetActiveScene().name;
+        Scene currentScene = SceneManager.GetActiveScene();
+        string sceneName = currentScene.name;
 
-        if (currentSceneName.StartsWith("SceneStage"))
+        if (sceneName.StartsWith("SceneStage"))
         {
+            string stageInfo = sceneName.Substring("SceneStage".Length);
+            Debug.Log("스테이지 정보: " + stageInfo);
+
             int stageNumber;
-            if (int.TryParse(currentSceneName.Substring("SceneStage".Length), out stageNumber))
+            if (int.TryParse(stageInfo.Split('_')[0], out stageNumber))
             {
-                // 스테이지 숫자를 파싱하여 씬을 다시 불러오는 처리
+                string reloadSceneName = "SceneStage" + stageInfo;
                 Time.timeScale = 1f;
-                SceneManager.LoadSceneAsync(currentSceneName);
-                Debug.Log("씬 불러오기왔습니다.");
+                SceneManager.LoadSceneAsync(reloadSceneName);
+                Debug.Log("씬 재로드: " + reloadSceneName);
             }
             else
             {
@@ -26,7 +30,18 @@ public class GameRestart : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Not in a stage scene.");
+            string savedSceneName = PlayerPrefs.GetString("PlayingSceneName");
+
+            if (!string.IsNullOrEmpty(savedSceneName))
+            {
+                Time.timeScale = 1f;
+                SceneManager.LoadSceneAsync(savedSceneName);
+                Debug.Log("저장된 씬 불러오기: " + savedSceneName);
+            }
+            else
+            {
+                Debug.LogWarning("No suitable scene to reload.");
+            }
         }
     }
 }

@@ -85,7 +85,7 @@ public class Pattern888ccc : MonoBehaviour
 
             //경고 오브젝트 생성
 
-            yPos = -3.7209f;
+            yPos = -3.3371f;
 
             StartCoroutine(SpawnWeasel(xPos, yPos));
         }
