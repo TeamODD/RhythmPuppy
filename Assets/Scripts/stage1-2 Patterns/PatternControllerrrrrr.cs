@@ -9,6 +9,8 @@ public class PatternControllerrrrrr : MonoBehaviour
     [SerializeField]
     AudioClip music;
     [SerializeField]
+    AudioSource audioSource;
+    [SerializeField]
     float[] savePointTime;
     [SerializeField]
     private GameObject pattern6;
@@ -95,13 +97,11 @@ public class PatternControllerrrrrr : MonoBehaviour
     private float startTime;
     /*private float savePointTime;*/
     EventManager eventManager;
-    AudioSource audioSource;
 
     private void Start()
     {
         isPuppyShown = false;
         eventManager = FindObjectOfType<EventManager>();
-        audioSource = FindObjectOfType<AudioSource>();
         audioSource.clip = music;
         eventManager.savePointTime = savePointTime;
         eventManager.playerEvent.deathEvent += deathEvent;

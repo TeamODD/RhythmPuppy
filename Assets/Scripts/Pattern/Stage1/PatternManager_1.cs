@@ -1,7 +1,10 @@
 using EventManagement;
+using SceneData;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using static PlayerEvent;
 
 public class PatternManager_1 : MonoBehaviour
 {
@@ -18,6 +21,8 @@ public class PatternManager_1 : MonoBehaviour
 
     [SerializeField]
     float[] savePointTime;
+    [SerializeField]
+    AudioSource audioSource;
     [SerializeField]
     AudioClip music;
     [SerializeField]
@@ -48,7 +53,6 @@ public class PatternManager_1 : MonoBehaviour
 
     Dictionary<Type, float> patternCount;
     EventManager eventManager;
-    AudioSource audioSource;
     bool isPuppyShown;
     /*private int count_1_a;
     private int count_1_b;
@@ -58,8 +62,9 @@ public class PatternManager_1 : MonoBehaviour
 
     void Awake()
     {
+        StartCoroutine(init());
+        /*audioSource.clip = music;
         eventManager = FindObjectOfType<EventManager>();
-        audioSource = FindObjectOfType<AudioSource>();
         patternCount = new Dictionary<Type, float>();
         patternCount[Type.pattern1_a] = 0;
         patternCount[Type.pattern1_b] = 0;
@@ -68,16 +73,28 @@ public class PatternManager_1 : MonoBehaviour
         patternCount[Type.pattern2_b_3] = 0;
         patternCount[Type.pattern3] = 0;
         patternCount[Type.pattern4] = 0;
-        audioSource.clip = music;
         eventManager.savePointTime = savePointTime;
-        eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.stageEvent.gameStartEvent += run;
-        eventManager.playerEvent.reviveEvent += run;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += run;*/
         /*
                 count_1_a = 0;
                 count_1_b = 0;
                 count_3 = 0;
                 count_4 = 0;*/
+    }
+
+    IEnumerator init()
+    {
+        audioSource.clip = music;
+        eventManager = FindObjectOfType<EventManager>();
+        patternCount = new Dictionary<Type, float>();
+
+        eventManager.savePointTime = savePointTime;
+        eventManager.stageEvent.gameStartEvent += run;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += run;
+        yield return new WaitForSeconds(1);
 
         eventManager.stageEvent.gameStartEvent();
     }

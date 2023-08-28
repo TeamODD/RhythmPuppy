@@ -30,7 +30,7 @@ public class ProgressBar : MonoBehaviour
     {
         eventManager = FindObjectOfType<EventManager>();
         fillImage = transform.Find("GameProgressGuage").GetComponent<Image>();
-        musicAudioSource = FindObjectOfType<AudioSource>();
+        musicAudioSource = GameObject.FindGameObjectWithTag("MusicManager").GetComponent<AudioSource>();
         w = new WaitUntil(() => musicAudioSource.clip != null);
         beginPoint = beginPointTransform.position;
         endPoint = endPointTransform.position;
@@ -131,12 +131,12 @@ public class ProgressBar : MonoBehaviour
 
     private void gameStartEvent()
     {
-        playMusic().Forget();
+        StartCoroutine(playMusic());
     }
 
-    private async UniTask playMusic()
+    private IEnumerator playMusic()
     {
-        await UniTask.Delay(System.TimeSpan.FromSeconds(1));
+        yield return new WaitForSeconds(1);
         musicAudioSource.Play();
     }
 

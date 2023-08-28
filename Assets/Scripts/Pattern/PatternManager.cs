@@ -7,7 +7,6 @@ using Cysharp.Threading.Tasks;
 using Stage_2;
 using UnityEngine.SceneManagement;
 using EventManagement;
-using UnityEditor.SceneManagement;
 
 public class PatternManager : MonoBehaviour
 {
@@ -15,11 +14,11 @@ public class PatternManager : MonoBehaviour
     public float[] savePointTime;
     [SerializeField] float startDelayTime;
     [SerializeField] AudioClip music;
+    [SerializeField] AudioSource audioSource;
 
     [HideInInspector] 
     public EventManager eventManager;
     GameObject stage;
-    AudioSource audioSource;
     List<Coroutine> coroutineList;
     bool isPuppyShown;
 
