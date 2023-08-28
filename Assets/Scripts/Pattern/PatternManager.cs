@@ -14,7 +14,6 @@ public class PatternManager : MonoBehaviour
     [SerializeField] GameObject stagePrefab;
     public float[] savePointTime;
     [SerializeField] float startDelayTime;
-    [SerializeField] GameObject puppyPrefab;
     [SerializeField] AudioClip music;
 
     [HideInInspector] 
