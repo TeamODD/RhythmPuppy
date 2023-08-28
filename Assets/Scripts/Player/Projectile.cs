@@ -74,6 +74,7 @@ public class Projectile : MonoBehaviour
         }
         else if (LayerMask.NameToLayer("Puppy").Equals(col.gameObject.layer) || col.gameObject.CompareTag("Puppy"))
         {
+            eventManager.stageEvent.onClear = true;
             eventManager.stageEvent.clearEvent();
         }
     }

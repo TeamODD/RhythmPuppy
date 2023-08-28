@@ -20,6 +20,7 @@ public class GameRestart : MonoBehaviour
             {
                 string reloadSceneName = "SceneStage" + stageInfo;
                 Time.timeScale = 1f;
+                Time.fixedDeltaTime = 0.02f;
                 SceneManager.LoadSceneAsync(reloadSceneName);
                 Debug.Log("씬 재로드: " + reloadSceneName);
             }
@@ -35,6 +36,7 @@ public class GameRestart : MonoBehaviour
             if (!string.IsNullOrEmpty(savedSceneName))
             {
                 Time.timeScale = 1f;
+                Time.fixedDeltaTime = 0.02f;
                 SceneManager.LoadSceneAsync(savedSceneName);
                 Debug.Log("저장된 씬 불러오기: " + savedSceneName);
             }

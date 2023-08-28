@@ -12,7 +12,6 @@ public class GameClear : MonoBehaviour
     private SpriteRenderer Puppy;
     public Sprite HappyPuppy;
     private Collider2D Collider;
-    [SerializeField]
     private GameObject corgi;
     private Vector3 CorgiTransform;
     [SerializeField]
@@ -44,6 +43,7 @@ public class GameClear : MonoBehaviour
 
     void Start()
     {
+        corgi = GameObject.FindGameObjectWithTag("Player");
         eventManager = FindObjectOfType<EventManager>();
         eventManager.stageEvent.clearEvent += Clear;
         clear = false;

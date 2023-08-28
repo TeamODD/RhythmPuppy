@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static EventManagement.StageEvent;
+using static UIEvent;
 
 public class UICanvas : MonoBehaviour
 {
@@ -36,6 +38,8 @@ public class UICanvas : MonoBehaviour
     EventManager eventManager;
     Image darkImage, redImage, clearSpotlightImage, dashTimerImage, hitTimerImage;
     Color c;
+    CanvasScaler overlayCanvasScaler;
+    Vector2 baseResolution, currentResolution;
 
     void Awake()
     {
@@ -44,8 +48,11 @@ public class UICanvas : MonoBehaviour
 
     public void init()
     {
+        baseResolution = new Vector2(1920, 1080);
+        currentResolution = new Vector2(Screen.width, Screen.height);
         player = FindObjectOfType<Player>();
         eventManager = FindObjectOfType<EventManager>();
+        overlayCanvasScaler = overlayCanvas.overlayCanvas.GetComponent<CanvasScaler>();
 
         darkImage = overlayCanvas.darkEffect.GetComponent<Image>();
         redImage= overlayCanvas.redEffect.GetComponent<Image>();
@@ -53,13 +60,15 @@ public class UICanvas : MonoBehaviour
         dashTimerImage = worldSpaceCanvas.dashTimer.GetComponent<Image>();
         hitTimerImage = worldSpaceCanvas.hitTimer.GetComponent<Image>();
 
+        eventManager.stageEvent.warnWithBox += warnWithBox;
+        eventManager.stageEvent.pauseEvent += enableBlindEvent;
+        eventManager.stageEvent.resumeEvent += disableBlindEvent;
         eventManager.playerEvent.playerHitEvent += playerHitEvent;
         eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.playerEvent.reviveEvent += reviveEvent;
         eventManager.playerEvent.dashEvent += dashEvent;
         eventManager.uiEvent.fadeInEvent += fadeIn;
         eventManager.uiEvent.fadeOutEvent += fadeOut;
-        eventManager.stageEvent.warnWithBox += warnWithBox;
         eventManager.uiEvent.enableBlindEvent += enableBlindEvent;
         eventManager.uiEvent.enableBlindEvent += enableDarkEffect;
         eventManager.uiEvent.disableBlindEvent += disableBlindEvent;
@@ -68,6 +77,19 @@ public class UICanvas : MonoBehaviour
         eventManager.uiEvent.enableClearSpotlightEvent += enableClearSpotlight;
         eventManager.uiEvent.disableClearSpotlightEvent += disableClearSpotlight;
         eventManager.uiEvent.onBlindEvent = false;
+        eventManager.stageEvent.onClear = false;
+    }
+
+    void Update()
+    {
+        if (1 < Time.time % 2)  return;
+        currentResolution.x = Screen.width;
+        currentResolution.y = Screen.height;
+        if (!currentResolution.Equals(baseResolution))
+        {
+            eventManager.uiEvent.resolutionChangeEvent();
+            overlayCanvasScaler.scaleFactor = currentResolution.x / baseResolution.x;
+        }
     }
 
     public void disableClearSpotlight()

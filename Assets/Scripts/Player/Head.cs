@@ -21,10 +21,11 @@ public class Head : MonoBehaviour
     EventManager eventManager;
     SpriteRenderer sp;
     Player player;
-    Transform neck, head;
+    Transform neck, head, puppy;
     float correctFactor;
-    bool isAlive;
+    bool movable;
     WaitForSeconds invincibleDelay;
+    Camera mainCamera;
 
     void Awake()
     {
@@ -35,31 +36,52 @@ public class Head : MonoBehaviour
     {
         eventManager = FindObjectOfType<EventManager>();
         player = FindObjectOfType<Player>();
+        mainCamera = Camera.main;
         sp = GetComponent<SpriteRenderer>();
         neck = GetComponent<SpriteSkin>().rootBone;
         head = neck.Find("head");
+        puppy = null;
         correctFactor = neck.rotation.eulerAngles.z + head.rotation.eulerAngles.z;
-        isAlive = true;
+        movable = true;
         invincibleDelay = new WaitForSeconds(player.invincibleDuration);
 
         eventManager.playerEvent.playerHitEvent += playerHitEvent;
         eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.deathEvent += freeze;
         eventManager.playerEvent.reviveEvent += reviveEvent;
+        eventManager.playerEvent.reviveEvent += defreeze;
+        eventManager.stageEvent.clearEvent += clearEvent;
+        eventManager.stageEvent.clearEvent += freeze;
+        eventManager.stageEvent.pauseEvent += freeze;
+        eventManager.stageEvent.resumeEvent += defreeze;
     }
 
     void Update()
     {
-        if (isAlive) 
-            headToMousePos();
+        if (!movable) return;
+
+        if (puppy != null &&  eventManager.stageEvent.onClear)
+        {
+            lookAt(puppy.transform.position);
+        }
+        else
+        {
+            lookAt(mainCamera.ScreenToWorldPoint(Input.mousePosition));
+        }
+
     }
 
-    private void headToMousePos()
+    private void clearEvent()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        puppy = GameObject.FindGameObjectWithTag("Puppy").transform;
+    }
+
+    private void lookAt(Vector3 pos)
+    {
         Vector2 dir;
         float rot, headRot;
 
-        dir = mousePos - neck.position;
+        dir = pos - neck.position;
         rot = 0 < dir.y ? Vector2.Angle(dir, Vector2.right) : 360f - Vector3.Angle(dir, Vector2.right);
 
         headRot = rot + correctFactor;
@@ -90,7 +112,7 @@ public class Head : MonoBehaviour
 
     public void revive()
     {
-        isAlive = true;
+        movable = true;
         setNormalFace();
     }
 
@@ -108,7 +130,6 @@ public class Head : MonoBehaviour
 
     private void deathEvent()
     {
-        isAlive = false;
         StopAllCoroutines();
         setDeadFace();
     }
@@ -116,6 +137,15 @@ public class Head : MonoBehaviour
     private void reviveEvent()
     {
         setNormalFace();
-        isAlive = true;
+    }
+
+    private void freeze()
+    {
+        movable = false;
+    }
+
+    private void defreeze()
+    {
+        movable = true;
     }
 }

@@ -10,6 +10,7 @@ namespace SceneData
         STAGE2_1,
         GAMEOVER,
         CREDIT,
+        OPTION,
     }
 
     public static class SceneInfo
@@ -34,6 +35,8 @@ namespace SceneData
                     return "GameOver";
                 case SceneName.CREDIT:
                     return "Credit";
+                case SceneName.OPTION:
+                    return "Option_Stage";
             }
             return "";
         }

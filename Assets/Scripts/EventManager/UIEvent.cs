@@ -9,6 +9,7 @@ public struct UIEvent
     public delegate bool GetLampStatus();
     public delegate void FadeInEvent();
     public delegate void FadeOutEvent();
+    public delegate void ResolutionChangeEvent();
 
     [HideInInspector] public bool onBlindEvent;
     public EnableBlindEvent enableBlindEvent;
@@ -18,5 +19,5 @@ public struct UIEvent
     public GetLampStatus getLampStatus;
     public FadeInEvent fadeInEvent;
     public FadeOutEvent fadeOutEvent;
-
+    public ResolutionChangeEvent resolutionChangeEvent;
 }

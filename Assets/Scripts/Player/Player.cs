@@ -110,7 +110,9 @@ public class Player : MonoBehaviour
         anim.SetInteger("JumpCount", 0);
 
         eventManager.playerEvent.playerHitEvent += playerHitEvent;
-        eventManager.stageEvent.clearEvent += clearEvent;
+        eventManager.stageEvent.clearEvent += freeze;
+        eventManager.stageEvent.pauseEvent += freeze;
+        eventManager.stageEvent.resumeEvent += defreeze;
         eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.playerEvent.reviveEvent += reviveEvent;
         eventManager.playerEvent.dashEvent += dashEvent;
@@ -512,8 +514,13 @@ public class Player : MonoBehaviour
         return ref s1;
     }
 
-    private void clearEvent()
+    private void freeze()
     {
         movable = false;
+    }
+
+    private void defreeze()
+    {
+        movable = true;
     }
 }

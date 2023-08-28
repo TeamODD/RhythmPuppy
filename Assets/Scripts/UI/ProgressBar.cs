@@ -4,21 +4,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UIEvent;
 
 public class ProgressBar : MonoBehaviour
 {
     [SerializeField] GameObject emptySavePointPrefab;
     [SerializeField] GameObject fullSavePointPrefab;
+    [SerializeField] Transform playerBudge, beginPointTransform, endPointTransform;
 
     AudioSource musicAudioSource;
 
     EventManager eventManager;
     Image fillImage;
-    GameObject playerbudge, puppybudge;
     WaitUntil w;
-    Vector3 initialPlayerBudgePosition;
     GameObject[] emptySavePoint, fullSavePoint;
     Coroutine initCoroutine;
+    Vector2 beginPoint, endPoint;
 
     void Awake()
     {
@@ -29,16 +30,16 @@ public class ProgressBar : MonoBehaviour
     {
         eventManager = FindObjectOfType<EventManager>();
         fillImage = transform.Find("GameProgressGuage").GetComponent<Image>();
-        playerbudge = transform.Find("MovingPlayerBudge").gameObject;
-        puppybudge = transform.Find("PuppyBudge").gameObject;
         musicAudioSource = FindObjectOfType<AudioSource>();
         w = new WaitUntil(() => musicAudioSource.clip != null);
-        initialPlayerBudgePosition = playerbudge.transform.position;
+        beginPoint = beginPointTransform.position;
+        endPoint = endPointTransform.position;
 
         eventManager.stageEvent.gameStartEvent += gameStartEvent;
-        eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.stageEvent.rewindEvent += rewindEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.playerEvent.reviveEvent += gameStartEvent;
+        eventManager.uiEvent.resolutionChangeEvent += resolutionChangeEvent;
 
         fillImage.fillAmount = 0;
         yield return w;
@@ -47,8 +48,8 @@ public class ProgressBar : MonoBehaviour
         for (int i = 0; i < eventManager.savePointTime.Length; i++)
         {
             float normalizedPosition = Mathf.Clamp01(eventManager.savePointTime[i] / musicAudioSource.clip.length);
-            float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, puppybudge.transform.position.x, normalizedPosition);
-            Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
+            float targetX = Mathf.Lerp(beginPoint.x, endPoint.x, normalizedPosition);
+            Vector3 newPosition = new Vector2(targetX, beginPoint.y);
 
             emptySavePoint[i] = Instantiate(emptySavePointPrefab);
             emptySavePoint[i].transform.SetParent(transform);
@@ -90,18 +91,24 @@ public class ProgressBar : MonoBehaviour
         SavePointChecking(fillAmount);
     }
 
+    void resolutionChangeEvent()
+    {
+        beginPoint = beginPointTransform.position;
+        endPoint = endPointTransform.position;
+    }
+
 
     private void MovePlayerBudge(float currentMusicPosition)
     {
         float normalizedPosition = Mathf.Clamp01(currentMusicPosition / musicAudioSource.clip.length);
-        float targetX = Mathf.Lerp(initialPlayerBudgePosition.x, puppybudge.transform.position.x, normalizedPosition);
-        Vector3 newPosition = new Vector3(targetX, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
+        float targetX = Mathf.Lerp(beginPoint.x, endPoint.x, normalizedPosition);
+        Vector2 newPosition = new Vector2(targetX, beginPoint.y);
 
-        playerbudge.transform.position = newPosition;
+        playerBudge.position = newPosition;
 
         if (1 <= normalizedPosition)
         {
-            playerbudge.transform.position = new Vector3(puppybudge.transform.position.x, initialPlayerBudgePosition.y, initialPlayerBudgePosition.z);
+            playerBudge.position = new Vector2(endPoint.x, beginPoint.y);
         }
     }
 
