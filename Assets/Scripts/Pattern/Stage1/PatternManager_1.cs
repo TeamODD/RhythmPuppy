@@ -91,6 +91,7 @@ public class PatternManager_1 : MonoBehaviour
 
         StartCoroutine(Pattern1_b(68f, startTime));
 
+        StartCoroutine(Pattern2_a(4f, startTime));
         StartCoroutine(Pattern2_a(12f, startTime));
         StartCoroutine(Pattern2_a(20f, startTime));
         StartCoroutine(Pattern2_a(28f, startTime));
@@ -109,7 +110,7 @@ public class PatternManager_1 : MonoBehaviour
         StartCoroutine(Pattern2_b_3(114f, startTime));
 
         StartCoroutine(Pattern3(20.0f, startTime));
-        StartCoroutine(Pattern3(85.0f, startTime));
+        StartCoroutine(Pattern3(84.0f, startTime));
 
         StartCoroutine(Pattern4(36f, startTime));
         StartCoroutine(Pattern4(44f, startTime));
@@ -150,9 +151,9 @@ public class PatternManager_1 : MonoBehaviour
         {
             if (0 <= t - startTime + i * delayTime)
             {
-                yield return delay_0_5;
                 Instantiate(Bee_1_a);
                 Instantiate(Warning_1_a);
+                yield return delay_0_5;
             }
         }
             /*patternCount[Type.pattern1_a]++;
@@ -174,9 +175,9 @@ public class PatternManager_1 : MonoBehaviour
         {
             if (0 <= t - startTime + i * delayTime)
             {
-                yield return delay_0_5;
                 Instantiate(Bee_1_b);
                 Instantiate(Warning_1_b);
+                yield return delay_0_5;
             }
             /* patternCount[Type.pattern1_b]++;
              count_1_b++;
@@ -218,14 +219,14 @@ public class PatternManager_1 : MonoBehaviour
         }
         float delayTime = 2;
         WaitForSeconds delay = new WaitForSeconds(delayTime);
-        for (int i = 1; i < 3; i++)
+        for (int i = 1; i < 4; i++) //통나무가 2회 나오길래 i<3을 고쳤습니다. 
         {
             if (0 <= waitTime - startTime + i * delayTime)
             {
-                yield return delay;
-
                 Instantiate(Warning_2_b);
                 Instantiate(Oak_2_b);
+
+                yield return delay; //delay가 if문 첫 시작이라 2초 밀려서 수정했습니다. (나머지 패턴도)
             }
         }
     }
@@ -244,9 +245,9 @@ public class PatternManager_1 : MonoBehaviour
         {
             if (0 <= t - startTime + i * delayTime)
             {
-                yield return delay;
                 Instantiate(Warning_3);
                 Instantiate(Piranha);
+                yield return delay;
             }
         }
 
