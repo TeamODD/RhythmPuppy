@@ -45,6 +45,7 @@ public class PatternManager_1 : MonoBehaviour
     [SerializeField]
     private GameObject Warning_4;
 
+
     Dictionary<Type, float> patternCount;
     EventManager eventManager;
     AudioSource audioSource;
@@ -52,6 +53,7 @@ public class PatternManager_1 : MonoBehaviour
     private int count_1_b;
     private int count_3;
     private int count_4;*/
+
 
     void Awake()
     {
@@ -70,56 +72,56 @@ public class PatternManager_1 : MonoBehaviour
         eventManager.deathEvent += deathEvent;
         eventManager.gameStartEvent += run;
         eventManager.reviveEvent += run;
-/*
-        count_1_a = 0;
-        count_1_b = 0;
-        count_3 = 0;
-        count_4 = 0;*/
-
+        /*
+                count_1_a = 0;
+                count_1_b = 0;
+                count_3 = 0;
+                count_4 = 0;*/
+        
         eventManager.gameStartEvent();
     }
 
     void run()
     {
-        //1초 빠르게 함수 호출(경고가 1초 동안 나오므로), 벌이 날아오는데 1초가 걸리도록 설정
         float startTime = audioSource.time;
 
-        StartCoroutine(Pattern1_a(3.0f, startTime));
+        StartCoroutine(Pattern1_a(4.0f, startTime));
 
-        StartCoroutine(Pattern1_b(67f, startTime));
+        StartCoroutine(Pattern1_b(68f, startTime));
 
-        StartCoroutine(Pattern2_a(11f, startTime));
-        StartCoroutine(Pattern2_a(19f, startTime));
-        StartCoroutine(Pattern2_a(27f, startTime));
-        StartCoroutine(Pattern2_a(35f, startTime));
+        StartCoroutine(Pattern2_a(12f, startTime));
+        StartCoroutine(Pattern2_a(20f, startTime));
+        StartCoroutine(Pattern2_a(28f, startTime));
+        StartCoroutine(Pattern2_a(36f, startTime));
 
-        StartCoroutine(Pattern2_b_2(4.7f, startTime));
-        StartCoroutine(Pattern2_b_2(20.7f, startTime));
-        StartCoroutine(Pattern2_b_2(36.7f, startTime));
-        StartCoroutine(Pattern2_b_2(85f, startTime));
+        StartCoroutine(Pattern2_b_2(5.7f, startTime));
+        StartCoroutine(Pattern2_b_2(21.7f, startTime));
+        StartCoroutine(Pattern2_b_2(37.7f, startTime));
+        StartCoroutine(Pattern2_b_2(86f, startTime));
 
-        StartCoroutine(Pattern2_b_3(12.7f, startTime));
-        StartCoroutine(Pattern2_b_3(28.7f, startTime));
-        StartCoroutine(Pattern2_b_3(91f, startTime));
-        StartCoroutine(Pattern2_b_3(97f, startTime));
-        StartCoroutine(Pattern2_b_3(107f, startTime));
-        StartCoroutine(Pattern2_b_3(113f, startTime));
+        StartCoroutine(Pattern2_b_3(13.7f, startTime));
+        StartCoroutine(Pattern2_b_3(29.7f, startTime));
+        StartCoroutine(Pattern2_b_3(92f, startTime));
+        StartCoroutine(Pattern2_b_3(98f, startTime));
+        StartCoroutine(Pattern2_b_3(108f, startTime));
+        StartCoroutine(Pattern2_b_3(114f, startTime));
 
-        StartCoroutine(Pattern3(19.0f, startTime));
-        StartCoroutine(Pattern3(84.0f, startTime));
+        StartCoroutine(Pattern3(20.0f, startTime));
+        StartCoroutine(Pattern3(85.0f, startTime));
 
-        StartCoroutine(Pattern4(35f, startTime));
-        StartCoroutine(Pattern4(43f, startTime));
-        StartCoroutine(Pattern4(51f, startTime));
-        StartCoroutine(Pattern4(59f, startTime));
-        StartCoroutine(Pattern4(67f, startTime));
-        StartCoroutine(Pattern4(75f, startTime));
+        StartCoroutine(Pattern4(36f, startTime));
+        StartCoroutine(Pattern4(44f, startTime));
+        StartCoroutine(Pattern4(52f, startTime));
+        StartCoroutine(Pattern4(60f, startTime));
+        StartCoroutine(Pattern4(68f, startTime));
+        StartCoroutine(Pattern4(76f, startTime));
 
-        StartCoroutine(Pattern4(83f, startTime));
-        StartCoroutine(Pattern4(91f, startTime));
-        StartCoroutine(Pattern4(99f, startTime));
-        StartCoroutine(Pattern4(107f, startTime));
-        StartCoroutine(Pattern4(115f, startTime));
+        StartCoroutine(Pattern4(84f, startTime));
+        StartCoroutine(Pattern4(92f, startTime));
+        StartCoroutine(Pattern4(100f, startTime));
+        StartCoroutine(Pattern4(108f, startTime));
+        StartCoroutine(Pattern4(116f, startTime));
+        GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc(120f, startTime);
     }
 
     IEnumerator Pattern1_a(float t, float startTime)
@@ -243,52 +245,112 @@ public class PatternManager_1 : MonoBehaviour
     }
     IEnumerator Pattern4(float waitTime, float startTime)
     {
-        yield return new WaitForSeconds(waitTime);
         WaitForSeconds delay_0_5 = new WaitForSeconds(0.5f);
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5;
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5;
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5;
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return new WaitForSeconds(0.7f);
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //3
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //3.5
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //4
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //4.5
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //5
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return new WaitForSeconds(1f); //6
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //6.5
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //7
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return delay_0_5; //7.5
-        Instantiate(Apple);
-        Instantiate(Warning_4);
-        yield return new WaitForSeconds(0.1f);
-        Instantiate(Apple);
-        Instantiate(Warning_4);
+        float currentTime = waitTime - startTime;
+        if (0 <= currentTime)
+        {
+            yield return new WaitForSeconds(currentTime);
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5;
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5;
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5;
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.7f;
+        if (0 <= currentTime)
+        {
+            yield return new WaitForSeconds(0.7f);
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 1;
+        if (0 <= currentTime)
+        {
+            yield return new WaitForSeconds(1f); 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.5f;
+        if (0 <= currentTime)
+        {
+            yield return delay_0_5; 
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
+        currentTime += 0.1f;
+        if (0 <= currentTime)
+        {
+            yield return new WaitForSeconds(0.1f);
+            Instantiate(Apple);
+            Instantiate(Warning_4);
+        }
     }
 
     private void deathEvent()

@@ -31,6 +31,9 @@ public class LoadingInfo : MonoBehaviour
             case 10:
                 SongInfo.text = "Music: Gaming 8bit Music\nArtist: AlexiAction";
                 break;
+            default:
+                SongInfo.text = "";
+                break;
         }
     }
     public void StageInfoFunc()

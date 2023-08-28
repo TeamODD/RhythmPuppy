@@ -5,6 +5,14 @@ using UnityEngine;
 /*[CreateAssetMenu(menuName="Event Manager")]*/
 public class EventManager : MonoBehaviour
 {
+    public enum BackgroundSpeedType
+    {
+        Stop,
+        Slow,
+        Normal,
+        Fast
+    }
+
     public struct PlayerEvent
     {
         public delegate void MarkActivationEvent();
@@ -22,8 +30,6 @@ public class EventManager : MonoBehaviour
         public ShootCancelEvent shootCancelEvent;
     }
 
-    [HideInInspector]
-    public float[] savePointTime;
     public delegate void GameStartEvent();
     public delegate void PlayerHitEvent();
     public delegate void DeathEvent();
@@ -35,6 +41,8 @@ public class EventManager : MonoBehaviour
     public delegate void FadeOutEvent();
     public delegate void WarnWithBox(Vector3 pos, Vector3 size);
 
+    [HideInInspector]
+    public float[] savePointTime;
     public GameStartEvent gameStartEvent;
     public PlayerHitEvent playerHitEvent;
     public DeathEvent deathEvent;
