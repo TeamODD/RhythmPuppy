@@ -44,8 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f6efac91d0bf61469e7f2d18d545ec0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  patternPlaylist: {fileID: 11400000, guid: 20b818cd8bf5ecb4290da296b4216c3b, type: 2}
   ratSwarm: {fileID: 4216593479806984942, guid: 12579abe159e059469538a414fb31964, type: 3}
-  angle: 60
-  delta: 2
-  cooltime: 0.5
+  startDelay: 0
   duration: 20

@@ -14,7 +14,6 @@ public class Pattern4 : MonoBehaviour
     void Awake()
     {
         eventManager = FindObjectOfType<EventManager>();
-        eventManager.playerEvent.deathEvent += deathEvent;
         xPosition = Random.Range(-8.5f, 8.5f);
     }
     void Start()
@@ -33,7 +32,6 @@ public class Pattern4 : MonoBehaviour
 
     void deathEvent()
     {
-        eventManager.playerEvent.deathEvent -= deathEvent;
         Destroy(gameObject);
     }
 }

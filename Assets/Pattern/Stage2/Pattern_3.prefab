@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea34880901804642aa3996ddc5033ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  patternPlaylist: {fileID: 11400000, guid: b3b46adf75b20c64c8f1e4d2d411e44b, type: 2}
   startDelay:
   - 0
   - 0.5

@@ -120,7 +120,7 @@ public class GameClear : MonoBehaviour
         }
         //로딩창 등장
 
-        Save();
+        /*Save();*/
 
         DontDestroyOnLoad(LoadingScreen);
         yield return new WaitForSeconds(2f); //2초후 로딩

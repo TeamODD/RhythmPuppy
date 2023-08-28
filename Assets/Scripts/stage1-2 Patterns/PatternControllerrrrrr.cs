@@ -28,6 +28,7 @@ public class PatternControllerrrrrr : MonoBehaviour
     private GameObject pattern10;
     [SerializeField]
     /*private GameObject gameprogress;*/
+    bool isPuppyShown;
 
     private List<float> pattern6Timings = new List<float>
     {
@@ -98,6 +99,7 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private void Start()
     {
+        isPuppyShown = false;
         eventManager = FindObjectOfType<EventManager>();
         audioSource = FindObjectOfType<AudioSource>();
         audioSource.clip = music;
@@ -196,6 +198,15 @@ public class PatternControllerrrrrr : MonoBehaviour
         StartCoroutine(RunPattern8c());
         StartCoroutine(RunPattern9());
         StartCoroutine(RunPattern10());
+    }
+
+    void Update()
+    {
+        if (!isPuppyShown && audioSource.clip.length - 2f < audioSource.time)
+        {
+            isPuppyShown = true;
+            GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc();
+        }
     }
 
     /*private void Checkingsavepoint() //현재 GameProgress에서 음악 구간과 진행도 바는 설정해주는 상황

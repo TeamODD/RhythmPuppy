@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4b67c6c6eb52d409617a3b4796dc9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  patternPlaylist: {fileID: 11400000, guid: 14dd42d6b6703414d92558df7bf9b6de, type: 2}
   cat: {fileID: 7425868369605693209, guid: 26cb71d2f187a5f45a55839efe7438a6, type: 3}
-  mark: {fileID: 8492249118385360277, guid: 1750fcde41fd4c744b37b3a3fbb5165c, type: 3}

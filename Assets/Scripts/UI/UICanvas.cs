@@ -92,6 +92,11 @@ public class UICanvas : MonoBehaviour
         }
     }
 
+    void restartEvent()
+    {
+        return;
+    }
+
     public void disableClearSpotlight()
     {
         setImageAlpha(ref clearSpotlightImage, 0);

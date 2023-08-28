@@ -1044,7 +1044,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &448613971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5221,7 +5221,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weasel: {fileID: 9001390689507493206, guid: 868c5b0fa6abfea48a1bd181cf319265, type: 3}
   weaselWarning: {fileID: 2141889054}
-  weaselSpeed: 5
+  weaselUpSpeed: 0
+  weaselDownspeed: 0
   rhythmTimings:
   - 0
   - 0.6

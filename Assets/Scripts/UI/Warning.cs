@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class Warning : MonoBehaviour
                 Destroy(gameObject);
          }
 
-        destroy().Forget();
+        StartCoroutine(destroy());
     }
 
     void Update()
@@ -43,9 +44,9 @@ public class Warning : MonoBehaviour
         }
     }
 
-    private async UniTask destroy()
+    private IEnumerator destroy()
     {
-        await UniTask.Delay(System.TimeSpan.FromSeconds(1));
+        yield return new WaitForSeconds(1);
         Destroy(gameObject);
     }
 }

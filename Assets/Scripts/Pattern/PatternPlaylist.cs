@@ -6,15 +6,15 @@ using UnityEngine;
 
 namespace Patterns
 {
-    public delegate void PatternAction(PatternPlaylist patternPlaylist, Timeline timeline);
+    public delegate bool PatternAction(PatternPlaylist patternPlaylist, Timeline timeline);
     [Serializable, CreateAssetMenu(menuName="Create New Pattern Playlist")]
     public class PatternPlaylist : ScriptableObject
     {
-        public GameObject prefab;
         [TimelineElementTitle()]
         public Timeline[] timeline;
 
         PatternAction patternAction;
+        GameObject self;
 
         public void init(PatternAction patternAction)
         {
@@ -54,7 +54,7 @@ namespace Patterns
                     if (timeline[i].startAt < startTime) continue;
                     delay = new WaitForSeconds(delayTime);
                     yield return delay;
-                    patternAction(this, timeline[i]);
+                    if (!patternAction(this, timeline[i])) yield break;
                 }
                 else
                 {
@@ -73,7 +73,7 @@ namespace Patterns
                         {
                             yield return repeatDelay;
                         }
-                        patternAction(this, timeline[i]);
+                        if (!patternAction(this, timeline[i])) yield break;
                     }
                 }
             }

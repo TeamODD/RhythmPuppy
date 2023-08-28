@@ -9,41 +9,50 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using EventManagement;
+using static EventManagement.StageEvent;
 
 namespace Stage_2
 {
-    [Serializable]
-    public struct Pattern_3
+    public class Pattern_3 : MonoBehaviour
     {
         public PatternPlaylist patternPlaylist;
         [SerializeField] float[] startDelay;
         [SerializeField] float duration;
 
         EventManager eventManager;
-        Transform parent;
-        Camera mainCamera;
-        CancellationTokenSource cancel;
+        AudioSource audioSource;
+        Coroutine coroutine;
 
-        public void init(Transform parent, EventManager eventManager, Camera mainCamera)
-        { 
-            this.parent = parent;
-            this.eventManager = eventManager;
-            this.mainCamera = mainCamera;
-            this.cancel = new CancellationTokenSource();
+        void Awake()
+        {
+            init();
+        }
+
+        public void init()
+        {
+            eventManager = FindObjectOfType<EventManager>();
+            audioSource = FindObjectOfType<AudioSource>();
             patternPlaylist.init(action);
             patternPlaylist.sortTimeline();
 
-            eventManager.playerEvent.deathEvent += deathEvent;
+            coroutine = StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
-
-        public void action(PatternPlaylist patternPlaylist, Timeline timeline)
+        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
         {
-            if (!timeline.duration.Equals(0))
-                setDuration(timeline.duration - startDelay[startDelay.Length - 1]);
-            else if (!timeline.endAt.Equals(0))
-                setDuration(timeline.startAt, timeline.endAt);
+            try
+            {
+                if (!timeline.duration.Equals(0))
+                    setDuration(timeline.duration - startDelay[startDelay.Length - 1]);
+                else if (!timeline.endAt.Equals(0))
+                    setDuration(timeline.startAt, timeline.endAt);
 
-            runPattern(timeline).Forget();
+                StartCoroutine(runPattern(timeline));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public void setDuration(float duration)
@@ -56,7 +65,7 @@ namespace Stage_2
             this.duration = end - start - startDelay[startDelay.Length - 1];
         }
 
-        private async UniTask runPattern(Timeline timeline)
+        private IEnumerator runPattern(Timeline timeline)
         {
             if (startDelay.Length % 2 == 0)
             {
@@ -64,24 +73,24 @@ namespace Stage_2
             }
 
             int i = 0;
-            await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i++]));
+            yield return new WaitForSeconds(startDelay[i++]);
             eventManager.uiEvent.enableBlindEvent();
             while (i < startDelay.Length)
             {
-                await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i] - startDelay[i - 1]));
+                yield return new WaitForSeconds(startDelay[i] - startDelay[i - 1]);
                 i++;
                 eventManager.uiEvent.disableBlindEvent();
-                await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i] - startDelay[i - 1]));
+                yield return new WaitForSeconds(startDelay[i] - startDelay[i - 1]);
                 i++;
                 eventManager.uiEvent.enableBlindEvent();
             }
-            await UniTask.Delay(System.TimeSpan.FromSeconds(duration));
+            yield return new WaitForSeconds(duration);
             eventManager.uiEvent.disableBlindEvent();
         }
 
-        public void deathEvent()
+        void deathEvent()
         {
-            cancel.Cancel();
+            StopAllCoroutines();
         }
     }
 }

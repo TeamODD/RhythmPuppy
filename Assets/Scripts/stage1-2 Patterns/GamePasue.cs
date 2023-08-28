@@ -8,17 +8,16 @@ using UnityEngine.SceneManagement;
 public class GamePasue : MonoBehaviour
 {
     private bool isPaused = false;
-    AudioSource stage1_2BGM;
-    [SerializeField]
-    GameObject EventSystem;
+    AudioSource BGM;
     EventManager eventManager;
 
     private void Start()
     {
-        stage1_2BGM = GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>();
+        /*stage1_2BGM = GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>();*/
+        BGM = FindObjectOfType<AudioSource>();
         eventManager = FindObjectOfType<EventManager>();
         eventManager.stageEvent.pauseEvent += PauseGame;
-        eventManager.stageEvent.resumeEvent += ResumeGame;
+        eventManager.stageEvent.resumeEvent += ResumeEvent;
     }
 
     private void Update()
@@ -47,12 +46,10 @@ public class GamePasue : MonoBehaviour
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
         isPaused = true;
 
-        EventSystem.SetActive(false);
-
         // 음악을 일시정지합니다.
-        if (stage1_2BGM != null && stage1_2BGM.isPlaying)
+        if (BGM != null && BGM.isPlaying)
         {
-            stage1_2BGM.Pause();
+            BGM.Pause();
         }
 
         // Option_Stage 씬을 로드합니다.
@@ -63,16 +60,19 @@ public class GamePasue : MonoBehaviour
 
     public void ResumeGame()
     {
+        eventManager.stageEvent.resumeEvent();
+    }
+
+    public void ResumeEvent()
+    {
         Time.timeScale = 1f; // 시간 경과를 정상적으로 진행합니다.
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
         isPaused = false;
 
-        EventSystem.SetActive(true);
-
         // 음악을 다시 재생합니다.
-        if (stage1_2BGM != null && !stage1_2BGM.isPlaying)
+        if (BGM != null && !BGM.isPlaying)
         {
-            stage1_2BGM.Play();
+            BGM.Play();
         }
 
         // Option_Stage 씬을 언로드합니다.

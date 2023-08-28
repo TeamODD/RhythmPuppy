@@ -1,55 +1,67 @@
-using Cysharp.Threading.Tasks;
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using Patterns;
 using UnityEngine;
 using EventManagement;
+using System.Collections;
 
 namespace Stage_2
 {
-    [Serializable]
-    public struct Pattern_1a
+    public class Pattern_1a : MonoBehaviour
     {
         public PatternPlaylist patternPlaylist;
         public GameObject cat;
 
         EventManager eventManager;
-        Transform parent;
-        Camera mainCamera;
-        CancellationTokenSource cancel;
         List<GameObject> objectList;
+        AudioSource audioSource;
+        Coroutine coroutine;
 
-        public void init(Transform parent, EventManager eventManager, Camera mainCamera)
+        void Awake()
         {
-            this.parent = parent;
-            this.eventManager = eventManager;
-            this.mainCamera = mainCamera;
-            this.cancel = new CancellationTokenSource();
+            eventManager = FindObjectOfType<EventManager>();
+            audioSource = FindObjectOfType<AudioSource>();
+            init();
+        }
+
+        public void init()
+        {
             this.objectList = new List<GameObject>();
             patternPlaylist.init(action);
             patternPlaylist.sortTimeline();
 
-            eventManager.playerEvent.deathEvent += deathEvent;
+            coroutine = StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
 
-        public void action(PatternPlaylist patternPlaylist, Timeline timeline)
+        void OnDestroy()
         {
-            createObjects().Forget();
+            StopCoroutine(coroutine);
         }
-        private async UniTask createObjects()
-        {
-            float r = UnityEngine.Random.Range(-8f, 8f);
 
-            warn(r);
-            await UniTask.Delay(System.TimeSpan.FromSeconds(1));
-            createCat(r);
+        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
+        {
+            try
+            {
+                StartCoroutine(createObjects());
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        private IEnumerator createObjects()
+        {
+            float r = Random.Range(-8f, 8f);
+
+            if (gameObject != null) warn(r);
+            yield return new WaitForSeconds(1);
+            if (gameObject != null) createCat(r);
         }
 
         private void createCat(float x)
         {
-            GameObject o = MonoBehaviour.Instantiate(cat);
-            o.transform.SetParent(parent);
+            GameObject o = Instantiate(cat);
+            o.transform.SetParent(transform.parent);
             o.transform.position = new Vector3(x, o.transform.position.y, 0);
             o.SetActive(true);
             objectList.Add(o);
@@ -57,18 +69,18 @@ namespace Stage_2
 
         private void warn(float x)
         {
-            Vector2 v = mainCamera.WorldToScreenPoint(new Vector2(x, 0));
+            Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, 0));
             eventManager.stageEvent.warnWithBox(v, new Vector3(300, 1080, 0));
         }
 
         public void deathEvent()
         {
+            StopCoroutine(coroutine);
             for (int i = 0; i < objectList.Count; i++)
             {
-                MonoBehaviour.Destroy(objectList[i]);
+                Destroy(objectList[i]);
             }
             objectList.Clear();
-            cancel.Cancel();
         }
     }
 }

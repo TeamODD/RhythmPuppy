@@ -9,11 +9,11 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using EventManagement;
+using static EventManagement.StageEvent;
 
 namespace Stage_2
 {
-    [Serializable]
-    public struct Pattern_5 
+    public class Pattern_5 : MonoBehaviour
     {
         public PatternPlaylist patternPlaylist;
         public GameObject ratSwarm;
@@ -22,31 +22,41 @@ namespace Stage_2
 
         EventManager eventManager;
         Transform parent;
-        Camera mainCamera;
-        CancellationTokenSource cancel;
         List<GameObject> objectList;
+        AudioSource audioSource;
 
-        public void init(Transform parent, EventManager eventManager, Camera mainCamera)
+        void Awake()
         {
-            this.parent = parent;
-            this.eventManager = eventManager;
-            this.mainCamera = mainCamera;
-            this.cancel = new CancellationTokenSource();
+            init();
+        }
+
+        public void init()
+        {
+            eventManager = FindObjectOfType<EventManager>();
+            audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
             patternPlaylist.init(action);
             patternPlaylist.sortTimeline();
 
-            eventManager.playerEvent.deathEvent += deathEvent;
+
+            StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
-
-        public void action(PatternPlaylist patternPlaylist, Timeline timeline)
+        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
         {
-            if (!timeline.duration.Equals(0))
-                setDuration(timeline.duration - startDelay);
-            else if (!timeline.endAt.Equals(0))
-                setDuration(timeline.startAt, timeline.endAt);
+            try
+            {
+                if (!timeline.duration.Equals(0))
+                    setDuration(timeline.duration - startDelay);
+                else if (!timeline.endAt.Equals(0))
+                    setDuration(timeline.startAt, timeline.endAt);
 
-            runPattern().Forget();
+                StartCoroutine(runPattern());
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public void setDuration(float duration)
@@ -59,13 +69,13 @@ namespace Stage_2
             this.duration = end - start - startDelay;
         }
 
-        private async UniTask runPattern()
+        private IEnumerator runPattern()
         {
             bool r = UnityEngine.Random.Range(0, 2) == 0 ? true : false;
 
             warn(r);
 
-            await UniTask.Delay(System.TimeSpan.FromSeconds(1));
+            yield return new WaitForSeconds(1);
 
             GameObject o = MonoBehaviour.Instantiate(ratSwarm);
             o.transform.SetParent(parent);
@@ -87,8 +97,8 @@ namespace Stage_2
             o.SetActive(true);
             objectList.Add(o);
 
-            await UniTask.Delay(System.TimeSpan.FromSeconds(duration));
-            MonoBehaviour.Destroy(o);
+            yield return new WaitForSeconds(duration);
+            Destroy(o);
             objectList.Clear();
         }
 
@@ -99,7 +109,7 @@ namespace Stage_2
                 pos.x = 10f;
             else
                 pos.x = -10f;
-            pos = mainCamera.WorldToScreenPoint(pos);
+            pos = Camera.main.WorldToScreenPoint(pos);
 
             eventManager.stageEvent.warnWithBox(pos, new Vector3(700, 150, 0));
         }
@@ -108,10 +118,9 @@ namespace Stage_2
         {
             for (int i = 0; i < objectList.Count; i++)
             {
-                MonoBehaviour.Destroy(objectList[i]);
+                Destroy(objectList[i]);
             }
             objectList.Clear();
-            cancel.Cancel();
         }
     }
 }

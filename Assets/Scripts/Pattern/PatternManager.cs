@@ -7,110 +7,64 @@ using Cysharp.Threading.Tasks;
 using Stage_2;
 using UnityEngine.SceneManagement;
 using EventManagement;
+using UnityEditor.SceneManagement;
 
 public class PatternManager : MonoBehaviour
 {
-    private enum StageType
-    {
-        Tutorial,
-        Stage_1_1,
-        Stage_1_2,
-        Stage_2_1,
-        Stage_2_2,
-    }
-
-    [SerializeField] StageType stageType;
-    [SerializeField] Stage_2_1 stage_2_1;
+    [SerializeField] GameObject stagePrefab;
+    public float[] savePointTime;
     [SerializeField] float startDelayTime;
     [SerializeField] GameObject puppyPrefab;
+    [SerializeField] AudioClip music;
 
     [HideInInspector] 
     public EventManager eventManager;
-    PatternManager patternManager;
+    GameObject stage;
     AudioSource audioSource;
     List<Coroutine> coroutineList;
-    GameObject puppy;
+    bool isPuppyShown;
 
     void Awake()
     {
-        init().Forget();
+        StartCoroutine(init());
     }
 
-    private async UniTask init()
+    private IEnumerator init()
     {
+        isPuppyShown = false;
         eventManager = FindObjectOfType<EventManager>();
-        patternManager = GetComponent<PatternManager>();
         audioSource = FindObjectOfType<AudioSource>();
-        coroutineList = new List<Coroutine>();
-        puppy = null;
-        setStageInfo();
-
+        if (stage != null) Destroy(stage);
+        stage = null;
+        audioSource.clip = music;
 
         eventManager.stageEvent.gameStartEvent += gameStartEvent;
         eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.playerEvent.reviveEvent += gameStartEvent;
+        eventManager.savePointTime = savePointTime;
 
-        await UniTask.Delay(System.TimeSpan.FromSeconds(startDelayTime));
+        yield return new WaitForSeconds(startDelayTime);
         eventManager.stageEvent.gameStartEvent();
     }
 
     void Update()
     {
-        if (puppy != null) return;
-        if (audioSource.clip.length - 5f < audioSource.time)
+        if (!isPuppyShown && audioSource.clip.length - 3f < audioSource.time)
         {
-            puppy = Instantiate(puppyPrefab);
-            puppy.SetActive(true);
+            isPuppyShown = true;
+            GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc();
         }
-    }
-
-    private void setStageInfo()
-    {
-        AudioClip clip = null;
-        switch(stageType)
-        {
-            case StageType.Tutorial:
-                break;
-            case StageType.Stage_1_1:
-                break;
-            case StageType.Stage_1_2:
-                break;
-            case StageType.Stage_2_1:
-                clip = stage_2_1.music;
-                stage_2_1.init(patternManager, eventManager);
-                eventManager.savePointTime = stage_2_1.savePointTime;
-                break;
-            case StageType.Stage_2_2:
-                break;
-        }
-        audioSource.clip = clip;
     }
 
     private void gameStartEvent()
     {
-        switch (stageType)
-        {
-            case StageType.Tutorial:
-                break;
-            case StageType.Stage_1_1:
-                break;
-            case StageType.Stage_1_2:
-                break;
-            case StageType.Stage_2_1:
-                stage_2_1.Run(audioSource.time, out coroutineList);
-                break;
-            case StageType.Stage_2_2:
-                break;
-        }
+        stage = Instantiate(stagePrefab);
+        stage.transform.SetParent(transform);
+        stage.SetActive(true);
     }
 
     private void deathEvent()
     {
-        int i;
-        for (i = 0; i < coroutineList.Count; i++)
-        {
-            StopCoroutine(coroutineList[i]);
-        }
-        coroutineList.Clear();
+        stage = null;
     }
 }

@@ -9,45 +9,53 @@ using EventManagement;
 
 namespace Stage_2
 {
-    [Serializable]
-    public struct Pattern_6 
+    public class Pattern_6 : MonoBehaviour
     {
         public PatternPlaylist patternPlaylist;
         public GameObject cat;
 
         EventManager eventManager;
-        Transform parent;
-        Camera mainCamera;
-        CancellationTokenSource cancel;
+        AudioSource audioSource;
         List<GameObject> objectList;
 
-        public void init(Transform parent, EventManager eventManager, Camera mainCamera)
+        void Awake()
         {
-            this.parent = parent;
-            this.eventManager = eventManager;
-            this.mainCamera = mainCamera;
-            this.cancel = new CancellationTokenSource();
+            init();
+        }
+
+        public void init()
+        {
+            eventManager = FindObjectOfType<EventManager>();
+            audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
             patternPlaylist.init(action);
             patternPlaylist.sortTimeline();
 
-            eventManager.playerEvent.deathEvent += deathEvent;
-        }
 
-        public void action(PatternPlaylist patternPlaylist, Timeline timeline)
+            StartCoroutine(patternPlaylist.Run(audioSource.time));
+        }
+        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
         {
-            runPattern().Forget();
+            try
+            {
+                StartCoroutine(runPattern());
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        private async UniTask runPattern()
+        private IEnumerator runPattern()
         {
             eventManager.playerEvent.markActivationEvent();
-            await UniTask.Delay(System.TimeSpan.FromSeconds(1));
+            yield return new WaitForSeconds(1);
             eventManager.playerEvent.markInactivationEvent();
 
             float r = UnityEngine.Random.Range(-8f, 8f);
-            GameObject catObject = MonoBehaviour.Instantiate(cat);
-            catObject.transform.SetParent(parent, false);
+            GameObject catObject = Instantiate(cat);
+            catObject.transform.SetParent(transform.parent, false);
             catObject.transform.position = new Vector3(r, 5, 0);
             catObject.SetActive(true);
             objectList.Add(catObject);
@@ -57,10 +65,9 @@ namespace Stage_2
         {
             for (int i = 0; i < objectList.Count; i++)
             {
-                MonoBehaviour.Destroy(objectList[i]);
+                Destroy(objectList[i]);
             }
             objectList.Clear();
-            cancel.Cancel();
         }
     }
 }
