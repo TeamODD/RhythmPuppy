@@ -49,6 +49,7 @@ public class PatternManager_1 : MonoBehaviour
     Dictionary<Type, float> patternCount;
     EventManager eventManager;
     AudioSource audioSource;
+    bool isPuppyShown;
     /*private int count_1_a;
     private int count_1_b;
     private int count_3;
@@ -83,6 +84,7 @@ public class PatternManager_1 : MonoBehaviour
 
     void run()
     {
+        isPuppyShown = false;
         float startTime = audioSource.time;
 
         StartCoroutine(Pattern1_a(4.0f, startTime));
@@ -121,7 +123,16 @@ public class PatternManager_1 : MonoBehaviour
         StartCoroutine(Pattern4(100f, startTime));
         StartCoroutine(Pattern4(108f, startTime));
         StartCoroutine(Pattern4(116f, startTime));
-        GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc(120f, startTime);
+        /*GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc(120f, startTime);*/
+    }
+
+    void Update()
+    {
+        if (!isPuppyShown && audioSource.clip.length - 8f < audioSource.time)
+        {
+            isPuppyShown = true;
+            GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc();
+        }
     }
 
     IEnumerator Pattern1_a(float t, float startTime)

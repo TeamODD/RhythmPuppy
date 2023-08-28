@@ -13,6 +13,7 @@ TagManager:
   - EventSystem
   - Music
   - Sound
+  - Puppy
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - Projectile
   - Player
   - PlayerHitbox
-  - puppy
+  - Puppy
   - 
   - 
   - 

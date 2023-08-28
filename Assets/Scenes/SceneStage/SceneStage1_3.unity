@@ -536,7 +536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cde77d9f3dccf6c46ba3532492a19826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stage1_2BGM: {fileID: 991858439}
+  EventSystem: {fileID: 0}
 --- !u!4 &370963102
 Transform:
   m_ObjectHideFlags: 0
@@ -1376,7 +1376,7 @@ GameObject:
   - component: {fileID: 991858439}
   m_Layer: 0
   m_Name: Stage 1-3 music
-  m_TagString: Untagged
+  m_TagString: Music
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -25,20 +25,4 @@ public class OptionController : MonoBehaviour
                 mainCameraToturnOff.SetActive(false);
         }
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape)) // ESC 키를 누르면 일시정지/해제
-        {
-            if (SceneManager.GetSceneByName("Option_Stage").isLoaded)
-            {
-                SceneManager.UnloadSceneAsync("Option_Stage");
-            }
-            if (SceneManager.GetSceneByName("Option_Menu").isLoaded)
-            {
-                SceneManager.UnloadSceneAsync("Option_Menu");
-            }
-        }
-    }
-
 }

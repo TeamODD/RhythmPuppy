@@ -31,7 +31,7 @@ public class GameOver : MonoBehaviour
         {
             Image image = obj.GetComponent<Image>();
             Color originalColor = image.color;
-            image.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+            image.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
         }
     }
 

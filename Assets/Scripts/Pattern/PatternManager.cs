@@ -22,12 +22,14 @@ public class PatternManager : MonoBehaviour
     [SerializeField] StageType stageType;
     [SerializeField] Stage_2_1 stage_2_1;
     [SerializeField] float startDelayTime;
+    [SerializeField] GameObject puppyPrefab;
 
     [HideInInspector] 
     public EventManager eventManager;
     PatternManager patternManager;
     AudioSource audioSource;
     List<Coroutine> coroutineList;
+    GameObject puppy;
 
     void Awake()
     {
@@ -40,6 +42,7 @@ public class PatternManager : MonoBehaviour
         patternManager = GetComponent<PatternManager>();
         audioSource = FindObjectOfType<AudioSource>();
         coroutineList = new List<Coroutine>();
+        puppy = null;
         setStageInfo();
 
 
@@ -49,6 +52,16 @@ public class PatternManager : MonoBehaviour
 
         await UniTask.Delay(System.TimeSpan.FromSeconds(startDelayTime));
         eventManager.gameStartEvent();
+    }
+
+    void Update()
+    {
+        if (puppy != null) return;
+        if (audioSource.clip.length - 5f < audioSource.time)
+        {
+            puppy = Instantiate(puppyPrefab);
+            puppy.SetActive(true);
+        }
     }
 
     private void setStageInfo()

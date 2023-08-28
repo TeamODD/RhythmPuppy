@@ -43,12 +43,20 @@ public class UICanvas : MonoBehaviour
         eventManager.deathEvent += deathEvent;
         eventManager.reviveEvent += reviveEvent;
         eventManager.playerEvent.dashEvent += dashEvent;
-        eventManager.lampOnEvent += disableDarkEffect;
-        eventManager.lampOffEvent += enableDarkEffect;
         eventManager.fadeInEvent += fadeIn;
         eventManager.fadeOutEvent += fadeOut;
         eventManager.warnWithBox += warnWithBox;
     }
+
+    void Update()
+    {
+        if (1f < Time.time % 2) return;
+
+        if (eventManager.isLampOn)
+            disableDarkEffect();
+        else
+            enableDarkEffect();
+}
 
     public void enableDarkEffect()
     {

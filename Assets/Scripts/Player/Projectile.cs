@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static EventManager;
 using static EventManager.PlayerEvent;
 
 public class Projectile : MonoBehaviour
@@ -42,6 +43,7 @@ public class Projectile : MonoBehaviour
         correctFactor = 16f;
         data = new ProjectileData(rad, correctFactor);
 
+        eventManager.clearEvent += clearEvent;
         eventManager.playerEvent.shootEvent += shootEvent;
         eventManager.playerEvent.teleportEvent += stop;
         eventManager.playerEvent.shootCancelEvent += stop;
@@ -70,6 +72,10 @@ public class Projectile : MonoBehaviour
         if (col.gameObject.CompareTag("Ground"))
         {
             dir = Vector3.zero;
+        }
+        else if (LayerMask.NameToLayer("Puppy").Equals(col.gameObject.layer) || col.gameObject.CompareTag("Puppy"))
+        {
+            eventManager.clearEvent();
         }
     }
 
@@ -111,5 +117,10 @@ public class Projectile : MonoBehaviour
             dir = Vector3.zero;
             transform.position = mainCamera.ViewportToWorldPoint(pos);
         }
+    }
+
+    private void clearEvent()
+    {
+        /* 정의해주세요 */
     }
 }

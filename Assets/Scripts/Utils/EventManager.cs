@@ -31,6 +31,7 @@ public class EventManager : MonoBehaviour
     }
 
     public delegate void GameStartEvent();
+    public delegate void ClearEvent();
     public delegate void PlayerHitEvent();
     public delegate void DeathEvent();
     public delegate void RewindEvent();
@@ -44,12 +45,12 @@ public class EventManager : MonoBehaviour
     [HideInInspector]
     public float[] savePointTime;
     public GameStartEvent gameStartEvent;
+    public ClearEvent clearEvent;
     public PlayerHitEvent playerHitEvent;
     public DeathEvent deathEvent;
     public RewindEvent rewindEvent;
     public ReviveEvent reviveEvent;
-    public LampOnEvent lampOnEvent;
-    public LampOffEvent lampOffEvent;
+    public bool isLampOn;
     public FadeInEvent fadeInEvent;
     public FadeOutEvent fadeOutEvent;
     public WarnWithBox warnWithBox;
