@@ -1,3 +1,4 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,9 +42,9 @@ public class Head : MonoBehaviour
         isAlive = true;
         invincibleDelay = new WaitForSeconds(player.invincibleDuration);
 
-        eventManager.playerHitEvent += playerHitEvent;
-        eventManager.deathEvent += deathEvent;
-        eventManager.reviveEvent += reviveEvent;
+        eventManager.playerEvent.playerHitEvent += playerHitEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += reviveEvent;
     }
 
     void Update()

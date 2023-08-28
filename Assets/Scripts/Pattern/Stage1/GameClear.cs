@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
-
+using EventManagement;
+using SceneData;
 
 public class GameClear : MonoBehaviour
 {
@@ -44,7 +45,7 @@ public class GameClear : MonoBehaviour
     void Start()
     {
         eventManager = FindObjectOfType<EventManager>();
-        eventManager.clearEvent += Clear;
+        eventManager.stageEvent.clearEvent += Clear;
         clear = false;
         Collider = gameObject.GetComponent<CircleCollider2D>();
         PuppyTransform = gameObject.transform.position;
@@ -124,15 +125,16 @@ public class GameClear : MonoBehaviour
         DontDestroyOnLoad(LoadingScreen);
         yield return new WaitForSeconds(2f); //2초후 로딩
         Debug.Log("Loading..");
-        var mAsymcOperation = SceneManager.LoadSceneAsync("SceneMenu_01", LoadSceneMode.Single);
+        var mAsymcOperation = SceneManager.LoadSceneAsync(SceneInfo.getSceneName(SceneName.STAGEMENU), LoadSceneMode.Single);
         Debug.Log("Loading Complete");
         LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
         yield return mAsymcOperation;
-        LoadingScreen.transform.position = new Vector3(0, 0, 0);
+
+        /*LoadingScreen.transform.position = new Vector3(0, 0, 0);
         Debug.Log("FadeOut");
         mAsymcOperation = SceneManager.UnloadSceneAsync("SceneStage1");
         Debug.Log("UnLoad Default Scene");
-        yield return mAsymcOperation;
+        yield return mAsymcOperation;*/
     }
 
 

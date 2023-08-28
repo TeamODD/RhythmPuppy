@@ -6,6 +6,7 @@ using System.Threading;
 using Patterns;
 using Unity.VisualScripting;
 using UnityEngine;
+using EventManagement;
 
 namespace Stage_2
 {
@@ -31,7 +32,7 @@ namespace Stage_2
             patternPlaylist.init(action);
             patternPlaylist.sortTimeline();
 
-            eventManager.deathEvent += deathEvent;
+            eventManager.playerEvent.deathEvent += deathEvent;
         }
 
         public void action(PatternPlaylist patternPlaylist, Timeline timeline)
@@ -56,7 +57,7 @@ namespace Stage_2
         private void warn(float x)
         {
             Vector2 v = mainCamera.WorldToScreenPoint(new Vector2(x, -4.3f - 0.5f));
-            eventManager.warnWithBox(v, new Vector3(200, 500, 0));
+            eventManager.stageEvent.warnWithBox(v, new Vector3(200, 500, 0));
         }
 
         public void deathEvent()

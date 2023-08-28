@@ -1,9 +1,9 @@
 using Cysharp.Threading.Tasks;
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static EventManager;
 
 public class ProgressBar : MonoBehaviour
 {
@@ -35,10 +35,10 @@ public class ProgressBar : MonoBehaviour
         w = new WaitUntil(() => musicAudioSource.clip != null);
         initialPlayerBudgePosition = playerbudge.transform.position;
 
-        eventManager.gameStartEvent += gameStartEvent;
-        eventManager.deathEvent += deathEvent;
-        eventManager.rewindEvent += rewindEvent;
-        eventManager.reviveEvent += gameStartEvent;
+        eventManager.stageEvent.gameStartEvent += gameStartEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.stageEvent.rewindEvent += rewindEvent;
+        eventManager.playerEvent.reviveEvent += gameStartEvent;
 
         fillImage.fillAmount = 0;
         yield return w;

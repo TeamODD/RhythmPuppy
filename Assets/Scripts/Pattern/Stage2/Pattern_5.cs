@@ -8,6 +8,7 @@ using Patterns;
 using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using EventManagement;
 
 namespace Stage_2
 {
@@ -35,7 +36,7 @@ namespace Stage_2
             patternPlaylist.init(action);
             patternPlaylist.sortTimeline();
 
-            eventManager.deathEvent += deathEvent;
+            eventManager.playerEvent.deathEvent += deathEvent;
         }
 
         public void action(PatternPlaylist patternPlaylist, Timeline timeline)
@@ -100,7 +101,7 @@ namespace Stage_2
                 pos.x = -10f;
             pos = mainCamera.WorldToScreenPoint(pos);
 
-            eventManager.warnWithBox(pos, new Vector3(700, 150, 0));
+            eventManager.stageEvent.warnWithBox(pos, new Vector3(700, 150, 0));
         }
 
         public void deathEvent()

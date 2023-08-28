@@ -767,8 +767,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440943201525982827, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440943201525982827, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
       propertyPath: m_SortingOrder
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440943201525982827, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8990387341346384610, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
       propertyPath: m_Name
@@ -1236,7 +1244,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   savePointTime: []
-  isLampOn: 0
 --- !u!4 &1068771751
 Transform:
   m_ObjectHideFlags: 0

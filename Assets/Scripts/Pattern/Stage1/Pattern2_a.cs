@@ -1,3 +1,4 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class Pattern2_a : MonoBehaviour
     void Start()
     {
         eventManager = FindObjectOfType<EventManager>();
-        eventManager.deathEvent += deathEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
         rb = gameObject.GetComponent<Rigidbody2D>();
         time = 0;
         Destroy(gameObject, 4.2f);
@@ -35,7 +36,7 @@ public class Pattern2_a : MonoBehaviour
 
     private void deathEvent()
     {
-        eventManager.deathEvent -= deathEvent;
+        eventManager.playerEvent.deathEvent -= deathEvent;
         Destroy(gameObject);
     }
 }
