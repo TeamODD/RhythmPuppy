@@ -296,7 +296,7 @@ public class Pattern888bbb : MonoBehaviour
             weaselObjectRigidbody.velocity = Vector2.up * 10f;
         }
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.2f);
 
         for (int i = 0; i < weaselObjects.Count; i++)
         {

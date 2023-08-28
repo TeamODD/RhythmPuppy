@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,10 +16,15 @@ public class GotoSelectStage : MonoBehaviour
     GameObject PressAnyKeyToPlayGame;
     [SerializeField]
     float fadeDuration;
+    [SerializeField]
+    float comedownspeed;
+
+    private bool FadeInDone = false;
+    private bool FadeOutDone = false;
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) || Input.anyKeyDown) 
+        if (Input.GetMouseButtonDown(0) || Input.anyKeyDown)
         {
             PlaySelectSound.instance.SelectSound();
             PlaySelectSound.instance.audioSourceSelect.Play();
@@ -26,13 +32,25 @@ public class GotoSelectStage : MonoBehaviour
             SceneManager.LoadScene("SceneMenu_01");
 
         }
+
+        if (FadeInDone)
+        {
+            FadeInDone = false;
+            StartCoroutine(FadeOutText(PressAnyKeyToPlayGame));
+        }
+        else if (FadeOutDone)
+        {
+            FadeOutDone = false;
+            StartCoroutine(FadeInText(PressAnyKeyToPlayGame));
+        }
+        
     }
+
 
     private void Start()
     {
         StartCoroutine(TitleSetting());
         StartCoroutine(FadeInObjects(TitleImage));
-        StartCoroutine(FadeInText(PressAnyKeyToPlayGame));
     }
 
     private IEnumerator TitleSetting()
@@ -41,9 +59,15 @@ public class GotoSelectStage : MonoBehaviour
         Color originalColor = renderer.color;
         renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
 
+        TextMeshProUGUI textMeshPro = PressAnyKeyToPlayGame.GetComponent<TextMeshProUGUI>();
+        if (textMeshPro != null)
+        {
+            textMeshPro.color = new Color(textMeshPro.color.r, textMeshPro.color.g, textMeshPro.color.b, 0f);
+        }
+
         RhythmPuppyText.transform.position = new Vector3(0f, 10f, 0f);
         Rigidbody2D RhythmPuppyTextRid2D = RhythmPuppyText.GetComponent<Rigidbody2D>();
-        RhythmPuppyTextRid2D.velocity = Vector2.down * 5;
+        RhythmPuppyTextRid2D.velocity = Vector2.down * comedownspeed;
 
         while (RhythmPuppyText.transform.position.y > 1.53)
         {
@@ -51,6 +75,8 @@ public class GotoSelectStage : MonoBehaviour
         }
 
         RhythmPuppyTextRid2D.velocity = Vector2.zero;
+        StartCoroutine(FadeInText(PressAnyKeyToPlayGame));
+        fadeDuration = 1f;
     }
 
     private IEnumerator FadeInObjects(GameObject obj)
@@ -84,48 +110,52 @@ public class GotoSelectStage : MonoBehaviour
             yield break;
         }
 
-        TMP_TextInfo textInfo = textMeshPro.textInfo;
         Color32 originalColor = textMeshPro.color;
-        Color32 transparentColor = new Color32(originalColor.r, originalColor.g, originalColor.b, 0);
 
         float startTime = Time.time;
 
-        while (Time.time - startTime < fadeDuration)
+        while (Time.time - startTime < fadeDuration) // Repeat until elapsed time is less than fadeDuration
         {
-            float elapsedTime = Time.time - startTime;
+            float elapsedTime = Time.time - startTime; // Calculate elapsed time
             float t = Mathf.Clamp01(elapsedTime / fadeDuration);
 
-            Color32 newVertexColor = Color32.Lerp(transparentColor, originalColor, t);
-
-            for (int i = 0; i < textInfo.characterCount; i++)
-            {
-                int materialIndex = textInfo.characterInfo[i].materialReferenceIndex;
-                Color32[] vertexColors = textInfo.meshInfo[materialIndex].colors32;
-                int vertexIndex = textInfo.characterInfo[i].vertexIndex;
-
-                vertexColors[vertexIndex + 0] = newVertexColor;
-                vertexColors[vertexIndex + 1] = newVertexColor;
-                vertexColors[vertexIndex + 2] = newVertexColor;
-                vertexColors[vertexIndex + 3] = newVertexColor;
-            }
-
-            textMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+            Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(0f, 1f, t));
+            textMeshPro.color = newColor;
 
             yield return null;
         }
 
-        for (int i = 0; i < textInfo.characterCount; i++)
-        {
-            int materialIndex = textInfo.characterInfo[i].materialReferenceIndex;
-            Color32[] vertexColors = textInfo.meshInfo[materialIndex].colors32;
-            int vertexIndex = textInfo.characterInfo[i].vertexIndex;
+        // Set the alpha value to exactly 1 to make it completely opaque.
+        textMeshPro.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+        FadeInDone = true;
+    }
 
-            vertexColors[vertexIndex + 0] = originalColor;
-            vertexColors[vertexIndex + 1] = originalColor;
-            vertexColors[vertexIndex + 2] = originalColor;
-            vertexColors[vertexIndex + 3] = originalColor;
+    private IEnumerator FadeOutText(GameObject obj)
+    {
+        TextMeshProUGUI textMeshPro = obj.GetComponent<TextMeshProUGUI>();
+        if (textMeshPro == null)
+        {
+            Debug.LogError("TextMeshPro component not found.");
+            yield break;
         }
 
-        textMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+        Color32 originalColor = textMeshPro.color;
+
+        float startTime = Time.time;
+
+        while (Time.time - startTime < fadeDuration) // Repeat until elapsed time is less than fadeDuration
+        {
+            float elapsedTime = Time.time - startTime; // Calculate elapsed time
+            float t = Mathf.Clamp01(elapsedTime / fadeDuration);
+
+            Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(1f, 0f, t));
+            textMeshPro.color = newColor;
+
+            yield return null;
+        }
+
+        // Set the alpha value to exactly 1 to make it completely opaque.
+        textMeshPro.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        FadeOutDone = true;
     }
 }
