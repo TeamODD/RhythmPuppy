@@ -1236,6 +1236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   savePointTime: []
+  isLampOn: 0
 --- !u!4 &1068771751
 Transform:
   m_ObjectHideFlags: 0
@@ -1735,7 +1736,7 @@ GameObject:
   - component: {fileID: 2081893727}
   m_Layer: 15
   m_Name: puppy
-  m_TagString: Untagged
+  m_TagString: Puppy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1842,7 +1843,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2081893724}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1

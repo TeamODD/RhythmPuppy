@@ -20,7 +20,7 @@ public class GotoOption : MonoBehaviour
             {
                 Time.timeScale = 0f;
                 isPaused = true;
-                SceneManager.LoadScene("Option_Menu", LoadSceneMode.Additive);
+                SceneManager.LoadSceneAsync("Option_Menu", LoadSceneMode.Additive);
             }
             else if (isPaused)
             {

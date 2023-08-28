@@ -68,8 +68,16 @@ public class ProgressBar : MonoBehaviour
     {
         if (initCoroutine != null) return;
 
-        float currentMusicPosition = musicAudioSource.time;
+        if (musicAudioSource.clip.length - 0.7f < musicAudioSource.time)
+        {
+            MovePlayerBudge(musicAudioSource.clip.length);
+            SavePointChecking(1);
+            musicAudioSource.Pause();
+            musicAudioSource.time = musicAudioSource.clip.length - 0.1f;
+            return;
+        }
 
+        float currentMusicPosition = musicAudioSource.time;
         float fillAmount = currentMusicPosition / musicAudioSource.clip.length;
         fillImage.fillAmount = fillAmount;
 
