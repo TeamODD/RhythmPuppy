@@ -20,13 +20,13 @@ public class BackGroundManager : MonoBehaviour
     {
         if (backgrounds[Index] == null) return;
         Img = backgrounds[Index].GetComponent<SpriteRenderer>();
-        StartCoroutine(Alpha(s));
+        StartCoroutine(Alpha(Index, s));
     }
     
-    IEnumerator Alpha(string s)
+    IEnumerator Alpha(int Index,string s)
     {
         float offset = 1f;
-        float waitTime = 0.2f;
+        float waitTime = 0f;
         switch (s)
         {
             case "appear":
@@ -34,12 +34,14 @@ public class BackGroundManager : MonoBehaviour
                 time = 0;
                 while (time < offset)
                 {
-                    Img.color = new Color(1, 1f, 1f, 1 * time);
-                    Text.alpha = time;
+                    Img.color = new Color(1, 1f, 1f, time * 2);
+                    if(Index > 6)
+                        Text.alpha = time * 2;
                     yield return new WaitForEndOfFrame();
                 }
                 Img.color = new Color(1, 1, 1, 1);
-                Text.alpha = 1;
+                if (Index > 6)
+                    Text.alpha = 1;
                 break;
 
             case "disappear":
@@ -47,12 +49,14 @@ public class BackGroundManager : MonoBehaviour
                 time = 0;
                 while (time < offset)
                 {
-                    Img.color = new Color(1, 1f, 1f, (1f-time) / time);
-                    Text.alpha = 1 - time;
-                    yield return new WaitForEndOfFrame();
+                    Img.color = new Color(1, 1f, 1f, 1 - time * 2);
+                    if (Index > 6)
+                        Text.alpha = 1 - time * 2;
+                    yield return new WaitForFixedUpdate();
                 }
                 Img.color = new Color(1, 1, 1, 0);
-                Text.alpha = 0;
+                if (Index > 6)
+                    Text.alpha = 0;
                 break;
         }
         yield break;
