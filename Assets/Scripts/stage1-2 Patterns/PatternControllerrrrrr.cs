@@ -1,8 +1,8 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using static EventManager;
 
 public class PatternControllerrrrrr : MonoBehaviour
 {
@@ -102,11 +102,11 @@ public class PatternControllerrrrrr : MonoBehaviour
         audioSource = FindObjectOfType<AudioSource>();
         audioSource.clip = music;
         eventManager.savePointTime = savePointTime;
-        eventManager.deathEvent += deathEvent;
-        eventManager.gameStartEvent += run;
-        eventManager.reviveEvent += run;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.stageEvent.gameStartEvent += run;
+        eventManager.playerEvent.reviveEvent += run;
 
-        eventManager.gameStartEvent();
+        eventManager.stageEvent.gameStartEvent();
 
         // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
         pattern6.SetActive(false);

@@ -1,9 +1,9 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static EventManager;
 
 namespace Stage_2
 {
@@ -24,14 +24,12 @@ namespace Stage_2
         {
             sp = GetComponentInChildren<SpriteRenderer>();
             eventManager = FindObjectOfType<EventManager>();
-            eventManager.isLampOn = true;
         }
 
         void Update()
         {
-            if (eventManager.isLampOn)  sp.sprite = lampOn;
-            else  sp.sprite = lampOff;
+            if (eventManager.uiEvent.onBlindEvent)  sp.sprite = lampOff;
+            else  sp.sprite = lampOn;
         }
-
     }
 }

@@ -1,9 +1,8 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static EventManager;
-using static EventManager.PlayerEvent;
 
 public class UICanvas : MonoBehaviour
 {
@@ -36,27 +35,31 @@ public class UICanvas : MonoBehaviour
         dashTimerImage = dashTimer.GetComponent<Image>();
         hitTimer = worldSpaceCanvas.Find("HitTimer");
         hitTimerImage = hitTimer.GetComponent<Image>();
-
         progressBar = overlayCanvas.Find("ProgressBar");
 
-        eventManager.playerHitEvent += playerHitEvent;
-        eventManager.deathEvent += deathEvent;
-        eventManager.reviveEvent += reviveEvent;
+        eventManager.playerEvent.playerHitEvent += playerHitEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += reviveEvent;
         eventManager.playerEvent.dashEvent += dashEvent;
-        eventManager.fadeInEvent += fadeIn;
-        eventManager.fadeOutEvent += fadeOut;
-        eventManager.warnWithBox += warnWithBox;
+        eventManager.uiEvent.fadeInEvent += fadeIn;
+        eventManager.uiEvent.fadeOutEvent += fadeOut;
+        eventManager.stageEvent.warnWithBox += warnWithBox;
+        eventManager.uiEvent.enableBlindEvent += enableBlindEvent;
+        eventManager.uiEvent.enableBlindEvent += enableDarkEffect;
+        eventManager.uiEvent.disableBlindEvent += disableBlindEvent;
+        eventManager.uiEvent.disableBlindEvent += disableDarkEffect;
+        eventManager.uiEvent.onBlindEvent = false;
     }
 
-    void Update()
+    public void enableBlindEvent()
     {
-        if (1f < Time.time % 2) return;
+        eventManager.uiEvent.onBlindEvent = true;
+    }
 
-        if (eventManager.isLampOn)
-            disableDarkEffect();
-        else
-            enableDarkEffect();
-}
+    public void disableBlindEvent()
+    {
+        eventManager.uiEvent.onBlindEvent = true;
+    }
 
     public void enableDarkEffect()
     {
@@ -171,7 +174,7 @@ public class UICanvas : MonoBehaviour
         setImageAlpha(ref darkImage, 0);
         worldSpaceCanvas.gameObject.SetActive(false);
         yield return new WaitForSeconds(2f);
-        eventManager.fadeInEvent();
+        eventManager.uiEvent.fadeInEvent();
     }
 
     private void reviveEvent()
@@ -179,7 +182,7 @@ public class UICanvas : MonoBehaviour
         worldSpaceCanvas.gameObject.SetActive(true);
         hitTimerImage.fillAmount = 0;
         setImageAlpha(ref redImage, 0);
-        eventManager.fadeOutEvent();
+        eventManager.uiEvent.fadeOutEvent();
     }
 
     public void warnWithBox(Vector3 pos, Vector3 size)

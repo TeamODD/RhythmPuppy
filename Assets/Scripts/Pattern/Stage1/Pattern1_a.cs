@@ -1,3 +1,4 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +17,7 @@ public class Pattern1_a : MonoBehaviour
     void Awake()
     {
         eventManager = FindObjectOfType<EventManager>();
-        eventManager.deathEvent += deathEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
         time = 0;
         yPosition = Random.Range(-2f, 4.5f);
     }
@@ -39,7 +40,7 @@ public class Pattern1_a : MonoBehaviour
 
     private void deathEvent()
     {
-        eventManager.deathEvent -= deathEvent;
+        eventManager.playerEvent.deathEvent -= deathEvent;
         Destroy(gameObject);
     }
     //재욱 형님 코드 가지고 온 거(플레이어 충돌 코드 같길래 붙여넣기만 함, 수정 안 함)

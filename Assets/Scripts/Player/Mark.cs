@@ -1,7 +1,7 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static EventManager.PlayerEvent;
 
 public class Mark : MonoBehaviour
 {

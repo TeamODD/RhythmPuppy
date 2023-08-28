@@ -1243,7 +1243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cde77d9f3dccf6c46ba3532492a19826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stage1_2BGM: {fileID: 330115481}
   EventSystem: {fileID: 448613970}
 --- !u!114 &537546945
 MonoBehaviour:
@@ -3553,8 +3552,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440943201525982827, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440943201525982827, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
       propertyPath: m_SortingOrder
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8440943201525982827, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8990387341346384610, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
       propertyPath: m_Name

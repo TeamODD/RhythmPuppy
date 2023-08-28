@@ -6,10 +6,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.U2D.Animation;
-using static EventManager.PlayerEvent;
 using static UnityEngine.GraphicsBuffer;
 
 using SceneData;
+using EventManagement;
 
 public class Player : MonoBehaviour
 {
@@ -109,10 +109,10 @@ public class Player : MonoBehaviour
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
 
-        eventManager.playerHitEvent += playerHitEvent;
-        eventManager.clearEvent += clearEvent;
-        eventManager.deathEvent += deathEvent;
-        eventManager.reviveEvent += reviveEvent;
+        eventManager.playerEvent.playerHitEvent += playerHitEvent;
+        eventManager.stageEvent.clearEvent += clearEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += reviveEvent;
         eventManager.playerEvent.dashEvent += dashEvent;
         eventManager.playerEvent.shootEvent += shootEvent;
         eventManager.playerEvent.teleportEvent += teleportEvent;
@@ -158,7 +158,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.U))    // direct hit on player
         {
-            if (invincibilityCoroutine == null) eventManager.playerHitEvent();
+            if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
         if (Input.GetKeyDown(KeyCode.I))     // developer mode (inactive hitbox)
         {
@@ -166,7 +166,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.O))     // developer mode (inactive hitbox)
         {
-            eventManager.deathEvent();
+            eventManager.playerEvent.deathEvent();
         }
     }
 
@@ -194,7 +194,7 @@ public class Player : MonoBehaviour
             if (!isCollisionVisibleOnTheScreen(c)) return;
 
             if (dashCoroutine != null) evade(c.collider);
-            else if (invincibilityCoroutine == null) eventManager.playerHitEvent();
+            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
     }
 
@@ -203,7 +203,7 @@ public class Player : MonoBehaviour
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
             if (dashCoroutine != null) evade(c);
-            else if (invincibilityCoroutine == null) eventManager.playerHitEvent();
+            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
     }
 
@@ -386,7 +386,7 @@ public class Player : MonoBehaviour
         if (currentHP <= 0)
         {
             deathCount++;
-            eventManager.deathEvent();
+            eventManager.playerEvent.deathEvent();
             return;
         }
         invincibilityCoroutine = StartCoroutine(activateInvincibility());
@@ -409,8 +409,8 @@ public class Player : MonoBehaviour
 
         if (deathCount <= 3)
         {
-            eventManager.rewindEvent();
-            eventManager.reviveEvent();
+            eventManager.stageEvent.rewindEvent();
+            eventManager.playerEvent.reviveEvent();
         }
         else
         {

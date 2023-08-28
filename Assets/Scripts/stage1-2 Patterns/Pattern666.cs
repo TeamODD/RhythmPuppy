@@ -1,9 +1,9 @@
 using Cysharp.Threading.Tasks;
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using static EventManager;
 
 public class Pattern666 : MonoBehaviour
 {
@@ -23,7 +23,7 @@ public class Pattern666 : MonoBehaviour
     private void OnEnable()
     {
         eventManager = FindObjectOfType<EventManager>();
-        eventManager.deathEvent += StopPattern;
+        eventManager.playerEvent.deathEvent += StopPattern;
         objects = new List<GameObject>();
         StartPattern();
     }
@@ -35,7 +35,7 @@ public class Pattern666 : MonoBehaviour
 
     private void OnDestroy()
     {
-        eventManager.deathEvent -= StopPattern;
+        eventManager.playerEvent.deathEvent -= StopPattern;
     }
 
     private void StartPattern()

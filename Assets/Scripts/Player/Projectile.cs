@@ -1,7 +1,6 @@
+using EventManagement;
 using System.Collections;
 using UnityEngine;
-using static EventManager;
-using static EventManager.PlayerEvent;
 
 public class Projectile : MonoBehaviour
 {
@@ -43,7 +42,7 @@ public class Projectile : MonoBehaviour
         correctFactor = 16f;
         data = new ProjectileData(rad, correctFactor);
 
-        eventManager.clearEvent += clearEvent;
+        eventManager.stageEvent.clearEvent += clearEvent;
         eventManager.playerEvent.shootEvent += shootEvent;
         eventManager.playerEvent.teleportEvent += stop;
         eventManager.playerEvent.shootCancelEvent += stop;
@@ -75,7 +74,7 @@ public class Projectile : MonoBehaviour
         }
         else if (LayerMask.NameToLayer("Puppy").Equals(col.gameObject.layer) || col.gameObject.CompareTag("Puppy"))
         {
-            eventManager.clearEvent();
+            eventManager.stageEvent.clearEvent();
         }
     }
 
