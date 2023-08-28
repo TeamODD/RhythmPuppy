@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
     EventManager eventManager;
 
 
-    bool onFired, isAlive;
+    bool onFired, movable;
     [HideInInspector] public float currentHP, currentStamina;
     float headCorrectFactor;
     [HideInInspector] public float deathCount;
@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
         shootCooldownDelay = new WaitForSeconds(shootCooltime);
 
         onFired = false;
-        isAlive = true;
+        movable = true;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = shootCooldownCoroutine = null;
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
         deathCount = 0;
@@ -121,7 +121,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (!isAlive) return;
+        if (!movable) return;
         checkJumpStatus();
         passiveStaminaGen();
 
@@ -172,7 +172,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isAlive) return;
+        if (!movable) return;
         velocity = rig2D.velocity;
         currentPosition = transform.position;
         flipBody();
@@ -181,7 +181,7 @@ public class Player : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!isAlive) return;
+        if (!movable) return;
         fixPositionIntoScreen();
     }
 
@@ -400,7 +400,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator deathAction()
     {
-        isAlive = false;
+        movable = false;
         hitbox.enabled = false;
         setAlpha(1);
         anim.SetTrigger("Death");
@@ -423,7 +423,7 @@ public class Player : MonoBehaviour
     {
         currentHP = maxHP;
         currentStamina = maxStamina;
-        isAlive = true;
+        movable = true;
         hitbox.enabled = true;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
         setAlpha(1);
@@ -509,6 +509,6 @@ public class Player : MonoBehaviour
 
     private void clearEvent()
     {
-        /* 이벤트를 정의해주세요 */
+        movable = false;
     }
 }

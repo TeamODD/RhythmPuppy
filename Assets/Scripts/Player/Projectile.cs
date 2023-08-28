@@ -42,7 +42,7 @@ public class Projectile : MonoBehaviour
         correctFactor = 16f;
         data = new ProjectileData(rad, correctFactor);
 
-        eventManager.stageEvent.clearEvent += clearEvent;
+        eventManager.stageEvent.clearEvent += stop;
         eventManager.playerEvent.shootEvent += shootEvent;
         eventManager.playerEvent.teleportEvent += stop;
         eventManager.playerEvent.shootCancelEvent += stop;
@@ -118,8 +118,8 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    private void clearEvent()
+    /*private void clearEvent()
     {
-        /* 정의해주세요 */
-    }
+        stop();
+    }*/
 }

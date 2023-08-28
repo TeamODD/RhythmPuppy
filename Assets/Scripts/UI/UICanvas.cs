@@ -1,4 +1,5 @@
 using EventManagement;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,13 +7,34 @@ using UnityEngine.UI;
 
 public class UICanvas : MonoBehaviour
 {
+    [Serializable]
+    struct OverlayCanvas
+    {
+        [Header("Main Transform")]
+        public Transform overlayCanvas;
+        [Header("Sub Transform")]
+        public Transform darkEffect;
+        public Transform redEffect;
+        public Transform clearSpotlight;
+        public Transform progressBar;
+    }
+    [Serializable]
+    struct WorldSpaceCanvas
+    {
+        [Header("Main Transform")]
+        public Transform worldSpaceCanvas;
+        [Header("Sub Transform")]
+        public Transform dashTimer;
+        public Transform hitTimer;
+    }
+
     [SerializeField] GameObject warningBoxPrefab, warningArrowPrefab;
+    [SerializeField] OverlayCanvas overlayCanvas;
+    [SerializeField] WorldSpaceCanvas worldSpaceCanvas;
 
     Player player;
     EventManager eventManager;
-    Transform overlayCanvas, worldSpaceCanvas;
-    Transform darkEffect, redEffect, dashTimer, hitTimer, progressBar;
-    Image darkImage, redImage, dashTimerImage, hitTimerImage;
+    Image darkImage, redImage, clearSpotlightImage, dashTimerImage, hitTimerImage;
     Color c;
 
     void Awake()
@@ -24,18 +46,12 @@ public class UICanvas : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
         eventManager = FindObjectOfType<EventManager>();
-        overlayCanvas = transform.Find("OverlayCanvas");
-        worldSpaceCanvas = transform.Find("WorldSpaceCanvas");
 
-        darkEffect = overlayCanvas.Find("DarkEffect");
-        darkImage = darkEffect.GetComponent<Image>();
-        redEffect = overlayCanvas.Find("RedEffect");
-        redImage= redEffect.GetComponent<Image>();
-        dashTimer = worldSpaceCanvas.Find("DashTimer");
-        dashTimerImage = dashTimer.GetComponent<Image>();
-        hitTimer = worldSpaceCanvas.Find("HitTimer");
-        hitTimerImage = hitTimer.GetComponent<Image>();
-        progressBar = overlayCanvas.Find("ProgressBar");
+        darkImage = overlayCanvas.darkEffect.GetComponent<Image>();
+        redImage= overlayCanvas.redEffect.GetComponent<Image>();
+        clearSpotlightImage = overlayCanvas.clearSpotlight.GetComponent<Image>();
+        dashTimerImage = worldSpaceCanvas.dashTimer.GetComponent<Image>();
+        hitTimerImage = worldSpaceCanvas.hitTimer.GetComponent<Image>();
 
         eventManager.playerEvent.playerHitEvent += playerHitEvent;
         eventManager.playerEvent.deathEvent += deathEvent;
@@ -48,7 +64,34 @@ public class UICanvas : MonoBehaviour
         eventManager.uiEvent.enableBlindEvent += enableDarkEffect;
         eventManager.uiEvent.disableBlindEvent += disableBlindEvent;
         eventManager.uiEvent.disableBlindEvent += disableDarkEffect;
+        eventManager.stageEvent.clearEvent += enableClearSpotlight;
+        eventManager.uiEvent.enableClearSpotlightEvent += enableClearSpotlight;
+        eventManager.uiEvent.disableClearSpotlightEvent += disableClearSpotlight;
         eventManager.uiEvent.onBlindEvent = false;
+    }
+
+    public void disableClearSpotlight()
+    {
+        setImageAlpha(ref clearSpotlightImage, 0);
+    }
+
+    public void enableClearSpotlight()
+    {
+
+        StartCoroutine(runClearSpotlightFadeIn());
+    }
+
+    private IEnumerator runClearSpotlightFadeIn()
+    {
+        float a = 0;
+
+        while (a < 1)
+        {
+            setImageAlpha(ref clearSpotlightImage, a);
+            a += Time.deltaTime;
+            yield return null;
+        }
+        setImageAlpha(ref clearSpotlightImage, 1);
     }
 
     public void enableBlindEvent()
@@ -172,14 +215,14 @@ public class UICanvas : MonoBehaviour
         hitTimerImage.fillAmount = 0;
         setImageAlpha(ref redImage, 0);
         setImageAlpha(ref darkImage, 0);
-        worldSpaceCanvas.gameObject.SetActive(false);
+        worldSpaceCanvas.worldSpaceCanvas.gameObject.SetActive(false);
         yield return new WaitForSeconds(2f);
         eventManager.uiEvent.fadeInEvent();
     }
 
     private void reviveEvent()
     {
-        worldSpaceCanvas.gameObject.SetActive(true);
+        worldSpaceCanvas.worldSpaceCanvas.gameObject.SetActive(true);
         hitTimerImage.fillAmount = 0;
         setImageAlpha(ref redImage, 0);
         eventManager.uiEvent.fadeOutEvent();
@@ -188,7 +231,7 @@ public class UICanvas : MonoBehaviour
     public void warnWithBox(Vector3 pos, Vector3 size)
     {
         GameObject o = Instantiate(warningBoxPrefab);
-        o.transform.SetParent(overlayCanvas);
+        o.transform.SetParent(overlayCanvas.overlayCanvas);
         o.transform.position = pos;
         o.transform.localScale = size;
         o.SetActive(true);
