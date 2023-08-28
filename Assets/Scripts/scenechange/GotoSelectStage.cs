@@ -77,6 +77,13 @@ public class GotoSelectStage : MonoBehaviour
 
     private IEnumerator FadeInText(GameObject obj)
     {
+        TextMeshProUGUI textMeshPro = obj.GetComponent<TextMeshProUGUI>(); // Get the TextMeshPro component
+        if (textMeshPro == null)
+        {
+            Debug.LogError("TextMeshPro component not found.");
+            yield break;
+        }
+
         TMP_TextInfo textInfo = textMeshPro.textInfo;
         Color32 originalColor = textMeshPro.color;
         Color32 transparentColor = new Color32(originalColor.r, originalColor.g, originalColor.b, 0);
