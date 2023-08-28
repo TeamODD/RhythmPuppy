@@ -9,7 +9,9 @@ public class Pattern888aaa : MonoBehaviour
     [SerializeField]
     private GameObject weaselWarning;
     [SerializeField]
-    private float weaselSpeed = 10f;
+    private float weaselUpSpeed;
+    [SerializeField]
+    private float weaselDownspeed;
     [SerializeField]
     private float[] rhythmTimings = { 0f, 0.6f, 0.8f, 1.1f, 1.5f, 1.8f, 2.2f, 2.3f, 2.7f, 2.9f, 3.2f, 3.5f, 3.9f };
 
@@ -143,7 +145,7 @@ public class Pattern888aaa : MonoBehaviour
 
         GameObject newWeasel = Instantiate(weasel, spawnPosition, Quaternion.identity);
         Rigidbody2D weaselRigidbody = newWeasel.GetComponent<Rigidbody2D>();
-        weaselRigidbody.velocity = Vector2.up * weaselSpeed;
+        weaselRigidbody.velocity = Vector2.up * weaselUpSpeed;
 
         while (newWeasel.transform.position.y < -3.963f)    
         {
@@ -159,7 +161,7 @@ public class Pattern888aaa : MonoBehaviour
     private IEnumerator WeaselGoDown(Rigidbody2D weaselRigidbody)
     {
         yield return new WaitForSeconds(0.5f);
-        weaselRigidbody.velocity = Vector2.down * 10f;
+        weaselRigidbody.velocity = Vector2.down * weaselDownspeed;
     }
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
