@@ -19,10 +19,12 @@ public class LoadingFadeOut : MonoBehaviour
     void Update()
     {
         if (!isSceneLoaded) return;
+        if(GameObject.Find("corgiFace")) //이 if문은 메뉴로 돌아올시 메뉴인지 확인하기 위함
+            gameObject.transform.position = new Vector3(Menu_PlayerTransform.corgi_posX, 2.49f, 0);
         if (a <= 0) Destroy(gameObject);
 
         Loading.color = new Color(0, 0, 0, a);
-        a -= Time.deltaTime * 0.3f;
+        a -= Time.deltaTime * 0.2f;
     }
 
     public void FadeOut()
