@@ -20,7 +20,7 @@ public class GotoOption : MonoBehaviour
             if (!isPaused)
             {
                 Time.timeScale = 0f;
-                Time.fixedDeltaTime = 0;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 GameObject.Find("SoundManager").GetComponent<AudioSource>().Pause();
                 isPaused = true;
                 SceneManager.LoadSceneAsync("Option_Menu", LoadSceneMode.Additive);
@@ -28,7 +28,7 @@ public class GotoOption : MonoBehaviour
             else if (isPaused)
             {
                 Time.timeScale = 1f;
-                Time.fixedDeltaTime = 0.02f;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 GameObject.Find("SoundManager").GetComponent<AudioSource>().Play();
                 isPaused = false;
                 SceneManager.UnloadSceneAsync("Option_Menu");

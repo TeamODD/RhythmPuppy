@@ -132,7 +132,7 @@ public class PatternManager_1 : MonoBehaviour
 
     void Update()
     {
-        if (!isPuppyShown && audioSource.clip.length - 1f < audioSource.time)
+        if (!isPuppyShown && audioSource.clip.length - 5f < audioSource.time)
         {
             isPuppyShown = true;
             GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc();

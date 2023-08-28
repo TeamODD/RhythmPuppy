@@ -9,7 +9,7 @@ public class Credit : MonoBehaviour
     public void onCredit()
     {
         Time.timeScale = 0f; // 시간 경과를 멈춥니다.
-        Time.fixedDeltaTime = 0;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
 
         // Option_Stage 씬을 로드합니다.
         SceneManager.LoadScene("Credit");

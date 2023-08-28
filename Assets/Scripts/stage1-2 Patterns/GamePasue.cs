@@ -17,14 +17,15 @@ public class GamePasue : MonoBehaviour
     {
         stage1_2BGM = GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>();
         eventManager = FindObjectOfType<EventManager>();
-        eventManager.stageEvent.pauseEvent += TogglePause;
+        eventManager.stageEvent.pauseEvent += PauseGame;
+        eventManager.stageEvent.resumeEvent += ResumeGame;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) // ESC 키를 누르면 일시정지/해제
         {
-            eventManager.stageEvent.pauseEvent();
+            TogglePause();
         }
     }
 
@@ -32,18 +33,18 @@ public class GamePasue : MonoBehaviour
     {
         if (isPaused)
         {
-            ResumeGame();
+            eventManager.stageEvent.resumeEvent();
         }
         else
         {
-            PauseGame();
+            eventManager.stageEvent.pauseEvent();
         }
     }
 
     private void PauseGame()
     {
         Time.timeScale = 0f; // 시간 경과를 멈춥니다.
-        Time.fixedDeltaTime = 0;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
         isPaused = true;
 
         EventSystem.SetActive(false);
@@ -63,7 +64,7 @@ public class GamePasue : MonoBehaviour
     public void ResumeGame()
     {
         Time.timeScale = 1f; // 시간 경과를 정상적으로 진행합니다.
-        Time.fixedDeltaTime = 0.02f;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
         isPaused = false;
 
         EventSystem.SetActive(true);

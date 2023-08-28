@@ -17,7 +17,7 @@ public class ExitToMenu : MonoBehaviour
         if (Time.timeScale != 1f)
         {
             Time.timeScale = 1f;
-            Time.fixedDeltaTime = 0.02f;
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
         }
 
         SceneManager.LoadScene("SceneMenu_01", LoadSceneMode.Single);

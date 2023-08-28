@@ -7,6 +7,7 @@ public class GameRestart : MonoBehaviour
 {
     public void onRestart()
     {
+        Debug.Log("123");
         Scene currentScene = SceneManager.GetActiveScene();
         string sceneName = currentScene.name;
 
@@ -20,7 +21,7 @@ public class GameRestart : MonoBehaviour
             {
                 string reloadSceneName = "SceneStage" + stageInfo;
                 Time.timeScale = 1f;
-                Time.fixedDeltaTime = 0.02f;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 SceneManager.LoadSceneAsync(reloadSceneName);
                 Debug.Log("씬 재로드: " + reloadSceneName);
             }
@@ -36,7 +37,7 @@ public class GameRestart : MonoBehaviour
             if (!string.IsNullOrEmpty(savedSceneName))
             {
                 Time.timeScale = 1f;
-                Time.fixedDeltaTime = 0.02f;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 SceneManager.LoadSceneAsync(savedSceneName);
                 Debug.Log("저장된 씬 불러오기: " + savedSceneName);
             }
