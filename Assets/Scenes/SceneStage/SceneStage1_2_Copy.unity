@@ -879,7 +879,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   savePointTime: []
-  isLampOn: 0
 --- !u!4 &391168479
 Transform:
   m_ObjectHideFlags: 0
@@ -1264,6 +1263,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2109696228, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 853321459083148496, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -4614,7 +4617,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weasel: {fileID: 9001390689507493206, guid: 868c5b0fa6abfea48a1bd181cf319265, type: 3}
   weaselWarning: {fileID: 2141889054}
-  weaselSpeed: 5
+  weaselUpSpeed: 10
+  weaselDownspeed: 15
   rhythmTimings:
   - 0
   - 0.6
