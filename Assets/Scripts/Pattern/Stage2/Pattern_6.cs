@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Patterns;
 using UnityEngine;
+using EventManagement;
 
 namespace Stage_2
 {
@@ -30,7 +31,7 @@ namespace Stage_2
             patternPlaylist.init(action);
             patternPlaylist.sortTimeline();
 
-            eventManager.deathEvent += deathEvent;
+            eventManager.playerEvent.deathEvent += deathEvent;
         }
 
         public void action(PatternPlaylist patternPlaylist, Timeline timeline)

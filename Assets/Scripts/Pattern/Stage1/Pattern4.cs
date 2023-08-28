@@ -1,3 +1,4 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class Pattern4 : MonoBehaviour
     void Awake()
     {
         eventManager = FindObjectOfType<EventManager>();
-        eventManager.deathEvent += deathEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
         xPosition = Random.Range(-8.5f, 8.5f);
     }
     void Start()
@@ -32,7 +33,7 @@ public class Pattern4 : MonoBehaviour
 
     void deathEvent()
     {
-        eventManager.deathEvent -= deathEvent;
+        eventManager.playerEvent.deathEvent -= deathEvent;
         Destroy(gameObject);
     }
 }

@@ -6,10 +6,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.U2D.Animation;
-using static EventManager.PlayerEvent;
 using static UnityEngine.GraphicsBuffer;
 
 using SceneData;
+using EventManagement;
 
 public class Player : MonoBehaviour
 {
@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
     EventManager eventManager;
 
 
-    bool onFired, isAlive;
+    bool onFired, movable;
     [HideInInspector] public float currentHP, currentStamina;
     float headCorrectFactor;
     [HideInInspector] public float deathCount;
@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
         shootCooldownDelay = new WaitForSeconds(shootCooltime);
 
         onFired = false;
-        isAlive = true;
+        movable = true;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = shootCooldownCoroutine = null;
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
         deathCount = 0;
@@ -109,10 +109,10 @@ public class Player : MonoBehaviour
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
 
-        eventManager.playerHitEvent += playerHitEvent;
-        eventManager.clearEvent += clearEvent;
-        eventManager.deathEvent += deathEvent;
-        eventManager.reviveEvent += reviveEvent;
+        eventManager.playerEvent.playerHitEvent += playerHitEvent;
+        eventManager.stageEvent.clearEvent += clearEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += reviveEvent;
         eventManager.playerEvent.dashEvent += dashEvent;
         eventManager.playerEvent.shootEvent += shootEvent;
         eventManager.playerEvent.teleportEvent += teleportEvent;
@@ -121,7 +121,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (!isAlive) return;
+        if (!movable) return;
         checkJumpStatus();
         passiveStaminaGen();
 
@@ -158,7 +158,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.U))    // direct hit on player
         {
-            if (invincibilityCoroutine == null) eventManager.playerHitEvent();
+            if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
         if (Input.GetKeyDown(KeyCode.I))     // developer mode (inactive hitbox)
         {
@@ -166,13 +166,13 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.O))     // developer mode (inactive hitbox)
         {
-            eventManager.deathEvent();
+            eventManager.playerEvent.deathEvent();
         }
     }
 
     void FixedUpdate()
     {
-        if (!isAlive) return;
+        if (!movable) return;
         velocity = rig2D.velocity;
         currentPosition = transform.position;
         flipBody();
@@ -181,7 +181,7 @@ public class Player : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!isAlive) return;
+        if (!movable) return;
         fixPositionIntoScreen();
     }
 
@@ -194,7 +194,7 @@ public class Player : MonoBehaviour
             if (!isCollisionVisibleOnTheScreen(c)) return;
 
             if (dashCoroutine != null) evade(c.collider);
-            else if (invincibilityCoroutine == null) eventManager.playerHitEvent();
+            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
     }
 
@@ -203,7 +203,7 @@ public class Player : MonoBehaviour
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
             if (dashCoroutine != null) evade(c);
-            else if (invincibilityCoroutine == null) eventManager.playerHitEvent();
+            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
     }
 
@@ -386,7 +386,7 @@ public class Player : MonoBehaviour
         if (currentHP <= 0)
         {
             deathCount++;
-            eventManager.deathEvent();
+            eventManager.playerEvent.deathEvent();
             return;
         }
         invincibilityCoroutine = StartCoroutine(activateInvincibility());
@@ -400,7 +400,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator deathAction()
     {
-        isAlive = false;
+        movable = false;
         hitbox.enabled = false;
         setAlpha(1);
         anim.SetTrigger("Death");
@@ -409,8 +409,8 @@ public class Player : MonoBehaviour
 
         if (deathCount <= 3)
         {
-            eventManager.rewindEvent();
-            eventManager.reviveEvent();
+            eventManager.stageEvent.rewindEvent();
+            eventManager.playerEvent.reviveEvent();
         }
         else
         {
@@ -428,7 +428,7 @@ public class Player : MonoBehaviour
     {
         currentHP = maxHP;
         currentStamina = maxStamina;
-        isAlive = true;
+        movable = true;
         hitbox.enabled = true;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
         setAlpha(1);
@@ -514,6 +514,6 @@ public class Player : MonoBehaviour
 
     private void clearEvent()
     {
-        /* 이벤트를 정의해주세요 */
+        movable = false;
     }
 }

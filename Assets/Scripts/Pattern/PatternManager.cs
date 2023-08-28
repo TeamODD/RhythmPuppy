@@ -5,8 +5,8 @@ using UnityEngine;
 using Patterns;
 using Cysharp.Threading.Tasks;
 using Stage_2;
-using static EventManager;
 using UnityEngine.SceneManagement;
+using EventManagement;
 
 public class PatternManager : MonoBehaviour
 {
@@ -46,12 +46,12 @@ public class PatternManager : MonoBehaviour
         setStageInfo();
 
 
-        eventManager.gameStartEvent += gameStartEvent;
-        eventManager.deathEvent += deathEvent;
-        eventManager.reviveEvent += gameStartEvent;
+        eventManager.stageEvent.gameStartEvent += gameStartEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += gameStartEvent;
 
         await UniTask.Delay(System.TimeSpan.FromSeconds(startDelayTime));
-        eventManager.gameStartEvent();
+        eventManager.stageEvent.gameStartEvent();
     }
 
     void Update()

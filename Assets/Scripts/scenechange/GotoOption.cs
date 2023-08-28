@@ -11,6 +11,7 @@ public class GotoOption : MonoBehaviour
     {
         isPaused = true;
         SceneManager.LoadScene("Option_Menu", LoadSceneMode.Additive);
+        GameObject.Find("SoundManager").GetComponent<AudioSource>().Pause();
     }
 
     void Update()
@@ -19,12 +20,14 @@ public class GotoOption : MonoBehaviour
             if (!isPaused)
             {
                 Time.timeScale = 0f;
+                GameObject.Find("SoundManager").GetComponent<AudioSource>().Pause();
                 isPaused = true;
                 SceneManager.LoadSceneAsync("Option_Menu", LoadSceneMode.Additive);
             }
             else if (isPaused)
             {
                 Time.timeScale = 1f;
+                GameObject.Find("SoundManager").GetComponent<AudioSource>().Play();
                 isPaused = false;
                 SceneManager.UnloadSceneAsync("Option_Menu");
             }

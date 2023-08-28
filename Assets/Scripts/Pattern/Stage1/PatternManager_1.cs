@@ -1,7 +1,7 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static EventManager;
 
 public class PatternManager_1 : MonoBehaviour
 {
@@ -70,16 +70,16 @@ public class PatternManager_1 : MonoBehaviour
         patternCount[Type.pattern4] = 0;
         audioSource.clip = music;
         eventManager.savePointTime = savePointTime;
-        eventManager.deathEvent += deathEvent;
-        eventManager.gameStartEvent += run;
-        eventManager.reviveEvent += run;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.stageEvent.gameStartEvent += run;
+        eventManager.playerEvent.reviveEvent += run;
         /*
                 count_1_a = 0;
                 count_1_b = 0;
                 count_3 = 0;
                 count_4 = 0;*/
         
-        eventManager.gameStartEvent();
+        eventManager.stageEvent.gameStartEvent();
     }
 
     void run()

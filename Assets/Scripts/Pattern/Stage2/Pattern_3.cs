@@ -8,7 +8,7 @@ using Patterns;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static EventManager;
+using EventManagement;
 
 namespace Stage_2
 {
@@ -33,7 +33,7 @@ namespace Stage_2
             patternPlaylist.init(action);
             patternPlaylist.sortTimeline();
 
-            eventManager.deathEvent += deathEvent;
+            eventManager.playerEvent.deathEvent += deathEvent;
         }
 
         public void action(PatternPlaylist patternPlaylist, Timeline timeline)
@@ -65,18 +65,18 @@ namespace Stage_2
 
             int i = 0;
             await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i++]));
-            eventManager.isLampOn = false;
+            eventManager.uiEvent.enableBlindEvent();
             while (i < startDelay.Length)
             {
                 await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i] - startDelay[i - 1]));
                 i++;
-                eventManager.isLampOn = true;
+                eventManager.uiEvent.disableBlindEvent();
                 await UniTask.Delay(System.TimeSpan.FromSeconds(startDelay[i] - startDelay[i - 1]));
                 i++;
-                eventManager.isLampOn = false;
+                eventManager.uiEvent.enableBlindEvent();
             }
             await UniTask.Delay(System.TimeSpan.FromSeconds(duration));
-            eventManager.isLampOn = true;
+            eventManager.uiEvent.disableBlindEvent();
         }
 
         public void deathEvent()

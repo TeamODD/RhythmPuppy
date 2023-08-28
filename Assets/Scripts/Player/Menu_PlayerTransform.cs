@@ -26,35 +26,42 @@ public class Menu_PlayerTransform : MonoBehaviour
     public static int currentIndex;
     public static int savingIndex;
     public static int clearIndex;
+    public static float corgi_posX;
     private string SceneName;
     [SerializeField]
     private float speed;
     private float time;
     private bool onInputDelay;
 
-    void Start()
+    void Awake()
     {
-        Time.timeScale = 1f;
-        onInputDelay = false;
-
         if (PlayerPrefs.HasKey("clearIndex"))
         {
             clearIndex = PlayerPrefs.GetInt("clearIndex");
-        } else
+        }
+        else
         {
-            clearIndex = 30;
+            clearIndex = 30; //개발 끝나면 1로 바꿔주세요.
         }
 
         if (savingIndex != 0)
         {
             gameObject.transform.position = waypoints[savingIndex];
             currentIndex = savingIndex;
-            if(savingIndex >= 7)
+            if (savingIndex >= 7) //메뉴로 돌아왔을시 월드2라면 월드2배경을 띄움.
                 BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
         }
         else
             currentIndex = 0;
-        
+
+        corgi_posX = waypoints[currentIndex].x;
+    }
+
+    void Start()
+    {
+        GameObject.Find("SoundManager").GetComponent<AudioSource>().Play();
+        onInputDelay = false;
+
         currentPosition = transform.position; //플레이어 현재 위치
     }
 

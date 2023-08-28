@@ -148,7 +148,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 5.2
-  RotateSpeed: 540
 --- !u!1 &9170058006487248844
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,7 +159,7 @@ GameObject:
   - component: {fileID: 9097968664684738832}
   - component: {fileID: 5709167333573674773}
   - component: {fileID: 7859288628626692693}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: "\uB808\uC774\uC5B4 1 \uBCF5\uC0AC"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
