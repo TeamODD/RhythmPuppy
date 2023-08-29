@@ -50,6 +50,8 @@ public class Menu_PlayerTransform : MonoBehaviour
             currentIndex = savingIndex;
             if (savingIndex >= 7) //메뉴로 돌아왔을시 월드2라면 월드2배경을 띄움.
                 BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
+            else if(savingIndex > = 2) //메뉴로 돌아왔을시 월드1이라면 월드1배경을 띄움.
+                BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
         }
         else
             currentIndex = 0;
