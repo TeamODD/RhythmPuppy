@@ -11,19 +11,19 @@ public class Pattern11 : MonoBehaviour
     [SerializeField]
     float OakSpeed;
 
-    private List<float> patternTimings = new List<float> { 0f, 0.4f, 0.7f, 1.0f };
+    private List<float> patternTimings = new List<float> {0f, 0.4f, 0.7f, 1.0f};
     private float startTime;
     private float time;
 
     private void OnEnable()
     {
         startTime = Time.time; // 패턴이 활성화될 때 시작 시간 저장
-        StartCoroutine(pattern());
+        StartCoroutine(patterntiming());
     }
 
     private void OnDisable()
     {
-        StopCoroutine(pattern());
+        StopAllCoroutines();
     }
 
     private IEnumerator patterntiming()
@@ -41,6 +41,8 @@ public class Pattern11 : MonoBehaviour
 
             StartCoroutine(pattern());
         }
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
     }
 
     private IEnumerator pattern()
@@ -81,10 +83,10 @@ public class Pattern11 : MonoBehaviour
         // 경고 오브젝트 제거
         Destroy(newWarning);
 
-        Vector3 OakPosition = new Vector3(8.02f, -3.45f, 0f);
+        Vector3 OakPosition = new Vector3(10.5f, -3.45f, 0f);
         GameObject newOak = Instantiate(Oak, OakPosition, Quaternion.identity);
-        Rigidbody2D RedAppleRigidbody = newOak.GetComponent<Rigidbody2D>();
-        RedAppleRigidbody.velocity = Vector2.left * OakSpeed;
+        //Rigidbody2D RedAppleRigidbody = newOak.GetComponent<Rigidbody2D>();
+        //RedAppleRigidbody.velocity = Vector2.left * OakSpeed;
 
         StartCoroutine(DestroyIfOutOfBounds(newOak));
     }
@@ -96,7 +98,6 @@ public class Pattern11 : MonoBehaviour
             if (!IsWithinMapBounds(obj.transform.position))
             {
                 Destroy(obj);
-                Destroy(gameObject);
                 yield break;
             }
             yield return null;
@@ -107,7 +108,7 @@ public class Pattern11 : MonoBehaviour
     {
         // IsWithinMapBounds 메서드 내용 그대로 가져옵니다.
         float minX = -10f;
-        float maxX = 10f;
+        float maxX = 11f;
         float minY = -5.5f;
         float maxY = 10f;
 

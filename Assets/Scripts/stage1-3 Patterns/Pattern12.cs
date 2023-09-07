@@ -67,8 +67,8 @@ public class Pattern12 : MonoBehaviour
         float thorstemPosX = -20f;
         float thorstemPosY = -4.49f + (thorstemPosX + 4.56f) * tanValue;
 
-        Debug.Log(Mathf.Tan(Mathf.Deg2Rad * -randomZRotation));
-        Debug.Log(thorstemPosY);
+        //Debug.Log(Mathf.Tan(Mathf.Deg2Rad * -randomZRotation));
+        //Debug.Log(thorstemPosY);
 
         Vector3 thorstemPosition = new Vector3(thorstemPosX, thorstemPosY, 0f);
         GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);
@@ -95,7 +95,23 @@ public class Pattern12 : MonoBehaviour
             }
         }
 
-        while (newthorstem.transform.position.y < 5.79f)
+        while (newthorstem.transform.position.y < -5f)
+        {
+            yield return null;
+        }
+
+        newthorstemRigidbody.velocity = -diagonalVelocity;
+
+        foreach (Transform childTransform in newthorstem.transform)
+        {
+            Rigidbody2D childRigidbody = childTransform.GetComponent<Rigidbody2D>();
+            if (childRigidbody != null)
+            {
+                childRigidbody.velocity = -diagonalVelocity;
+            }
+        }
+
+        while (newthorstem.transform.position.y > -15f)
         {
             yield return null;
         }
