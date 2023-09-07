@@ -61,7 +61,7 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Start()
     {
-        GameObject.Find("SoundManager").GetComponent<AudioSource>().Play();
+        GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
         onInputDelay = false;
 
         currentPosition = transform.position; //플레이어 현재 위치

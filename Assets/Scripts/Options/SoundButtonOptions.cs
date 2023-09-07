@@ -20,7 +20,7 @@ public class SoundButtonOptions : MonoBehaviour
 
     private void Start()
     {
-        GameObject StageMusicObject = GameObject.FindGameObjectWithTag("Music");
+        GameObject StageMusicObject = GameObject.FindGameObjectWithTag("MusicManager");
         if (StageMusicObject != null)
         {
             StageMusic = StageMusicObject.GetComponent<AudioSource>();
