@@ -20,6 +20,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     public UnityEvent Loading;
     public Animator animator;
     public GameObject corgiLoading;
+    public SpriteRenderer SelectLevelSprite;
 
     private Vector3 endPoint;
     private Vector3 currentPosition;
@@ -32,7 +33,10 @@ public class Menu_PlayerTransform : MonoBehaviour
     private float speed;
     private float time;
     private bool onInputDelay;
-
+    public static bool ReadyToGoStage;
+    public static bool IsPaused; //옵션창에서 Enter 키 중단
+    
+    //발판 위 엔터Sprite관리는 ShowInfo 스크립트에 넣어놨습니다.
     void Awake()
     {
         if (PlayerPrefs.HasKey("clearIndex"))
@@ -64,14 +68,16 @@ public class Menu_PlayerTransform : MonoBehaviour
     void Start()
     {
         GameObject.Find("SoundManager").GetComponent<AudioSource>().Play();
+        ReadyToGoStage = false;
+        IsPaused = false;
         onInputDelay = false;
-
         currentPosition = transform.position; //플레이어 현재 위치
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Point();
+        savingIndex = currentIndex;
+        PlayerOnPoint.Invoke();
     }
     void OnTriggerExit2D(Collider2D other)
     {
@@ -86,10 +92,11 @@ public class Menu_PlayerTransform : MonoBehaviour
     {
         int offset = 1;
         time += Time.deltaTime;
-        if (onInputDelay) return;
+        if (onInputDelay || IsPaused) return;
 
         if (Input.GetKeyDown(KeyCode.D))
         {
+            if (ReadyToGoStage) return;
             if (waypoints.Length == currentIndex + offset || currentIndex + offset > clearIndex) return;
             ++currentIndex;
             onInputDelay = true; //연타 방지
@@ -99,6 +106,7 @@ public class Menu_PlayerTransform : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
+            if (ReadyToGoStage) return;
             if (0 == currentIndex) return;
             --currentIndex;
             onInputDelay = true;
@@ -107,21 +115,34 @@ public class Menu_PlayerTransform : MonoBehaviour
             //좌우반전 구현 필요
             StartCoroutine(move("Back"));
         }
-
+        
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            GetSceneString();
-            if (SceneName == null) return;
-            onInputDelay = true;
-            PlaySelectSound.instance.MenuSelectSound();
-            StartCoroutine(LoadingScene());
-        }
-    }
+            switch (ReadyToGoStage)
+            {
+                case false:
+                    GetSceneString();
+                    if (SceneName == null) return;
+                    SelectLevelSprite.color = new Color(1, 1, 1, 1); //어쨋든 난이도 선택이 등장하도록
+                    ReadyToGoStage = true;
+                    break;
 
-    void Point()
-    {
-        savingIndex = currentIndex;
-        PlayerOnPoint.Invoke();
+                case true:
+                    onInputDelay = true;
+                    PlaySelectSound.instance.MenuSelectSound();
+                    StartCoroutine(LoadingScene());
+                    break;
+            }
+        }
+
+        if (ReadyToGoStage)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SelectLevelSprite.color = new Color(1, 1, 1, 0);
+                ReadyToGoStage = false;
+            }
+        }
     }
 
     IEnumerator move(string s)
