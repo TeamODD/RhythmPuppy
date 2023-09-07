@@ -43,18 +43,20 @@ public class Menu_PlayerTransform : MonoBehaviour
         {
             clearIndex = 30; //개발 끝나면 1로 바꿔주세요.
         }
-
+        //스테이지->맵 돌아왔을 때 위치, 인덱스 수정 
         if (savingIndex != 0)
         {
             gameObject.transform.position = waypoints[savingIndex];
             currentIndex = savingIndex;
-            if (savingIndex >= 2) //메뉴로 돌아왔을시 월드2라면 월드2배경을 띄움.
-                BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
-            else if(savingIndex >= 7) //메뉴로 돌아왔을시 월드1이라면 월드1배경을 띄움.
-                BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
         }
         else
             currentIndex = 0;
+
+        //메뉴로 돌아왔을 시 인덱스에 따라 배경이 나타나도록.
+        if (savingIndex >= 2)
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(2, "appear");
+        if (savingIndex >= 7)
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(7, "appear");
 
         corgi_posX = waypoints[currentIndex].x;
     }
