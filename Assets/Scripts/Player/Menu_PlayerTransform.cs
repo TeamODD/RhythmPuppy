@@ -75,9 +75,9 @@ public class Menu_PlayerTransform : MonoBehaviour
     {
         PlayerOnPointExceptMusicChange.Invoke();
         if (currentIndex < 7)
-            PlaySelectSound.instance.World1_Walking();
+            PlayerWalkingSound.instance.World1_Walking();
         else
-            PlaySelectSound.instance.World2_Walking();
+            PlayerWalkingSound.instance.World2_Walking();
     }
 
     void Update()
