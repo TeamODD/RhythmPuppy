@@ -5,7 +5,10 @@ using UnityEngine;
 public class VolumeManager : MonoBehaviour
 {
     private AudioSource StageMusic;
+    private AudioSource StageSound;
+
     private float StageMusicVolumeIncrement;
+    private float StageSoundVolumeIncrement;
 
     private float MusicVolume;
     private float SfxVolume;
@@ -25,6 +28,16 @@ public class VolumeManager : MonoBehaviour
             PlayerPrefs.SetFloat("StageMusicVolumeIncrement", StageMusicVolumeIncrement);
         }
 
+        GameObject StageSoundObject = GameObject.FindGameObjectWithTag("SoundManager");
+        if (StageSoundObject != null)
+        {
+            StageSound = StageSoundObject.GetComponent<AudioSource>();
+            float OriginalStageSoundVolume = StageSound.volume;
+            StageSoundVolumeIncrement = OriginalStageSoundVolume / 5;
+            PlayerPrefs.SetFloat("StageSoundVolumeIncrement", StageSoundVolumeIncrement);
+
+        }
+
         if (PlayerPrefs.HasKey("MusicVolume"))
         {
             MusicVolume = PlayerPrefs.GetFloat("MusicVolume");
@@ -41,6 +54,14 @@ public class VolumeManager : MonoBehaviour
         if (PlayerPrefs.HasKey("SfxVolume"))
         {
             SfxVolume = PlayerPrefs.GetFloat("SfxVolume");
+            if (StageSound != null && StageSound.volume != 0)
+            {
+                StageSound.volume = SfxVolume * 10 * StageSoundVolumeIncrement;
+            }
+            else if (StageSound != null && StageSound.volume == 0)
+            {
+                StageSound.volume += StageSoundVolumeIncrement;
+            }
         }
     }
 }
