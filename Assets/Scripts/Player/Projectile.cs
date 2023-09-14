@@ -46,6 +46,7 @@ public class Projectile : MonoBehaviour
         eventManager.playerEvent.shootEvent += shootEvent;
         eventManager.playerEvent.teleportEvent += stop;
         eventManager.playerEvent.shootCancelEvent += stop;
+        eventManager.playerEvent.reviveEvent += stop;
     }
 
     void FixedUpdate()

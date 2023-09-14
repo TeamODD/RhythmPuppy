@@ -28,7 +28,6 @@ namespace Stage_2
             audioSource = FindObjectOfType<AudioSource>();
             patternManager = transform.parent;
 
-            eventManager.playerEvent.deathEvent += deathEvent;
             Run();
         }
 
@@ -43,13 +42,13 @@ namespace Stage_2
             }
         }
 
-        public void deathEvent()
+        /*public void deathEvent()
         {
             for (int i = 0; i < patternList.Length; i++)
             {
                 Destroy(patternList[i]);
             }
             Destroy(gameObject);
-        }
+        }*/
     }
 }
