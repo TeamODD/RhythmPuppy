@@ -20,7 +20,9 @@ public class Menu_PlayerTransform : MonoBehaviour
     public UnityEvent Loading;
     public Animator animator;
     public GameObject corgiLoading;
-    public SpriteRenderer SelectLevelSprite;
+    public GameObject Select_Difficulty;
+    public GameObject Normal;
+    public GameObject Hard;
 
     private Vector3 endPoint;
     private Vector3 currentPosition;
@@ -36,7 +38,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     public static bool ReadyToGoStage;
     public static bool IsPaused; //옵션창에서 Enter 키 중단
     
-    //발판 위 엔터Sprite관리는 ShowInfo 스크립트에 넣어놨습니다.
+
     void Awake()
     {
         if (PlayerPrefs.HasKey("clearIndex"))
@@ -88,11 +90,36 @@ public class Menu_PlayerTransform : MonoBehaviour
             PlaySelectSound.instance.World2_Walking();
     }
 
+    void DifficultyOff()
+    {
+        ReadyToGoStage = false;
+    }
+
     void Update()
     {
         int offset = 1;
         time += Time.deltaTime;
         if (onInputDelay || IsPaused) return;
+
+        //난이도 선택창 스크립트.
+        if (ReadyToGoStage)
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                Normal.SetActive(true);
+                Hard.SetActive(false);
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                Normal.SetActive(false);
+                Hard.SetActive(true);
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Select_Difficulty.SetActive(false);
+                Invoke("DifficultyOff", 0.1f);
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -118,12 +145,20 @@ public class Menu_PlayerTransform : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Return))
         {
+            if(currentIndex == 1)
+            {
+                onInputDelay = true;
+                PlaySelectSound.instance.MenuSelectSound();
+                StartCoroutine(LoadingScene());
+                return;
+            }
+
             switch (ReadyToGoStage)
             {
                 case false:
                     GetSceneString();
                     if (SceneName == null) return;
-                    SelectLevelSprite.color = new Color(1, 1, 1, 1); //어쨋든 난이도 선택이 등장하도록
+                    Select_Difficulty.SetActive(true);
                     ReadyToGoStage = true;
                     break;
 
@@ -135,14 +170,6 @@ public class Menu_PlayerTransform : MonoBehaviour
             }
         }
 
-        if (ReadyToGoStage)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                SelectLevelSprite.color = new Color(1, 1, 1, 0);
-                ReadyToGoStage = false;
-            }
-        }
     }
 
     IEnumerator move(string s)
