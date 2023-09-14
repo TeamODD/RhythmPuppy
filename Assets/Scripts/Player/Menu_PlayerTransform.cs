@@ -93,6 +93,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     void DifficultyOff()
     {
         ReadyToGoStage = false;
+        onInputDelay = false;
     }
 
     void Update()
@@ -117,6 +118,7 @@ public class Menu_PlayerTransform : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 Select_Difficulty.SetActive(false);
+                onInputDelay = true;
                 Invoke("DifficultyOff", 0.1f);
             }
         }
@@ -145,7 +147,7 @@ public class Menu_PlayerTransform : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if(currentIndex == 1)
+            if(currentIndex == 1) //튜토리얼은 그냥 진입하도록
             {
                 onInputDelay = true;
                 PlaySelectSound.instance.MenuSelectSound();

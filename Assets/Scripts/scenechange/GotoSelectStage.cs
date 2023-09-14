@@ -18,6 +18,12 @@ public class GotoSelectStage : MonoBehaviour
     float fadeDuration;
     [SerializeField]
     float comedownspeed;
+    [SerializeField]
+    GameObject LoadingScreen;
+    [SerializeField]
+    AudioSource volume;
+
+    private float alpha;
 
     private bool FadeInDone = false;
     private bool FadeOutDone = false;
@@ -29,8 +35,7 @@ public class GotoSelectStage : MonoBehaviour
             PlaySelectSound.instance.SelectSound();
             PlaySelectSound.instance.audioSourceSelect.Play();
 
-            SceneManager.LoadScene("SceneMenu_01");
-
+            StartCoroutine(SceneLoading());
         }
 
         if (FadeInDone)
@@ -49,8 +54,21 @@ public class GotoSelectStage : MonoBehaviour
 
     private void Start()
     {
+        alpha = 0;
         StartCoroutine(TitleSetting());
         StartCoroutine(FadeInObjects(TitleImage));
+    }
+
+    private IEnumerator SceneLoading()
+    {
+        while (alpha < 1)
+        {
+            LoadingScreen.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, alpha);
+            volume.volume = 1f - alpha;
+            alpha += 0.02f;
+            yield return new WaitForFixedUpdate();
+        }
+        PlaySelectSound.instance.StartLoading("SceneMenu_01", LoadingScreen);
     }
 
     private IEnumerator TitleSetting()
