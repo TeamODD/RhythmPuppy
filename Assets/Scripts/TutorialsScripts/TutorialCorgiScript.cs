@@ -27,4 +27,12 @@ public class TutorialCorgiScript : MonoBehaviour
             renderer.color = color; // 변경된 투명도 설정
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (LayerMask.NameToLayer("Obstacle").Equals(collision.gameObject.layer))
+        {
+            GameObject Tutorials2Manager = GameObject.Find("Tutorials2Manager");
+            Tutorials2Manager.GetComponent<Tutorials2Manager>().IsFirstHited = true;
+        }
+    }
 }

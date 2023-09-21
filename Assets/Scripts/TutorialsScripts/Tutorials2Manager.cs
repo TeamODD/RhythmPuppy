@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks.Triggers;
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,8 +18,22 @@ public class Tutorials2Manager : MonoBehaviour
     Sprite D_PressedImage;
     [SerializeField]
     Sprite A_UnPressedImage;
-    [SerializeField]    
+    [SerializeField]
     Sprite D_UnPressedImage;
+
+    [SerializeField]
+    GameObject SpaceBarImage;
+    [SerializeField]
+    Sprite SpaceBar_PressedImage;
+    [SerializeField]
+    Sprite SpaceBar_UnPressedImage;
+
+    [SerializeField]
+    GameObject Shift_ButtonImage;   
+    [SerializeField]
+    Sprite Shift_PressedImage;
+    [SerializeField]
+    Sprite Shift_UnPressedImage;
 
     [SerializeField]
     GameObject TutorialCorgi;
@@ -26,8 +42,19 @@ public class Tutorials2Manager : MonoBehaviour
     [SerializeField]
     GameObject Puppy;
 
+    [SerializeField]
+    GameObject OakObstacle;
+    [SerializeField]
+    GameObject OakObstacleWarning;
+    [SerializeField]
+    GameObject ThorStemObstacle;
+    [SerializeField]
+    GameObject ThorStemObstacleWarning;
+
     SpriteRenderer Asprite;
     SpriteRenderer Dsprite;
+    SpriteRenderer SpaceBarSprite;
+    SpriteRenderer ShiftSprite;
 
     Rigidbody2D TutorialCorgiRig2D;
 
@@ -36,30 +63,63 @@ public class Tutorials2Manager : MonoBehaviour
     bool IsFinishedJumpTest = false;
     bool IsFinishedDashTest = false;
 
+    public bool IsFirstHited = false;
+
+    GameObject NewOakObstacle;
+    GameObject NewOakObstacleWarning;
+    GameObject NewThorStemObstacle;
+    GameObject NewThorStemObstacleWarning;
 
     IEnumerator Atest;
     IEnumerator Dtest;
     IEnumerator JumpTest;
+    IEnumerator DashTest;
 
     Animator TutorialCorgiAnim;
 
     [SerializeField]
     float TutorialCorgiSpeed;
 
+    private enum TestMode
+    {
+        ADTest,
+        SpaceTest,
+        DashTest,
+        None
+    }
+
+    [SerializeField]
+    private TestMode testMode = TestMode.None;
+
     void Start()
     {
         Asprite = A_ButtonImage.GetComponent<SpriteRenderer>();
         Dsprite = D_ButtonImage.GetComponent<SpriteRenderer>();
 
+        SpaceBarSprite = SpaceBarImage.GetComponent<SpriteRenderer>();
+
+        ShiftSprite = Shift_ButtonImage.GetComponent<SpriteRenderer>();
+
         TutorialCorgiRig2D = TutorialCorgi.GetComponent<Rigidbody2D>();
         TutorialCorgiAnim = TutorialCorgi.GetComponent<Animator>();
 
-        Atest = PleaseMoveToRightPuppy();
-        Dtest = PleaseMoveToLeftPuppy();
-        StartCoroutine(Atest);
-
+        Dtest = PleaseMoveToRightPuppy();
+        Atest = PleaseMoveToLeftPuppy();
         JumpTest = PleaseJumpToAvoid();
+        DashTest = PleaseDashToAvoid();
 
+        if (testMode == TestMode.ADTest)
+        {
+            StartCoroutine(Dtest);
+        }
+        else if (testMode == TestMode.SpaceTest)
+        {
+            StartCoroutine(JumpTest);
+        }
+        else if (testMode == TestMode.DashTest)
+        {
+            StartCoroutine(DashTest);
+        }
     }
 
     void Update()
@@ -82,6 +142,24 @@ public class Tutorials2Manager : MonoBehaviour
             Dsprite.sprite= D_UnPressedImage;
         }
 
+        if (Input.GetKey(KeyCode.Space))
+        {
+            SpaceBarSprite.sprite = SpaceBar_PressedImage;
+        }
+        else
+        {
+            SpaceBarSprite.sprite = SpaceBar_UnPressedImage;
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            ShiftSprite.sprite = Shift_PressedImage;
+        }
+        else
+        {
+            ShiftSprite.sprite = Shift_UnPressedImage;
+        }
+
         //플레이어가 처음으로 오른쪽에 도달했을 때
         if (PlayerCorgi.transform.position.x >= 5 && IsArrivedRightSide == false)
         {
@@ -95,13 +173,12 @@ public class Tutorials2Manager : MonoBehaviour
                 float scaleZ = Puppy.transform.localScale.z;
                 Puppy.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
             }
-            StopCoroutine(Atest);
-            TutorialCorgiRig2D.velocity = Vector2.zero;
-            StartCoroutine(Dtest);
+            StopCoroutine(Dtest);
+            StartCoroutine(Atest);
         }
 
         //플레이어가 오른쪽으로 도달한 이후 왼쪽에 도달했을 때
-        if (PlayerCorgi.transform.position.x <= -5 && IsArrivedRightSide == true)
+        if (PlayerCorgi.transform.position.x <= -5 && IsArrivedRightSide == true && IsFinishedMoveLeftAndRightTest == false)
         {
             IsFinishedMoveLeftAndRightTest = true;
 
@@ -113,12 +190,39 @@ public class Tutorials2Manager : MonoBehaviour
                 float scaleZ = Puppy.transform.localScale.z;
                 Puppy.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
             }
-            A_ButtonImage.SetActive(false);
-            D_ButtonImage.SetActive(false);
 
-            StopCoroutine(Dtest);
-            TutorialCorgiRig2D.velocity = Vector2.zero;
-            //StartCoroutine(JumpTest);
+            StopCoroutine(Atest);
+            StartCoroutine(JumpTest);
+        }
+
+        if (PlayerCorgi.transform.position.x >= 5 && IsFinishedMoveLeftAndRightTest == true && IsFinishedJumpTest == false)
+        {
+            IsFinishedJumpTest = true;
+
+            SpaceBarImage.SetActive(false);
+            if (NewOakObstacle.activeSelf == true)
+            {
+                Destroy(NewOakObstacle);
+            }
+
+            PlayerCorgi.transform.position = new Vector3(-7f, -4.3012f, 0f);
+
+            StopCoroutine(JumpTest);
+            StartCoroutine(DashTest);
+        }
+
+        if (PlayerCorgi.transform.position.x >= 5 && IsFinishedJumpTest == true && IsFinishedDashTest == false)
+        {
+            IsFinishedDashTest = true;
+
+            Shift_ButtonImage.SetActive(false);
+            if (NewThorStemObstacle.activeSelf == true)
+            {
+                Destroy(NewThorStemObstacle);
+            }
+            TutorialCorgi.SetActive(false);
+
+            StopCoroutine(DashTest);
         }
     }
 
@@ -132,6 +236,7 @@ public class Tutorials2Manager : MonoBehaviour
         {
             Puppy.transform.position = new Vector3(7.34f, -3.15f, 0);
 
+            TutorialCorgiRig2D.velocity = Vector2.zero;
             TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
 
             TutorialCorgiAnim.SetBool("bAxisInput", false);
@@ -145,8 +250,6 @@ public class Tutorials2Manager : MonoBehaviour
                 TutorialCorgiRig2D.velocity = Vector2.right * TutorialCorgiSpeed;
                 yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
             }
-
-            TutorialCorgiRig2D.velocity = Vector2.zero;
         }
     }
 
@@ -159,6 +262,7 @@ public class Tutorials2Manager : MonoBehaviour
         while (IsArrivedRightSide)
         {
             TutorialCorgi.transform.position = new Vector3(4, -4.3012f, 0);
+            TutorialCorgiRig2D.velocity = Vector2.zero;
 
             if (TutorialCorgi.transform.localScale.x > 0)
             {
@@ -179,18 +283,32 @@ public class Tutorials2Manager : MonoBehaviour
                 TutorialCorgiRig2D.velocity = Vector2.left * TutorialCorgiSpeed;
                 yield return TestCorgiFadeOut(initialAlpha, finalAlpha, 4f, -5f);
             }
-
-            TutorialCorgiRig2D.velocity = Vector2.zero;
         }
     }
 
     private IEnumerator PleaseJumpToAvoid()
     {
+        A_ButtonImage.SetActive(false);
+        D_ButtonImage.SetActive(false);
+        SpaceBarImage.SetActive(true);
+
+        IsArrivedRightSide = true;
+        IsFinishedMoveLeftAndRightTest = true;
+
         float initialAlpha = 100f; // 초기 투명도 값
         float finalAlpha = 0f;    // 최종 투명도 값
 
         while (!IsFinishedJumpTest)
         {
+            Vector3 OakObstcleWarningPosition = new Vector3(8.75f, -3.15f, 0f);
+            NewOakObstacleWarning = Instantiate(OakObstacleWarning, OakObstcleWarningPosition, Quaternion.identity);
+            NewOakObstacleWarning.SetActive(true);
+
+            Vector3 OakObstclePosition = new Vector3(10.5f, -3.46f, 0f);
+            NewOakObstacle = Instantiate(OakObstacle, OakObstclePosition, Quaternion.identity);
+            NewOakObstacle.SetActive(true);
+
+            TutorialCorgiRig2D.velocity = Vector2.zero;
             TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
 
             if (TutorialCorgi.transform.localScale.x < 0)
@@ -204,9 +322,159 @@ public class Tutorials2Manager : MonoBehaviour
             TutorialCorgiAnim.SetBool("bAxisInput", false);
 
             yield return StartCoroutine(TestCorgiFadeIn(finalAlpha, initialAlpha)); //0에서 100으로 올라는 겁니다. 문자만 보고 착각하시면 큰일은 아니지만 일이 좀 납니다.
+
+            TutorialCorgiAnim.SetBool("bAxisInput", true);
+
+            bool IsJumped = false;
+
+            if (IsFirstHited == true) //맞았음
+            {
+                while (TutorialCorgi.transform.position.x < 5)
+                {
+                    TutorialCorgiRig2D.velocity = new Vector2(TutorialCorgiSpeed, TutorialCorgiRig2D.velocity.y);
+
+                    if (Mathf.Abs(TutorialCorgi.transform.position.x - NewOakObstacle.transform.position.x) < 4.5f && IsJumped == false)
+                    {
+                        TutorialCorgiRig2D.velocity = new Vector2(TutorialCorgiRig2D.velocity.x, 6f);
+                        IsJumped = true;
+                    }
+                    IsFirstHited = false;
+                    yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
+                }
+            }
+            else if (IsFirstHited == false) //맞지 않음
+            {
+                while (TutorialCorgi.transform.position.x < 5)
+                {
+                    TutorialCorgiRig2D.velocity = Vector2.right * TutorialCorgiSpeed;
+                    yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
+                }
+            }
+            Destroy(NewOakObstacle);
+        }
+    }
+
+    private IEnumerator PleaseDashToAvoid()
+    {
+        A_ButtonImage.SetActive(false);
+        D_ButtonImage.SetActive(false);
+        SpaceBarImage.SetActive(false);
+        Shift_ButtonImage.SetActive(true);
+
+        IsArrivedRightSide = true;
+        IsFinishedMoveLeftAndRightTest = true;
+        IsFinishedJumpTest = true;
+
+        float initialAlpha = 100f; // 초기 투명도 값
+        float finalAlpha = 0f;    // 최종 투명도 값
+
+        while (!IsFinishedDashTest)
+        {
+            StartCoroutine(RunPattern());
+
+            TutorialCorgiRig2D.velocity = Vector2.zero;
+            TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
+
+            if (TutorialCorgi.transform.localScale.x < 0)
+            {
+                float scaleX = TutorialCorgi.transform.localScale.x;
+                float scaleY = TutorialCorgi.transform.localScale.y;
+                float scaleZ = TutorialCorgi.transform.localScale.z;
+                TutorialCorgi.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
+            }
+
+            TutorialCorgiAnim.SetBool("bAxisInput", false);
+
+            yield return StartCoroutine(TestCorgiFadeIn(finalAlpha, initialAlpha)); //0에서 100으로 올라는 겁니다. 문자만 보고 착각하시면 큰일은 아니지만 일이 좀 납니다.
+
+            TutorialCorgiAnim.SetBool("bAxisInput", true);
+
+            bool IsJumped = false;
+
+            if (IsFirstHited == true) //맞았음
+            {
+                while (TutorialCorgi.transform.position.x < 5)
+                {
+                    TutorialCorgiRig2D.velocity = new Vector2(TutorialCorgiSpeed, TutorialCorgiRig2D.velocity.y);
+
+                    if (Mathf.Abs(TutorialCorgi.transform.position.x - NewThorStemObstacle.transform.position.x) < 4.5f && IsJumped == false)
+                    {
+                        TutorialCorgiRig2D.velocity = new Vector2(TutorialCorgiRig2D.velocity.x, 6f);
+                        IsJumped = true;
+                    }
+                    IsFirstHited = false;
+                    yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
+                }
+            }
+            else if (IsFirstHited == false) //맞지 않음
+            {
+                while (TutorialCorgi.transform.position.x < 5)
+                {
+                    TutorialCorgiRig2D.velocity = Vector2.right * TutorialCorgiSpeed;
+                    yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
+                }
+            }
+            Destroy(NewThorStemObstacle);
+        }
+    }
+
+    private IEnumerator RunPattern()
+    {
+        Vector3 ThorStemObstcleWarningPosition = new Vector3(8.2f, 0f, 0f);
+        NewThorStemObstacleWarning = Instantiate(ThorStemObstacleWarning, ThorStemObstcleWarningPosition, Quaternion.identity);
+        NewThorStemObstacleWarning.SetActive(true);
+
+        SpriteRenderer[] warningRenderers = NewThorStemObstacleWarning.GetComponentsInChildren<SpriteRenderer>();
+
+        Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+        foreach (SpriteRenderer renderer in warningRenderers)
+        {
+            renderer.color = targetColor;
         }
 
-        yield return null;
+        float totalTime = 0.25f;
+        float elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(targetColor, Color.red, t);
+            }
+
+            yield return null;
+        }
+
+        elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(Color.red, targetColor, t);
+            }
+
+            yield return null;
+        }
+
+        Destroy(NewThorStemObstacleWarning);
+
+        Vector3 ThorStemObstaclePosition = new Vector3(10f, 0f, 0f);
+        NewThorStemObstacle = Instantiate(ThorStemObstacle, ThorStemObstaclePosition, Quaternion.identity);
+        NewThorStemObstacle.SetActive(true);
+
+        Rigidbody2D stemRigidbody = NewThorStemObstacle.GetComponent<Rigidbody2D>();
+        
+        stemRigidbody.velocity = Vector2.left * 5f;
+
+        while (NewThorStemObstacle.transform.position.x < -10)
+        {
+            Destroy(NewThorStemObstacle);
+        }
     }
 
     private IEnumerator TestCorgiFadeIn(float finalAlpha, float initialAlpha)
@@ -262,4 +530,6 @@ public class Tutorials2Manager : MonoBehaviour
 
         yield return null;
     }
+
+    
 }

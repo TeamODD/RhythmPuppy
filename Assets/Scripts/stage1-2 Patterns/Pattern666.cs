@@ -136,7 +136,6 @@ public class Pattern666 : MonoBehaviour
     {
         while (isPatternRunning)
         {
-            // �� ������ ���� ��� ������Ʈ�� �ı��մϴ�.
             if (!IsWithinMapBounds(obj.transform.position))
             {
                 objects.Remove(obj);
