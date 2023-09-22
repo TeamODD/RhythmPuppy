@@ -58,11 +58,15 @@ public class Tutorials2Manager : MonoBehaviour
 
     Rigidbody2D TutorialCorgiRig2D;
 
-    bool IsArrivedRightSide = false;
-    bool IsFinishedMoveLeftAndRightTest = false;
-    bool IsFinishedJumpTest = false;
-    bool IsFinishedDashTest = false;
-
+    [HideInInspector]
+    public bool IsArrivedRightSide = false;
+    [HideInInspector]
+    public bool IsFinishedMoveLeftAndRightTest = false;
+    [HideInInspector]
+    public bool IsFinishedJumpTest = false;
+    [HideInInspector]
+    public bool IsFinishedDashTest = false;
+    [HideInInspector]
     public bool IsFirstHited = false;
 
     GameObject NewOakObstacle;
@@ -220,7 +224,6 @@ public class Tutorials2Manager : MonoBehaviour
             {
                 Destroy(NewThorStemObstacle);
             }
-            TutorialCorgi.SetActive(false);
 
             StopCoroutine(DashTest);
         }
@@ -399,8 +402,10 @@ public class Tutorials2Manager : MonoBehaviour
 
                     if (Mathf.Abs(TutorialCorgi.transform.position.x - NewThorStemObstacle.transform.position.x) < 4.5f && IsJumped == false)
                     {
-                        TutorialCorgiRig2D.velocity = new Vector2(TutorialCorgiRig2D.velocity.x, 6f);
+                        TutorialCorgiRig2D.velocity = new Vector2(TutorialCorgiRig2D.velocity.x + 6f, TutorialCorgiRig2D.velocity.y);
                         IsJumped = true;
+
+                        yield return new WaitForSeconds(0.4f);
                     }
                     IsFirstHited = false;
                     yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);

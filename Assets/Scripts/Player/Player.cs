@@ -190,6 +190,18 @@ public class Player : MonoBehaviour
     {
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
+            if (SceneManager.GetActiveScene().name == "Tutorials2")
+            {
+                if (dashCoroutine != null)
+                {
+                    evade(c);
+                    return;
+                }
+
+                transform.position = new Vector3(-7f, -4.3012f, 0f);
+                return;
+            }
+
             if (dashCoroutine != null) evade(c);
             else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
