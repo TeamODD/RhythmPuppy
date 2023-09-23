@@ -80,9 +80,14 @@ public class Tutorials2Manager : MonoBehaviour
     IEnumerator DashTest;
 
     Animator TutorialCorgiAnim;
+    AudioSource audioSource;
 
     [SerializeField]
     float TutorialCorgiSpeed;
+
+    float startTime;
+
+    List<float> PatternTimings = new List<float>();
 
     private enum TestMode
     {
@@ -95,6 +100,18 @@ public class Tutorials2Manager : MonoBehaviour
     [SerializeField]
     private TestMode testMode = TestMode.None;
 
+    private void Awake()
+    {
+        float interval = 2.0f;
+
+        for (float timing = 0.9f; timing <= 294.0f; timing += interval)
+        {
+            PatternTimings.Add(timing);
+        }
+
+        startTime = 0f;
+    }
+
     void Start()
     {
         Asprite = A_ButtonImage.GetComponent<SpriteRenderer>();
@@ -106,6 +123,8 @@ public class Tutorials2Manager : MonoBehaviour
 
         TutorialCorgiRig2D = TutorialCorgi.GetComponent<Rigidbody2D>();
         TutorialCorgiAnim = TutorialCorgi.GetComponent<Animator>();
+
+        audioSource = GameObject.FindWithTag("Music").GetComponent<AudioSource>();
 
         Dtest = PleaseMoveToRightPuppy();
         Atest = PleaseMoveToLeftPuppy();
@@ -303,57 +322,63 @@ public class Tutorials2Manager : MonoBehaviour
 
         while (!IsFinishedJumpTest)
         {
-            Vector3 OakObstcleWarningPosition = new Vector3(8.75f, -3.15f, 0f);
-            NewOakObstacleWarning = Instantiate(OakObstacleWarning, OakObstcleWarningPosition, Quaternion.identity);
-            NewOakObstacleWarning.SetActive(true);
-
-            Vector3 OakObstclePosition = new Vector3(10.5f, -3.46f, 0f);
-            NewOakObstacle = Instantiate(OakObstacle, OakObstclePosition, Quaternion.identity);
-            NewOakObstacle.SetActive(true);
-
-            TutorialCorgiRig2D.velocity = Vector2.zero;
-            TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
-
-            if (TutorialCorgi.transform.localScale.x < 0)
+            for (int i = 0; i < PatternTimings.Count; i++)
             {
-                float scaleX = TutorialCorgi.transform.localScale.x;
-                float scaleY = TutorialCorgi.transform.localScale.y;
-                float scaleZ = TutorialCorgi.transform.localScale.z;
-                TutorialCorgi.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
-            }
+                float timing = PatternTimings[i];
 
-            TutorialCorgiAnim.SetBool("bAxisInput", false);
-
-            yield return StartCoroutine(TestCorgiFadeIn(finalAlpha, initialAlpha)); //0에서 100으로 올라는 겁니다. 문자만 보고 착각하시면 큰일은 아니지만 일이 좀 납니다.
-
-            TutorialCorgiAnim.SetBool("bAxisInput", true);
-
-            bool IsJumped = false;
-
-            if (IsFirstHited == true) //맞았음
-            {
-                while (TutorialCorgi.transform.position.x < 5)
+                if (timing < startTime)
                 {
-                    TutorialCorgiRig2D.velocity = new Vector2(TutorialCorgiSpeed, TutorialCorgiRig2D.velocity.y);
+                    continue;
+                }
 
-                    if (Mathf.Abs(TutorialCorgi.transform.position.x - NewOakObstacle.transform.position.x) < 4.5f && IsJumped == false)
+                yield return new WaitForSeconds(timing - audioSource.time);
+                StartCoroutine(RunOakPattern());
+
+                TutorialCorgiRig2D.velocity = Vector2.zero;
+                TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
+
+                if (TutorialCorgi.transform.localScale.x < 0)
+                {
+                    float scaleX = TutorialCorgi.transform.localScale.x;
+                    float scaleY = TutorialCorgi.transform.localScale.y;
+                    float scaleZ = TutorialCorgi.transform.localScale.z;
+                    TutorialCorgi.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
+                }
+
+                TutorialCorgiAnim.SetBool("bAxisInput", false);
+
+                yield return StartCoroutine(TestCorgiFadeIn(finalAlpha, initialAlpha)); //0에서 100으로 올라는 겁니다. 문자만 보고 착각하시면 큰일은 아니지만 일이 좀 납니다.
+
+                TutorialCorgiAnim.SetBool("bAxisInput", true);
+
+                bool IsJumped = false;
+
+                if (IsFirstHited == true) //맞았음
+                {
+                    while (TutorialCorgi.transform.position.x < 5)
                     {
-                        TutorialCorgiRig2D.velocity = new Vector2(TutorialCorgiRig2D.velocity.x, 6f);
-                        IsJumped = true;
+                        TutorialCorgiRig2D.velocity = new Vector2(TutorialCorgiSpeed, TutorialCorgiRig2D.velocity.y);
+
+                        if (Mathf.Abs(TutorialCorgi.transform.position.x - NewOakObstacle.transform.position.x) < 4.5f && IsJumped == false)
+                        {
+                            TutorialCorgiRig2D.velocity = new Vector2(TutorialCorgiRig2D.velocity.x, 6f);
+                            IsJumped = true;
+                        }
+                        IsFirstHited = false;
+                        yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
                     }
-                    IsFirstHited = false;
-                    yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
                 }
-            }
-            else if (IsFirstHited == false) //맞지 않음
-            {
-                while (TutorialCorgi.transform.position.x < 5)
+                else if (IsFirstHited == false) //맞지 않음
                 {
-                    TutorialCorgiRig2D.velocity = Vector2.right * TutorialCorgiSpeed;
-                    yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
+                    while (TutorialCorgi.transform.position.x < 5)
+                    {
+                        TutorialCorgiRig2D.velocity = Vector2.right * TutorialCorgiSpeed;
+                        yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
+                    }
                 }
+                yield return new WaitUntil(() => NewThorStemObstacle.transform.position.x <= -4.5f);
+                Destroy(NewThorStemObstacle);
             }
-            Destroy(NewOakObstacle);
         }
     }
 
@@ -373,7 +398,7 @@ public class Tutorials2Manager : MonoBehaviour
 
         while (!IsFinishedDashTest)
         {
-            StartCoroutine(RunPattern());
+            StartCoroutine(RunThorStemPattern());
 
             TutorialCorgiRig2D.velocity = Vector2.zero;
             TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
@@ -419,11 +444,62 @@ public class Tutorials2Manager : MonoBehaviour
                     yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
                 }
             }
+            yield return new WaitUntil(() => NewThorStemObstacle.transform.position.x <= -4.5f);
             Destroy(NewThorStemObstacle);
         }
     }
 
-    private IEnumerator RunPattern()
+    private IEnumerator RunOakPattern()
+    {
+        Vector3 OakObstcleWarningPosition = new Vector3(8.75f, -3.15f, 0f);
+        NewOakObstacleWarning = Instantiate(OakObstacleWarning, OakObstcleWarningPosition, Quaternion.identity);
+        NewOakObstacleWarning.SetActive(true);
+
+        SpriteRenderer[] warningRenderers = NewOakObstacleWarning.GetComponentsInChildren<SpriteRenderer>();
+
+        Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+        foreach (SpriteRenderer renderer in warningRenderers)
+        {
+            renderer.color = targetColor;
+        }
+
+        float totalTime = 0.25f;
+        float elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(targetColor, Color.red, t);
+            }
+
+            yield return null;
+        }
+
+        elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(Color.red, targetColor, t);
+            }
+
+            yield return null;
+        }
+
+        Destroy(NewOakObstacleWarning);
+
+        Vector3 OakObstclePosition = new Vector3(10.5f, -3.46f, 0f);
+        NewOakObstacle = Instantiate(OakObstacle, OakObstclePosition, Quaternion.identity);
+        NewOakObstacle.SetActive(true);
+    }
+
+    private IEnumerator RunThorStemPattern()
     {
         Vector3 ThorStemObstcleWarningPosition = new Vector3(8.2f, 0f, 0f);
         NewThorStemObstacleWarning = Instantiate(ThorStemObstacleWarning, ThorStemObstcleWarningPosition, Quaternion.identity);
@@ -475,11 +551,6 @@ public class Tutorials2Manager : MonoBehaviour
         Rigidbody2D stemRigidbody = NewThorStemObstacle.GetComponent<Rigidbody2D>();
         
         stemRigidbody.velocity = Vector2.left * 5f;
-
-        while (NewThorStemObstacle.transform.position.x < -10)
-        {
-            Destroy(NewThorStemObstacle);
-        }
     }
 
     private IEnumerator TestCorgiFadeIn(float finalAlpha, float initialAlpha)
@@ -532,9 +603,6 @@ public class Tutorials2Manager : MonoBehaviour
             color.a = normalizedAlpha; // 투명도 값 변경
             renderer.color = color; // 변경된 투명도 설정
         }
-
         yield return null;
     }
-
-    
 }

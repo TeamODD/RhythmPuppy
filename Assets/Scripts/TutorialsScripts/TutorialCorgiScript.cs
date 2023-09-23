@@ -132,7 +132,16 @@ public class TutorialCorgiScript : MonoBehaviour
         if (tutorials2Manager.IsFinishedDashTest == true)
         {
             Shift_ButtonImage.SetActive(false);
+            GetComponent<TutorialCorgiUIScript>().TutorialCorgiUI.SetActive(false);
             gameObject.SetActive(false);
+        }
+
+        if (transform.position.x >= 5)
+        {
+            A_ButtonImage.SetActive(false);
+            D_ButtonImage.SetActive(false);
+            SpaceBarImage.SetActive(false);
+            Shift_ButtonImage.SetActive(false);
         }
     }
 
