@@ -36,6 +36,24 @@ public class Tutorials2Manager : MonoBehaviour
     Sprite Shift_UnPressedImage;
 
     [SerializeField]
+    GameObject MouseImage;
+    [SerializeField]
+    Sprite LeftMouseClickedImage;
+    [SerializeField]
+    Sprite RightMouseClickedImage;
+    [SerializeField]
+    Sprite MouseUnClickedImage;
+
+    [SerializeField]
+    GameObject TutorialCorgi_MouseImage;
+    [SerializeField]
+    Sprite TutorialCorgi_LeftMouseClickedImage;
+    [SerializeField]
+    Sprite TutorialCorgi_RightMouseClickedImage;
+    [SerializeField]
+    Sprite TutorialCorgi_MouseUnClickedImage;
+
+    [SerializeField]
     GameObject TutorialCorgi;
     [SerializeField]
     GameObject PlayerCorgi;
@@ -50,11 +68,15 @@ public class Tutorials2Manager : MonoBehaviour
     GameObject ThorStemObstacle;
     [SerializeField]
     GameObject ThorStemObstacleWarning;
+    [SerializeField]
+    GameObject ThorStems;
 
     SpriteRenderer Asprite;
     SpriteRenderer Dsprite;
     SpriteRenderer SpaceBarSprite;
     SpriteRenderer ShiftSprite;
+    SpriteRenderer MouseSprite;
+    SpriteRenderer TutorialCorgi_MouseSprite;
 
     Rigidbody2D TutorialCorgiRig2D;
 
@@ -67,6 +89,8 @@ public class Tutorials2Manager : MonoBehaviour
     [HideInInspector]
     public bool IsFinishedDashTest = false;
     [HideInInspector]
+    public bool IsFinishedTeleportTest = false;
+    [HideInInspector]
     public bool IsFirstHited = false;
 
     GameObject NewOakObstacle;
@@ -78,6 +102,7 @@ public class Tutorials2Manager : MonoBehaviour
     IEnumerator Dtest;
     IEnumerator JumpTest;
     IEnumerator DashTest;
+    IEnumerator TeleportTest;
 
     Animator TutorialCorgiAnim;
     AudioSource audioSource;
@@ -94,6 +119,7 @@ public class Tutorials2Manager : MonoBehaviour
         ADTest,
         SpaceTest,
         DashTest,
+        TeleportTest,
         None
     }
 
@@ -116,10 +142,10 @@ public class Tutorials2Manager : MonoBehaviour
     {
         Asprite = A_ButtonImage.GetComponent<SpriteRenderer>();
         Dsprite = D_ButtonImage.GetComponent<SpriteRenderer>();
-
         SpaceBarSprite = SpaceBarImage.GetComponent<SpriteRenderer>();
-
         ShiftSprite = Shift_ButtonImage.GetComponent<SpriteRenderer>();
+        MouseSprite = MouseImage.GetComponent<SpriteRenderer>();
+        TutorialCorgi_MouseSprite = TutorialCorgi_MouseImage.GetComponent<SpriteRenderer>();
 
         TutorialCorgiRig2D = TutorialCorgi.GetComponent<Rigidbody2D>();
         TutorialCorgiAnim = TutorialCorgi.GetComponent<Animator>();
@@ -130,6 +156,7 @@ public class Tutorials2Manager : MonoBehaviour
         Atest = PleaseMoveToLeftPuppy();
         JumpTest = PleaseJumpToAvoid();
         DashTest = PleaseDashToAvoid();
+        TeleportTest = PleaseTeleportToAvoid();
 
         if (testMode == TestMode.ADTest)
         {
@@ -142,6 +169,10 @@ public class Tutorials2Manager : MonoBehaviour
         else if (testMode == TestMode.DashTest)
         {
             StartCoroutine(DashTest);
+        }
+        else if (testMode == TestMode.TeleportTest)
+        {
+            StartCoroutine(TeleportTest);
         }
     }
 
@@ -181,6 +212,19 @@ public class Tutorials2Manager : MonoBehaviour
         else
         {
             ShiftSprite.sprite = Shift_UnPressedImage;
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            MouseSprite.sprite = LeftMouseClickedImage;
+        }
+        else if (Input.GetMouseButton(1))
+        {
+            MouseSprite.sprite = RightMouseClickedImage;
+        }
+        else
+        {
+            MouseSprite.sprite = MouseUnClickedImage;
         }
 
         //플레이어가 처음으로 오른쪽에 도달했을 때
@@ -244,7 +288,20 @@ public class Tutorials2Manager : MonoBehaviour
                 Destroy(NewThorStemObstacle);
             }
 
+            PlayerCorgi.transform.position = new Vector3(-7f, -4.3012f, 0f);
+
             StopCoroutine(DashTest);
+            StartCoroutine(TeleportTest);
+        }
+
+        if (PlayerCorgi.transform.position.x >= 5 && IsFinishedDashTest==true && IsFinishedTeleportTest == false)
+        {
+            IsFinishedTeleportTest = true;
+
+            ThorStems.SetActive(false);
+            MouseImage.SetActive(false);
+
+            StopCoroutine(TeleportTest);
         }
     }
 
@@ -376,8 +433,8 @@ public class Tutorials2Manager : MonoBehaviour
                         yield return TestCorgiFadeOut(initialAlpha, finalAlpha, -4f, 5f);
                     }
                 }
-                yield return new WaitUntil(() => NewThorStemObstacle.transform.position.x <= -4.5f);
-                Destroy(NewThorStemObstacle);
+                yield return new WaitUntil(() => NewOakObstacle.transform.position.x <= -4.5f);
+                Destroy(NewOakObstacle);
             }
         }
     }
@@ -392,6 +449,8 @@ public class Tutorials2Manager : MonoBehaviour
         IsArrivedRightSide = true;
         IsFinishedMoveLeftAndRightTest = true;
         IsFinishedJumpTest = true;
+
+        IsFirstHited = false;
 
         float initialAlpha = 100f; // 초기 투명도 값
         float finalAlpha = 0f;    // 최종 투명도 값
@@ -447,6 +506,55 @@ public class Tutorials2Manager : MonoBehaviour
             yield return new WaitUntil(() => NewThorStemObstacle.transform.position.x <= -4.5f);
             Destroy(NewThorStemObstacle);
         }
+    }
+
+    private IEnumerator PleaseTeleportToAvoid()
+    {
+        A_ButtonImage.SetActive(false);
+        D_ButtonImage.SetActive(false);
+        SpaceBarImage.SetActive(false);
+        Shift_ButtonImage.SetActive(false);
+        MouseImage.SetActive(true);
+
+        ThorStems.SetActive(true); //애니메이션으로 보강 2023.10.26
+
+        IsArrivedRightSide = true;
+        IsFinishedMoveLeftAndRightTest = true;
+        IsFinishedJumpTest = true;
+        IsFinishedDashTest = true;
+
+        IsFirstHited = false;
+
+        float initialAlpha = 100f; // 초기 투명도 값
+        float finalAlpha = 0f;    // 최종 투명도 값
+
+        GameObject TutorialCorgi = GameObject.Find("TutorialCorgi");
+        GameObject TutorialCorgi_Bone = TutorialCorgi.transform.GetChild(0).gameObject;
+        GameObject PlayerCorgi_Bone = PlayerCorgi.transform.GetChild(0).gameObject;
+
+        TutorialCorgi_Bone.transform.position = new Vector3(1f, 0.6f, 0f);
+        PlayerCorgi_Bone.transform.position = new Vector3(1f, -0.6f, 0f);
+
+        //while (!IsFinishedTeleportTest)
+        {
+            TutorialCorgiRig2D.velocity = Vector2.zero;
+            TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
+
+            if (TutorialCorgi.transform.localScale.x < 0)
+            {
+                float scaleX = TutorialCorgi.transform.localScale.x;
+                float scaleY = TutorialCorgi.transform.localScale.y;
+                float scaleZ = TutorialCorgi.transform.localScale.z;
+                TutorialCorgi.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
+
+                TutorialCorgiAnim.SetBool("bAxisInput", false);
+
+                yield return StartCoroutine(TestCorgiFadeIn(finalAlpha, initialAlpha)); //0에서 100으로 올라는 겁니다. 문자만 보고 착각하시면 큰일은 아니지만 일이 좀 납니다.
+
+                TutorialCorgiAnim.SetBool("bAxisInput", true);
+            }
+        }
+            yield return null;
     }
 
     private IEnumerator RunOakPattern()

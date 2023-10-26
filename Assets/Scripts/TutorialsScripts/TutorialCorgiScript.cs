@@ -34,6 +34,9 @@ public class TutorialCorgiScript : MonoBehaviour
     [SerializeField]
     Sprite Shift_UnPressedImage;
 
+    [SerializeField]
+    GameObject MouseImage;
+
     SpriteRenderer Asprite;
     SpriteRenderer Dsprite;
     SpriteRenderer SpaceBarSprite;
@@ -78,7 +81,8 @@ public class TutorialCorgiScript : MonoBehaviour
         A_ButtonImage.transform.position = new Vector3(transform.position.x - 0.6f, -1f, 0f);
         D_ButtonImage.transform.position = new Vector3(transform.position.x + 0.6f, -1f, 0f);
         SpaceBarImage.transform.position = new Vector3(transform.position.x + 3f, -1f, 0f);
-        ShiftSprite.transform.position = new Vector3(transform.position.x, -1f, 0f);
+        Shift_ButtonImage.transform.position = new Vector3(transform.position.x, -1f, 0f);
+        MouseImage.transform.position = new Vector3(transform.position.x + 0.025f, -0.7f, 0f);
 
         if (TutorialCorgiRig2D.velocity.x > 0 && tutorials2Manager.IsArrivedRightSide == false)
         {
@@ -132,6 +136,12 @@ public class TutorialCorgiScript : MonoBehaviour
         if (tutorials2Manager.IsFinishedDashTest == true)
         {
             Shift_ButtonImage.SetActive(false);
+            MouseImage.SetActive(true);
+        }
+
+        if (tutorials2Manager.IsFinishedTeleportTest == true)
+        {
+            MouseImage.SetActive(false);
             GetComponent<TutorialCorgiUIScript>().TutorialCorgiUI.SetActive(false);
             gameObject.SetActive(false);
         }
@@ -142,6 +152,7 @@ public class TutorialCorgiScript : MonoBehaviour
             D_ButtonImage.SetActive(false);
             SpaceBarImage.SetActive(false);
             Shift_ButtonImage.SetActive(false);
+            MouseImage.SetActive(false);
         }
     }
 
