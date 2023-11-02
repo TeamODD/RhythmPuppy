@@ -37,6 +37,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     private bool onInputDelay;
     public static bool ReadyToGoStage;
     public static bool IsPaused; //옵션창에서 Enter 키 중단
+    public static int difficulty_num;
     
 
     void Awake()
@@ -105,15 +106,18 @@ public class Menu_PlayerTransform : MonoBehaviour
         //난이도 선택창 스크립트.
         if (ReadyToGoStage)
         {
+            //normal은 0으로 hard는 1
             if (Input.GetKeyDown(KeyCode.A))
             {
                 Normal.SetActive(true);
                 Hard.SetActive(false);
+                difficulty_num = 0;
             }
             if (Input.GetKeyDown(KeyCode.D))
             {
                 Normal.SetActive(false);
                 Hard.SetActive(true);
+                difficulty_num = 1;
             }
             if (Input.GetKeyDown(KeyCode.Escape))
             {
