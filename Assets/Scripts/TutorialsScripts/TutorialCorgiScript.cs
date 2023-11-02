@@ -46,6 +46,8 @@ public class TutorialCorgiScript : MonoBehaviour
 
     Rigidbody2D TutorialCorgiRig2D;
 
+    GameObject TutorialCorgi_Bone;
+
     private void Start()
     {
         tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
@@ -56,6 +58,8 @@ public class TutorialCorgiScript : MonoBehaviour
         ShiftSprite = Shift_ButtonImage.GetComponent<SpriteRenderer>();
 
         TutorialCorgiRig2D = GetComponent<Rigidbody2D>();
+
+        TutorialCorgi_Bone = GameObject.Find("Projectile");
 
         // 자식 오브젝트에 있는 모든 스프라이트 렌더러를 가져옴
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
@@ -82,7 +86,6 @@ public class TutorialCorgiScript : MonoBehaviour
         D_ButtonImage.transform.position = new Vector3(transform.position.x + 0.6f, -1f, 0f);
         SpaceBarImage.transform.position = new Vector3(transform.position.x + 3f, -1f, 0f);
         Shift_ButtonImage.transform.position = new Vector3(transform.position.x, -1f, 0f);
-        MouseImage.transform.position = new Vector3(transform.position.x + 0.025f, -0.7f, 0f);
 
         if (TutorialCorgiRig2D.velocity.x > 0 && tutorials2Manager.IsArrivedRightSide == false)
         {
@@ -133,26 +136,26 @@ public class TutorialCorgiScript : MonoBehaviour
             Shift_ButtonImage.SetActive(true);
         }
 
-        if (tutorials2Manager.IsFinishedDashTest == true)
+        if (tutorials2Manager.IsFinishedDashTest == true && tutorials2Manager.IsFinishedTeleportTest == false)
         {
             Shift_ButtonImage.SetActive(false);
-            MouseImage.SetActive(true);
+            MouseImage.SetActive(true); 
+
+            StartCoroutine(ForeverBlinking(TutorialCorgi_Bone, 50f, 255f));
         }
 
         if (tutorials2Manager.IsFinishedTeleportTest == true)
-        {
-            MouseImage.SetActive(false);
-            GetComponent<TutorialCorgiUIScript>().TutorialCorgiUI.SetActive(false);
-            gameObject.SetActive(false);
-        }
-
-        if (transform.position.x >= 5)
         {
             A_ButtonImage.SetActive(false);
             D_ButtonImage.SetActive(false);
             SpaceBarImage.SetActive(false);
             Shift_ButtonImage.SetActive(false);
             MouseImage.SetActive(false);
+
+            TutorialCorgi_Bone.SetActive(false);
+
+            GetComponent<TutorialCorgiUIScript>().TutorialCorgiUI.SetActive(false);
+            gameObject.SetActive(false);
         }
     }
 
@@ -161,6 +164,69 @@ public class TutorialCorgiScript : MonoBehaviour
         if (LayerMask.NameToLayer("Obstacle").Equals(collision.gameObject.layer))
         {
             tutorials2Manager.IsFirstHited = true;
+        }
+    }
+
+    private IEnumerator ForeverBlinking(GameObject gameobject, float finalAlpha, float initialAlpha)
+    {
+        float elapsedTime = 0f;
+        float fadeDuration = 0.5f;
+
+        while (true) 
+        { 
+            //TestCorgiFadeIn
+            while (elapsedTime < fadeDuration)
+            {
+                float currentAlpha = Mathf.Lerp(finalAlpha, initialAlpha, elapsedTime / fadeDuration); //최종 투명도값과 초기 투명도값을 바꿔 작성한 게 맞음.
+
+                // 0에서 255 사이의 값으로 투명도 제한
+                currentAlpha = Mathf.Clamp(currentAlpha, 0f, 255f);
+
+                SpriteRenderer[] renderers = gameobject.GetComponentsInChildren<SpriteRenderer>();
+
+                foreach (SpriteRenderer renderer in renderers)
+                {
+                    Color color = renderer.color;
+
+                    // 0부터 255 범위의 값을 0부터 1 사이의 실수로 변환
+                    float normalizedAlpha = currentAlpha / 255.0f;
+
+                    color.a = normalizedAlpha; // 투명도 값 변경
+                    renderer.color = color; // 변경된 투명도 설정
+                }
+
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            elapsedTime = 0f;
+
+            //TestCorgiFadeOut
+            while (elapsedTime < fadeDuration)
+            {
+                float currentAlpha = Mathf.Lerp(initialAlpha, finalAlpha, elapsedTime / fadeDuration); //최종 투명도값과 초기 투명도값을 바꿔 작성한 게 맞음.
+
+                // 0에서 255 사이의 값으로 투명도 제한
+                currentAlpha = Mathf.Clamp(currentAlpha, 0f, 255f);
+
+                SpriteRenderer[] renderers = gameobject.GetComponentsInChildren<SpriteRenderer>();
+
+                foreach (SpriteRenderer renderer in renderers)
+                {
+                    Color color = renderer.color;
+
+                    // 0부터 255 범위의 값을 0부터 1 사이의 실수로 변환
+                    float normalizedAlpha = currentAlpha / 255.0f;
+
+                    color.a = normalizedAlpha; // 투명도 값 변경
+                    renderer.color = color; // 변경된 투명도 설정
+                }
+
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            elapsedTime = 0f;
         }
     }
 }

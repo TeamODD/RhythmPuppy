@@ -97,6 +97,7 @@ public class Tutorials2Manager : MonoBehaviour
     GameObject NewOakObstacleWarning;
     GameObject NewThorStemObstacle;
     GameObject NewThorStemObstacleWarning;
+    GameObject TutorialCorgi_Bone;
 
     IEnumerator Atest;
     IEnumerator Dtest;
@@ -149,6 +150,8 @@ public class Tutorials2Manager : MonoBehaviour
 
         TutorialCorgiRig2D = TutorialCorgi.GetComponent<Rigidbody2D>();
         TutorialCorgiAnim = TutorialCorgi.GetComponent<Animator>();
+
+        TutorialCorgi_Bone = TutorialCorgi.transform.GetChild(0).gameObject;
 
         audioSource = GameObject.FindWithTag("Music").GetComponent<AudioSource>();
 
@@ -267,7 +270,7 @@ public class Tutorials2Manager : MonoBehaviour
             IsFinishedJumpTest = true;
 
             SpaceBarImage.SetActive(false);
-            if (NewOakObstacle.activeSelf == true)
+            if (NewOakObstacle.activeSelf == true && NewOakObstacle != null)
             {
                 Destroy(NewOakObstacle);
             }
@@ -529,16 +532,20 @@ public class Tutorials2Manager : MonoBehaviour
         float finalAlpha = 0f;    // 최종 투명도 값
 
         GameObject TutorialCorgi = GameObject.Find("TutorialCorgi");
-        GameObject TutorialCorgi_Bone = TutorialCorgi.transform.GetChild(0).gameObject;
         GameObject PlayerCorgi_Bone = PlayerCorgi.transform.GetChild(0).gameObject;
+
+        Rigidbody2D TutorialCorgi_Bone_Rig2D = TutorialCorgi_Bone.GetComponent<Rigidbody2D>();
 
         TutorialCorgi_Bone.transform.position = new Vector3(1f, 0.6f, 0f);
         PlayerCorgi_Bone.transform.position = new Vector3(1f, -0.6f, 0f);
+        TutorialCorgi_Bone.transform.SetParent(null);
 
-        //while (!IsFinishedTeleportTest)
+        while (!IsFinishedTeleportTest)
         {
-            TutorialCorgiRig2D.velocity = Vector2.zero;
+            TutorialCorgi_Bone_Rig2D.velocity = Vector2.zero;
             TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
+            TutorialCorgi_Bone.transform.position = new Vector3(1f, 0.6f, 0f);
+            TutorialCorgi_MouseImage.transform.position = new Vector3(TutorialCorgi_Bone.transform.position.x, TutorialCorgi_Bone.transform.position.y + 1.15f, 0f);
 
             if (TutorialCorgi.transform.localScale.x < 0)
             {
@@ -546,15 +553,46 @@ public class Tutorials2Manager : MonoBehaviour
                 float scaleY = TutorialCorgi.transform.localScale.y;
                 float scaleZ = TutorialCorgi.transform.localScale.z;
                 TutorialCorgi.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
-
-                TutorialCorgiAnim.SetBool("bAxisInput", false);
-
-                yield return StartCoroutine(TestCorgiFadeIn(finalAlpha, initialAlpha)); //0에서 100으로 올라는 겁니다. 문자만 보고 착각하시면 큰일은 아니지만 일이 좀 납니다.
-
-                TutorialCorgiAnim.SetBool("bAxisInput", true);
             }
+
+            TutorialCorgiAnim.SetBool("bAxisInput", false);
+
+            yield return StartCoroutine(TestCorgiFadeIn(finalAlpha, initialAlpha)); //0에서 100으로 올라는 겁니다. 문자만 보고 착각하시면 큰일은 아니지만 일이 좀 납니다.
+
+            yield return new WaitForSeconds(1f); //회수 전 1초 대기
+
+            TutorialCorgi_MouseSprite.sprite = TutorialCorgi_RightMouseClickedImage; //튜토리얼 코기 마우스 이미지 변경
+            TutorialCorgi_Bone.transform.position = new Vector3(-3.082999f, -3.219f, 0f); //튜토리얼 코기 뼈다귀 이동
+
+            yield return new WaitForSeconds(0.4f); //튜코의 마우스 이미지 0.2초간 유지
+
+            TutorialCorgi_MouseImage.transform.position = new Vector3(TutorialCorgi_Bone.transform.position.x, TutorialCorgi_Bone.transform.position.y + 1.15f, 0f);
+            TutorialCorgi_MouseSprite.sprite = TutorialCorgi_MouseUnClickedImage; //튜코의 마우스 이미지 복구
+
+            yield return new WaitForSeconds(1f); //뼈다귀를 던지기 전 1초 지연
+
+            TutorialCorgi_MouseSprite.sprite = TutorialCorgi_LeftMouseClickedImage; 
+            TutorialCorgi_Bone_Rig2D.velocity = Vector2.right * 6f; //뼈다귀에 가속도 부여
+
+            yield return new WaitForSeconds(0.4f);  
+
+            TutorialCorgi_MouseSprite.sprite = TutorialCorgi_MouseUnClickedImage;
+            TutorialCorgi_MouseImage.transform.position = new Vector3(6.016997f, -2.069f, 0f);
+
+            yield return new WaitUntil(() => TutorialCorgi_Bone.transform.position.x >= 6f); //뼈다귀의 상대적 x좌표가 80f를 넘을 때까지 대기
+
+            TutorialCorgi_Bone_Rig2D.velocity = Vector2.zero;
+            TutorialCorgi.transform.position = new Vector3(TutorialCorgi_Bone.transform.position.x- 0.983002f, TutorialCorgi.transform.position.y, TutorialCorgi.transform.position.z); //뼈다귀의 x좌표가 5f를 넘으면 그 위치로 이동
+            TutorialCorgi_MouseSprite.sprite = TutorialCorgi_LeftMouseClickedImage;
+
+            yield return new WaitForSeconds(0.4f);
+
+            TutorialCorgi_MouseSprite.sprite = TutorialCorgi_MouseUnClickedImage;
+
+            yield return new WaitForSeconds(1f); //1초 대기 후 반복
+
         }
-            yield return null;
+        yield return null;
     }
 
     private IEnumerator RunOakPattern()
