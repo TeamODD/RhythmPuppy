@@ -24,6 +24,7 @@ public class Curtain : MonoBehaviour
     IEnumerator CurtainCoroutine()
     {
         RawImage.SetActive(true);
+        CloseObject.SetActive(true);
         Close.time = 0f;
         Close.Play();
         

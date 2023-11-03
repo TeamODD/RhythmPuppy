@@ -49,6 +49,8 @@ public class PatternManager_1 : MonoBehaviour
     private GameObject Apple;
     [SerializeField]
     private GameObject Warning_4;
+    [SerializeField]
+    private GameObject MainCamera;
 
 
     Dictionary<Type, float> patternCount;
@@ -144,6 +146,8 @@ public class PatternManager_1 : MonoBehaviour
         StartCoroutine(Pattern4(100f, startTime));
         StartCoroutine(Pattern4(108f, startTime));
         StartCoroutine(Pattern4(116f, startTime));
+
+        StartCoroutine(PatternGray(6f, startTime));
         /*GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc(120f, startTime);*/
     }
 
@@ -393,6 +397,17 @@ public class PatternManager_1 : MonoBehaviour
             Instantiate(Apple);
             Instantiate(Warning_4);
         }
+    }
+
+    IEnumerator PatternGray(float t, float startTime)
+    {
+        if (0 <= t - startTime)
+        {
+            yield return new WaitForSeconds(t - startTime);
+            MainCamera.GetComponent<GrayFilmEffect>().enabled = true;
+        }
+        yield break;
+        
     }
 
     private void deathEvent()
