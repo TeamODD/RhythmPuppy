@@ -327,7 +327,7 @@ public class PatternControllerrrrrr : MonoBehaviour
             /*while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                yield return null;
+                yield return null;  
             }*/
             yield return new WaitForSeconds(timing - audioSource.time);
             // 패턴을 복제하고 활성화

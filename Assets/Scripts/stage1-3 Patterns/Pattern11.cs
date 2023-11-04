@@ -1,3 +1,4 @@
+using Autodesk.Fbx;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,11 +6,11 @@ using UnityEngine;
 public class Pattern11 : MonoBehaviour
 {
     [SerializeField]
-    GameObject Oak;
+    GameObject RedApple;
     [SerializeField]
     GameObject warning;
     [SerializeField]
-    float OakSpeed;
+    float RedAppleSpeed;
 
     private List<float> patternTimings = new List<float> {0f, 0.4f, 0.7f, 1.0f};
     private float startTime;
@@ -41,14 +42,23 @@ public class Pattern11 : MonoBehaviour
 
             StartCoroutine(pattern());
         }
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(10f);
         Destroy(gameObject);
     }
 
     private IEnumerator pattern()
     {
+        float Xpos;
+        if (Random.Range(-1f, 1f) < 0f){
+            Xpos = Random.Range(-2f, -8f);
+        }
+        else
+        {
+            Xpos = Random.Range(2f, 8f);
+        }
+
         // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(8.02f, -3.15f, 0f);
+        Vector3 warningPosition = new Vector3(Xpos, 5.1f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
@@ -83,12 +93,12 @@ public class Pattern11 : MonoBehaviour
         // 경고 오브젝트 제거
         Destroy(newWarning);
 
-        Vector3 OakPosition = new Vector3(10.5f, -3.45f, 0f);
-        GameObject newOak = Instantiate(Oak, OakPosition, Quaternion.identity);
-        //Rigidbody2D RedAppleRigidbody = newOak.GetComponent<Rigidbody2D>();
-        //RedAppleRigidbody.velocity = Vector2.left * OakSpeed;
+        Vector3 RedApplePosition = new Vector3(Xpos, 5.5f, 0f);
+        GameObject NewRedApple = Instantiate(RedApple, RedApplePosition, Quaternion.identity);
+        Rigidbody2D RedAppleRigidbody = NewRedApple.GetComponent<Rigidbody2D>();
+        RedAppleRigidbody.velocity = Vector2.down * RedAppleSpeed;
 
-        StartCoroutine(DestroyIfOutOfBounds(newOak));
+        StartCoroutine(DestroyIfOutOfBounds(NewRedApple));
     }
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
@@ -106,9 +116,8 @@ public class Pattern11 : MonoBehaviour
 
     private bool IsWithinMapBounds(Vector3 position)
     {
-        // IsWithinMapBounds 메서드 내용 그대로 가져옵니다.
         float minX = -10f;
-        float maxX = 11f;
+        float maxX = 10f;
         float minY = -5.5f;
         float maxY = 10f;
 
