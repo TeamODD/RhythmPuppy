@@ -73,8 +73,8 @@ public class PlaySelectSound : MonoBehaviour
         LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
         yield return mAsymcOperation;
         LoadingScreen.transform.position = new Vector3(0, 0, 0);
-        mAsymcOperation = SceneManager.UnloadSceneAsync("SceneMenu_01");
-        yield return mAsymcOperation;
+        /*mAsymcOperation = SceneManager.UnloadSceneAsync("SceneMenu_01");
+        yield return mAsymcOperation;*/
 
     }
 }
