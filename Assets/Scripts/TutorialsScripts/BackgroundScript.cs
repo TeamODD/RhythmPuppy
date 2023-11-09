@@ -8,9 +8,16 @@ public class BackgroundScript : MonoBehaviour
     GameObject BackGround;
     void Start()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < BackGround.transform.childCount; i++)
         {
-            //transform.GetChild(i).gameObject;
-        }
+            GameObject backgroundImg = transform.GetChild(i).gameObject;
+            SpriteRenderer sprite = backgroundImg.GetComponent<SpriteRenderer>();
+            Debug.Log(i+":"+sprite.sortingOrder);
+        }   
+    }
+
+    IEnumerator ImgRouting(GameObject Img, float MovingSpeed)
+    {
+        yield return null;
     }
 }
