@@ -24,6 +24,12 @@ public class GotoSelectStage : MonoBehaviour
     float fadeDuration;
     [SerializeField]
     float comedownspeed;
+    [SerializeField]
+    GameObject LoadingScreen;
+    [SerializeField]
+    AudioSource volume;
+
+    private float alpha;
 
     private bool FadeInDone = false;
     private bool FadeOutDone = false;
@@ -45,7 +51,11 @@ public class GotoSelectStage : MonoBehaviour
             PlaySelectSound.instance.SelectSound();
             PlaySelectSound.instance.audioSourceSelect.Play();
 
+
             SceneManager.LoadScene("SceneMenu_01");
+
+            StartCoroutine(SceneLoading());
+
         }
 
         if ((Input.GetMouseButtonDown(0)))
@@ -92,6 +102,7 @@ public class GotoSelectStage : MonoBehaviour
 
     private IEnumerator Start()
     {
+
         //아무런 행동도 하지 않았을 경우 진행되는 순서
         DevelopmentTeamCoroutine = DevelopmentTeamSetting(DevelopmentTeam, 3f);
         LicenseNoticeCoroutine = LicenseNoticeSetting(LicenseNotice, 3f);
@@ -219,6 +230,18 @@ public class GotoSelectStage : MonoBehaviour
 
         // Set the alpha value to exactly 1 to make it completely opaque.
         renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+    }
+
+    private IEnumerator SceneLoading()
+    {
+        while (alpha < 1)
+        {
+            LoadingScreen.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, alpha);
+            volume.volume = 1f - alpha;
+            alpha += 0.02f;
+            yield return new WaitForFixedUpdate();
+        }
+        PlaySelectSound.instance.StartLoading("SceneMenu_01", LoadingScreen);
     }
 
     private IEnumerator TitleSetting()

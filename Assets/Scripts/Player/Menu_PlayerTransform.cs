@@ -20,6 +20,9 @@ public class Menu_PlayerTransform : MonoBehaviour
     public UnityEvent Loading;
     public Animator animator;
     public GameObject corgiLoading;
+    public GameObject Select_Difficulty;
+    public GameObject Normal;
+    public GameObject Hard;
 
     private Vector3 endPoint;
     private Vector3 currentPosition;
@@ -32,6 +35,10 @@ public class Menu_PlayerTransform : MonoBehaviour
     private float speed;
     private float time;
     private bool onInputDelay;
+    public static bool ReadyToGoStage;
+    public static bool IsPaused; //ï¿½É¼ï¿½Ã¢ï¿½ï¿½ï¿½ï¿½ Enter Å° ï¿½ß´ï¿½
+    public static int difficulty_num;
+    
 
     void Awake()
     {
@@ -41,20 +48,22 @@ public class Menu_PlayerTransform : MonoBehaviour
         }
         else
         {
-            clearIndex = 30; //°³¹ß ³¡³ª¸é 1·Î ¹Ù²ãÁÖ¼¼¿ä.
+            clearIndex = 30; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.
         }
-
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½->ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡, ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         if (savingIndex != 0)
         {
             gameObject.transform.position = waypoints[savingIndex];
             currentIndex = savingIndex;
-            if (savingIndex >= 2) //¸Þ´º·Î µ¹¾Æ¿ÔÀ»½Ã ¿ùµå2¶ó¸é ¿ùµå2¹è°æÀ» ¶ç¿ò.
-                BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
-            else if(savingIndex >= 7) //¸Þ´º·Î µ¹¾Æ¿ÔÀ»½Ã ¿ùµå1ÀÌ¶ó¸é ¿ùµå1¹è°æÀ» ¶ç¿ò.
-                BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
         }
         else
             currentIndex = 0;
+
+        //ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
+        if (savingIndex >= 2)
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(2, "appear");
+        if (savingIndex >= 7)
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(7, "appear");
 
         corgi_posX = waypoints[currentIndex].x;
     }
@@ -62,14 +71,17 @@ public class Menu_PlayerTransform : MonoBehaviour
     void Start()
     {
         GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
+        GameObject.Find("SoundManager").GetComponent<AudioSource>().Play();
+        ReadyToGoStage = false;
+        IsPaused = false;
         onInputDelay = false;
-
-        currentPosition = transform.position; //ÇÃ·¹ÀÌ¾î ÇöÀç À§Ä¡
+        currentPosition = transform.position; //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Point();
+        savingIndex = currentIndex;
+        PlayerOnPoint.Invoke();
     }
     void OnTriggerExit2D(Collider2D other)
     {
@@ -80,46 +92,91 @@ public class Menu_PlayerTransform : MonoBehaviour
             PlayerWalkingSound.instance.World2_Walking();
     }
 
+    void DifficultyOff()
+    {
+        ReadyToGoStage = false;
+        onInputDelay = false;
+    }
+
     void Update()
     {
         int offset = 1;
         time += Time.deltaTime;
-        if (onInputDelay) return;
+        if (onInputDelay || IsPaused) return;
+
+        //ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½Ã¢ ï¿½ï¿½Å©ï¿½ï¿½Æ®.
+        if (ReadyToGoStage)
+        {
+            //normalï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ hardï¿½ï¿½ 1
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                Normal.SetActive(true);
+                Hard.SetActive(false);
+                difficulty_num = 0;
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                Normal.SetActive(false);
+                Hard.SetActive(true);
+                difficulty_num = 1;
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Select_Difficulty.SetActive(false);
+                onInputDelay = true;
+                Invoke("DifficultyOff", 0.1f);
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.D))
         {
+            if (ReadyToGoStage) return;
             if (waypoints.Length == currentIndex + offset || currentIndex + offset > clearIndex) return;
             ++currentIndex;
-            onInputDelay = true; //¿¬Å¸ ¹æÁö
+            onInputDelay = true; //ï¿½ï¿½Å¸ ï¿½ï¿½ï¿½ï¿½
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
             animator.SetBool("WalkBool", true);
             StartCoroutine(move("Forward"));
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
+            if (ReadyToGoStage) return;
             if (0 == currentIndex) return;
             --currentIndex;
             onInputDelay = true;
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex + 1, "disappear");
             animator.SetBool("WalkBool", true);
-            //ÁÂ¿ì¹ÝÀü ±¸Çö ÇÊ¿ä
+            //ï¿½Â¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
             StartCoroutine(move("Back"));
         }
-
+        
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            GetSceneString();
-            if (SceneName == null) return;
-            onInputDelay = true;
-            PlaySelectSound.instance.MenuSelectSound();
-            StartCoroutine(LoadingScene());
-        }
-    }
+            if(currentIndex == 1) //Æ©ï¿½ä¸®ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½
+            {
+                onInputDelay = true;
+                PlaySelectSound.instance.MenuSelectSound();
+                StartCoroutine(LoadingScene());
+                return;
+            }
 
-    void Point()
-    {
-        savingIndex = currentIndex;
-        PlayerOnPoint.Invoke();
+            switch (ReadyToGoStage)
+            {
+                case false:
+                    GetSceneString();
+                    if (SceneName == null) return;
+                    Select_Difficulty.SetActive(true);
+                    ReadyToGoStage = true;
+                    break;
+
+                case true:
+                    onInputDelay = true;
+                    PlaySelectSound.instance.MenuSelectSound();
+                    StartCoroutine(LoadingScene());
+                    break;
+            }
+        }
+
     }
 
     IEnumerator move(string s)

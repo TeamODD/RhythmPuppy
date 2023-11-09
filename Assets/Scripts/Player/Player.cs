@@ -102,7 +102,9 @@ public class Player : MonoBehaviour
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
         deathCount = 0;
         S_Rank_True = true;
-        currentHP = maxHP;
+        if (Menu_PlayerTransform.difficulty_num == 0)
+            maxHP = 6;
+        currentHP = maxHP;   
         currentStamina = maxStamina;
 
         anim.ResetTrigger("Jump");

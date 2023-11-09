@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,13 +17,17 @@ public class GotoOption : MonoBehaviour
 
     void Update()
     {
+        if (Menu_PlayerTransform.ReadyToGoStage) return;
+
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
             if (!isPaused)
             {
                 Time.timeScale = 0f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Pause();
                 isPaused = true;
+                Menu_PlayerTransform.IsPaused = true;
                 SceneManager.LoadSceneAsync("Option_Menu", LoadSceneMode.Additive);
             }
             else if (isPaused)
@@ -31,7 +36,9 @@ public class GotoOption : MonoBehaviour
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
                 isPaused = false;
+                Menu_PlayerTransform.IsPaused = false;
                 SceneManager.UnloadSceneAsync("Option_Menu");
             }
+        }
     }
 }
