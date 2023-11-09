@@ -25,10 +25,10 @@ public class GrayFilmEffect : MonoBehaviour
 
     public void GrayEffect()
     {
-        StartCoroutine(CameraGrayEffect());
+        StartCoroutine(GrayPatternOn());
     }
     
-    IEnumerator CameraGrayEffect()
+    IEnumerator GrayPatternOn()
     {
         float elapsedtime = 0f;
         while (elapsedtime < applytime)
@@ -38,6 +38,21 @@ public class GrayFilmEffect : MonoBehaviour
             grayScale = elapsedtime / applytime;
             yield return null;
         }
+        yield return new WaitForSeconds(32f);
+
+        //Èæ¹é È¿°ú ²ô±â
+        elapsedtime = 0f;
+        while (elapsedtime < applytime)
+        {
+            elapsedtime += Time.deltaTime;
+
+            grayScale = 1 - (elapsedtime / applytime);
+            yield return null;
+        }
+        grayScale = 0f;
         yield break;
+
     }
+
+    
 }

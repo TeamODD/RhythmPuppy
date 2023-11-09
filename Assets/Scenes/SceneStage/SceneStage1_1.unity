@@ -185,6 +185,7 @@ MonoBehaviour:
   Warning_2_b: {fileID: 6792650544568328892, guid: 28e73e2bbafaa5842bc9fe4a51bf793b, type: 3}
   Apple: {fileID: 5902494799918804423, guid: f01756b4746d3e541a813b3dff85e3e7, type: 3}
   Warning_4: {fileID: 7908879697045142483, guid: ff9cdf76f2203f844a5642dd59d9bb80, type: 3}
+  MainCamera: {fileID: 2099564461}
 --- !u!1 &202428445
 GameObject:
   m_ObjectHideFlags: 0
@@ -1120,6 +1121,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7785910521463230750, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_VideoClip
+      value: 
+      objectReference: {fileID: 32900000, guid: 43a3f753fc974184687a06d2d3400a25, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
 --- !u!1 &1167593447 stripped
@@ -1427,6 +1432,7 @@ GameObject:
   - component: {fileID: 2099564463}
   - component: {fileID: 2099564462}
   - component: {fileID: 2099564465}
+  - component: {fileID: 2099564466}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1512,7 +1518,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6de40b93ac4d83e44a4d2b00c64e82a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GrayScale: 0
+  grayScale: 0
+--- !u!114 &2099564466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099564461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc72f9992f03bf148b4e69d959810e49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShakeAmount: 0.1
 --- !u!1001 &2103192932
 PrefabInstance:
   m_ObjectHideFlags: 0

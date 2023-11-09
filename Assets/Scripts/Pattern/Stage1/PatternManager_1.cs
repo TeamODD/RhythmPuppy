@@ -51,7 +51,7 @@ public class PatternManager_1 : MonoBehaviour
     private GameObject Warning_4;
     [SerializeField]
     private GameObject MainCamera;
-
+    CameraShake Camera;
 
     Dictionary<Type, float> patternCount;
     EventManager eventManager;
@@ -88,6 +88,7 @@ public class PatternManager_1 : MonoBehaviour
 
     IEnumerator init()
     {
+        Camera = MainCamera.GetComponent<CameraShake>();
         audioSource.clip = music;
         eventManager = FindObjectOfType<EventManager>();
         patternCount = new Dictionary<Type, float>();
@@ -147,7 +148,9 @@ public class PatternManager_1 : MonoBehaviour
         StartCoroutine(Pattern4(108f, startTime));
         StartCoroutine(Pattern4(116f, startTime));
 
-        StartCoroutine(PatternGray(6f, startTime));
+        StartCoroutine(PatternGray(51f, startTime));
+
+        StartCoroutine(PatternShake(68f, startTime));
         /*GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc(120f, startTime);*/
     }
 
@@ -408,6 +411,28 @@ public class PatternManager_1 : MonoBehaviour
         }
         yield break;
         
+    }
+
+    IEnumerator PatternShake(float t, float startTime)
+    {
+        float VibrateTime = 0.1f;
+        if (0 <= t - startTime)
+        {
+            yield return new WaitForSeconds(t - startTime);
+            Camera.VibrateForTime(VibrateTime);
+        }
+
+        float delayTime = 0.5f;
+        WaitForSeconds delay_0_5 = new WaitForSeconds(delayTime);
+        for (int i = 1; i < 28; i++)
+        {
+            if (0 <= t - startTime + i * delayTime)
+            {
+                Camera.VibrateForTime(VibrateTime);
+                yield return delay_0_5;
+            }
+        }
+        yield break;
     }
 
     private void deathEvent()
