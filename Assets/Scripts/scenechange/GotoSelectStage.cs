@@ -71,6 +71,7 @@ public class GotoSelectStage : MonoBehaviour
                 IsHeadphoneSettingDone = true;
                 StopCoroutine(HeadphoneCoroutine);
                 StartCoroutine(TitleImageCoroutine);
+                StartCoroutine(FadeInObjects(TitleImage));
                 Headphone.SetActive(false);
 
                 TitleSettingDone = true;
@@ -91,7 +92,7 @@ public class GotoSelectStage : MonoBehaviour
 
     private IEnumerator Start()
     {
-        //¾Æ¹«·± Çàµ¿µµ ÇÏÁö ¾Ê¾ÒÀ» °æ¿ì ÁøÇàµÇ´Â ¼ø¼­
+        //ì•„ë¬´ëŸ° í–‰ë™ë„ í•˜ì§€ ì•Šì•˜ì„ ê²½ìš° ì§„í–‰ë˜ëŠ” ìˆœì„œ
         DevelopmentTeamCoroutine = DevelopmentTeamSetting(DevelopmentTeam, 3f);
         LicenseNoticeCoroutine = LicenseNoticeSetting(LicenseNotice, 3f);
         HeadphoneCoroutine = HeadphoneSetting(Headphone, 3f);
@@ -118,30 +119,27 @@ public class GotoSelectStage : MonoBehaviour
 
     private IEnumerator DevelopmentTeamSetting(GameObject obj, float time)
     {
-        //FadeOut ÆäÀÌµå ¾Æ¿ô, ÅğÀå
-        SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
-        Color originalColor = renderer.color;
+        float startTime = Time.time;
 
-        float startTime = Time.time; // Save the start time
-
-        while (Time.time - startTime < fadeDuration) // Repeat until elapsed time is less than fadeDuration
+        while (Time.time - startTime < fadeDuration)
         {
             float elapsedTime = Time.time - startTime; // Calculate elapsed time
             float t = Mathf.Clamp01(elapsedTime / fadeDuration);
+            SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>();
 
-            Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(1f, 0f, t));
-            renderer.color = newColor;
-
+            foreach (SpriteRenderer renderer in renderers)
+            {
+                Color originalColor = renderer.color;
+                Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(1f, 0f, t));
+                renderer.color = newColor;
+            }
             yield return null;
         }
-
-        // Set the alpha value to exactly 1 to make it completely opaque.
-        renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
     }
 
     private IEnumerator LicenseNoticeSetting(GameObject obj, float time)
     {
-        //FadeIn ÆäÀÌµå ÀÎ, µîÀå
+        //FadeIn í˜ì´ë“œ ì¸, ë“±ì¥
         SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
         Color originalColor = renderer.color;
 
@@ -161,9 +159,9 @@ public class GotoSelectStage : MonoBehaviour
         // Set the alpha value to exactly 1 to make it completely opaque.
         renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
 
-        yield return new WaitForSeconds(time); //´ë±â½Ã°£
+        yield return new WaitForSeconds(time); //ëŒ€ê¸°ì‹œê°„
 
-        //FadeOut ÆäÀÌµå ¾Æ¿ô, ÅğÀå
+        //FadeOut í˜ì´ë“œ ì•„ì›ƒ, í‡´ì¥
         startTime = Time.time;
 
         while (Time.time - startTime < fadeDuration) // Repeat until elapsed time is less than fadeDuration
@@ -183,7 +181,7 @@ public class GotoSelectStage : MonoBehaviour
 
     private IEnumerator HeadphoneSetting(GameObject obj, float time)
     {
-        //FadeIn ÆäÀÌµå ÀÎ, µîÀå
+        //FadeIn í˜ì´ë“œ ì¸, ë“±ì¥
         SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
         Color originalColor = renderer.color;
 
@@ -203,9 +201,9 @@ public class GotoSelectStage : MonoBehaviour
         // Set the alpha value to exactly 1 to make it completely opaque.
         renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
 
-        yield return new WaitForSeconds(time); //´ë±â½Ã°£
+        yield return new WaitForSeconds(time); //ëŒ€ê¸°ì‹œê°„
 
-        //FadeOut ÆäÀÌµå ¾Æ¿ô, ÅğÀå
+        //FadeOut í˜ì´ë“œ ì•„ì›ƒ, í‡´ì¥
         startTime = Time.time;
 
         while (Time.time - startTime < fadeDuration) // Repeat until elapsed time is less than fadeDuration
@@ -251,8 +249,6 @@ public class GotoSelectStage : MonoBehaviour
         StartCoroutine(FadeInText(PressAnyKeyToPlayGame));
         fadeDuration = 1f;
     }
-
-
 
     private IEnumerator FadeInObjects(GameObject obj)
     {

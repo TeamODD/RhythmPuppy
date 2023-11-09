@@ -70,6 +70,8 @@ public class Tutorials2Manager : MonoBehaviour
     GameObject ThorStemObstacleWarning;
     [SerializeField]
     GameObject ThorStems;
+    [SerializeField]
+    GameObject UICanvas;
 
     SpriteRenderer Asprite;
     SpriteRenderer Dsprite;
@@ -153,7 +155,7 @@ public class Tutorials2Manager : MonoBehaviour
 
         TutorialCorgi_Bone = TutorialCorgi.transform.GetChild(0).gameObject;
 
-        audioSource = GameObject.FindWithTag("Music").GetComponent<AudioSource>();
+        audioSource = GameObject.FindWithTag("MusicManager").GetComponent<AudioSource>();
 
         Dtest = PleaseMoveToRightPuppy();
         Atest = PleaseMoveToLeftPuppy();
@@ -265,11 +267,13 @@ public class Tutorials2Manager : MonoBehaviour
             StartCoroutine(JumpTest);
         }
 
+        //플레이어가 점프 테스트를 끝냈을 경우
         if (PlayerCorgi.transform.position.x >= 5 && IsFinishedMoveLeftAndRightTest == true && IsFinishedJumpTest == false)
         {
             IsFinishedJumpTest = true;
 
             SpaceBarImage.SetActive(false);
+
             if (NewOakObstacle.activeSelf == true && NewOakObstacle != null)
             {
                 Destroy(NewOakObstacle);
@@ -281,12 +285,13 @@ public class Tutorials2Manager : MonoBehaviour
             StartCoroutine(DashTest);
         }
 
+        //플레이어가 대쉬 테스트를 끝냈을 경우
         if (PlayerCorgi.transform.position.x >= 5 && IsFinishedJumpTest == true && IsFinishedDashTest == false)
         {
             IsFinishedDashTest = true;
 
             Shift_ButtonImage.SetActive(false);
-            if (NewThorStemObstacle.activeSelf == true)
+            if (NewThorStemObstacle.activeSelf == true && NewThorStemObstacle != null)
             {
                 Destroy(NewThorStemObstacle);
             }
@@ -297,6 +302,7 @@ public class Tutorials2Manager : MonoBehaviour
             StartCoroutine(TeleportTest);
         }
 
+        //플레이어가 텔레포스 테스트를 끝냈을 경우
         if (PlayerCorgi.transform.position.x >= 5 && IsFinishedDashTest==true && IsFinishedTeleportTest == false)
         {
             IsFinishedTeleportTest = true;
@@ -543,6 +549,7 @@ public class Tutorials2Manager : MonoBehaviour
         while (!IsFinishedTeleportTest)
         {
             TutorialCorgi_Bone_Rig2D.velocity = Vector2.zero;
+            TutorialCorgiRig2D.velocity = Vector2.zero;
             TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
             TutorialCorgi_Bone.transform.position = new Vector3(1f, 0.6f, 0f);
             TutorialCorgi_MouseImage.transform.position = new Vector3(TutorialCorgi_Bone.transform.position.x, TutorialCorgi_Bone.transform.position.y + 1.15f, 0f);
