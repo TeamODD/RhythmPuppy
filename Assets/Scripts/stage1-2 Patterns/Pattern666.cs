@@ -67,14 +67,10 @@ public class Pattern666 : MonoBehaviour
 
     private IEnumerator RunPattern()
     {
-        //������ ��ġ������ ����
-
-        // ��� ������Ʈ ����
         Vector3 warningPosition = new Vector3(8.297f, 2.28f, 0f);
         GameObject warning = Instantiate(thornStemWarning, warningPosition, Quaternion.identity);
         objects.Add(warning);
 
-        // ��� ������Ʈ�� �ڽ� ������Ʈ�� Sprite Renderer �迭 ���
         SpriteRenderer[] warningRenderers = warning.GetComponentsInChildren<SpriteRenderer>();
 
         Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
@@ -140,7 +136,6 @@ public class Pattern666 : MonoBehaviour
     {
         while (isPatternRunning)
         {
-            // �� ������ ���� ��� ������Ʈ�� �ı��մϴ�.
             if (!IsWithinMapBounds(obj.transform.position))
             {
                 objects.Remove(obj);

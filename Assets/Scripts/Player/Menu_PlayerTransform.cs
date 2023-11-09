@@ -36,7 +36,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     private float time;
     private bool onInputDelay;
     public static bool ReadyToGoStage;
-    public static bool IsPaused; //¿É¼ÇÃ¢¿¡¼­ Enter Å° Áß´Ü
+    public static bool IsPaused; //ï¿½É¼ï¿½Ã¢ï¿½ï¿½ï¿½ï¿½ Enter Å° ï¿½ß´ï¿½
     public static int difficulty_num;
     
 
@@ -48,9 +48,9 @@ public class Menu_PlayerTransform : MonoBehaviour
         }
         else
         {
-            clearIndex = 30; //°³¹ß ³¡³ª¸é 1·Î ¹Ù²ãÁÖ¼¼¿ä.
+            clearIndex = 30; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.
         }
-        //½ºÅ×ÀÌÁö->¸Ê µ¹¾Æ¿ÔÀ» ¶§ À§Ä¡, ÀÎµ¦½º ¼öÁ¤ 
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½->ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡, ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         if (savingIndex != 0)
         {
             gameObject.transform.position = waypoints[savingIndex];
@@ -59,7 +59,7 @@ public class Menu_PlayerTransform : MonoBehaviour
         else
             currentIndex = 0;
 
-        //¸Þ´º·Î µ¹¾Æ¿ÔÀ» ½Ã ÀÎµ¦½º¿¡ µû¶ó ¹è°æÀÌ ³ªÅ¸³ªµµ·Ï.
+        //ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
         if (savingIndex >= 2)
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(2, "appear");
         if (savingIndex >= 7)
@@ -70,11 +70,12 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Start()
     {
+        GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
         GameObject.Find("SoundManager").GetComponent<AudioSource>().Play();
         ReadyToGoStage = false;
         IsPaused = false;
         onInputDelay = false;
-        currentPosition = transform.position; //ÇÃ·¹ÀÌ¾î ÇöÀç À§Ä¡
+        currentPosition = transform.position; //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -86,9 +87,9 @@ public class Menu_PlayerTransform : MonoBehaviour
     {
         PlayerOnPointExceptMusicChange.Invoke();
         if (currentIndex < 7)
-            PlaySelectSound.instance.World1_Walking();
+            PlayerWalkingSound.instance.World1_Walking();
         else
-            PlaySelectSound.instance.World2_Walking();
+            PlayerWalkingSound.instance.World2_Walking();
     }
 
     void DifficultyOff()
@@ -103,10 +104,10 @@ public class Menu_PlayerTransform : MonoBehaviour
         time += Time.deltaTime;
         if (onInputDelay || IsPaused) return;
 
-        //³­ÀÌµµ ¼±ÅÃÃ¢ ½ºÅ©¸³Æ®.
+        //ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½Ã¢ ï¿½ï¿½Å©ï¿½ï¿½Æ®.
         if (ReadyToGoStage)
         {
-            //normalÀº 0À¸·Î hard´Â 1
+            //normalï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ hardï¿½ï¿½ 1
             if (Input.GetKeyDown(KeyCode.A))
             {
                 Normal.SetActive(true);
@@ -132,7 +133,7 @@ public class Menu_PlayerTransform : MonoBehaviour
             if (ReadyToGoStage) return;
             if (waypoints.Length == currentIndex + offset || currentIndex + offset > clearIndex) return;
             ++currentIndex;
-            onInputDelay = true; //¿¬Å¸ ¹æÁö
+            onInputDelay = true; //ï¿½ï¿½Å¸ ï¿½ï¿½ï¿½ï¿½
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
             animator.SetBool("WalkBool", true);
             StartCoroutine(move("Forward"));
@@ -145,13 +146,13 @@ public class Menu_PlayerTransform : MonoBehaviour
             onInputDelay = true;
             BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex + 1, "disappear");
             animator.SetBool("WalkBool", true);
-            //ÁÂ¿ì¹ÝÀü ±¸Çö ÇÊ¿ä
+            //ï¿½Â¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
             StartCoroutine(move("Back"));
         }
         
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if(currentIndex == 1) //Æ©Åä¸®¾óÀº ±×³É ÁøÀÔÇÏµµ·Ï
+            if(currentIndex == 1) //Æ©ï¿½ä¸®ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½
             {
                 onInputDelay = true;
                 PlaySelectSound.instance.MenuSelectSound();
