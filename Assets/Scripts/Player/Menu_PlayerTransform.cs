@@ -70,7 +70,7 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Start()
     {
-        GameObject.Find("SoundManager").GetComponent<AudioSource>().Play();
+        GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
         ReadyToGoStage = false;
         IsPaused = false;
         onInputDelay = false;
