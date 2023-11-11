@@ -1,39 +1,54 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BackgroundScript : MonoBehaviour
 {
-    private GameObject[] ChildBackGround;
-    private int[] Index;
-    private int[] LayerOrders;
+    [SerializeField]
+    GameObject BackGrounds;
+
+    private float[] SpeedList;
 
     private void Start()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < BackGrounds.transform.childCount; i++)
         {
-            ChildBackGround[i] = transform.GetChild(i).gameObject;
-        }
+            GameObject BackGround = BackGrounds.transform.GetChild(i).gameObject;
+            SpriteRenderer spriteRenderer = BackGround.GetComponent<SpriteRenderer>();
+            int LayerOrder = spriteRenderer.sortingOrder;
+            float Speed = (float)LayerOrder / BackGrounds.transform.childCount;
+            SpeedList = new float[BackGrounds.transform.childCount];
+            SpeedList[i] = Speed;    
 
-        for (int i = 0;i < ChildBackGround.Length; i++)
-        {
-            SpriteRenderer spriteRenderer = ChildBackGround[i].GetComponent<SpriteRenderer>();
-            LayerOrders[i] = spriteRenderer.sortingOrder;
+            StartCoroutine(Move(BackGround, Speed, i));
+
+            GameObject NewBackGround = Instantiate(BackGround);
+            NewBackGround.transform.position = BackGround.transform.position;
+            NewBackGround.transform.position += new Vector3(spriteRenderer.bounds.size.x, 0f, 0f);
+            StartCoroutine(Move(NewBackGround, Speed, i));
         }
     }
 
-    private IEnumerator RemoveBackGround(GameObject background)
+    private IEnumerator Move(GameObject obj, float speed, int index)
     {
-        yield return background.transform.position.x < -29f;
-        Destroy(background);
+        while(obj.transform.position.x > -25f)
+        {
+            obj.transform.position += new Vector3(-1f, 0f, 0f) * Time.deltaTime * speed;
+            yield return new WaitForFixedUpdate();
+        }
+        Copy(obj, speed, index);
+        Destroy(obj);
+        yield return null;
     }
 
-    private void CopyBackGround(GameObject background)
+    private void Copy(GameObject obj, float Speed, int index)
     {
-        GameObject clonedBackground = Instantiate(background);
-        clonedBackground.transform.position = new Vector3(background.transform.position.x + background.GetComponent<SpriteRenderer>().bounds.size.x,
-                                                           background.transform.position.y,
-                                                           background.transform.position.z);
+        SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
+
+        GameObject NewBackGround = Instantiate(obj);
+        NewBackGround.transform.position = obj.transform.position;
+        NewBackGround.transform.position += new Vector3(spriteRenderer.bounds.size.x * 2, 0f, 0f);
+        StartCoroutine(Move(NewBackGround, Speed, index));
     }
 }
-
