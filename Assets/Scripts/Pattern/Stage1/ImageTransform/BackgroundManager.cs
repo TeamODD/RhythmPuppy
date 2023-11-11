@@ -67,5 +67,4 @@ public class BackgroundManager : MonoBehaviour
         tempImg[index].transform.position += new Vector3(bgSprite.bounds.size.x - 0.04f, 0, 0);
         
     }
-
 }

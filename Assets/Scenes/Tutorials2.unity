@@ -899,7 +899,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 160b44d04965ae343902fcdbcf1c0297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BackGround: {fileID: 669462720}
+  bgSprite: {fileID: 8676986339916487070, guid: 0dbd789b79033994db393cdeab092971, type: 3}
+  parent: {fileID: 669462720}
+  baseScrollSpeed: 1
 --- !u!1 &715577034 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6242360763942303091, guid: 63e9553bf57e59f4799310765bd68057, type: 3}
