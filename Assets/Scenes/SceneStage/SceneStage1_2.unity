@@ -5161,8 +5161,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weasel: {fileID: 9001390689507493206, guid: 868c5b0fa6abfea48a1bd181cf319265, type: 3}
   weaselWarning: {fileID: 2141889054}
-  weaselUpSpeed: 0
-  weaselDownspeed: 0
+  weaselUpSpeed: 5
+  weaselDownspeed: 10
   rhythmTimings:
   - 0
   - 0.6

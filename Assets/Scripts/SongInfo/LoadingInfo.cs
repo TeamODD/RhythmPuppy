@@ -16,9 +16,6 @@ public class LoadingInfo : MonoBehaviour
     {
         switch (currentIndex)
         {
-            case 1:
-                SongInfo.text = "Music: 8 bit ice cave lofi\nArtist: Tad Miller";
-                break;
             case 2:
                 SongInfo.text = "Music: Minimal Inspiring Ambient\nArtist: ComaStudio";
                 break;

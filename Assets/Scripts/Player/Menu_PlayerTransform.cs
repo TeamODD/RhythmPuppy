@@ -20,9 +20,6 @@ public class Menu_PlayerTransform : MonoBehaviour
     public UnityEvent Loading;
     public Animator animator;
     public GameObject corgiLoading;
-    public GameObject Select_Difficulty;
-    public GameObject Normal;
-    public GameObject Hard;
 
     private Vector3 endPoint;
     private Vector3 currentPosition;
@@ -35,10 +32,6 @@ public class Menu_PlayerTransform : MonoBehaviour
     private float speed;
     private float time;
     private bool onInputDelay;
-    public static bool ReadyToGoStage;
-    public static bool IsPaused; //옵션창에서 Enter 키 중단
-    public static int difficulty_num;
-    
 
     void Awake()
     {
@@ -50,86 +43,51 @@ public class Menu_PlayerTransform : MonoBehaviour
         {
             clearIndex = 30; //개발 끝나면 1로 바꿔주세요.
         }
-        //스테이지->맵 돌아왔을 때 위치, 인덱스 수정 
+
         if (savingIndex != 0)
         {
             gameObject.transform.position = waypoints[savingIndex];
             currentIndex = savingIndex;
+            if (savingIndex >= 2) //메뉴로 돌아왔을시 월드2라면 월드2배경을 띄움.
+                BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
+            else if(savingIndex >= 7) //메뉴로 돌아왔을시 월드1이라면 월드1배경을 띄움.
+                BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(currentIndex, "appear");
         }
         else
             currentIndex = 0;
-
-        //메뉴로 돌아왔을 시 인덱스에 따라 배경이 나타나도록.
-        if (savingIndex >= 2)
-            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(2, "appear");
-        if (savingIndex >= 7)
-            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(7, "appear");
 
         corgi_posX = waypoints[currentIndex].x;
     }
 
     void Start()
     {
-        GameObject.Find("SoundManager").GetComponent<AudioSource>().Play();
-        ReadyToGoStage = false;
-        IsPaused = false;
+        GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
         onInputDelay = false;
+
         currentPosition = transform.position; //플레이어 현재 위치
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        savingIndex = currentIndex;
-        PlayerOnPoint.Invoke();
+        Point();
     }
     void OnTriggerExit2D(Collider2D other)
     {
         PlayerOnPointExceptMusicChange.Invoke();
         if (currentIndex < 7)
-            PlaySelectSound.instance.World1_Walking();
+            PlayerWalkingSound.instance.World1_Walking();
         else
-            PlaySelectSound.instance.World2_Walking();
-    }
-
-    void DifficultyOff()
-    {
-        ReadyToGoStage = false;
-        onInputDelay = false;
+            PlayerWalkingSound.instance.World2_Walking();
     }
 
     void Update()
     {
         int offset = 1;
         time += Time.deltaTime;
-        if (onInputDelay || IsPaused) return;
-
-        //난이도 선택창 스크립트.
-        if (ReadyToGoStage)
-        {
-            //normal은 0으로 hard는 1
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                Normal.SetActive(true);
-                Hard.SetActive(false);
-                difficulty_num = 0;
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                Normal.SetActive(false);
-                Hard.SetActive(true);
-                difficulty_num = 1;
-            }
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Select_Difficulty.SetActive(false);
-                onInputDelay = true;
-                Invoke("DifficultyOff", 0.1f);
-            }
-        }
+        if (onInputDelay) return;
 
         if (Input.GetKeyDown(KeyCode.D))
         {
-            if (ReadyToGoStage) return;
             if (waypoints.Length == currentIndex + offset || currentIndex + offset > clearIndex) return;
             ++currentIndex;
             onInputDelay = true; //연타 방지
@@ -139,7 +97,6 @@ public class Menu_PlayerTransform : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
-            if (ReadyToGoStage) return;
             if (0 == currentIndex) return;
             --currentIndex;
             onInputDelay = true;
@@ -148,34 +105,21 @@ public class Menu_PlayerTransform : MonoBehaviour
             //좌우반전 구현 필요
             StartCoroutine(move("Back"));
         }
-        
+
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if(currentIndex == 1) //튜토리얼은 그냥 진입하도록
-            {
-                onInputDelay = true;
-                PlaySelectSound.instance.MenuSelectSound();
-                StartCoroutine(LoadingScene());
-                return;
-            }
-
-            switch (ReadyToGoStage)
-            {
-                case false:
-                    GetSceneString();
-                    if (SceneName == null) return;
-                    Select_Difficulty.SetActive(true);
-                    ReadyToGoStage = true;
-                    break;
-
-                case true:
-                    onInputDelay = true;
-                    PlaySelectSound.instance.MenuSelectSound();
-                    StartCoroutine(LoadingScene());
-                    break;
-            }
+            GetSceneString();
+            if (SceneName == null) return;
+            onInputDelay = true;
+            PlaySelectSound.instance.MenuSelectSound();
+            StartCoroutine(LoadingScene());
         }
+    }
 
+    void Point()
+    {
+        savingIndex = currentIndex;
+        PlayerOnPoint.Invoke();
     }
 
     IEnumerator move(string s)

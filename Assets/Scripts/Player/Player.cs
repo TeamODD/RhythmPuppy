@@ -102,9 +102,7 @@ public class Player : MonoBehaviour
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
         deathCount = 0;
         S_Rank_True = true;
-        if (Menu_PlayerTransform.difficulty_num == 0)
-            maxHP = 6;
-        currentHP = maxHP;   
+        currentHP = maxHP;
         currentStamina = maxStamina;
 
         anim.ResetTrigger("Jump");
@@ -192,6 +190,18 @@ public class Player : MonoBehaviour
     {
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
+            if (SceneManager.GetActiveScene().name == "Tutorials2")
+            {
+                if (dashCoroutine != null)
+                {
+                    evade(c);
+                    return;
+                }
+
+                transform.position = new Vector3(-7f, -4.3012f, 0f);
+                return;
+            }
+
             if (dashCoroutine != null) evade(c);
             else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }

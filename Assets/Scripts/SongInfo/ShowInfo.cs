@@ -7,7 +7,6 @@ using TMPro;
 public class ShowInfo : MonoBehaviour
 {
     public TMP_Text Info;
-    [SerializeField]
 
     public void InfoModify()
     {
@@ -15,7 +14,7 @@ public class ShowInfo : MonoBehaviour
         {
             //Menu_PlayerTransform 스크립트에서 인덱스에 따라 곡 정보 표시
             case 1:
-                Info.text = "Music: 8 bit ice cave lofi\nArtist: Tad Miller";
+                Info.text = "Tutorial";
                 break;
             case 2:
                 Info.text = "Music: Minimal Inspiring Ambient\nArtist: ComaStudio";
@@ -37,9 +36,5 @@ public class ShowInfo : MonoBehaviour
                 break;
 
         }
-    }
-    public void EmptyInfo()
-    {
-        Info.text = "";
     }
 }
