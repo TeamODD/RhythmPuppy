@@ -64,7 +64,7 @@ public class Pattern13 : MonoBehaviour
         // 경고 오브젝트 제거
         Destroy(newWarning);
 
-        Vector3 thorstemPosition = new Vector3(-4.86f, -25f, 0f);
+        Vector3 thorstemPosition = new Vector3(-4.86f, -15.3f, 0f);
         GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);
 
         Rigidbody2D newthorstemRigidbody = newthorstem.GetComponent<Rigidbody2D>();
@@ -80,7 +80,7 @@ public class Pattern13 : MonoBehaviour
             }
         }
 
-        while (newthorstem.transform.position.y < -5.5f)
+        while (newthorstem.transform.position.y < -4.60f)
         {
             yield return null;
         }
