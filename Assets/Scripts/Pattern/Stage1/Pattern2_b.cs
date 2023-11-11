@@ -1,3 +1,4 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +11,12 @@ public class Pattern2_b : MonoBehaviour
     private float power;
     // private float RotateSpeed;
     private float time;
+    EventManager eventManager;
 
     void Awake()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.playerEvent.deathEvent += deathEvent;
         time = 0;
     }
     void Start()
@@ -32,5 +36,11 @@ public class Pattern2_b : MonoBehaviour
             gameObject.transform.position += new Vector3(power * -1, 0, 0) * Time.deltaTime;
             //gameObject.transform.Rotate(0, 0, Time.deltaTime * RotateSpeed, Space.Self);
         }
+    }
+
+    void deathEvent()
+    {
+        eventManager.playerEvent.deathEvent -= deathEvent;
+        Destroy(gameObject);
     }
 }

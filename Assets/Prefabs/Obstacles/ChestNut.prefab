@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 591713329246745256}
   - component: {fileID: 3142120577132963001}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ChestNut
   m_TagString: Obstacles
   m_Icon: {fileID: 0}
@@ -65,7 +65,7 @@ GameObject:
   - component: {fileID: 7815788561625735577}
   - component: {fileID: 1293163436270109217}
   - component: {fileID: 3452539837125688461}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ChestNut
   m_TagString: Obstacles
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 678c341128d26424c9f02a9e325a1c61, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

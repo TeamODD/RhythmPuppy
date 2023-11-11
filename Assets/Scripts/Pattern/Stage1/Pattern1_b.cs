@@ -1,3 +1,4 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,13 +10,16 @@ public class Pattern1_b : MonoBehaviour
     [SerializeField]
     private int dir;
 
+    EventManager eventManager;
     private float time;
     public static float yPosition;
 
     void Awake()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.playerEvent.deathEvent += deathEvent;
         time = 0;
-        yPosition = Random.Range(-2.5f, 3.5f);
+        yPosition = Random.Range(-1.3f, 3.5f);
     }
     void Start()
     {
@@ -38,5 +42,11 @@ public class Pattern1_b : MonoBehaviour
             else if (time < 3f)
                 transform.position += new Vector3(speed * dir, speed * 0.6f, 0) * Time.deltaTime;
         }
+    }
+
+    private void deathEvent()
+    {
+        eventManager.playerEvent.deathEvent -= deathEvent;
+        Destroy(gameObject);
     }
 }

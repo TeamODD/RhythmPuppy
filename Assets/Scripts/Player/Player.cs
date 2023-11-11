@@ -3,8 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.U2D.Animation;
 using static UnityEngine.GraphicsBuffer;
+
+using SceneData;
+using EventManagement;
 
 public class Player : MonoBehaviour
 {
@@ -16,54 +20,118 @@ public class Player : MonoBehaviour
         ShootCancel,
     }
 
-    [Header("�⺻ ����")]
-    [Tooltip("ü��")] public int health;
-
-    [Tooltip("���¹̳�")] public float stamina;
-
-    [SerializeField, Tooltip("�⺻ �̵��ӵ�")]
+    [Header("Basic Status")]
+    public int maxHP;
+    public float maxStamina;
+    [SerializeField]
+    float staminaGen;
+    [SerializeField]
     float speed;
+    public float invincibleDuration;
 
-    [Header("����")]
-    [SerializeField, Tooltip("���� �Է� �� y������ ���� ��(Force)")]
+    [Header("Jump")]
+    [SerializeField]
     float jumpForce;
 
-    [Header("���")]
-    [SerializeField, Tooltip("��� �Է� �� x������ ���� ��(Force)")]
+    [Header("Dash")]
+    [SerializeField]
     float dashForce;
-
-    [SerializeField, Tooltip("��� �Ҹ� �ð�")]
-    float dashTime;
-
-    [SerializeField, Tooltip("��� ���� �� ���� ���ð�")]
+    public float dashDuration;
+    [SerializeField]
     float dashCooltime;
+    [SerializeField]
+    float dashStaminaCost;
+    [SerializeField]
+    float dashEvasionGen;
 
-    GameObject uiCanvas, projectile, mark, head, neck;
+    [Header("Shoot")]
+    [SerializeField]
+    float shootStaminaCost;
+    [SerializeField]
+    float shootCancelStaminaGen;
+    [Tooltip("투사체 발사 시 적용되는 힘(Force)")]
+    public float shootForce;
+    [Tooltip("발사 종료 후 재사용 대기시간")]
+    public float shootCooltime;
+
+    Camera mainCamera;
+    GameObject projectile, head, neck;
+    Collider2D hitbox;
     Rigidbody2D rig2D;
-    CompositeCollider2D col2D;
     SpriteRenderer[] spriteList;
     Animator anim;
+    EventManager eventManager;
 
-    bool onFired;
+
+    bool onFired, movable;
+    [HideInInspector] public float currentHP, currentStamina;
     float headCorrectFactor;
-    Coroutine dashCoroutine, dashCooldownCoroutine, invincibilityCoroutine;
-    
+    [HideInInspector] public float deathCount;
+    [HideInInspector] public bool S_Rank_True;
+    Vector3 velocity, currentPosition;
+    Coroutine dashCoroutine, dashCooldownCoroutine, shootCooldownCoroutine, invincibilityCoroutine;
+
+    WaitForSeconds invincibleDelay, dashDelay, dashCooldownDelay, shootCooldownDelay;
 
     void Awake()
     {
         init();
     }
 
+    public void init()
+    {
+        mainCamera = Camera.main;
+        projectile = transform.Find("Projectile").gameObject;
+        head = transform.Find("Head").gameObject;
+        neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
+
+        rig2D = GetComponent<Rigidbody2D>();
+        hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
+        spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+        eventManager = FindObjectOfType<EventManager>();
+
+        invincibleDelay = new WaitForSeconds(invincibleDuration);
+        dashDelay = new WaitForSeconds(dashDuration);
+        dashCooldownDelay = new WaitForSeconds(dashCooltime);
+        shootCooldownDelay = new WaitForSeconds(shootCooltime);
+
+        onFired = false;
+        movable = true;
+        dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = shootCooldownCoroutine = null;
+        headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
+        deathCount = 0;
+        S_Rank_True = true;
+        currentHP = maxHP;
+        currentStamina = maxStamina;
+
+        anim.ResetTrigger("Jump");
+        anim.SetInteger("JumpCount", 0);
+
+        eventManager.playerEvent.playerHitEvent += playerHitEvent;
+        eventManager.stageEvent.clearEvent += freeze;
+        eventManager.stageEvent.pauseEvent += freeze;
+        eventManager.stageEvent.resumeEvent += defreeze;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += reviveEvent;
+        eventManager.playerEvent.dashEvent += dashEvent;
+        eventManager.playerEvent.shootEvent += shootEvent;
+        eventManager.playerEvent.teleportEvent += teleportEvent;
+        eventManager.playerEvent.shootCancelEvent += shootCancelEvent;
+    }
+
     void Update()
     {
+        if (!movable) return;
         checkJumpStatus();
+        passiveStaminaGen();
 
         if (Input.GetButtonDown("Dash"))
         {
-            if (dashCoroutine == null && dashCooldownCoroutine == null)
-            {
-                dashCoroutine = StartCoroutine(dash());
-            }
+            if (currentStamina < dashStaminaCost)
+                    Debug.Log("not enough stamina!");
+            else if (!Input.GetAxisRaw("Horizontal").Equals(0) && dashCoroutine == null && dashCooldownCoroutine == null)
+                eventManager.playerEvent.dashEvent();
         }
         if (Input.GetButtonDown("Jump"))
         {
@@ -71,71 +139,78 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown("Shoot"))
         {
-            if (!onFired) shoot();
-            else teleport();
+            if (!onFired)
+            {
+                if (currentStamina < shootStaminaCost)
+                    Debug.Log("not enough stamina!");
+                else if (shootCooldownCoroutine == null)
+                    eventManager.playerEvent.shootEvent();
+            }
+            else
+            {
+                eventManager.playerEvent.teleportEvent();
+            }
         }
         if (Input.GetButtonDown("ShootCancel"))
         {
             if (onFired)
-            {
-                shootCancel();
-            }
+                eventManager.playerEvent.shootCancelEvent();
         }
     }
 
     void FixedUpdate()
     {
+        if (!movable) return;
+        velocity = rig2D.velocity;
+        currentPosition = transform.position;
         flipBody();
-        move(); 
-        RaycastHit2D raycast = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.up, 1f);
-        /*if(raycast.collider != null) Debug.Log(raycast.collider.gameObject.name);*/
+        move();
     }
 
     void LateUpdate()
     {
-        fixProjectilePos();
-        fixPlayerPosition();
+        if (!movable) return;
+        fixPositionIntoScreen();
     }
 
     void OnCollisionEnter2D(Collision2D c)
     {
-        GameObject o = c.gameObject;
-        if (LayerMask.NameToLayer("Obstacle").Equals(o.layer))
+        if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
-            StartCoroutine(hitEvent());
+            rig2D.velocity = velocity;
+            transform.position = currentPosition;
+            if (!isCollisionVisibleOnTheScreen(c)) return;
+
+            if (dashCoroutine != null) evade(c.collider);
+            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
     }
 
-    public void init()
+    void OnTriggerEnter2D(Collider2D c)
     {
-        uiCanvas = GameObject.Find("UICanvas");
-        projectile = transform.Find("Projectile").gameObject;
-        mark = transform.Find("Mark").gameObject;
-        head = transform.Find("Head").gameObject;
-        neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
+        if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
+        {
+            if (SceneManager.GetActiveScene().name == "Tutorials2")
+            {
+                if (dashCoroutine != null)
+                {
+                    evade(c);
+                    return;
+                }
 
-        rig2D = GetComponent<Rigidbody2D>();
-        col2D = GetComponent<CompositeCollider2D>();
-        spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
-        anim = GetComponent<Animator>();
+                transform.position = new Vector3(-7f, -4.3012f, 0f);
+                return;
+            }
 
-        onFired = false;
-        dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
-        headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
-
-
-        anim.ResetTrigger("Jump");
-        anim.SetInteger("JumpCount", 0);
+            if (dashCoroutine != null) evade(c);
+            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
+        }
     }
 
-    public void activateMark()
+    private void passiveStaminaGen()
     {
-        mark.SendMessage("activate");
-    }
-
-    public void inactivateMark()
-    {
-        mark.SendMessage("inactivate");
+        float s = staminaGen * Time.deltaTime;
+        currentStamina = maxStamina < currentStamina + s ? maxStamina : currentStamina + s;
     }
 
     private void move()
@@ -170,71 +245,82 @@ public class Player : MonoBehaviour
 
     private bool isJump()
     {
-        RaycastHit2D ray2D = Physics2D.Raycast(transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
         const float margin = 0.05f;
 
         if (Mathf.Abs(rig2D.velocity.y) < margin)
         {
-            if (ray2D.collider != null)
-            {
-                if (ray2D.distance < margin)
-                {
-                    return false;
-                }
-            }
+            return false;
         }
         return true;
     }
 
-    private IEnumerator dash()
+    private void dashEvent()
     {
         float dir = Input.GetAxisRaw("Horizontal");
-        if (dir == 0) yield break;
+        if (dir == 0) return;
 
-        anim.SetTrigger("Dash");
-        if (invincibilityCoroutine != null) StopCoroutine(invincibilityCoroutine);
-        invincibilityCoroutine = StartCoroutine(activateInvincibility(dashTime));
+        currentStamina -= dashStaminaCost;
+        dashCoroutine = StartCoroutine(dash(dir));
+    }
+
+    private IEnumerator dash(float dir)
+    {
+        setAlpha(0.5f);
         rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
         rig2D.gravityScale = 0f;
+        anim.SetTrigger("Dash");
 
-        yield return new WaitForSeconds(dashTime);
+        yield return dashDelay;
+        setAlpha(1f);
         rig2D.velocity = new Vector2(0, rig2D.velocity.y);
         rig2D.gravityScale = 1f;
         dashCooldownCoroutine = StartCoroutine(dashCooldown());
         dashCoroutine = null;
     }
 
+    private void evade(Collider2D c)
+    {
+        Debug.Log(string.Format("[{0}] {1}", Time.time, "회피!"));
+        currentStamina = maxStamina < currentStamina + dashEvasionGen ? maxStamina : currentStamina + dashEvasionGen;
+        StartCoroutine(delayCollision(c, dashDelay));
+    }
+
     private IEnumerator dashCooldown()
     {
-        yield return new WaitForSeconds(dashCooltime);
+        yield return dashCooldownDelay;
         anim.ResetTrigger("Dash");
         dashCooldownCoroutine = null;
     }
 
-    private void shoot()
+    private void shootEvent()
     {
-        if (!isProjectileOnScreen()) return;
-        projectile.SendMessage("shoot");
+        currentStamina -= shootStaminaCost;
         onFired = true;
+        shootCooldownCoroutine = StartCoroutine(runShootCooldown());
     }
 
-    private void teleport()
+    private IEnumerator runShootCooldown()
+    {
+        yield return shootCooldownDelay;
+        shootCooldownCoroutine = null;
+    }
+
+    private void teleportEvent()
     {
         int count = anim.GetInteger("JumpCount");
         Vector3 pos = projectile.transform.position;
-        projectile.SendMessage("stop");
-        projectile.transform.position = neck.transform.position;
         transform.position = pos;
         if (2 <= count)
             anim.SetInteger("JumpCount", count - 1);
         onFired = false;
     }
 
-    private void shootCancel()
+    private void shootCancelEvent()
     {
-        projectile.SendMessage("stop");
+        currentStamina = maxStamina < currentStamina + shootCancelStaminaGen ? maxStamina : currentStamina + shootCancelStaminaGen;
         projectile.transform.position = neck.transform.position;
         onFired = false;
+        shootCooldownCoroutine = StartCoroutine(runShootCooldown());
     }
 
     private void checkJumpStatus()
@@ -254,41 +340,14 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void fixPlayerPosition()
+    private void fixPositionIntoScreen()
     {
-        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+        Vector3 pos = mainCamera.WorldToViewportPoint(transform.position);
         if (pos.x <= 0f) pos.x = 0f;
         if (1f <= pos.x) pos.x = 1f;
         if (pos.y <= 0f) pos.y = 0f;
         if (1f <= pos.y) pos.y = 1f;
-        transform.position = Camera.main.ViewportToWorldPoint(pos);
-    }
-
-    private void fixProjectilePos()
-    {
-        if (!onFired) return;
-
-        Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
-        Vector3 copy = pos;
-
-        if (pos.x <= 0f) pos.x = 0f;
-        if (1f <= pos.x) pos.x = 1f;
-        if (pos.y <= 0f) pos.y = 0f;
-        if (1f <= pos.y) pos.y = 1f;
-
-        if (!pos.Equals(copy))
-        {
-            projectile.SendMessage("stop");
-            projectile.transform.position = Camera.main.ViewportToWorldPoint(pos);
-        }
-    }
-
-    private bool isProjectileOnScreen()
-    {
-        Vector3 pos = Camera.main.WorldToViewportPoint(projectile.transform.position);
-
-        if (pos.x <= 0f || 1f <= pos.x || pos.y <= 0f || 1f <= pos.y) return false;
-        return true;
+        transform.position = mainCamera.ViewportToWorldPoint(pos);
     }
 
     /** Flip body if corgi is heading behind or moving to behind. */
@@ -320,53 +379,76 @@ public class Player : MonoBehaviour
         transform.localScale = flip;
     }
 
-    private IEnumerator ignoreCollision(Collision2D target)
+    private void playerHitEvent()
     {
-        /*Physics2D.IgnoreLayerCollision(gameObject.layer, target.gameObject.layer, true);*/
-        Debug.Log(string.Format("[{0}] {1}", Time.time, "ignore true"));
-        yield return new WaitForSeconds(2f);
-        /*Physics2D.IgnoreLayerCollision(gameObject.layer, target.gameObject.layer, false);*/
-        Debug.Log(string.Format("[{0}] {1}", Time.time, "ignore false"));
-        Physics2D.IgnoreCollision(col2D, target.collider, false);
-    }
-
-    public void getDamage()
-    {
-        if (invincibilityCoroutine != null) return;
-
-        /*StartCoroutine(hitEvent());*/
-    }
-
-    private IEnumerator hitEvent()
-    {
-        if (invincibilityCoroutine != null) yield break;
-
-        const float duration = 1.5f;
-        invincibilityCoroutine = StartCoroutine(activateInvincibility(duration));
-
-        uiCanvas.SendMessage("hitEffect");
-        head.SendMessage("setSadFace");
-
-        health--;
-        if (health < 0)
+        currentHP--;
+        S_Rank_True = false;
+        if (currentHP <= 0)
         {
-            head.SendMessage("setDeadFace");
-            anim.SetTrigger("Death");
-            gameObject.SetActive(false);
+            deathCount++;
+            eventManager.playerEvent.deathEvent();
+            return;
         }
-
-        yield return new WaitForSeconds(duration);
-        head.SendMessage("setNormalFace");
+        invincibilityCoroutine = StartCoroutine(activateInvincibility());
     }
 
-    private IEnumerator activateInvincibility(float duration)
+    private void deathEvent()
     {
-        int obsLayer = LayerMask.NameToLayer("Obstacle");
+        StopAllCoroutines();
+        StartCoroutine(deathAction());
+    }
 
-        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, true);
-        setAlpha(0.6f);
-        yield return new WaitForSeconds(duration);
-        Physics2D.IgnoreLayerCollision(gameObject.layer, obsLayer, false);
+    private IEnumerator deathAction()
+    {
+        movable = false;
+        hitbox.enabled = false;
+        setAlpha(1);
+        anim.SetTrigger("Death");
+
+        yield return new WaitForSeconds(5f);
+
+        if (deathCount <= 3)
+        {
+            eventManager.stageEvent.rewindEvent();
+            eventManager.playerEvent.reviveEvent();
+        }
+        else
+        {
+            Debug.Log("load gameover scene");
+
+            Scene currentScene = SceneManager.GetActiveScene();
+            string sceneName = currentScene.name;
+            PlayerPrefs.SetString("PlayingSceneName", sceneName);
+
+            SceneManager.LoadScene(SceneInfo.getSceneName(SceneName.GAMEOVER), LoadSceneMode.Single);
+        }
+    }
+
+    private void reviveEvent()
+    {
+        currentHP = maxHP;
+        currentStamina = maxStamina;
+        movable = true;
+        hitbox.enabled = true;
+        dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = null;
+        setAlpha(1);
+        anim.ResetTrigger("Death");
+        anim.SetTrigger("Revive");
+        StartCoroutine(reviveEventCoroutine());
+    }
+
+    private IEnumerator reviveEventCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+        anim.ResetTrigger("Revive");
+    }
+
+    private IEnumerator activateInvincibility()
+    {
+        hitbox.enabled = false;
+        setAlpha(0.5f);
+        yield return invincibleDelay;
+        hitbox.enabled = true;
         setAlpha(1f);
         invincibilityCoroutine = null; 
     }
@@ -383,5 +465,60 @@ public class Player : MonoBehaviour
             c.a = a;
             spriteList[i].color = c;
         }
+    }
+
+    private IEnumerator delayCollision(Collider2D c, WaitForSeconds delay)
+    {
+        Physics2D.IgnoreCollision(hitbox, c, true);
+        yield return delay;
+        if (c == null) yield break;
+        Physics2D.IgnoreCollision(hitbox, c, false);
+    }
+
+    private bool isCollisionVisibleOnTheScreen(Collision2D c)
+    {
+        Vector2 point = c.GetContact(0).point;
+        LayerMask layerMask = LayerMask.GetMask("Ground") | LayerMask.GetMask("Obstacle");
+        RaycastHit2D[] hit = Physics2D.RaycastAll(point, Vector2.zero, 0, layerMask);
+        SpriteRenderer sp = null, tmp = null;
+
+        for (int i = 0; i < hit.Length; i++)
+        {
+            tmp = null;
+            if (hit[i].transform.TryGetComponent(out tmp))
+            {
+                if (sp == null || getBiggerSortingOrder(ref tmp, ref sp).Equals(tmp))
+                    sp = tmp;
+            }
+        }
+        if (c != null && sp != null && c.transform.Equals(sp.transform))
+            return true;
+        return false;
+    }
+
+    private ref SpriteRenderer getBiggerSortingOrder(ref SpriteRenderer s1, ref SpriteRenderer s2)
+    {
+        int s1Layer = s1.gameObject.layer, s2Layer = s2.gameObject.layer, s1SortingOrder = s1.sortingOrder, s2SortingOrder = s2.sortingOrder;
+        if (LayerMask.LayerToName(s1Layer).Equals("Ground"))
+            return ref s1;
+        else if (LayerMask.LayerToName(s2Layer).Equals("Ground"))
+            return ref s2;
+
+        if (s1SortingOrder < s2SortingOrder)
+            return ref s2;
+        else if (s1SortingOrder > s2SortingOrder)
+            return ref s1;
+
+        return ref s1;
+    }
+
+    private void freeze()
+    {
+        movable = false;
+    }
+
+    private void defreeze()
+    {
+        movable = true;
     }
 }

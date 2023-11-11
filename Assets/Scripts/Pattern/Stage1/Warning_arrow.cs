@@ -1,9 +1,12 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Warning_arrow : MonoBehaviour
 {
+    [SerializeField]
+    EventManager eventManager;
     private float time;
     // Start is called before the first frame update
     void Start()

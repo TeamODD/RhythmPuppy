@@ -15,7 +15,7 @@ public class StaminaBar : MonoBehaviour
 
     void Update()
     {
-        slider.value = player.stamina;
+        slider.value = player.currentStamina;
     }
 
     public void init()

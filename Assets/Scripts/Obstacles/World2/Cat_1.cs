@@ -7,34 +7,36 @@ namespace Obstacles
 {
     public class Cat_1 : MonoBehaviour
     {
+        [SerializeField] float gravityScale;
         [SerializeField] float force;
 
-        Rigidbody2D rig2D;
+        const float G = 9.8f;
+
+        Vector3 velocity;
+
 
         void Awake()
         {
             init();
         }
 
-        /*void OnCollisionEnter2D(Collision2D col)
+        void FixedUpdate()
         {
-            Debug.Log("123");
-            GameObject o = col.transform.root.gameObject;
-            Vector2 point = col.GetContact(0).point;
-            RaycastHit2D hit = Physics2D.Raycast(point, transform.forward, 100);
-
-            *//* 고양이가 가려지지 않고 플레이어와 닿았는가? *//*
-            if (transform.Equals(hit.transform) && o.gameObject.CompareTag("Player"))
-            {
-                StartCoroutine(damageEvent(o));
-            }
-        }*/
+            physicalCalculation();
+            if (transform.position.y < -3f)
+                Destroy(gameObject);
+        }
 
         public void init()
         {
-            rig2D = GetComponent<Rigidbody2D>();
-            GetComponent<Rigidbody2D>().AddForce(transform.up * force, ForceMode2D.Impulse);
-            rig2D.gravityScale = 1f;
+            velocity = new Vector3(0, force, 0);
         }
+
+        private void physicalCalculation()
+        {
+            transform.Translate(velocity * Time.fixedDeltaTime);
+            velocity.y -= G * Time.fixedDeltaTime * gravityScale;
+        }
+
     }
 }

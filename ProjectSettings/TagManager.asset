@@ -9,25 +9,29 @@ TagManager:
   - PatternManager
   - ObstacleManager
   - MusicManager
-  - LampLight
   - Obstacles
+  - EventSystem
+  - Music
+  - Sound
+  - Puppy
+  - SoundManager
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Ground
+  - 
   - Water
   - UI
-  - Player
-  - Projectile
-  - Obstacle
+  - 
+  - 
+  - Background
+  - Ground
   - Artifact
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Obstacle
+  - Projectile
+  - Player
+  - PlayerHitbox
+  - Puppy
   - 
   - 
   - 
@@ -53,6 +57,9 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Obstacle
+    uniqueID: 2505857111
     locked: 0
   - name: Player
     uniqueID: 111921613

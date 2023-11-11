@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1238087970530892083}
   - component: {fileID: 5902494799918804418}
   - component: {fileID: 5902494799918804412}
-  m_Layer: 13
+  m_Layer: 11
   m_Name: apple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 5902494799918804423}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 4.14, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}

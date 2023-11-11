@@ -451,7 +451,7 @@ GameObject:
   - component: {fileID: 233853010}
   - component: {fileID: 233853009}
   m_Layer: 0
-  m_Name: SF Source
+  m_Name: SFX Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1364,7 +1364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicsource: {fileID: 1199596090}
-  btnsource: {fileID: 233853009}
+  sfxsource: {fileID: 233853009}
   MusicVolumeText: {fileID: 1645093528}
   SoundVolumeText: {fileID: 851372321}
 --- !u!1 &851372319
@@ -1534,7 +1534,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &1199596090
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1662,7 +1662,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1291252148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1675,8 +1675,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b273139f2a35e041affb6d2637225f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventsystem: {fileID: 1293656988}
-  maincamera: {fileID: 1619815478}
+  mainCameraToturnOff: {fileID: 1619815478}
+  eventSystemToturnOff: {fileID: 1293656988}
 --- !u!4 &1291252149
 Transform:
   m_ObjectHideFlags: 0
@@ -1705,11 +1705,11 @@ GameObject:
   - component: {fileID: 1293656989}
   m_Layer: 0
   m_Name: EventSystem
-  m_TagString: Untagged
+  m_TagString: EventSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1293656989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2119,7 +2119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &1619815479
 AudioListener:
   m_ObjectHideFlags: 0
@@ -2246,7 +2246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicsource: {fileID: 1199596090}
-  btnsource: {fileID: 233853009}
+  sfxsource: {fileID: 233853009}
   MusicVolumeText: {fileID: 1645093528}
   SoundVolumeText: {fileID: 851372321}
 --- !u!1 &1645093524
@@ -2880,12 +2880,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.843
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -2910,7 +2910,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!224 &2049879272
 RectTransform:

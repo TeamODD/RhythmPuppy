@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6541753761479392344}
   - component: {fileID: -1944533357769987573}
   - component: {fileID: 6185608998616328100}
-  m_Layer: 14
+  m_Layer: 11
   m_Name: bee_1_a
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 6541753761479392345}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 5}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}

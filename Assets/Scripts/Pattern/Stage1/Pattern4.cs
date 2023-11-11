@@ -1,3 +1,4 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,9 +9,11 @@ public class Pattern4 : MonoBehaviour
     [SerializeField]
     private float speed;
     public static float xPosition;
+    EventManager eventManager;
 
     void Awake()
     {
+        eventManager = FindObjectOfType<EventManager>();
         xPosition = Random.Range(-8.5f, 8.5f);
     }
     void Start()
@@ -25,5 +28,10 @@ public class Pattern4 : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    void deathEvent()
+    {
+        Destroy(gameObject);
     }
 }

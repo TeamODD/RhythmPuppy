@@ -1,48 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
-using TimelineManager;
+using Patterns;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
 public class ButtonAction : MonoBehaviour
 {
-    public GameObject target;
-    public GameObject Warning;
-    private int count;
-
-    private Pattern1_a Pattern1_a;
-    private float yPosition;
-
-    void Start()
-    {
-        //Pattern1_a.BeeMove();
-    }
-    
-    void Awake()
-    {
-        Bee();
-        count = 1;
-    }
-    void Bee()
-    {
-        Instantiate(target);
-        Instantiate(Warning);
-        
-        count++;
-        Invoke("Bee", 0.5f);
-    }
-    void Update()
-    {
-        
-    }
+    [SerializeField]
+    GameObject Option;
 
     public void onContinue()
     {
-        //Option.SetActive(false);
+        GameObject GamePlayManager = GameObject.Find("GamePlayManager");
+        GamePlayManager.GetComponent<GamePasue>().ResumeGame();
 
-        if (count == 32)
-            CancelInvoke("Bee");
+        Option.SetActive(false);
     }
-    //처음 두 마리 붙어서 나옴(가로)
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1737332030911727830}
   - component: {fileID: 6847897973224705813}
   - component: {fileID: 4493472792054189782}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: "\uB808\uC774\uC5B4 5"
   m_TagString: Obstacles
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: -7506998823224108248, guid: 6041cf2732069d445a1d892d81a7c05f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 8988471240368555783}
   - component: {fileID: 1148383607838517979}
   - component: {fileID: 6810123941561791960}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: "\uB808\uC774\uC5B4 2"
   m_TagString: Obstacles
   m_Icon: {fileID: 0}
@@ -184,7 +184,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: -272796707443877878, guid: 6041cf2732069d445a1d892d81a7c05f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -232,7 +232,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3029740461009634271}
   - component: {fileID: 1218291429837377557}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Weasel
   m_TagString: Obstacles
   m_Icon: {fileID: 0}

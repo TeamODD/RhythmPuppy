@@ -2,25 +2,67 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Patterns;
+using Cysharp.Threading.Tasks;
+using Stage_2;
+using UnityEngine.SceneManagement;
+using EventManagement;
+
 public class PatternManager : MonoBehaviour
 {
-    [SerializeField] GameObject pattern;
-    [SerializeField] float startDelay;
+    [SerializeField] GameObject stagePrefab;
+    public float[] savePointTime;
+    [SerializeField] float startDelayTime;
+    [SerializeField] AudioClip music;
+    [SerializeField] AudioSource audioSource;
+
+    [HideInInspector] 
+    public EventManager eventManager;
+    GameObject stage;
+    List<Coroutine> coroutineList;
+    bool isPuppyShown;
 
     void Awake()
     {
-        init();
+        StartCoroutine(init());
     }
 
-    public void init()
+    private IEnumerator init()
     {
-        Invoke("runPattern", startDelay);
+        isPuppyShown = false;
+        eventManager = FindObjectOfType<EventManager>();
+        audioSource = FindObjectOfType<AudioSource>();
+        if (stage != null) Destroy(stage);
+        stage = null;
+        audioSource.clip = music;
+
+        eventManager.stageEvent.gameStartEvent += gameStartEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += gameStartEvent;
+        eventManager.savePointTime = savePointTime;
+
+        yield return new WaitForSeconds(startDelayTime);
+        eventManager.stageEvent.gameStartEvent();
     }
 
-    private void runPattern()
+    void Update()
     {
-        GameObject o = Instantiate(pattern);
-        o.transform.SetParent(transform);
-        o.SetActive(true);
+        if (!isPuppyShown && audioSource.clip.length - 3f < audioSource.time)
+        {
+            isPuppyShown = true;
+            GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc();
+        }
+    }
+
+    private void gameStartEvent()
+    {
+        stage = Instantiate(stagePrefab);
+        stage.transform.SetParent(transform);
+        stage.SetActive(true);
+    }
+
+    private void deathEvent()
+    {
+        stage = null;
     }
 }

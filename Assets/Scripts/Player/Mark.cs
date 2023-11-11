@@ -1,3 +1,4 @@
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class Mark : MonoBehaviour
 {
     [SerializeField] float fadeDelay;
 
+    EventManager eventManager;
     SpriteRenderer sp;
     Color from, to;
     float progress;
@@ -14,6 +16,12 @@ public class Mark : MonoBehaviour
 
     void Awake()
     {
+        init();
+    }
+
+    private void init()
+    {
+        eventManager = FindObjectOfType<EventManager>();
         sp = GetComponent<SpriteRenderer>();
         progress = 0;
         task = null;
@@ -22,15 +30,18 @@ public class Mark : MonoBehaviour
         to.a = 0;
         sp.color = to;
         from = to;
+
+        eventManager.playerEvent.markActivationEvent += markActivationEvent;
+        eventManager.playerEvent.markInactivationEvent += markInactivationEvent;
     }
 
-    public void activate()
+    public void markActivationEvent()
     {
         if(sp.color.a == 0 && task == null)
             task = StartCoroutine(fadeIn());
     }
 
-    public void inactivate()
+    public void markInactivationEvent()
     {
         if (sp.color.a == 1 && task == null)
             task = StartCoroutine(fadeOut());

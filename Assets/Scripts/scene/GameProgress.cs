@@ -16,7 +16,6 @@ public class GameProgress : MonoBehaviour
     public GameObject fullsavepoint2;
     public GameObject fullsavepoint3;
 
-
     private float musicLength;
     private Vector3 initialPlayerBudgePosition;
     private float targetDistance; // 이동할 거리
@@ -25,6 +24,9 @@ public class GameProgress : MonoBehaviour
     private bool isarrivecheckpoint3 = false;
 
     private float checkpointTime;
+    float checkpoint1Threshold;
+    float checkpoint2Threshold;
+    float checkpoint3Threshold;
 
     private void Start()
     {
@@ -35,6 +37,22 @@ public class GameProgress : MonoBehaviour
         initialPlayerBudgePosition = playerbudge.transform.position;
 
         targetDistance = gameprogressguage.rect.width;
+
+        checkpoint1Threshold = 29.1f / musicLength;
+        checkpoint2Threshold = 68.8f / musicLength;
+        checkpoint3Threshold = 97.9f / musicLength;
+
+        float savepointXpos1 = Mathf.Lerp(-5f, 5f, checkpoint1Threshold);
+        float savepointXpos2 = Mathf.Lerp(-5f, 5f, checkpoint2Threshold);
+        float savepointXpos3 = Mathf.Lerp(-5f, 5f, checkpoint3Threshold);
+
+        emptysavepoint1.transform.position = new Vector3(savepointXpos1, 3.54f, 0);
+        emptysavepoint2.transform.position = new Vector3(savepointXpos2, 3.54f, 0);
+        emptysavepoint3.transform.position = new Vector3(savepointXpos3, 3.54f, 0);
+
+        fullsavepoint1.transform.position = new Vector3(savepointXpos1, 3.54f, 0);
+        fullsavepoint2.transform.position = new Vector3(savepointXpos2, 3.54f, 0);
+        fullsavepoint3.transform.position = new Vector3(savepointXpos3, 3.54f, 0);
     }
 
     private void Update()
@@ -69,11 +87,6 @@ public class GameProgress : MonoBehaviour
 
     private void SavePointChecking(float fillAmount)
     {
-        float checkpoint1Threshold = 0.25f; // 25% 세이브 포인트 임계값
-        float checkpoint2Threshold = 0.50f; // 50% 세이브 포인트 임계값
-        float checkpoint3Threshold = 0.75f; // 75% 세이브 포인트 임계값
-
-        // 25% 지점 체크
         if (fillAmount >= checkpoint1Threshold)
         {
             emptysavepoint1.SetActive(false);
@@ -86,7 +99,6 @@ public class GameProgress : MonoBehaviour
             fullsavepoint1.SetActive(false);
         }
 
-        // 50% 지점 체크
         if (fillAmount >= checkpoint2Threshold)
         {
             emptysavepoint2.SetActive(false);
@@ -99,7 +111,6 @@ public class GameProgress : MonoBehaviour
             fullsavepoint2.SetActive(false);
         }
 
-        // 75% 지점 체크
         if (fillAmount >= checkpoint3Threshold)
         {
             emptysavepoint3.SetActive(false);
@@ -119,15 +130,15 @@ public class GameProgress : MonoBehaviour
 
         if (isarrivecheckpoint3)
         {
-            checkpointTime = musicLength * 0.75f;
+            checkpointTime = 97.9f;
         }
         else if (isarrivecheckpoint2)
         {
-            checkpointTime = musicLength * 0.50f;
+            checkpointTime = 68.8f;
         }
         else if (isarrivecheckpoint1)
         {
-            checkpointTime = musicLength * 0.25f;
+            checkpointTime = 29.1f; 
         }
 
         PlayerPrefs.SetFloat("checkpointTime", checkpointTime);

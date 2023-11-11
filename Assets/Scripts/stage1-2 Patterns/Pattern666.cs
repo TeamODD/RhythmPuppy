@@ -1,5 +1,8 @@
+using Cysharp.Threading.Tasks;
+using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Pattern666 : MonoBehaviour
@@ -13,14 +16,26 @@ public class Pattern666 : MonoBehaviour
 
     private bool isPatternRunning = false;
     private GameObject currentStem;
+    float time;
+    EventManager eventManager;
+    List<GameObject> objects;
+
     private void OnEnable()
     {
+        eventManager = FindObjectOfType<EventManager>();
+        eventManager.playerEvent.deathEvent += StopPattern;
+        objects = new List<GameObject>();
         StartPattern();
     }
 
     private void OnDisable()
     {
         StopPattern();
+    }
+
+    private void OnDestroy()
+    {
+        eventManager.playerEvent.deathEvent -= StopPattern;
     }
 
     private void StartPattern()
@@ -37,65 +52,79 @@ public class Pattern666 : MonoBehaviour
         isPatternRunning = false;
         if (currentStem != null)
         {
+            objects.Remove(currentStem);
             Destroy(currentStem);
             currentStem = null;
         }
         StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 
     private IEnumerator RunPattern()
     {
-        //¿À¸¥ÂÊ À§Ä¡¿¡¼­¸¸ ½ÃÀÛ
-
-        // °æ°í ¿ÀºêÁ§Æ® »ý¼º
-        Vector3 warningPosition = new Vector3(7.49f, -0.58f, 0f);
+        Vector3 warningPosition = new Vector3(8.297f, 2.28f, 0f);
         GameObject warning = Instantiate(thornStemWarning, warningPosition, Quaternion.identity);
+        objects.Add(warning);
 
-        // °æ°í ¿ÀºêÁ§Æ®°¡ 0.5ÃÊ¿¡ °ÉÃÄ¼­ Åõ¸íÇØÁöµµ·Ï ¾ËÆÄ°ª Á¶Á¤
-        SpriteRenderer warningRenderer = warning.GetComponent<SpriteRenderer>();
-        Color originalColor = warningRenderer.color;
-        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        SpriteRenderer[] warningRenderers = warning.GetComponentsInChildren<SpriteRenderer>();
 
-        float totalTime = 0.5f; // ÀüÃ¼ ½Ã°£ (0.5ÃÊ)
-        float fadeInDuration = 0.3f; // 0.3ÃÊ µ¿¾ÈÀº ¿ÏÀüÈ÷ ºÒÅõ¸íÇÏ°Ô À¯Áö
+        Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+        foreach (SpriteRenderer renderer in warningRenderers)
+        {
+            renderer.color = targetColor;
+        }
 
+        float totalTime = 0.25f;
         float elapsedTime = 0f;
-
         while (elapsedTime < totalTime)
         {
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3ÃÊ µ¿¾ÈÀº ¿ÏÀüÈ÷ ºÒÅõ¸íÇÏ°Ô À¯Áö
-            if (elapsedTime <= fadeInDuration)
+            foreach (SpriteRenderer renderer in warningRenderers)
             {
-                warningRenderer.color = originalColor;
-            }
-            // ±× ÀÌÈÄ 0.2ÃÊ µ¿¾È¿¡´Â ºü¸£°Ô Åõ¸íÇØÁöµµ·Ï ¾ËÆÄ°ª Á¶Á¤
-            else //0.3ÃÊ°¡ Áö³²
-            {
-                float fadeOutDuration = totalTime - fadeInDuration; // Åõ¸íÇØÁö´Â ½Ã°£ (0.2ÃÊ)
-                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+                renderer.color = Color.Lerp(targetColor, Color.red, t);
             }
 
             yield return null;
         }
 
-        // °æ°í ¿ÀºêÁ§Æ® Á¦°Å
+        elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(Color.red, targetColor, t);
+            }
+
+            yield return null;
+        }
+
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+        objects.Remove(warning);
         Destroy(warning);
 
-        // °¡½Ã ÁÙ±â »ý¼º
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ù±ï¿½ ï¿½ï¿½ï¿½ï¿½
         float startX = 8.38f; //9.44f, 8.38f
-        float startY = 0;
+        float startY = 2.58f;
         Vector3 startPos = new Vector3(startX, startY, 0f);
 
         currentStem = Instantiate(thornStem, startPos, Quaternion.identity);
+        objects.Add(currentStem);
         Rigidbody2D stemRigidbody = currentStem.GetComponent<Rigidbody2D>();
 
-        // ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         if (startX < 0f)
             stemRigidbody.velocity = Vector2.right * stemSpeed;
-        // ¿ÞÂÊÀ¸·Î ÀÌµ¿
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         else
             stemRigidbody.velocity = Vector2.left * stemSpeed;
 
@@ -107,12 +136,12 @@ public class Pattern666 : MonoBehaviour
     {
         while (isPatternRunning)
         {
-            // ¸Ê ¹ÛÀ¸·Î ³ª°¥ °æ¿ì ¿ÀºêÁ§Æ®¸¦ ÆÄ±«ÇÕ´Ï´Ù.
             if (!IsWithinMapBounds(obj.transform.position))
             {
+                objects.Remove(obj);
                 Destroy(obj);
                 currentStem = null;
-                Destroy(gameObject);
+                StopPattern();
                 yield break;
             }
             yield return null;
@@ -127,5 +156,21 @@ public class Pattern666 : MonoBehaviour
         float maxY = 5f;
 
         return position.x >= minX && position.x <= maxX && position.y >= minY && position.y <= maxY;
+    }
+    async UniTask delayRemoval(GameObject o, float t)
+    {
+        await UniTask.Delay(System.TimeSpan.FromSeconds(t));
+        objects.Remove(o);
+    }
+
+    void deathEvent()
+    {
+        StopAllCoroutines();
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Destroy(objects[i]);
+        }
+        objects.Clear();
+        Destroy(gameObject);
     }
 }

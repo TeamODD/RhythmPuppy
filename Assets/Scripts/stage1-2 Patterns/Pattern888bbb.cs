@@ -12,51 +12,42 @@ public class Pattern888bbb : MonoBehaviour
     [SerializeField]
     private float weaselspeed;
 
-    private float[] firstweaselTimings = { 0f, 0.6f, 0.8f, 1.1f, 1.5f, 1.8f };
-    private float[] secondweaselTimings = { 2.2f, 2.3f, 2.7f, 2.9f, 3.2f, 3.5f, 3.9f };
-
+    //private float[] firstweaselTimings = { 0f, 0.6f, 0.8f, 1.1f, 1.5f, 1.8f };
+    [SerializeField]
+    private float[] secondweaselTimings = { 2.1f, 2.2f, 2.6f, 2.8f, 3.1f, 3.4f, 3.8f };
+        
     private Coroutine weaselCoroutine;
     private GameObject currentWarning;
 
-    public List<Vector3> firstPositions = new List<Vector3>
+    private List<Vector3> firstPositions = new List<Vector3>
     {
-        new Vector3(-7.5f, -5f, 0f),
-        new Vector3(-5f, -5f, 0f),
-        new Vector3(-2.5f, -5f, 0f),
-        new Vector3(0f, -5f, 0f),
-        new Vector3(2.5f, -5f, 0f),
-        new Vector3(5f, -5f, 0f),
-        new Vector3(7.5f, -5f, 0f)
+        new Vector3(-9f, -6f, 0f),
+        new Vector3(-6f, -6f, 0f),
+        new Vector3(-3f, -6f, 0f),
+        new Vector3(0f, -6f, 0f),
+        new Vector3(3f, -6f, 0f),
+        new Vector3(6f, -6f, 0f),
+        new Vector3(9f, -6f, 0f)
     };
 
-    public List<Vector3> secondPositions = new List<Vector3>
+    private List<Vector3> warningPositions = new List<Vector3>
     {
-        new Vector3(-7.5f, -3f, 0f),
-        new Vector3(-5f, -3f, 0f),
-        new Vector3(-2.5f, -3f, 0f),
-        new Vector3(0f, -3f, 0f),
-        new Vector3(2.5f, -3f, 0f),
-        new Vector3(5f, -3f, 0f),
-        new Vector3(7.5f, -3f, 0f)
-    };
-
-    public List<Vector3> warningPositions = new List<Vector3>
-    {
-        new Vector3(-7.5f, -4.55f, 0f),
-        new Vector3(-5f, -4.55f, 0f),
-        new Vector3(-2.5f, -4.55f, 0f),
+        new Vector3(-9f, -4.55f, 0f),
+        new Vector3(-6f, -4.55f, 0f),
+        new Vector3(-3f, -4.55f, 0f),
         new Vector3(0f, -4.55f, 0f),
-        new Vector3(2.5f, -4.55f, 0f),
-        new Vector3(5f, -4.55f, 0f),
-        new Vector3(7.5f, -4.55f, 0f)
+        new Vector3(3f, -4.55f, 0f),
+        new Vector3(6f, -4.55f, 0f),
+        new Vector3(9f, -4.55f, 0f)
     };
 
     private float startTime;
     float xPos;
     float yPos;
     float[] previousXPositions = new float[3]; // 이전 3개의 xPos 값을 저장할 배열 선언
-    int currentIndex = 0; // 현재 저장할 인덱스를 나타내는 변수 선언
+    //int currentIndex = 0; // 현재 저장할 인덱스를 나타내는 변수 선언
     private List<GameObject> weaselObjects;
+    private bool ReadyToJump = false;
 
     private void OnEnable()
     {
@@ -93,12 +84,13 @@ public class Pattern888bbb : MonoBehaviour
     {
         Destroy(gameObject, 10f);
         weaselObjects = new List<GameObject>(); // 초기화를 여기서 수행
-        StartCoroutine(Pattern8bFirst());
+        //StartCoroutine(Pattern8bFirst());
         StartCoroutine(Pattern8bSecond());
         StartCoroutine(Pattern8bFly());
         yield return null;
     }
 
+    /*
     private IEnumerator Pattern8bFirst()
     {
         for (int i = 0; i < firstweaselTimings.Length; i++)
@@ -132,6 +124,7 @@ public class Pattern888bbb : MonoBehaviour
             StartCoroutine(SpawnWeasel(xPos, yPos));
         }
     }
+    */
 
     private IEnumerator Pattern8bSecond()
     {
@@ -156,6 +149,7 @@ public class Pattern888bbb : MonoBehaviour
         StartCoroutine(FlyingWeasels(weaselObjects));
     }
 
+    //2023.08.27 패턴 폐기 결정
     private IEnumerator SpawnWeasel(float xPos, float yPos)
     {
         Vector3 warningPosition = new Vector3(xPos, yPos, 0f);
@@ -223,62 +217,71 @@ public class Pattern888bbb : MonoBehaviour
         Vector3 warningPosition = warningPositions[i];
         GameObject newWarning = Instantiate(weaselwarning, warningPosition, Quaternion.identity);
 
-        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
         newWarning.transform.rotation = Quaternion.Euler(0f, 0f, -90f);
-        if (warningRenderer != null)
+
+        // 경고 오브젝트와 자식 오브젝트의 Sprite Renderer 배열 얻기
+        SpriteRenderer[] warningRenderers = newWarning.GetComponentsInChildren<SpriteRenderer>();
+
+        Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+        foreach (SpriteRenderer renderer in warningRenderers)
         {
-            warningRenderer.sortingOrder = int.MaxValue;
+            renderer.color = targetColor;
         }
 
-        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
-        Color originalColor = warningRenderer.color;
-        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
-
-        float totalTime = 0.5f; // 전체 시간 (0.5초)
-        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
-
+        float totalTime = 0.25f;
         float elapsedTime = 0f;
-
         while (elapsedTime < totalTime)
         {
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3초 동안은 완전히 불투명하게 유지
-            if (elapsedTime <= fadeInDuration)
+            foreach (SpriteRenderer renderer in warningRenderers)
             {
-                warningRenderer.color = originalColor;
-            }
-            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
-            else //0.3초가 지남
-            {
-                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
-                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+                renderer.color = Color.Lerp(targetColor, Color.red, t);
             }
 
             yield return null;
         }
 
-        // 경고 오브젝트 제거
+        elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(Color.red, targetColor, t);
+            }
+
+            yield return null;
+        }
+
         Destroy(newWarning);
 
-        GameObject weaselObject = Instantiate(weasel, new Vector3(firstPositions[i].x, -6.12f, firstPositions[i].z), Quaternion.identity);
+        GameObject weaselObject = Instantiate(weasel, firstPositions[i], Quaternion.identity);
         weaselObjects.Add(weaselObject);
 
         Rigidbody2D weaselRigidbody = weaselObject.GetComponent<Rigidbody2D>();
         weaselRigidbody.velocity = Vector2.up * 5f;
-        while (weaselObject.transform.position.y < -3.963f)
+
+        while (weaselObject.transform.position.y < -4.5f)
         {
             yield return null;
         }
+
         weaselRigidbody.velocity = Vector2.zero;
+
+        if (weaselObjects.Count == 7)
+        {
+            ReadyToJump = true;
+        }
     }
 
     private IEnumerator FlyingWeasels(List<GameObject> weaselObjects)
     {
-        while (GetElapsedTime() < 4.2f)
+        while (!ReadyToJump)
         {
-            // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
             yield return null;
         }
 
@@ -328,8 +331,8 @@ public class Pattern888bbb : MonoBehaviour
 
     private bool IsWithinMapBounds(Vector3 position)
     {
-        float minX = -10f;
-        float maxX = 10f;
+        float minX = -11f;
+        float maxX = 11f;
         float minY = -7f;
         float maxY = 5f;
 

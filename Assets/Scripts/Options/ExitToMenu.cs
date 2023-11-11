@@ -13,7 +13,13 @@ public class ExitToMenu : MonoBehaviour
     {
         Option.SetActive(false);
         musicsource.Stop();
-            
-        SceneManager.LoadScene("SceneMenu_01");
+
+        if (Time.timeScale != 1f)
+        {
+            Time.timeScale = 1f;
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        }
+
+        SceneManager.LoadScene("SceneMenu_01", LoadSceneMode.Single);
     }
 }

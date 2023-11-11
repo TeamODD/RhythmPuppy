@@ -1,31 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LoadingFadeOut : MonoBehaviour
 {
-    private float time;
     [SerializeField]
     private SpriteRenderer Loading;
+    bool isSceneLoaded;
+    float a;
+
+    void Awake()
+    {
+        a = 1f;
+        isSceneLoaded = false;
+    }
+
+    void Update()
+    {
+        if (!isSceneLoaded) return;
+        if(GameObject.Find("corgiFace")) //이 if문은 메뉴로 돌아올시 메뉴인지 확인하기 위함
+            gameObject.transform.position = new Vector3(Menu_PlayerTransform.corgi_posX, 2.49f, 0);
+        if (a <= 0) Destroy(gameObject);
+
+        Loading.color = new Color(0, 0, 0, a);
+        a -= Time.deltaTime * 0.2f;
+    }
 
     public void FadeOut()
     {
-        StartCoroutine(FadeOutI());
+        isSceneLoaded = true;
     }
 
-    public IEnumerator FadeOutI()
+    /*public IEnumerator FadeOutI()
     {
-        Destroy(gameObject, 3f);
-        time = 0;
-        while (time < 1f)
-        {
-            Loading.color = new Color(0, 0, 0, 1 - time);
-            yield return new WaitForFixedUpdate();
-        }
-        yield break;
-    }
-    void Update()
-    {
-        time += Time.deltaTime;
-    }
+        WaitUntil w = new WaitUntil(() => !operation.isDone);
+        yield return w;
+        c = null;
+    }*/
 }

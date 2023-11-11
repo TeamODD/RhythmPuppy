@@ -64,7 +64,7 @@ public class Pattern13 : MonoBehaviour
         // 경고 오브젝트 제거
         Destroy(newWarning);
 
-        Vector3 thorstemPosition = new Vector3(-4.86f, -15.3f, 0f);
+        Vector3 thorstemPosition = new Vector3(-4.86f, -25f, 0f);
         GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);
 
         Rigidbody2D newthorstemRigidbody = newthorstem.GetComponent<Rigidbody2D>();
@@ -80,7 +80,7 @@ public class Pattern13 : MonoBehaviour
             }
         }
 
-        while (newthorstem.transform.position.y < -4.60f)
+        while (newthorstem.transform.position.y < -5.5f)
         {
             yield return null;
         }
@@ -96,24 +96,15 @@ public class Pattern13 : MonoBehaviour
             }
         }
 
-        
+        newthorstem.transform.Rotate(Vector3.back * swingspeed * Time.deltaTime);
 
-        float targetAngle = 240; // 목표 회전 각도 (90도)
-        float rotationSpeed = targetAngle / rotationDuration; // 초당 회전 각도 계산
-
-        float rotationElapsedTime = 0f;
-
-        while (rotationElapsedTime < rotationDuration)
+        while (newthorstem.transform.rotation.eulerAngles.z > 250f)
         {
-            float rotationAmount = rotationSpeed * Time.deltaTime;
-            newthorstem.transform.Rotate(Vector3.back * rotationAmount);
-
-            rotationElapsedTime += Time.deltaTime;
-
-            Debug.Log(rotationElapsedTime);
-
+            newthorstem.transform.Rotate(Vector3.back * swingspeed * Time.deltaTime);
             yield return null;
         }
+
+        Destroy(newthorstem);
         Destroy(gameObject);
     }
 }
