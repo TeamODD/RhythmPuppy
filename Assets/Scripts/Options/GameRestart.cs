@@ -9,12 +9,20 @@ using static EventManagement.StageEvent;
 public class GameRestart : MonoBehaviour
 {
     EventManager eventManager;
+    
     public void onRestart()
     {
         eventManager = FindObjectOfType<EventManager>();
 
         Scene currentScene = SceneManager.GetActiveScene();
         string sceneName = currentScene.name;
+
+        //커튼
+        GameObject CurtainObject = GameObject.FindGameObjectWithTag("Curtain");
+        CurtainObject.transform.SetParent(null, false); //worldpositionstays bool 인자 false로
+        Curtain curtain = GameObject.FindGameObjectWithTag("Curtain").GetComponent<Curtain>();
+        DontDestroyOnLoad(curtain);
+        curtain.CurtainClose();
 
         if (sceneName.StartsWith("SceneStage"))
         {

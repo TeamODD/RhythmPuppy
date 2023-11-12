@@ -1113,6 +1113,18 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 2099564463}
+    - target: {fileID: 5452003685390888150, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_RenderMode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6215351028057942965, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_Maskable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6215351028057942965, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6279042797299042890, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1121,10 +1133,18 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6388878635342885976, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6519054885089436166, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_TagString
+      value: Curtain
+      objectReference: {fileID: 0}
     - target: {fileID: 7785910521463230750, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_VideoClip
       value: 
-      objectReference: {fileID: 32900000, guid: 43a3f753fc974184687a06d2d3400a25, type: 3}
+      objectReference: {fileID: 32900000, guid: 9946038a1d14a544a8e0fdd83b8a94d4, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
 --- !u!1 &1167593447 stripped
@@ -1513,7 +1533,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2099564461}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6de40b93ac4d83e44a4d2b00c64e82a8, type: 3}
   m_Name: 
@@ -1531,7 +1551,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc72f9992f03bf148b4e69d959810e49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShakeAmount: 0.1
+  ShakeAmount: 0.2
 --- !u!1001 &2103192932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1541,6 +1561,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -4500674409776528799, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: shootCooltime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2501150029612411199, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_UpdateMode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -57217199681390872, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}

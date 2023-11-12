@@ -52,6 +52,7 @@ public class PatternManager_1 : MonoBehaviour
     [SerializeField]
     private GameObject MainCamera;
     CameraShake Camera;
+    private GrayFilmEffect GrayScript;
 
     Dictionary<Type, float> patternCount;
     EventManager eventManager;
@@ -92,6 +93,7 @@ public class PatternManager_1 : MonoBehaviour
         audioSource.clip = music;
         eventManager = FindObjectOfType<EventManager>();
         patternCount = new Dictionary<Type, float>();
+        GrayScript = MainCamera.GetComponent<GrayFilmEffect>();
 
         eventManager.savePointTime = savePointTime;
         eventManager.stageEvent.gameStartEvent += run;
@@ -150,7 +152,7 @@ public class PatternManager_1 : MonoBehaviour
 
         StartCoroutine(PatternGray(51f, startTime));
 
-        StartCoroutine(PatternShake(68f, startTime));
+        StartCoroutine(PatternShake(69f, startTime));
         /*GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc(120f, startTime);*/
     }
 
@@ -407,7 +409,7 @@ public class PatternManager_1 : MonoBehaviour
         if (0 <= t - startTime)
         {
             yield return new WaitForSeconds(t - startTime);
-            MainCamera.GetComponent<GrayFilmEffect>().enabled = true;
+            GrayScript.GrayEffect();
         }
         yield break;
         
