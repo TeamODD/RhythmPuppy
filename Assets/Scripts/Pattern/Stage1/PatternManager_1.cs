@@ -150,7 +150,7 @@ public class PatternManager_1 : MonoBehaviour
 
         StartCoroutine(PatternGray(51f, startTime));
 
-        StartCoroutine(PatternShake(68f, startTime));
+        StartCoroutine(PatternShake(69f, startTime));
         /*GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc(120f, startTime);*/
     }
 
@@ -407,6 +407,7 @@ public class PatternManager_1 : MonoBehaviour
         if (0 <= t - startTime)
         {
             yield return new WaitForSeconds(t - startTime);
+            //MainCamera.GetComponent<GrayFilmEffect>().GrayEffect();
             MainCamera.GetComponent<GrayFilmEffect>().enabled = true;
         }
         yield break;
