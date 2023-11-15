@@ -14,7 +14,7 @@ TagManager:
   - Music
   - Sound
   - Puppy
-  - SoundManager
+  - Curtain
   layers:
   - Default
   - TransparentFX

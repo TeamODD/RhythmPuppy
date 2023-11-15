@@ -15,7 +15,6 @@ public class GrayFilmEffect : MonoBehaviour
         grayScale = 0f; 
         applytime = 2f;
         CameraMaterial = new Material(Shader.Find("Custom/Grayscale"));
-        GrayEffect();
     }
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
@@ -38,7 +37,7 @@ public class GrayFilmEffect : MonoBehaviour
             grayScale = elapsedtime / applytime;
             yield return null;
         }
-        yield return new WaitForSeconds(32f);
+        yield return new WaitForSeconds(30f);
 
         //Èæ¹é È¿°ú ²ô±â
         elapsedtime = 0f;
