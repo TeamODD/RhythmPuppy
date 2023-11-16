@@ -80,13 +80,13 @@ public class Pattern12 : MonoBehaviour
         float thorstemPosX;
         if (PlayerCorgi_Xpos < 0f)
         {
-            thorstemPosX = 20f;
+            thorstemPosX = 5f;
         }
         else
         {
-            thorstemPosX = -20f;
+            thorstemPosX = -5f;
         }
-        float thorstemPosY = 0f + (thorstemPosX + 5f) * tanValue;
+        float thorstemPosY = -12f;//= 0f + (thorstemPosX + 5f) * tanValue;
 
         //Debug.Log(Mathf.Tan(Mathf.Deg2Rad * -randomZRotation));
         //Debug.Log(thorstemPosY);
@@ -116,10 +116,7 @@ public class Pattern12 : MonoBehaviour
             }
         }
 
-        while (newthorstem.transform.position.y < -5f)
-        {
-            yield return null;
-        }
+        yield return new WaitUntil(() => newthorstem.transform.position.y >= 0f);
 
         newthorstemRigidbody.velocity = Vector2.zero;
         foreach (Transform childTransform in newthorstem.transform)

@@ -55,7 +55,13 @@ public class PatternController1_3 : MonoBehaviour
 
     private List<float> pattern15Timings = new List<float>
     {
-
+        1f, 3f, 5f, 7f, 9f,
+        25.9f, 27.4f, 29f, 29.7f, 30.6f, 31.4f, 32.3f, 33.8f,
+        35.4f, 36.2f, 37f, 37.9f, 38.8f, 40.3f, 41.9f, 42.6f, 
+        43.4f, 44.2f, 45f, 46.6f, 48.2f, 49f, 49.8f, 50.6f, 
+        77f, 78.6f, 80.2f, 80.9f, 81.8f, 82.6f, 83.5f, 85.0f,
+        86.6f, 87.4f, 88.2f, 89.1f, 90.0f, 91.5f, 93.1f, 93.8f,
+        94.6f, 95.4f, 96.2f, 97.8f, 99.4f, 100.2f, 101.0f, 101.8f
     };
 
     private float startTime;
