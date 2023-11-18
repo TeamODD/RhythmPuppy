@@ -22,6 +22,9 @@ public class PatternController1_3 : MonoBehaviour
     GameObject pattern14;
     [SerializeField]
     GameObject pattern15;
+    [SerializeField]
+    float DelayTime;
+
     bool isPuppyShown;
 
     private List<float> pattern11Timings = new List<float>
@@ -38,14 +41,12 @@ public class PatternController1_3 : MonoBehaviour
 
     private List<float> pattern12Timings = new List<float>
     {
-    0.3f, 6.7f, 13.1f, 19.5f, 25.9f, 32.3f, 38.7f, 45.1f, 
-    51.5f, 57.9f, 64.3f, 70.7f, 77.1f, 83.5f, 89.9f, 96.3f
+    13.1f, 19.5f, 64.3f, 70.7f
     };
 
     private List<float> pattern13Timings = new List<float>
     {
-    3.5f, 9.9f, 16.3f, 22.7f, 29.1f, 35.5f, 41.9f, 48.3f,
-    54.7f, 61.1f, 67.5f, 73.9f, 80.3f, 86.7f, 93.1f, 99.5f
+    16.3f, 22.7f, 67.5f, 73.9f
     };
 
     private List<float> pattern14Timings = new List<float>
@@ -55,7 +56,6 @@ public class PatternController1_3 : MonoBehaviour
 
     private List<float> pattern15Timings = new List<float>
     {
-        1f, 3f, 5f, 7f, 9f,
         25.9f, 27.4f, 29f, 29.7f, 30.6f, 31.4f, 32.3f, 33.8f,
         35.4f, 36.2f, 37f, 37.9f, 38.8f, 40.3f, 41.9f, 42.6f, 
         43.4f, 44.2f, 45f, 46.6f, 48.2f, 49f, 49.8f, 50.6f, 
@@ -88,7 +88,7 @@ public class PatternController1_3 : MonoBehaviour
 
     void run()
     {
-        startTime = audioSource.time;
+        startTime = audioSource.time - DelayTime;
 
         // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
         StartCoroutine(RunPattern11());
@@ -123,7 +123,7 @@ public class PatternController1_3 : MonoBehaviour
                 continue;
             }
 
-            yield return new WaitForSeconds(timing - audioSource.time);
+            yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
 
             // 패턴을 복제하고 활성화
             GameObject newPattern11 = Instantiate(pattern11, pattern11.transform.position, pattern11.transform.rotation);
@@ -142,7 +142,7 @@ public class PatternController1_3 : MonoBehaviour
                 continue;
             }
 
-            yield return new WaitForSeconds(timing - audioSource.time);
+            yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
 
             // 패턴을 복제하고 활성화
             GameObject newPattern12 = Instantiate(pattern12, pattern12.transform.position, pattern12.transform.rotation);
@@ -162,7 +162,7 @@ public class PatternController1_3 : MonoBehaviour
                 continue;
             }
 
-            yield return new WaitForSeconds(timing - audioSource.time);
+            yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
 
             // 패턴을 복제하고 활성화
             GameObject newPattern13 = Instantiate(pattern13, pattern13.transform.position, pattern13.transform.rotation);
@@ -182,7 +182,7 @@ public class PatternController1_3 : MonoBehaviour
                 continue;
             }
 
-            yield return new WaitForSeconds(timing - audioSource.time);
+            yield return new WaitForSeconds(timing - audioSource.time + 3f);
 
             // 패턴을 복제하고 활성화
             GameObject newPattern14 = Instantiate(pattern14, pattern14.transform.position, pattern14.transform.rotation);
@@ -202,7 +202,7 @@ public class PatternController1_3 : MonoBehaviour
                 continue;
             }
 
-            yield return new WaitForSeconds(timing - audioSource.time);
+            yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
 
             // 패턴을 복제하고 활성화
             GameObject newPattern15 = Instantiate(pattern15, pattern15.transform.position, pattern15.transform.rotation);

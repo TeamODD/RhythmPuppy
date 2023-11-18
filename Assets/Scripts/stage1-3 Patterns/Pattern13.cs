@@ -116,13 +116,13 @@ public class Pattern13 : MonoBehaviour
 
         if (Order % 2 == 0) // 짝수인 경우(실제론 첫번째, 세번째)
         {
-            randomZRotation = Random.Range(5f, 20f);
-            ThorstemXpos = (Order == 0) ? -4f : -2f;
+            randomZRotation = Random.Range(-5f, -20f);
+            ThorstemXpos = (Order == 0) ? -8f : -4f;
         }
         else  // 홀수인 경우(실제론 두번째, 네번째)
         {
-            randomZRotation = Random.Range(-20f, -5f);
-            ThorstemXpos = (Order == 1) ? -8f : -6f;
+            randomZRotation = Random.Range(5f, 20f);
+            ThorstemXpos = (Order == 1) ? -6f : -2f;
         }
         ThorstemXpos = (PlayerCorgi_Xpos < 0f) ? -Mathf.Abs(ThorstemXpos) : Mathf.Abs(ThorstemXpos);
 

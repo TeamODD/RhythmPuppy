@@ -73,6 +73,9 @@ public class GotoSelectStage : MonoBehaviour
                 StartCoroutine(TitleImageCoroutine);
                 StartCoroutine(FadeInObjects(TitleImage));
                 Headphone.SetActive(false);
+                TitleImage.SetActive(true);
+                RhythmPuppyText.SetActive(true);
+                PressAnyKeyToPlayGame.SetActive(true);
 
                 TitleSettingDone = true;
             }
@@ -90,7 +93,7 @@ public class GotoSelectStage : MonoBehaviour
         }
     }
 
-    private IEnumerator Start()
+    private void Start()
     {
         //아무런 행동도 하지 않았을 경우 진행되는 순서
         DevelopmentTeamCoroutine = DevelopmentTeamSetting(DevelopmentTeam, 3f);
@@ -98,43 +101,55 @@ public class GotoSelectStage : MonoBehaviour
         HeadphoneCoroutine = HeadphoneSetting(Headphone, 3f);
         TitleImageCoroutine = TitleSetting();
 
-        yield return new WaitForSeconds(2f);
-        yield return StartCoroutine(DevelopmentTeamCoroutine);
-        DevelopmentTeam.SetActive(false);
-
-        LicenseNotice.SetActive(true);
-        yield return StartCoroutine(LicenseNoticeCoroutine);
-        LicenseNotice.SetActive(false);
-
-        Headphone.SetActive(true);
-        yield return StartCoroutine(HeadphoneCoroutine);
-        Headphone.SetActive(false);
-
-        StartCoroutine(TitleSetting());
-        StartCoroutine(FadeInObjects(TitleImage));
-
-        PressAnyKeyToPlayGame.SetActive(true);
-        TitleSettingDone = true;
+        StartCoroutine(DevelopmentTeamCoroutine);
     }
 
     private IEnumerator DevelopmentTeamSetting(GameObject obj, float time)
     {
-        float startTime = Time.time;
+        //FadeIn 페이드 인, 등장
+        SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
+        Color originalColor = renderer.color;
 
-        while (Time.time - startTime < fadeDuration)
+        float startTime = Time.time; // Save the start time
+
+        while (Time.time - startTime < fadeDuration) // Repeat until elapsed time is less than fadeDuration
         {
             float elapsedTime = Time.time - startTime; // Calculate elapsed time
             float t = Mathf.Clamp01(elapsedTime / fadeDuration);
-            SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>();
 
-            foreach (SpriteRenderer renderer in renderers)
-            {
-                Color originalColor = renderer.color;
-                Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(1f, 0f, t));
-                renderer.color = newColor;
-            }
+            Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(0f, 1f, t));
+            renderer.color = newColor;
+
             yield return null;
         }
+
+        // Set the alpha value to exactly 1 to make it completely opaque.
+        renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+
+        yield return new WaitForSeconds(time); //대기시간
+
+        //FadeOut 페이드 아웃, 퇴장
+        startTime = Time.time;
+
+        while (Time.time - startTime < fadeDuration) // Repeat until elapsed time is less than fadeDuration
+        {
+            float elapsedTime = Time.time - startTime; // Calculate elapsed time
+            float t = Mathf.Clamp01(elapsedTime / fadeDuration);
+
+            Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(1f, 0f, t));
+            renderer.color = newColor;
+
+            yield return null;
+        }
+
+        // Set the alpha value to exactly 1 to make it completely opaque.
+        renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+
+        IsDevelopmentTeamSettingDone = true;
+
+        DevelopmentTeam.SetActive(false);
+        LicenseNotice.SetActive(true);
+        yield return StartCoroutine(LicenseNoticeCoroutine);
     }
 
     private IEnumerator LicenseNoticeSetting(GameObject obj, float time)
@@ -177,6 +192,12 @@ public class GotoSelectStage : MonoBehaviour
 
         // Set the alpha value to exactly 1 to make it completely opaque.
         renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+
+        IsLicenseNoticeSettingDone = true;
+
+        LicenseNotice.SetActive(false);
+        Headphone.SetActive(true);
+        yield return StartCoroutine(HeadphoneCoroutine);
     }
 
     private IEnumerator HeadphoneSetting(GameObject obj, float time)
@@ -219,13 +240,21 @@ public class GotoSelectStage : MonoBehaviour
 
         // Set the alpha value to exactly 1 to make it completely opaque.
         renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+
+        IsHeadphoneSettingDone = true;
+
+        Headphone.SetActive(false);
+        TitleImage.SetActive(true);
+        RhythmPuppyText.SetActive(true);
+        PressAnyKeyToPlayGame.SetActive(true);
+
+        StartCoroutine(TitleImageCoroutine);
+        StartCoroutine(FadeInObjects(TitleImage));
+        TitleSettingDone = true;
     }
 
     private IEnumerator TitleSetting()
     {
-        TitleImage.SetActive(true);
-        RhythmPuppyText.SetActive(true);
-
         SpriteRenderer renderer = TitleImage.GetComponent<SpriteRenderer>();
         Color originalColor = renderer.color;
         renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
@@ -248,6 +277,8 @@ public class GotoSelectStage : MonoBehaviour
         RhythmPuppyTextRid2D.velocity = Vector2.zero;
         StartCoroutine(FadeInText(PressAnyKeyToPlayGame));
         fadeDuration = 1f;
+
+        TitleSettingDone = true;
     }
 
     private IEnumerator FadeInObjects(GameObject obj)
@@ -293,7 +324,6 @@ public class GotoSelectStage : MonoBehaviour
         // Set the alpha value to exactly 1 to make it completely opaque.
         renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
     }
-
 
     private IEnumerator FadeInText(GameObject obj)
     {

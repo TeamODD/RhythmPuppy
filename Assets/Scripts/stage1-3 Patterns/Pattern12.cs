@@ -38,7 +38,11 @@ public class Pattern12 : MonoBehaviour
         }
 
         // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(0f, -5f, 0f);
+        float warningXPos = 0f;
+        float warningYPos = -5f;
+        float warningZPos = 0f;
+
+        Vector3 warningPosition = new Vector3(warningXPos, warningYPos, warningZPos);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
         newWarning.transform.rotation = Quaternion.Euler(0f, 0f, randomZRotation);
@@ -76,20 +80,19 @@ public class Pattern12 : MonoBehaviour
         // 경고 오브젝트 제거
         Destroy(newWarning);
 
-        float tanValue = Mathf.Tan(Mathf.Deg2Rad * (90 + randomZRotation));
+        float tanValue = Mathf.Tan(randomZRotation * Mathf.PI / 180f + Mathf.PI / 2);
+
         float thorstemPosX;
         if (PlayerCorgi_Xpos < 0f)
         {
-            thorstemPosX = 5f;
+            thorstemPosX = 10f;
         }
         else
         {
-            thorstemPosX = -5f;
+            thorstemPosX = -10f;
         }
-        float thorstemPosY = -12f;//= 0f + (thorstemPosX + 5f) * tanValue;
-
-        //Debug.Log(Mathf.Tan(Mathf.Deg2Rad * -randomZRotation));
-        //Debug.Log(thorstemPosY);
+        float thorstemPosY = tanValue * (thorstemPosX - warningXPos) + warningYPos;
+        Debug.Log(thorstemPosY);
 
         Vector3 thorstemPosition = new Vector3(thorstemPosX, thorstemPosY, 0f);
         GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);
@@ -106,27 +109,9 @@ public class Pattern12 : MonoBehaviour
 
         newthorstemRigidbody.velocity = diagonalVelocity;
 
-        // 자식 오브젝트도 함께 움직이도록 설정
-        foreach (Transform childTransform in newthorstem.transform)
-        {
-            Rigidbody2D childRigidbody = childTransform.GetComponent<Rigidbody2D>();
-            if (childRigidbody != null)
-            {
-                childRigidbody.velocity = diagonalVelocity;
-            }
-        }
-
         yield return new WaitUntil(() => newthorstem.transform.position.y >= 0f);
 
         newthorstemRigidbody.velocity = Vector2.zero;
-        foreach (Transform childTransform in newthorstem.transform)
-        {
-            Rigidbody2D childRigidbody = childTransform.GetComponent<Rigidbody2D>();
-            if (childRigidbody != null)
-            {
-                childRigidbody.velocity = Vector2.zero;
-            }
-        }
 
         yield return FadeOut(newthorstem, 255f, 0f);
 

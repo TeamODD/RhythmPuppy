@@ -37,6 +37,7 @@ public class PlaySelectSound : MonoBehaviour
     {
         theAudio.PlayOneShot(audioClipSelect[1]);
     }
+    /*
     public void World1_Walking()
     {
         theAudio.clip = Walking[0];
@@ -47,6 +48,7 @@ public class PlaySelectSound : MonoBehaviour
         theAudio.clip = Walking[1];
         theAudio.Play();
     }
+    */
     public void ChangeMusic()
     {
         if (Music_Stage[currentIndex] == null)
