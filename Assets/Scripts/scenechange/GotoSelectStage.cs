@@ -106,6 +106,8 @@ public class GotoSelectStage : MonoBehaviour
 
     private IEnumerator DevelopmentTeamSetting(GameObject obj, float time)
     {
+        DevelopmentTeam.SetActive(true);
+
         //FadeIn 페이드 인, 등장
         SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
         Color originalColor = renderer.color;
@@ -148,12 +150,13 @@ public class GotoSelectStage : MonoBehaviour
         IsDevelopmentTeamSettingDone = true;
 
         DevelopmentTeam.SetActive(false);
-        LicenseNotice.SetActive(true);
         yield return StartCoroutine(LicenseNoticeCoroutine);
     }
 
     private IEnumerator LicenseNoticeSetting(GameObject obj, float time)
     {
+        LicenseNotice.SetActive(true);
+
         //FadeIn 페이드 인, 등장
         SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
         Color originalColor = renderer.color;
@@ -196,12 +199,13 @@ public class GotoSelectStage : MonoBehaviour
         IsLicenseNoticeSettingDone = true;
 
         LicenseNotice.SetActive(false);
-        Headphone.SetActive(true);
         yield return StartCoroutine(HeadphoneCoroutine);
     }
 
     private IEnumerator HeadphoneSetting(GameObject obj, float time)
     {
+        Headphone.SetActive(true);
+
         //FadeIn 페이드 인, 등장
         SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
         Color originalColor = renderer.color;
@@ -244,17 +248,17 @@ public class GotoSelectStage : MonoBehaviour
         IsHeadphoneSettingDone = true;
 
         Headphone.SetActive(false);
-        TitleImage.SetActive(true);
-        RhythmPuppyText.SetActive(true);
-        PressAnyKeyToPlayGame.SetActive(true);
 
         StartCoroutine(TitleImageCoroutine);
         StartCoroutine(FadeInObjects(TitleImage));
-        TitleSettingDone = true;
     }
 
     private IEnumerator TitleSetting()
     {
+        TitleImage.SetActive(true);
+        RhythmPuppyText.SetActive(true);
+        PressAnyKeyToPlayGame.SetActive(true);
+
         SpriteRenderer renderer = TitleImage.GetComponent<SpriteRenderer>();
         Color originalColor = renderer.color;
         renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
