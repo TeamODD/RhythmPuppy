@@ -14,7 +14,6 @@ public class Curtain : MonoBehaviour
     
     void Start()
     {
-        CurtainClose();
         //Invoke("CurtainOpen", 3f);
     }
 
@@ -25,15 +24,14 @@ public class Curtain : MonoBehaviour
 
     IEnumerator CurtainCloseCoroutine()
     {
+        Video.clip = CloseClip;
         //RawImage.SetActive(true);
-        Video.Play();
+        Video.Prepare();
+        if (Video.isPrepared)
+            Video.Play();
 
         yield return new WaitForSeconds(3f);
 
-        Video.playbackSpeed = 0f;
-
-        Video.Play();
-        
         yield break;
     }
 
@@ -44,7 +42,14 @@ public class Curtain : MonoBehaviour
 
     IEnumerator CurtainOpenCoroutine()
     {
+        Video.clip = OpenClip;
 
+        Video.Prepare();
+        yield return Video.isPrepared;
+        if (Video.isPrepared)
+            Video.Play();
+
+        yield return new WaitForSeconds(3f);
 
         yield break;
     }

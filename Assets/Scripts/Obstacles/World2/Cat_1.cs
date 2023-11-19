@@ -23,6 +23,8 @@ namespace Obstacles
         void FixedUpdate()
         {
             physicalCalculation();
+            if (transform.position.y < 0)
+                gameObject.GetComponent<Rigidbody2D>().simulated = false;
             if (transform.position.y < -3f)
                 Destroy(gameObject);
         }
@@ -30,6 +32,7 @@ namespace Obstacles
         public void init()
         {
             velocity = new Vector3(0, force, 0);
+            //gameObject.GetComponent<Rigidbody2D>().GetShapes(PhysicsShapeType2D.Polygon, gameObject());
         }
 
         private void physicalCalculation()

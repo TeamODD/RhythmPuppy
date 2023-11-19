@@ -1037,6 +1037,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 560664134356053816, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_Texture
+      value: 
+      objectReference: {fileID: 8400000, guid: b8413181cb4876a40b6fd7f2ea11dcde, type: 2}
+    - target: {fileID: 560664134356053816, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_Maskable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 560664134356053816, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1338004346022117870, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1136,15 +1148,27 @@ PrefabInstance:
     - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_VideoClip
       value: 
-      objectReference: {fileID: 32900000, guid: b18883aca4c8f304f98c921416bcf01a, type: 3}
+      objectReference: {fileID: 32900000, guid: 9946038a1d14a544a8e0fdd83b8a94d4, type: 3}
+    - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_RenderMode
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_SkipOnDrop
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_PlaybackSpeed
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_TargetTexture
+      value: 
+      objectReference: {fileID: 8400000, guid: b8413181cb4876a40b6fd7f2ea11dcde, type: 2}
     - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_WaitForFirstFrame
       value: 1
