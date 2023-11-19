@@ -34,6 +34,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     [SerializeField]
     private float speed;
     private float time;
+    private float lastInputTime;
     private bool onInputDelay;
     public static bool ReadyToGoStage;
     public static bool IsPaused; //옵션창에서 Enter 키 중단
@@ -177,7 +178,7 @@ public class Menu_PlayerTransform : MonoBehaviour
                     break;
             }
         }
-
+        
     }
 
     IEnumerator move(string s)
