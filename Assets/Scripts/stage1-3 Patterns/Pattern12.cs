@@ -10,6 +10,8 @@ public class Pattern12 : MonoBehaviour
     private GameObject warning;
     [SerializeField]
     private float thorwingspeed; //가시덤블을 날리는 속도
+    [SerializeField]
+    private GameObject PlayerCorgi;
 
     private void OnEnable()
     {
@@ -23,11 +25,22 @@ public class Pattern12 : MonoBehaviour
 
     private IEnumerator pattern()
     {
+        float randomZRotation;
+        float PlayerCorgi_Xpos = PlayerCorgi.transform.position.x;
+
+        if (PlayerCorgi_Xpos < 0f)
+        {
+            randomZRotation = Random.Range(30f, 60f);
+        }
+        else
+        {
+            randomZRotation = Random.Range(-30f, -60f);
+        }
+
         // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(-4.56f, -4.49f, 0f);
+        Vector3 warningPosition = new Vector3(0f, -5f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
-        float randomZRotation = Random.Range(-80f, -40f);
         newWarning.transform.rotation = Quaternion.Euler(0f, 0f, randomZRotation);
 
         // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
@@ -64,11 +77,19 @@ public class Pattern12 : MonoBehaviour
         Destroy(newWarning);
 
         float tanValue = Mathf.Tan(Mathf.Deg2Rad * (90 + randomZRotation));
-        float thorstemPosX = -20f;
-        float thorstemPosY = -4.49f + (thorstemPosX + 4.56f) * tanValue;
+        float thorstemPosX;
+        if (PlayerCorgi_Xpos < 0f)
+        {
+            thorstemPosX = 20f;
+        }
+        else
+        {
+            thorstemPosX = -20f;
+        }
+        float thorstemPosY = 0f + (thorstemPosX + 5f) * tanValue;
 
-        Debug.Log(Mathf.Tan(Mathf.Deg2Rad * -randomZRotation));
-        Debug.Log(thorstemPosY);
+        //Debug.Log(Mathf.Tan(Mathf.Deg2Rad * -randomZRotation));
+        //Debug.Log(thorstemPosY);
 
         Vector3 thorstemPosition = new Vector3(thorstemPosX, thorstemPosY, 0f);
         GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);
@@ -95,12 +116,54 @@ public class Pattern12 : MonoBehaviour
             }
         }
 
-        while (newthorstem.transform.position.y < 5.79f)
+        while (newthorstem.transform.position.y < -5f)
         {
             yield return null;
         }
 
+        newthorstemRigidbody.velocity = Vector2.zero;
+        foreach (Transform childTransform in newthorstem.transform)
+        {
+            Rigidbody2D childRigidbody = childTransform.GetComponent<Rigidbody2D>();
+            if (childRigidbody != null)
+            {
+                childRigidbody.velocity = Vector2.zero;
+            }
+        }
+
+        yield return FadeOut(newthorstem, 255f, 0f);
+
         Destroy(newthorstem);
         Destroy(gameObject);
+    }
+
+    private IEnumerator FadeOut(GameObject obj, float initialAlpha, float finalAlpha)
+    {
+        float elapsedTime = 0f;
+        float fadeDuration = 1.0f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            float currentAlpha = Mathf.Lerp(initialAlpha, finalAlpha, elapsedTime / fadeDuration); //최종 투명도값과 초기 투명도값을 바꿔 작성한 게 맞음.
+
+            // 0에서 255 사이의 값으로 투명도 제한
+            currentAlpha = Mathf.Clamp(currentAlpha, 0f, 255f);
+
+            SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>();
+
+            foreach (SpriteRenderer renderer in renderers)
+            {
+                Color color = renderer.color;
+
+                // 0부터 255 범위의 값을 0부터 1 사이의 실수로 변환
+                float normalizedAlpha = currentAlpha / 255.0f;
+
+                color.a = normalizedAlpha; // 투명도 값 변경
+                renderer.color = color; // 변경된 투명도 설정
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
     }
 }

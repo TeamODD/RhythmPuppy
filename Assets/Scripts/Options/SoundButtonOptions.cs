@@ -13,20 +13,29 @@ public class SoundButtonOptions : MonoBehaviour
     private float volumeIncrement = 0.1f; // 볼륨 증가량 조절
 
     private AudioSource StageMusic;
+    private AudioSource StageSound;
+
     private float StageMusicVolumeIncrement;
+    private float StageSoundVolumeIncrement;
 
     private float MusicVolume;
     private float SfxVolume;
 
     private void Start()
     {
-        GameObject StageMusicObject = GameObject.FindGameObjectWithTag("Music");
+        GameObject StageMusicObject = GameObject.FindGameObjectWithTag("MusicManager");
         if (StageMusicObject != null)
         {
             StageMusic = StageMusicObject.GetComponent<AudioSource>();
         }
 
-        if (PlayerPrefs.HasKey("MusicVolume"))
+        GameObject StageSoundObject = GameObject.FindGameObjectWithTag("SoundManager");
+        if (StageSoundObject != null)
+        {
+            StageSound = StageSoundObject.GetComponent<AudioSource>();
+        }
+
+            if (PlayerPrefs.HasKey("MusicVolume"))
         {
             MusicVolume = PlayerPrefs.GetFloat("MusicVolume");
             StageMusicVolumeIncrement = PlayerPrefs.GetFloat("StageMusicVolumeIncrement");
@@ -46,7 +55,18 @@ public class SoundButtonOptions : MonoBehaviour
         if (PlayerPrefs.HasKey("SfxVolume"))
         {
             SfxVolume = PlayerPrefs.GetFloat("SfxVolume");
+            StageSoundVolumeIncrement = PlayerPrefs.GetFloat("StageSoundVolumeIncrement");
+
             sfxsource.volume = SfxVolume;
+
+            if (StageMusic != null && StageMusic.volume != 0)
+            {
+                StageMusic.volume = MusicVolume * 10 * StageMusicVolumeIncrement;
+            }
+            else if (StageMusic != null && StageMusic.volume == 0)
+            {
+                StageMusic.volume += StageMusicVolumeIncrement;
+            }
         }
         UpdateMusicText();
         UpdateSfxText();
@@ -79,6 +99,11 @@ public class SoundButtonOptions : MonoBehaviour
     public void IncreaseSfxVolume()
     {
         sfxsource.volume = Mathf.Clamp01(sfxsource.volume + volumeIncrement);
+        if (StageSound != null)
+        {
+            StageSound.volume = Mathf.Clamp01(StageSound.volume + StageSoundVolumeIncrement);
+        }
+
         PlayerPrefs.SetFloat("SfxVolume", sfxsource.volume);
         UpdateSfxText();
     }
@@ -86,6 +111,11 @@ public class SoundButtonOptions : MonoBehaviour
     public void DecreaseSfxVolume()
     {
         sfxsource.volume = Mathf.Clamp01(sfxsource.volume - volumeIncrement);
+        if (StageSound != null)
+        {
+            StageSound.volume = Mathf.Clamp01(StageSound.volume - StageSoundVolumeIncrement);
+        }
+
         PlayerPrefs.SetFloat("SfxVolume", sfxsource.volume);
         UpdateSfxText();
     }

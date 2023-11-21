@@ -2287,6 +2287,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2028422510174846913, guid: 743441a081cac604ba926695b4bbb142, type: 3}
     - target: {fileID: 5901459855511751505, guid: 4147df10fc4e86547954e32b4db8a3c7, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 496841131}
+    - target: {fileID: 5901459855511751505, guid: 4147df10fc4e86547954e32b4db8a3c7, type: 3}
       propertyPath: puppyPrefab
       value: 
       objectReference: {fileID: 7788082564123900340, guid: c17b1de3fca103f40a24a23313350430, type: 3}

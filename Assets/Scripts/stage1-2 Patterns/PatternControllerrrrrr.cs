@@ -9,6 +9,8 @@ public class PatternControllerrrrrr : MonoBehaviour
     [SerializeField]
     AudioClip music;
     [SerializeField]
+    AudioSource audioSource;
+    [SerializeField]
     float[] savePointTime;
     [SerializeField]
     private GameObject pattern6;
@@ -93,15 +95,12 @@ public class PatternControllerrrrrr : MonoBehaviour
     };
 
     private float startTime;
-    /*private float savePointTime;*/
     EventManager eventManager;
-    AudioSource audioSource;
 
     private void Start()
     {
         isPuppyShown = false;
         eventManager = FindObjectOfType<EventManager>();
-        audioSource = FindObjectOfType<AudioSource>();
         audioSource.clip = music;
         eventManager.savePointTime = savePointTime;
         eventManager.playerEvent.deathEvent += deathEvent;
@@ -119,71 +118,8 @@ public class PatternControllerrrrrr : MonoBehaviour
         pattern8c.SetActive(false);
         pattern9.SetActive(false);
         pattern10.SetActive(false);
-        /*Checkingsavepoint();*/
-        /*gameprogress.GetComponent<GameProgress>().SettingCheckPoint();*/
-
-        /*// 패턴1, 패턴2, 패턴3 스크립트를 비활성화
-        pattern6.SetActive(false);
-        pattern7a.SetActive(false);
-        pattern7b.SetActive(false);
-        pattern8a.SetActive(false);
-        pattern8b.SetActive(false);
-        pattern8c.SetActive(false);
-        pattern9.SetActive(false);
-        pattern10.SetActive(false);
-        // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
-
-        StartCoroutine(RunPattern6());
-        StartCoroutine(RunPattern7a());
-        StartCoroutine(RunPattern7b());
-        StartCoroutine(RunPattern8a());
-        StartCoroutine(RunPattern8b());
-        StartCoroutine(RunPattern8c());
-        StartCoroutine(RunPattern9());
-        StartCoroutine(RunPattern10());*/
-        // 추가 패턴 실행 메서드들도 필요에 따라 추가
     }
 
-    /*
-    private void OnEnable()
-    {
-        Checkingsavepoint();
-        gameprogress.GetComponent<GameProgress>().SettingCheckPoint();
-
-        // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
-        pattern6.SetActive(false);
-        pattern7a.SetActive(false);
-        pattern7b.SetActive(false);
-        pattern8a.SetActive(false);
-        pattern8b.SetActive(false);
-        pattern8c.SetActive(false);
-        pattern9.SetActive(false);
-        pattern10.SetActive(false);
-        // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
-
-        StartCoroutine(RunPattern6());
-        StartCoroutine(RunPattern7a());
-        StartCoroutine(RunPattern7b());
-        StartCoroutine(RunPattern8a());
-        StartCoroutine(RunPattern8b());
-        StartCoroutine(RunPattern8c());
-        StartCoroutine(RunPattern9());
-        StartCoroutine(RunPattern10());
-        // 추가 패턴 실행 메서드들도 필요에 따라 추가
-    }
-    */
-
-    /*private void OnDisable()
-    {
-        StopCoroutine(RunPattern6());
-        StopCoroutine(RunPattern7a());
-        StopCoroutine(RunPattern7b());
-        StopCoroutine(RunPattern8a());
-        StopCoroutine(RunPattern8b());
-        StopCoroutine(RunPattern8c());
-        StopCoroutine(RunPattern9());
-        StopCoroutine(RunPattern10());
-    }*/
     void run()
     {
         startTime = audioSource.time;
@@ -208,40 +144,6 @@ public class PatternControllerrrrrr : MonoBehaviour
             GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc();
         }
     }
-
-    /*private void Checkingsavepoint() //현재 GameProgress에서 음악 구간과 진행도 바는 설정해주는 상황
-    {
-        float  checkpointTime = PlayerPrefs.GetFloat("checkpointTime");
-       
-        if (checkpointTime == 0)
-        {
-            startTime = Time.time;
-        }
-        else if (checkpointTime == 39.6669f)
-        {
-            startTime = Time.time - 39.6669f;
-        }
-        else if (checkpointTime == 79.3338f)
-        {
-            startTime = Time.time - 79.3338f;
-        }
-        else if (checkpointTime == 119.0008f)
-        {
-            startTime = Time.time - 119.0008f;
-        }
-    }*/
-
-    /*private float GetElapsedTime()
-    {
-        float elapsedTime = Time.time - startTime;
-        float roundedElapsedTime = Mathf.Round(elapsedTime * 10f) / 10f; // 소수 첫째 자리까지 반올림
-        return roundedElapsedTime;
-    }*/
-
-    /*private void Update()
-    {
-        //Debug.Log("GetElapsedTime : " + GetElapsedTime());
-    }*/
 
     private IEnumerator RunPattern6()
     {
@@ -425,7 +327,7 @@ public class PatternControllerrrrrr : MonoBehaviour
             /*while (GetElapsedTime() != timing)
             {
                 // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                yield return null;
+                yield return null;  
             }*/
             yield return new WaitForSeconds(timing - audioSource.time);
             // 패턴을 복제하고 활성화
@@ -436,14 +338,6 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     void deathEvent()
     {
-        /*StopCoroutine(RunPattern6());
-        StopCoroutine(RunPattern7a());
-        StopCoroutine(RunPattern7b());
-        StopCoroutine(RunPattern8a());
-        StopCoroutine(RunPattern8b());
-        StopCoroutine(RunPattern8c());
-        StopCoroutine(RunPattern9());
-        StopCoroutine(RunPattern10());*/
         StopAllCoroutines();
     }
 }

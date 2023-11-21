@@ -1,7 +1,10 @@
 using EventManagement;
+using SceneData;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using static PlayerEvent;
 
 public class PatternManager_1 : MonoBehaviour
 {
@@ -18,6 +21,8 @@ public class PatternManager_1 : MonoBehaviour
 
     [SerializeField]
     float[] savePointTime;
+    [SerializeField]
+    AudioSource audioSource;
     [SerializeField]
     AudioClip music;
     [SerializeField]
@@ -44,11 +49,12 @@ public class PatternManager_1 : MonoBehaviour
     private GameObject Apple;
     [SerializeField]
     private GameObject Warning_4;
-
+    [SerializeField]
+    private GameObject MainCamera;
+    CameraShake Camera;
 
     Dictionary<Type, float> patternCount;
     EventManager eventManager;
-    AudioSource audioSource;
     bool isPuppyShown;
     /*private int count_1_a;
     private int count_1_b;
@@ -58,8 +64,9 @@ public class PatternManager_1 : MonoBehaviour
 
     void Awake()
     {
+        StartCoroutine(init());
+        /*audioSource.clip = music;
         eventManager = FindObjectOfType<EventManager>();
-        audioSource = FindObjectOfType<AudioSource>();
         patternCount = new Dictionary<Type, float>();
         patternCount[Type.pattern1_a] = 0;
         patternCount[Type.pattern1_b] = 0;
@@ -68,16 +75,29 @@ public class PatternManager_1 : MonoBehaviour
         patternCount[Type.pattern2_b_3] = 0;
         patternCount[Type.pattern3] = 0;
         patternCount[Type.pattern4] = 0;
-        audioSource.clip = music;
         eventManager.savePointTime = savePointTime;
-        eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.stageEvent.gameStartEvent += run;
-        eventManager.playerEvent.reviveEvent += run;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += run;*/
         /*
                 count_1_a = 0;
                 count_1_b = 0;
                 count_3 = 0;
                 count_4 = 0;*/
+    }
+
+    IEnumerator init()
+    {
+        Camera = MainCamera.GetComponent<CameraShake>();
+        audioSource.clip = music;
+        eventManager = FindObjectOfType<EventManager>();
+        patternCount = new Dictionary<Type, float>();
+
+        eventManager.savePointTime = savePointTime;
+        eventManager.stageEvent.gameStartEvent += run;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.playerEvent.reviveEvent += run;
+        yield return new WaitForSeconds(1);
 
         eventManager.stageEvent.gameStartEvent();
     }
@@ -127,6 +147,10 @@ public class PatternManager_1 : MonoBehaviour
         StartCoroutine(Pattern4(100f, startTime));
         StartCoroutine(Pattern4(108f, startTime));
         StartCoroutine(Pattern4(116f, startTime));
+
+        StartCoroutine(PatternGray(51f, startTime));
+
+        StartCoroutine(PatternShake(68f, startTime));
         /*GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc(120f, startTime);*/
     }
 
@@ -376,6 +400,39 @@ public class PatternManager_1 : MonoBehaviour
             Instantiate(Apple);
             Instantiate(Warning_4);
         }
+    }
+
+    IEnumerator PatternGray(float t, float startTime)
+    {
+        if (0 <= t - startTime)
+        {
+            yield return new WaitForSeconds(t - startTime);
+            MainCamera.GetComponent<GrayFilmEffect>().enabled = true;
+        }
+        yield break;
+        
+    }
+
+    IEnumerator PatternShake(float t, float startTime)
+    {
+        float VibrateTime = 0.1f;
+        if (0 <= t - startTime)
+        {
+            yield return new WaitForSeconds(t - startTime);
+            Camera.VibrateForTime(VibrateTime);
+        }
+
+        float delayTime = 0.5f;
+        WaitForSeconds delay_0_5 = new WaitForSeconds(delayTime);
+        for (int i = 1; i < 28; i++)
+        {
+            if (0 <= t - startTime + i * delayTime)
+            {
+                Camera.VibrateForTime(VibrateTime);
+                yield return delay_0_5;
+            }
+        }
+        yield break;
     }
 
     private void deathEvent()

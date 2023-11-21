@@ -1,4 +1,3 @@
-using Autodesk.Fbx;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -103,7 +102,9 @@ public class Player : MonoBehaviour
         headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
         deathCount = 0;
         S_Rank_True = true;
-        currentHP = maxHP;
+        if (Menu_PlayerTransform.difficulty_num == 0)
+            maxHP = 6;
+        currentHP = maxHP;   
         currentStamina = maxStamina;
 
         anim.ResetTrigger("Jump");
@@ -157,19 +158,6 @@ public class Player : MonoBehaviour
             if (onFired)
                 eventManager.playerEvent.shootCancelEvent();
         }
-
-        if (Input.GetKeyDown(KeyCode.U))    // direct hit on player
-        {
-            if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
-        }
-        if (Input.GetKeyDown(KeyCode.I))     // developer mode (inactive hitbox)
-        {
-            hitbox.enabled = false;
-        }
-        if (Input.GetKeyDown(KeyCode.O))     // developer mode (inactive hitbox)
-        {
-            eventManager.playerEvent.deathEvent();
-        }
     }
 
     void FixedUpdate()
@@ -204,6 +192,18 @@ public class Player : MonoBehaviour
     {
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
+            if (SceneManager.GetActiveScene().name == "Tutorials2")
+            {
+                if (dashCoroutine != null)
+                {
+                    evade(c);
+                    return;
+                }
+
+                transform.position = new Vector3(-7f, -4.3012f, 0f);
+                return;
+            }
+
             if (dashCoroutine != null) evade(c);
             else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }

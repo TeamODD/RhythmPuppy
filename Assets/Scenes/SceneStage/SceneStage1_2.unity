@@ -810,7 +810,7 @@ GameObject:
   - component: {fileID: 330115481}
   m_Layer: 0
   m_Name: Stage 1-2 music
-  m_TagString: Music
+  m_TagString: MusicManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1320,7 +1320,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cde77d9f3dccf6c46ba3532492a19826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EventSystem: {fileID: 448613970}
 --- !u!114 &537546945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5089,6 +5088,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   music: {fileID: 8300000, guid: cffa9edf03d2c5b46b71b39661682aac, type: 3}
+  audioSource: {fileID: 330115481}
   savePointTime:
   - 29.1
   - 68.8
@@ -5101,67 +5101,7 @@ MonoBehaviour:
   pattern8c: {fileID: 120520503}
   pattern9: {fileID: 828353507}
   pattern10: {fileID: 924600124}
-  pattern6Timings:
-  - 0.4
-  - 1.4
-  - 2.4
-  - 3.4
-  - 4.6
-  - 5.6
-  - 6.6
-  - 7.6
-  - 8.8
-  - 9.8
-  - 10.8
-  - 11.8
-  - 12.9
-  - 13.9
-  - 14.9
-  - 15.9
-  - 17.1
-  - 18.1
-  - 19.1
-  - 20.1
-  - 21.3
-  - 22.3
-  - 23.3
-  - 24.3
-  - 25.4
-  - 26.4
-  - 27.5
-  - 28.5
-  - 29.6
-  - 30.6
-  - 69.2
-  - 70.2
-  - 71.2
-  - 72.2
-  - 73.4
-  - 74.4
-  - 75.4
-  - 76.4
-  - 77.6
-  - 78.6
-  - 79.6
-  - 80.6
-  - 81.7
-  - 82.7
-  - 83.7
-  - 84.7
-  - 85.9
-  - 86.9
-  - 87.9
-  - 88.9
-  - 90.1
-  - 91.1
-  - 92.1
-  - 93.1
-  - 94.2
-  - 95.2
-  - 96.3
-  - 97.3
-  - 98.4
-  - 99.4
+  isPuppyShown: 0
 --- !u!4 &2136633903
 Transform:
   m_ObjectHideFlags: 0
@@ -5221,8 +5161,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weasel: {fileID: 9001390689507493206, guid: 868c5b0fa6abfea48a1bd181cf319265, type: 3}
   weaselWarning: {fileID: 2141889054}
-  weaselUpSpeed: 0
-  weaselDownspeed: 0
+  weaselUpSpeed: 5
+  weaselDownspeed: 10
   rhythmTimings:
   - 0
   - 0.6
