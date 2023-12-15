@@ -200,7 +200,11 @@ public class Player : MonoBehaviour
         {
             rig2D.velocity = velocity;
             transform.position = currentPosition;
-            if (!isCollisionVisibleOnTheScreen(c)) return;
+            Collider2D d = c.collider;
+            if (!isCollisionVisibleOnTheScreen(c))
+            {
+                return;
+            }
 
             if (dashCoroutine != null) evade(c.collider);
             else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();

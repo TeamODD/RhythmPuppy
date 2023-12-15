@@ -7,34 +7,50 @@ using UnityEngine.Video;
 public class Curtain : MonoBehaviour
 {
     public GameObject RawImage;
-    public GameObject CloseObject;
-    public VideoPlayer Open;
-    public VideoPlayer Close;
+    public GameObject VideoObject;
+    public VideoPlayer Video;
+    public VideoClip CloseClip;
+    public VideoClip OpenClip;
     
     void Start()
     {
-        CurtainEffect();
+        //Invoke("CurtainOpen", 3f);
     }
 
-    void CurtainEffect()
+    void CurtainClose()
     {
-        StartCoroutine(CurtainCoroutine());
+        StartCoroutine(CurtainCloseCoroutine());
     } 
 
-    IEnumerator CurtainCoroutine()
+    IEnumerator CurtainCloseCoroutine()
     {
-        RawImage.SetActive(true);
-        CloseObject.SetActive(true);
-        Close.time = 0f;
-        Close.Play();
-        
-        yield return new WaitForSeconds(3f);
-        Open.time = 0f;
-        Open.Play();
-        CloseObject.SetActive(false);
-        yield return new WaitForSeconds(3f);
-        RawImage.SetActive(false);
-        yield break;
+        Video.clip = CloseClip;
+        //RawImage.SetActive(true);
+        Video.Prepare();
+        if (Video.isPrepared)
+            Video.Play();
 
+        yield return new WaitForSeconds(3f);
+
+        yield break;
+    }
+
+    void CurtainOpen()
+    {
+        StartCoroutine(CurtainOpenCoroutine());
+    }
+
+    IEnumerator CurtainOpenCoroutine()
+    {
+        Video.clip = OpenClip;
+
+        Video.Prepare();
+        yield return Video.isPrepared;
+        if (Video.isPrepared)
+            Video.Play();
+
+        yield return new WaitForSeconds(3f);
+
+        yield break;
     }
 }

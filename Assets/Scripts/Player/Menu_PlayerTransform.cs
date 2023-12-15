@@ -158,6 +158,8 @@ public class Menu_PlayerTransform : MonoBehaviour
             {
                 onInputDelay = true;
                 PlaySelectSound.instance.MenuSelectSound();
+                GetSceneString();
+                if (SceneName == null) return;
                 StartCoroutine(LoadingScene());
                 return;
             }
@@ -237,7 +239,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     {
         switch(currentIndex)
         {
-            case 1: SceneName = "Tutorials";
+            case 1: SceneName = "Tutorials2";
                 break;
             case 2: SceneName = "SceneStage1_1";
                 break;
@@ -251,6 +253,7 @@ public class Menu_PlayerTransform : MonoBehaviour
                 SceneName = "SceneStage2_1";
                 break;
             case 10:
+                SceneName = "SceneStage2_2";
                 break;
             default:
                 SceneName = null;
