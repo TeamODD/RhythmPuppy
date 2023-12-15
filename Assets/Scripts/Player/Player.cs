@@ -61,6 +61,7 @@ public class Player : MonoBehaviour
     SpriteRenderer[] spriteList;
     Animator anim;
     EventManager eventManager;
+    Tutorials2Manager tutorials2Manager;
 
 
     bool onFired, movable;
@@ -130,10 +131,18 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Dash"))
         {
+            //텔레포트 튜토리얼 중 대쉬 사용 방지코드
+            tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
+            if (tutorials2Manager.IsFinishedDashTest == true && tutorials2Manager.IsFinishedTeleportTest == false)
+            {
+                return;
+            }
+            //정상코드
             if (currentStamina < dashStaminaCost)
-                    Debug.Log("not enough stamina!");
+                Debug.Log("not enough stamina!");
             else if (!Input.GetAxisRaw("Horizontal").Equals(0) && dashCoroutine == null && dashCooldownCoroutine == null)
                 eventManager.playerEvent.dashEvent();
+
         }
         if (Input.GetButtonDown("Jump"))
         {
