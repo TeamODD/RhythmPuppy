@@ -70,8 +70,9 @@ public class PatternController1_3 : MonoBehaviour
     private void Start()
     {
         isPuppyShown = false;
-        eventManager = FindObjectOfType<EventManager>();
         audioSource.clip = music;
+        audioSource.Stop();
+        eventManager = FindObjectOfType<EventManager>();
         eventManager.savePointTime = savePointTime;
         eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.stageEvent.gameStartEvent += run;
@@ -84,6 +85,15 @@ public class PatternController1_3 : MonoBehaviour
         pattern13.SetActive(false);
         pattern14.SetActive(false);
         pattern15.SetActive(false);
+
+        StartCoroutine(StartMusicWithDelay());
+    }
+
+    private IEnumerator StartMusicWithDelay()
+    {
+        yield return new WaitForSeconds(DelayTime);
+        //audioSource.Play();
+        // 여기서 다른 오디오 설정이나 재생을 수행할 수 있습니다.
     }
 
     void run()

@@ -2478,7 +2478,8 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3605880568092419517, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
 --- !u!1 &1929604711 stripped
 GameObject:
@@ -2555,7 +2556,7 @@ MonoBehaviour:
   pattern13: {fileID: 1451592686}
   pattern14: {fileID: 1426471004}
   pattern15: {fileID: 2037563909}
-  DelayTime: 2
+  DelayTime: 1
 --- !u!1 &1984728876
 GameObject:
   m_ObjectHideFlags: 0
