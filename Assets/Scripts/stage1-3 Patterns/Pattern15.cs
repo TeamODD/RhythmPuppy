@@ -80,7 +80,7 @@ public class Pattern15 : MonoBehaviour
 
         flowerRigidBody2D.velocity = Vector2.zero;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.4f);
         ChangeImg(newflower);
 
         //본 모습 등장

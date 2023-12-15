@@ -34,6 +34,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     [SerializeField]
     private float speed;
     private float time;
+    private float lastInputTime;
     private bool onInputDelay;
     public static bool ReadyToGoStage;
     public static bool IsPaused; //옵션창에서 Enter 키 중단
@@ -82,14 +83,16 @@ public class Menu_PlayerTransform : MonoBehaviour
         savingIndex = currentIndex;
         PlayerOnPoint.Invoke();
     }
+    
     void OnTriggerExit2D(Collider2D other)
     {
         PlayerOnPointExceptMusicChange.Invoke();
         if (currentIndex < 7)
-            PlaySelectSound.instance.World1_Walking();
+            PlayerWalkingSound.instance.World1_Walking();
         else
-            PlaySelectSound.instance.World2_Walking();
+            PlayerWalkingSound.instance.World2_Walking();
     }
+    
 
     void DifficultyOff()
     {
@@ -177,7 +180,7 @@ public class Menu_PlayerTransform : MonoBehaviour
                     break;
             }
         }
-
+        
     }
 
     IEnumerator move(string s)

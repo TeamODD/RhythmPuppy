@@ -158,6 +158,25 @@ public class Player : MonoBehaviour
             if (onFired)
                 eventManager.playerEvent.shootCancelEvent();
         }
+
+        if (Input.GetKey(KeyCode.F1))
+        {
+            Debug.Log("개발자모드 작동");
+            Collider2D collider2D = gameObject.GetComponent<Collider2D>();
+            if (collider2D != null)
+            {
+                collider2D.enabled = false;
+            }
+
+            foreach (Transform child in gameObject.transform)
+            {
+                Collider2D childCollider = child.GetComponent<Collider2D>();
+                if (childCollider != null)
+                {
+                    childCollider.enabled = false;
+                }
+            }
+        }
     }
 
     void FixedUpdate()
