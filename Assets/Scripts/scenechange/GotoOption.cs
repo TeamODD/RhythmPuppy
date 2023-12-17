@@ -6,13 +6,18 @@ using UnityEngine.SceneManagement;
 
 public class GotoOption : MonoBehaviour
 {
-    private bool isPaused = false;
+    [HideInInspector]
+    public bool isPaused = false;
     
     public void GoOption()
     {
-        isPaused = true;
-        SceneManager.LoadScene("Option_Menu", LoadSceneMode.Additive);
+        Time.timeScale = 0f;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
         GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Pause();
+        GameObject.Find("SFXSoundManager").GetComponent<AudioSource>().Pause();
+        isPaused = true;
+        Menu_PlayerTransform.IsPaused = true;
+        SceneManager.LoadScene("Option_Menu", LoadSceneMode.Additive);
     }
 
     void Update()

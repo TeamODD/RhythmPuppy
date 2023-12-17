@@ -1,8 +1,11 @@
 using Cysharp.Threading.Tasks.Triggers;
 using EventManagement;
+using SceneData;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
@@ -72,6 +75,8 @@ public class Tutorials2Manager : MonoBehaviour
     GameObject ThorStems;
     [SerializeField]
     GameObject UICanvas;
+    [SerializeField]
+    GameObject BlackBox;
 
     SpriteRenderer Asprite;
     SpriteRenderer Dsprite;
@@ -250,7 +255,7 @@ public class Tutorials2Manager : MonoBehaviour
         }
 
         //플레이어가 오른쪽으로 도달한 이후 왼쪽에 도달했을 때
-        if (PlayerCorgi.transform.position.x <= -6 && IsArrivedRightSide == true && IsFinishedMoveLeftAndRightTest == false)
+        else if (PlayerCorgi.transform.position.x <= -6 && IsArrivedRightSide == true && IsFinishedMoveLeftAndRightTest == false)
         {
             IsFinishedMoveLeftAndRightTest = true;
 
@@ -268,13 +273,13 @@ public class Tutorials2Manager : MonoBehaviour
         }
 
         //플레이어가 점프 테스트를 끝냈을 경우
-        if (PlayerCorgi.transform.position.x >= 6 && IsFinishedMoveLeftAndRightTest == true && IsFinishedJumpTest == false)
+        else if (PlayerCorgi.transform.position.x >= 6 && IsFinishedMoveLeftAndRightTest == true && IsFinishedJumpTest == false)
         {
             IsFinishedJumpTest = true;
 
             SpaceBarImage.SetActive(false);
 
-            if (NewOakObstacle.activeSelf == true && NewOakObstacle != null)
+            if (NewOakObstacle != null && NewOakObstacle.activeSelf == true )
             {
                 Destroy(NewOakObstacle);
             }
@@ -286,12 +291,13 @@ public class Tutorials2Manager : MonoBehaviour
         }
 
         //플레이어가 대쉬 테스트를 끝냈을 경우
-        if (PlayerCorgi.transform.position.x >= 6 && IsFinishedJumpTest == true && IsFinishedDashTest == false)
+        else if (PlayerCorgi.transform.position.x >= 6 && IsFinishedJumpTest == true && IsFinishedDashTest == false)
         {
             IsFinishedDashTest = true;
 
             Shift_ButtonImage.SetActive(false);
-            if (NewThorStemObstacle.activeSelf == true && NewThorStemObstacle != null)
+
+            if (NewThorStemObstacle != null && NewThorStemObstacle.activeSelf == true)
             {
                 Destroy(NewThorStemObstacle);
             }
@@ -303,7 +309,7 @@ public class Tutorials2Manager : MonoBehaviour
         }
 
         //플레이어가 텔레포스 테스트를 끝냈을 경우
-        if (PlayerCorgi.transform.position.x >= 6 && IsFinishedDashTest == true && IsFinishedTeleportTest == false)
+        else if (PlayerCorgi.transform.position.x >= 6 && IsFinishedDashTest == true && IsFinishedTeleportTest == false)
         {
             IsFinishedTeleportTest = true;
 
@@ -311,6 +317,8 @@ public class Tutorials2Manager : MonoBehaviour
             MouseImage.SetActive(false);
 
             StopCoroutine(TeleportTest);
+
+            StartCoroutine(TutorialEnd());
         }
     }
 
@@ -597,6 +605,52 @@ public class Tutorials2Manager : MonoBehaviour
         }
         yield return null;
     }
+
+    private IEnumerator TutorialEnd()
+    {
+        float elapsedTime = 0f;
+        float fadeDuration = 2f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            float currentAlphaBlackBox = Mathf.Lerp(0f, 255f, elapsedTime / fadeDuration); // fade in
+            float currentAlphaPlayerCorgi = Mathf.Lerp(255f, 0f, elapsedTime / fadeDuration); // fade out
+
+            // 0에서 255 사이의 값으로 투명도 제한
+            currentAlphaBlackBox = Mathf.Clamp(currentAlphaBlackBox, 0f, 255f);
+            currentAlphaPlayerCorgi = Mathf.Clamp(currentAlphaPlayerCorgi, 0f, 255f);
+
+            SpriteRenderer BlackBoxrenderer = BlackBox.GetComponent<SpriteRenderer>();
+            SpriteRenderer[] PlayerCorgirenderers = PlayerCorgi.GetComponentsInChildren<SpriteRenderer>();
+
+            // 두 배열 합치기
+            SpriteRenderer[] renderers = new SpriteRenderer[] { BlackBoxrenderer }.Concat(PlayerCorgirenderers).ToArray();
+
+            foreach (SpriteRenderer renderer in renderers)
+            {
+                Color color = renderer.color;
+
+                if (renderer == BlackBoxrenderer)
+                {
+                    float normalizedAlpha = currentAlphaBlackBox / 255.0f;
+                    color.a = normalizedAlpha; // 투명도 값 변경
+                }
+                else
+                {
+                    float normalizedAlpha = currentAlphaPlayerCorgi / 255.0f;
+                    color.a = normalizedAlpha; // 투명도 값 변경
+                }
+
+                renderer.color = color; // 변경된 투명도 설정
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        SceneManager.LoadSceneAsync("SceneMenu_01");
+    }
+
 
     private IEnumerator RunOakPattern()
     {
