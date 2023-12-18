@@ -286,7 +286,7 @@ public class Player : MonoBehaviour
 
     private bool isJump()
     {
-        const float margin = 0.05f;
+        const float margin = 0.05f; //점프했다고 판단하는 최소 속도
 
         if (Mathf.Abs(rig2D.velocity.y) < margin)
         {
@@ -307,14 +307,14 @@ public class Player : MonoBehaviour
     private IEnumerator dash(float dir)
     {
         setAlpha(0.5f);
-        rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
-        rig2D.gravityScale = 0f;
+        rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y); //이와 같은 방법을 사용할 시 y축 속도를 일정 시간 '고정'시켜버리는 문제가 발생, 이로 인해 슈퍼점프가 가능.
+        rig2D.gravityScale = 1f;
         anim.SetTrigger("Dash");
 
         yield return dashDelay;
         setAlpha(1f);
         rig2D.velocity = new Vector2(0, rig2D.velocity.y);
-        rig2D.gravityScale = 1f;
+        rig2D.gravityScale = 1f; Debug.Log("중력복구");
         dashCooldownCoroutine = StartCoroutine(dashCooldown());
         dashCoroutine = null;
     }

@@ -881,6 +881,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 4973529264187534432, guid: 0dbd789b79033994db393cdeab092971, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8990387341346384610, guid: 0dbd789b79033994db393cdeab092971, type: 3}
       propertyPath: m_Name
       value: Img2
@@ -1608,6 +1612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cde77d9f3dccf6c46ba3532492a19826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPaused: 0
 --- !u!4 &1174824920
 Transform:
   m_ObjectHideFlags: 0
