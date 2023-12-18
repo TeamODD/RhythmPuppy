@@ -272,9 +272,12 @@ public class Player : MonoBehaviour
         {
             case 0:
             case 1:
-                anim.SetTrigger("Jump");
-                anim.SetInteger("JumpCount", count + 1);
-                rig2D.velocity = new Vector2(rig2D.velocity.x, jumpForce);
+                if (!isDashing()) // 대쉬 중에는 점프하지 않도록 수정
+                {
+                    anim.SetTrigger("Jump");
+                    anim.SetInteger("JumpCount", count + 1);
+                    rig2D.velocity = new Vector2(rig2D.velocity.x, jumpForce);
+                }
                 break;
             default:
                 break;
@@ -314,6 +317,11 @@ public class Player : MonoBehaviour
         rig2D.gravityScale = 1f;
         dashCooldownCoroutine = StartCoroutine(dashCooldown());
         dashCoroutine = null;
+    }
+
+    private bool isDashing()
+    {
+        return dashCoroutine != null;
     }
 
     private void evade(Collider2D c)
