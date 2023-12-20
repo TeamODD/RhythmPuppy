@@ -174,7 +174,6 @@ public class Pattern13 : MonoBehaviour
             yield return null;
         }
         Destroy(obj);
-        Debug.Log(Time.time);
     }
 
     private float GetElapsedTime()

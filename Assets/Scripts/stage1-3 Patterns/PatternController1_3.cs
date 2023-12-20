@@ -226,7 +226,7 @@ public class PatternController1_3 : MonoBehaviour
 
     private IEnumerator GameClear()
     {
-        yield return new WaitForSeconds(2 * 60 + 38f);
+        yield return new WaitForSeconds(100f);
         Rigidbody2D BossRigidbody2D = Boss.GetComponent<Rigidbody2D>();
         BossRigidbody2D.velocity = Vector2.down * 3f;
         yield return new WaitUntil(() => Boss.transform.position.y < -8f);

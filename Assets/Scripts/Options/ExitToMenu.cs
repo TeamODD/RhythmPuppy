@@ -34,13 +34,16 @@ public class ExitToMenu : MonoBehaviour
             Menu_PlayerTransform.IsPaused = false;
             SceneManager.UnloadSceneAsync("Option_Menu");
         }
-
-        if (SceneManager.GetSceneByName("Option_Stage").isLoaded)
+        else if (SceneManager.GetSceneByName("Option_Stage").isLoaded)
         {
             GameObject.Find("GamePlayManager").GetComponent<GamePasue>().isPaused = false;
             Time.timeScale = 1f;
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
             Menu_PlayerTransform.IsPaused = false;
+            SceneManager.LoadScene("SceneMenu_01", LoadSceneMode.Single);
+        }
+        else if (SceneManager.GetSceneByName("GameOver").isLoaded)
+        {
             SceneManager.LoadScene("SceneMenu_01", LoadSceneMode.Single);
         }
     }

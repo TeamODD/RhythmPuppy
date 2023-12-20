@@ -290,7 +290,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2504214358711625576, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
       propertyPath: m_SortingOrder
-      value: 100
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5359566681268600028, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
       propertyPath: m_Layer
@@ -2075,6 +2075,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Img1
       objectReference: {fileID: 0}
+    - target: {fileID: 8990387341346384610, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 4843985084834002234, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
 --- !u!1 &1484036106 stripped
@@ -2571,7 +2575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 808902230414f5547b1b0c1e5a05258e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  music: {fileID: 8300000, guid: 1a40d8bac7b111f4a9577b4f432ce752, type: 3}
+  music: {fileID: 8300000, guid: e197b5ad4f37cc2428a5b0b203abac81, type: 3}
   audioSource: {fileID: 991858439}
   savePointTime:
   - 10

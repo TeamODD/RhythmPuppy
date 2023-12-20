@@ -9,6 +9,8 @@ using static UnityEngine.GraphicsBuffer;
 
 using SceneData;
 using EventManagement;
+using static UnityEditor.PlayerSettings;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -397,33 +399,67 @@ public class Player : MonoBehaviour
     }
 
     /** Flip body if corgi is heading behind or moving to behind. */
+
     private void flipBody()
     {
-        const float detailCorrFactor = 16f;
-        Vector3 flip = transform.localScale;
+        Vector2 vertex1 = (Vector2)transform.position + new Vector2(-1f, 0f); // 왼쪽
+        Vector2 vertex2 = (Vector2)transform.position + new Vector2(0f, 0f); // 아래
+        Vector2 vertex3 = (Vector2)transform.position + new Vector2(1f, 0f);  // 오른쪽
+        Vector2 vertex4 = (Vector2)transform.position + new Vector2(0f, 3f);  // 위
 
-        float rot = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
-        rot = 0 <= rot ? rot % 360 : rot % 360 + 360;
-        if (110 < rot && rot < 250)
+        //플레이어 중심(정확한 중심은 아닙니다)을 기준으로 다이아몬드 범위 내에 마우스가 들어오면 플립하지 않도록 수정
+        if (!IsMouseInDiamond(mainCamera.ScreenToWorldPoint(Input.mousePosition), vertex1, vertex2, vertex3, vertex4))
         {
-            flip.x = flip.x * -1;
-        }
-        else if (70 < rot && rot < 290)
-        {
-            int xInput = (int)Input.GetAxisRaw("Horizontal");
-            switch (xInput)
+            // 기존 코드
+            const float detailCorrFactor = 16f;
+            Vector3 flip = transform.localScale;
+
+            float rot = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
+            rot = 0 <= rot ? rot % 360 : rot % 360 + 360;
+            if (110 < rot && rot < 250)
             {
-                case -1:
-                    flip.x = Mathf.Abs(flip.x) * -1;
-                    break;
-                case 1:
-                    flip.x = Mathf.Abs(flip.x);
-                    break;
+                flip.x = flip.x * -1;
             }
+            else if (70 < rot && rot < 290)
+            {
+                int xInput = (int)Input.GetAxisRaw("Horizontal");
+                switch (xInput)
+                {
+                    case -1:
+                        flip.x = Mathf.Abs(flip.x) * -1;
+                        break;
+                    case 1:
+                        flip.x = Mathf.Abs(flip.x);
+                        break;
+                }
+            }
+            transform.localScale = flip;
+        }
+    }
+
+    bool IsMouseInDiamond(Vector2 mousePosition, Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4)
+    {
+        Debug.Log(IsPointInTriangle(mousePosition, v1, v2, v3));
+        // 다이아몬드 모양 범위 내에 있는지 확인
+        if (IsPointInTriangle(mousePosition, v1, v2, v3) || IsPointInTriangle(mousePosition, v1, v3, v4))
+        {
+            return true;
         }
 
-        transform.localScale = flip;
+        return false;
     }
+
+    // 삼각형의 내부에 점이 있는지 확인하는 함수
+    bool IsPointInTriangle(Vector2 point, Vector2 p1, Vector2 p2, Vector2 p3)
+    {
+        float denominator = ((p2.y - p3.y) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.y - p3.y));
+        float a = ((p2.y - p3.y) * (point.x - p3.x) + (p3.x - p2.x) * (point.y - p3.y)) / denominator;
+        float b = ((p3.y - p1.y) * (point.x - p3.x) + (p1.x - p3.x) * (point.y - p3.y)) / denominator;
+        float c = 1 - a - b;
+
+        return a >= 0 && a <= 1 && b >= 0 && b <= 1 && c >= 0 && c <= 1;
+    }
+
 
     private void playerHitEvent()
     {
