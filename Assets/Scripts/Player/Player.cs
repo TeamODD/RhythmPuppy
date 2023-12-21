@@ -9,8 +9,6 @@ using static UnityEngine.GraphicsBuffer;
 
 using SceneData;
 using EventManagement;
-using static UnityEditor.PlayerSettings;
-using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -274,12 +272,9 @@ public class Player : MonoBehaviour
         {
             case 0:
             case 1:
-                if (!isDashing()) // 대쉬 중에는 점프하지 않도록 수정
-                {
-                    anim.SetTrigger("Jump");
-                    anim.SetInteger("JumpCount", count + 1);
-                    rig2D.velocity = new Vector2(rig2D.velocity.x, jumpForce);
-                }
+                anim.SetTrigger("Jump");
+                anim.SetInteger("JumpCount", count + 1);
+                rig2D.velocity = new Vector2(rig2D.velocity.x, jumpForce);
                 break;
             default:
                 break;
@@ -309,21 +304,16 @@ public class Player : MonoBehaviour
     private IEnumerator dash(float dir)
     {
         setAlpha(0.5f);
-        rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y); //이와 같은 방법을 사용할 시 y축 속도를 일정 시간 '고정'시켜버리는 문제가 발생, 이로 인해 슈퍼점프가 가능.
+        rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
         rig2D.gravityScale = 1f;
         anim.SetTrigger("Dash");
 
         yield return dashDelay;
         setAlpha(1f);
         rig2D.velocity = new Vector2(0, rig2D.velocity.y);
-        rig2D.gravityScale = 1f; Debug.Log("중력복구");
+        rig2D.gravityScale = 1f;
         dashCooldownCoroutine = StartCoroutine(dashCooldown());
         dashCoroutine = null;
-    }
-
-    private bool isDashing()
-    {
-        return dashCoroutine != null;
     }
 
     private void evade(Collider2D c)
@@ -439,7 +429,6 @@ public class Player : MonoBehaviour
 
     bool IsMouseInDiamond(Vector2 mousePosition, Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4)
     {
-        Debug.Log(IsPointInTriangle(mousePosition, v1, v2, v3));
         // 다이아몬드 모양 범위 내에 있는지 확인
         if (IsPointInTriangle(mousePosition, v1, v2, v3) || IsPointInTriangle(mousePosition, v1, v3, v4))
         {
@@ -459,7 +448,6 @@ public class Player : MonoBehaviour
 
         return a >= 0 && a <= 1 && b >= 0 && b <= 1 && c >= 0 && c <= 1;
     }
-
 
     private void playerHitEvent()
     {
