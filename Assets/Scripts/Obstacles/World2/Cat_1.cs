@@ -26,7 +26,7 @@ namespace Obstacles
             if (transform.position.y < 0)
                 gameObject.GetComponent<Rigidbody2D>().simulated = false;
             if (transform.position.y < -3f)
-                Destroy(gameObject);
+                Destroy(this);
         }
 
         public void init()
