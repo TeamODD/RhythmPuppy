@@ -13,11 +13,11 @@ public class Pattern101010 : MonoBehaviour
     [SerializeField]
     private GameObject chestnutbomb;
     [SerializeField]
-    private float chestnutSpeed;
-    [SerializeField]
     private float splinterSpeed;
     [SerializeField]
     private float splinterInterval;
+
+    private float chestnutSpeed;
 
     private void OnEnable()
     {
@@ -82,6 +82,9 @@ public class Pattern101010 : MonoBehaviour
         // ChestNut 오브젝트 생성
         GameObject newChestnut = Instantiate(chestnut, chestnutPosition, Quaternion.identity);
         Rigidbody2D chestnutRigidbody = newChestnut.GetComponent<Rigidbody2D>();
+
+        chestnutSpeed = Random.Range(3f, 7f);
+
         chestnutRigidbody.velocity = Vector2.down * chestnutSpeed;
 
         yield return new WaitForSeconds(0.5f);

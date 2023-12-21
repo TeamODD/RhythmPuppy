@@ -7,13 +7,6 @@ public class BossScript : MonoBehaviour
     [SerializeField]
     GameObject PlayerCorgi;
 
-
-    
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         if (PlayerCorgi.transform.position.x < 0f && transform.localScale.x < 0f)

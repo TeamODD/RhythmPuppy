@@ -92,7 +92,6 @@ public class Pattern12 : MonoBehaviour
             thorstemPosX = -10f;
         }
         float thorstemPosY = tanValue * (thorstemPosX - warningXPos) + warningYPos;
-        Debug.Log(thorstemPosY);
 
         Vector3 thorstemPosition = new Vector3(thorstemPosX, thorstemPosY, 0f);
         GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);

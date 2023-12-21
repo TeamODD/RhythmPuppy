@@ -108,23 +108,21 @@ public class Pattern666 : MonoBehaviour
             yield return null;
         }
 
-        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         objects.Remove(warning);
         Destroy(warning);
 
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ù±ï¿½ ï¿½ï¿½ï¿½ï¿½
-        float startX = 8.38f; //9.44f, 8.38f
-        float startY = 2.58f;
+        float RandomZRoation = Random.Range(-20f, 20f);
+        float startX = 0.039f * Mathf.Abs(RandomZRoation) + 9.44f; //ÃÖ¼Ò9.44f, ÃÖ´ë10.22f
+        float startY = 2.3f;
         Vector3 startPos = new Vector3(startX, startY, 0f);
 
         currentStem = Instantiate(thornStem, startPos, Quaternion.identity);
         objects.Add(currentStem);
         Rigidbody2D stemRigidbody = currentStem.GetComponent<Rigidbody2D>();
+        currentStem.transform.rotation = Quaternion.Euler(0f, 0f, RandomZRoation);
 
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         if (startX < 0f)
             stemRigidbody.velocity = Vector2.right * stemSpeed;
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         else
             stemRigidbody.velocity = Vector2.left * stemSpeed;
 
