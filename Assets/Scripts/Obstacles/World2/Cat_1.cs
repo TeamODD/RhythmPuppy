@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Obstacles
 {
@@ -9,6 +10,11 @@ namespace Obstacles
     {
         [SerializeField] float gravityScale;
         [SerializeField] float force;
+
+
+        private ObjectPoolManager PoolingManager;
+        private float randomX;
+        private Rigidbody2D rigid;
 
         const float G = 9.8f;
 
@@ -24,14 +30,18 @@ namespace Obstacles
         {
             physicalCalculation();
             if (transform.position.y < 0)
-                gameObject.GetComponent<Rigidbody2D>().simulated = false;
-            if (transform.position.y < -3f)
-                Destroy(this);
+                rigid.simulated = false;
+            else
+                rigid.simulated = true;
+            if (transform.position.y < -4f)
+                DestroyObject();
         }
 
         public void init()
         {
             velocity = new Vector3(0, force, 0);
+            rigid = gameObject.GetComponent<Rigidbody2D>();
+            PoolingManager = FindObjectOfType<ObjectPoolManager>();
             //gameObject.GetComponent<Rigidbody2D>().GetShapes(PhysicsShapeType2D.Polygon, gameObject());
         }
 
@@ -39,6 +49,23 @@ namespace Obstacles
         {
             transform.Translate(velocity * Time.fixedDeltaTime);
             velocity.y -= G * Time.fixedDeltaTime * gravityScale;
+        }
+
+        public void Jump()
+        {
+            //패턴2_2를 위해 함수 추가했습니다
+            velocity = new Vector3(0, force, 0);
+        }
+
+        private void DestroyObject()
+        {
+            if (PoolingManager != null)
+            {
+                //Pool에 반납
+                PoolingManager.ReleaseObject();
+            }
+            else
+                Destroy(this);
         }
 
     }

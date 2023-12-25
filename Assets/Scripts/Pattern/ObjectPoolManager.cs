@@ -12,7 +12,7 @@ public class ObjectPoolManager : MonoBehaviour
         _ManagedPool = Pool;
     }
 
-    public void DestroyObject()
+    public void ReleaseObject()
     {
         _ManagedPool.Release(this);
     }
