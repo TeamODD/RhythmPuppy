@@ -6,15 +6,17 @@ using PatternManager_2_2;
 
 public class ObjectPoolManager : MonoBehaviour
 {
-    public IObjectPool<ObjectPoolManager> _ManagedPool;
+    public IObjectPool<GameObject> _ManagedPool;
 
-    public void SetManagedPool(IObjectPool<ObjectPoolManager> Pool)
+    //관리되는 풀 설정
+    public void SetManagedPool(IObjectPool<GameObject> Pool)
     {
         _ManagedPool = Pool;
     }
 
+    //풀에 오브젝트 반납
     public void ReleaseObject()
     {
-        _ManagedPool.Release(this);
+        _ManagedPool.Release(gameObject);
     }
 }

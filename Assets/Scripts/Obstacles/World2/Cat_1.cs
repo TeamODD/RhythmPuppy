@@ -11,7 +11,6 @@ namespace Obstacles
         [SerializeField] float gravityScale;
         [SerializeField] float force;
 
-
         private ObjectPoolManager PoolingManager;
         private float randomX;
         private Rigidbody2D rigid;
@@ -63,8 +62,9 @@ namespace Obstacles
             if (IsPooled)
             {
                 //Pool¿¡ ¹Ý³³
-                Debug.Log("Released Cat");
+                //Debug.Log("Released Cat");
                 PoolingManager.ReleaseObject();
+
             }
             else
                 Destroy(this);

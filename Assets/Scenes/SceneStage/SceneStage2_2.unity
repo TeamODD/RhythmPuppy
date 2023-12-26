@@ -1127,12 +1127,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1163857276}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9924895, y: -0.10944958, z: 4.535343}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1163857278
 MonoBehaviour:
@@ -1149,10 +1149,7 @@ MonoBehaviour:
   objectInfos:
   - objectName: 1-a
     prefab: {fileID: 4005571409586596380, guid: 01f973f280cc91a4090e89e381b7e14c, type: 3}
-    count: 4
-  - objectName: 1-a_warning
-    prefab: {fileID: 4005571409586596380, guid: 01f973f280cc91a4090e89e381b7e14c, type: 3}
-    count: 4
+    count: 3
   audioSource: {fileID: 2117660269}
   audioClip: {fileID: 8300000, guid: 1c8059f5c96281741a2060106ea601d8, type: 3}
   MusicManager: {fileID: 2117660267}
@@ -1953,7 +1950,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &2117660269
 AudioSource:

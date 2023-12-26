@@ -28,17 +28,18 @@ namespace PatternManager_2_2
         AudioClip audioClip;
         [SerializeField]
         private GameObject MusicManager;
+        EventManager eventManager;
+        //private ObjectPoolManager PoolingManager;
+        private IObjectPool<GameObject> _Pool;
 
-        private ObjectPoolManager PoolingManager;
-
-        private IObjectPool<ObjectPoolManager> _Pool;
-
-        // 오브젝트풀들을 관리할 딕셔너리
-        private Dictionary<string, IObjectPool<ObjectPoolManager>> objectPoolDic = new Dictionary<string, IObjectPool<ObjectPoolManager>>();
+        // 오브젝트풀을 관리할 딕셔너리
+        private Dictionary<string, IObjectPool<GameObject>> ObjectPoolDic = new Dictionary<string, IObjectPool<GameObject>>();
+        // 프리펩을 관리할 딕셔너리
+        private Dictionary<string, GameObject> GameObjectDic = new Dictionary<string, GameObject>();
 
         private int PrefabIndex;
+        private string objectName;
         public bool IsReady { get; set; }
-        private float WaitingTimeBeforeGameStart;
         private float startTime = 3f;
 
         //패턴 타임라인에 대해서는 이름을 바꾼다거나하는 등, 절대 건들지 마시오.
@@ -50,27 +51,17 @@ namespace PatternManager_2_2
         private float[] DelayedPattern1_a_2;
 
 
-        EventManager eventManager;
-
-
         void Awake()
         {
             eventManager = FindObjectOfType<EventManager>();
-            PoolingManager = FindObjectOfType<ObjectPoolManager>();
-            //_Pool = new ObjectPool<ObjectPoolManager>(CreatePrefab, OnGetPrefab, OnReleasePrefab, OnDestroyPrefab, maxSize: 10);
+            //PoolingManager = FindObjectOfType<ObjectPoolManager>();
             init();
-        }
-
-        void Update()
-        {
-            WaitingTimeBeforeGameStart += Time.fixedDeltaTime;
         }
 
         private void init()
         {
             IsReady = false;
 
-            WaitingTimeBeforeGameStart = 0f;
             audioSource.clip = audioClip;
 
             DelayedPattern1_a_1 = new float[Pattern1_aTimeLine_1.Length];
@@ -79,23 +70,29 @@ namespace PatternManager_2_2
             for (int i = 0; i < objectInfos.Length; i++)
             {
                 PrefabIndex = i;
-                _Pool = new ObjectPool<ObjectPoolManager>(CreatePrefab, OnGetPrefab, OnReleasePrefab, OnDestroyPrefab,
+                objectName = objectInfos[PrefabIndex].objectName;
+                _Pool = new ObjectPool<GameObject>(CreatePrefab, OnGetPrefab, OnReleasePrefab, OnDestroyPrefab,
                     maxSize: objectInfos[PrefabIndex].count);
-                objectPoolDic.Add(objectInfos[PrefabIndex].objectName, _Pool);
+                ObjectPoolDic.Add(objectName, _Pool);
+                GameObjectDic.Add(objectName, objectInfos[PrefabIndex].prefab);
+
+                /* 미리 프리팹들을 풀링해놓는 코드, 다만 오류 발생으로 인해 주석 처리 해놓았음.
+                 * GameObject PoolingTest;
+                for (int j = 0; j < objectInfos[PrefabIndex].count; j++)
+                {
+                    PoolingTest = CreatePrefab();
+                    PoolingTest.GetComponent<ObjectPoolManager>().ReleaseObject();
+                }*/
             }
-            /*for (int j = 0; j < objectInfos[PrefabIndex].count; j++)
-            {
-                ObjectPoolManager PreMakingObject = CreatePrefab();
-                PreMakingObject.ReleaseObject();
-            }*/
+
             DelayingPattern();
             PatternMake();
 
             IsReady = true;
-            Debug.Log("Ready");
+            Debug.Log("Stage is Ready");
             //음악 재생
             StartCoroutine(PlayMusic());
-            Debug.Log("go");
+            Debug.Log("Stage Start");
 
         }
 
@@ -124,13 +121,26 @@ namespace PatternManager_2_2
         IEnumerator Pattern1_a(float t, float startTime)
         {
             string objectName = objectInfos[0].objectName;
-            ObjectPoolManager cat;
+
             float randomX;
 
-            void Warning1_a(float x)
+            void MakingWarningBox(float x)
             {
                 Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, 0));
                 eventManager.stageEvent.warnWithBox(v, new Vector3(300, 1080, 0));
+            }
+
+            void MakingCat(string ObjectName, float X)
+            {
+                GameObject cat;
+
+                cat = ObjectPoolDic[ObjectName].Get();  
+
+                cat.gameObject.transform.position = new Vector3(X, -2, 0); //위치 이동
+                cat.gameObject.GetComponent<Cat_1>().Jump(); //점프를 하도록
+                cat.gameObject.GetComponent<Cat_1>().IsPooled = true;
+
+                //return PoolingManager;
             }
 
             if (0 <= t - startTime)
@@ -140,18 +150,14 @@ namespace PatternManager_2_2
                 //변수 캐싱
                 randomX = Random.Range(-8f, 8f);
                 //경고 박스 생성
-                Warning1_a(randomX);
+                MakingWarningBox(randomX);
                 yield return new WaitForSeconds(1f);
 
                 //고양이 생성
                 SetPrefabIndex(0);
-                cat = objectPoolDic[objectName].Get();
-                cat.gameObject.transform.position = new Vector3(randomX, -2, 0); //위치 이동
-                cat.gameObject.GetComponent<Cat_1>().Jump(); //점프를 하도록
-                cat.gameObject.GetComponent<Cat_1>().IsPooled = true;
+                MakingCat(objectName, randomX);
             }
-
-            yield return PoolingManager;
+            yield break;
         }
 
         IEnumerator PlayMusic()
@@ -160,34 +166,41 @@ namespace PatternManager_2_2
             audioSource.Play();
         }
 
-
-        //풀링 함수들입니다.
-        private ObjectPoolManager CreatePrefab()
-        {
-            //if (Prefab.GetComponent<ObjectPoolManager>() == null) return;
-            ObjectPoolManager PoolingObject = Instantiate(objectInfos[PrefabIndex].prefab).GetComponent<ObjectPoolManager>();
-            PoolingObject.SetManagedPool(_Pool);
-            return PoolingObject;
-        }
-        //오브젝트 빌려올 때 사용
-        private void OnGetPrefab(ObjectPoolManager Manager)
-        {
-            Manager.gameObject.SetActive(true);
-        }
-
-        private void OnReleasePrefab(ObjectPoolManager Manager)
-        {
-            Manager.gameObject.SetActive(false);
-        }
-
-        private void OnDestroyPrefab(ObjectPoolManager Manager)
-        {
-            Destroy(Manager.gameObject);
-        }
-        
         private void SetPrefabIndex(int prefabIndex)
         {
             PrefabIndex = prefabIndex;
+        }
+
+
+        //풀링 함수들입니다.
+        private GameObject CreatePrefab()
+        {
+            /*if (_Pool.CountInactive != 0)
+            {
+                OnGetPrefab(PoolingManager);
+                return PoolingManager;
+            } 
+            ObjectPoolManager PoolingObject = Instantiate(objectInfos[PrefabIndex].prefab).GetComponent<ObjectPoolManager>();
+            PoolingObject.SetManagedPool(_Pool);
+            return PoolingObject; */
+            GameObject PoolingObject = Instantiate(objectInfos[PrefabIndex].prefab);
+            PoolingObject.GetComponent<ObjectPoolManager>().SetManagedPool(ObjectPoolDic[objectName]);
+            return PoolingObject;
+        }
+        //오브젝트 빌려올 때 사용
+        private void OnGetPrefab(GameObject Prefab)
+        {
+            Prefab.SetActive(true);
+        }
+
+        private void OnReleasePrefab(GameObject Prefab)
+        {
+            Prefab.SetActive(false);
+        }
+
+        private void OnDestroyPrefab(GameObject Prefab)
+        {
+            Destroy(Prefab);
         }
     }
 }
