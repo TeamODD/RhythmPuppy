@@ -13,7 +13,7 @@ public class Curtain : MonoBehaviour
 
     void Start()
     {
-        Invoke("CurtainEffect", 5f);
+        CurtainEffect();
     }
 
     void CurtainEffect()

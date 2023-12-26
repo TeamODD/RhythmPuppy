@@ -15,6 +15,7 @@ namespace Obstacles
         private ObjectPoolManager PoolingManager;
         private float randomX;
         private Rigidbody2D rigid;
+        public bool IsPooled = false;
 
         const float G = 9.8f;
 
@@ -39,7 +40,7 @@ namespace Obstacles
 
         public void init()
         {
-            velocity = new Vector3(0, force, 0);
+            Jump();
             rigid = gameObject.GetComponent<Rigidbody2D>();
             PoolingManager = FindObjectOfType<ObjectPoolManager>();
             //gameObject.GetComponent<Rigidbody2D>().GetShapes(PhysicsShapeType2D.Polygon, gameObject());
@@ -59,9 +60,10 @@ namespace Obstacles
 
         private void DestroyObject()
         {
-            if (PoolingManager != null)
+            if (IsPooled)
             {
                 //Pool¿¡ ¹Ý³³
+                Debug.Log("Released Cat");
                 PoolingManager.ReleaseObject();
             }
             else

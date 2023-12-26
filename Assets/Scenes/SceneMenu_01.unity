@@ -5325,6 +5325,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Background0
       objectReference: {fileID: 0}
+    - target: {fileID: -8653719598885068355, guid: 724097c62c045e142ae02dbd50ba614c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 724097c62c045e142ae02dbd50ba614c, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -8165,6 +8169,10 @@ PrefabInstance:
     - target: {fileID: -8653719598885068355, guid: 724097c62c045e142ae02dbd50ba614c, type: 3}
       propertyPath: m_Name
       value: Background0 clone
+      objectReference: {fileID: 0}
+    - target: {fileID: -8653719598885068355, guid: 724097c62c045e142ae02dbd50ba614c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 724097c62c045e142ae02dbd50ba614c, type: 3}
       propertyPath: m_RootOrder
