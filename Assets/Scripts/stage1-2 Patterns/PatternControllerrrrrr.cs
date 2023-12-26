@@ -43,14 +43,11 @@ public class PatternControllerrrrrr : MonoBehaviour
         21.3f, 22.3f, 23.3f, 24.3f,
         25.4f, 26.4f, 27.5f, 28.5f,
         29.6f, 30.6f,
-        69.2f, 70.2f, 71.2f, 72.2f,
-        73.4f, 74.4f, 75.4f, 76.4f,
-        77.6f, 78.6f, 79.6f, 80.6f,
-        81.7f, 82.7f, 83.7f, 84.7f,
+        68.7f, 69.7f, 70.7f, 71.7f, 72.9f, 73.9f, 74.9f, 75.9f, 77.1f, 78.1f, 79.1f, 80.1f, 81.2f, 82.2f, 83.2f, 84.2f, 85.3f,
         85.9f, 86.9f, 87.9f, 88.9f,
         90.1f, 91.1f, 92.1f, 93.1f,
         94.2f, 95.2f, 96.3f, 97.3f,
-        98.4f, 99.4f
+        98.4f
     };
 
     private List<float> pattern7aTimings = new List<float>

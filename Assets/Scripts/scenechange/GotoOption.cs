@@ -11,13 +11,16 @@ public class GotoOption : MonoBehaviour
     
     public void GoOption()
     {
-        Time.timeScale = 0f;
-        Time.fixedDeltaTime = 0.02f * Time.timeScale;
-        GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Pause();
-        GameObject.Find("SFXSoundManager").GetComponent<AudioSource>().Pause();
-        isPaused = true;
-        Menu_PlayerTransform.IsPaused = true;
-        SceneManager.LoadScene("Option_Menu", LoadSceneMode.Additive);
+        if (!isPaused && !SceneManager.GetSceneByName("Option_Menu").isLoaded) //정지 중이지 않을 때 중지
+        {
+            Time.timeScale = 0f;
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Pause();
+            GameObject.Find("SFXSoundManager").GetComponent<AudioSource>().Pause();
+            isPaused = true;
+            Menu_PlayerTransform.IsPaused = true;
+            SceneManager.LoadSceneAsync("Option_Menu", LoadSceneMode.Additive);
+        }
     }
 
     void Update()

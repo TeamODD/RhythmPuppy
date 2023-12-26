@@ -135,7 +135,7 @@ public class Player : MonoBehaviour
             if (GameObject.Find("Tutorials2Manager") != null)
             {
                 tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
-                if (tutorials2Manager.IsFinishedDashTest == true && tutorials2Manager.IsFinishedTeleportTest == false)
+                if (tutorials2Manager.IsFinishedDashTest == true && tutorials2Manager.IsFinishedTeleportTest == false || tutorials2Manager.IsFinishedJumpTest == false)
                 {
                     return;
                 }
@@ -154,12 +154,30 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown("Shoot"))
         {
+            //텔레포트 사용 방지코드
+            if (GameObject.Find("Tutorials2Manager") != null)
+            {
+                tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
+                if (tutorials2Manager.IsFinishedDashTest == false)
+                {
+                    return;
+                }
+            }
+
             if (!onFired)
             {
                 if (currentStamina < shootStaminaCost)
                     Debug.Log("not enough stamina!");
                 else if (shootCooldownCoroutine == null)
+                {
+                    Projectile projectile = GameObject.Find("Projectile").GetComponent<Projectile>();
+                    if (!projectile.IsBoneRecovered)
+                    {
+                        return;
+                    }
                     eventManager.playerEvent.shootEvent();
+                }
+                    
             }
             else
             {
@@ -240,6 +258,16 @@ public class Player : MonoBehaviour
                 return;
             }
 
+            if (dashCoroutine != null) evade(c);
+            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D c)
+    {
+        Debug.Log("스테이발동");
+        if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
+        {
             if (dashCoroutine != null) evade(c);
             else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
