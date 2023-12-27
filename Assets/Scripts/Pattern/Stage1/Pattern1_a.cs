@@ -6,24 +6,34 @@ using UnityEngine;
 public class Pattern1_a : MonoBehaviour
 {
     [SerializeField]
-    float speed = 3.5f;
+    float speed;
     [SerializeField]
     private int dir = -1;
+    [SerializeField]
+    private float XPosition;
 
     EventManager eventManager;
-    private float time;
+    ObjectPoolManager PoolingManager;
+    [HideInInspector]
+    public float time;
     public static float yPosition;
+    [HideInInspector]
+    public bool IsPooled = false;
 
     void Awake()
     {
         eventManager = FindObjectOfType<EventManager>();
+        PoolingManager = FindObjectOfType<ObjectPoolManager>();
         eventManager.playerEvent.deathEvent += deathEvent;
         time = 0;
         yPosition = Random.Range(-2f, 4.5f);
     }
     void Start()
     {
-        gameObject.transform.position = new Vector3(10, yPosition, 0);
+        if(!IsPooled)
+        {
+            gameObject.transform.position = new Vector3(XPosition, yPosition, 0);
+        }
     }
     // FixedUpdate로 변경해야 할 수도 있음.
     void FixedUpdate()
@@ -32,12 +42,20 @@ public class Pattern1_a : MonoBehaviour
         if (time > 1f)
         {
             transform.position += new Vector3(speed * dir, 0, 0) * Time.fixedDeltaTime;
-            if (gameObject.transform.position.x <= -15)
-                Destroy(gameObject);
+            if (gameObject.transform.position.x <= -10.5f)
+                DestroyObject();
         }
         
     }
 
+    private void DestroyObject()
+    {
+        if (IsPooled)
+            PoolingManager.ReleaseObject();
+        else
+            Destroy(gameObject);
+
+    }
     private void deathEvent()
     {
         eventManager.playerEvent.deathEvent -= deathEvent;

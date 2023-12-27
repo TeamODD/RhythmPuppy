@@ -3702,6 +3702,10 @@ PrefabInstance:
       value: 26
       objectReference: {fileID: 0}
     - target: {fileID: -553452711977426290, guid: f09b81a8c25e6854790d0f7b4dd2057a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -553452711977426290, guid: f09b81a8c25e6854790d0f7b4dd2057a, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.2
       objectReference: {fileID: 0}
@@ -9957,7 +9961,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 8300000, guid: 7c627e27a8a4ce743a2ebe064539d77d, type: 3}
   - {fileID: 0}
-  - {fileID: 8300000, guid: a2fed9f2752b85c42a98157367ccb4fd, type: 3}
+  - {fileID: 8300000, guid: 1c8059f5c96281741a2060106ea601d8, type: 3}
   - {fileID: 0}
   audioSourceSelect: {fileID: 0}
   audioClipSelect:

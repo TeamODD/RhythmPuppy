@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
-using UnityEngine.Pool;
+//using UnityEngine.Pool;
 
 namespace Obstacles
 {
@@ -12,8 +12,9 @@ namespace Obstacles
         [SerializeField] float force;
 
         private ObjectPoolManager PoolingManager;
-        private float randomX;
         private Rigidbody2D rigid;
+
+        [HideInInspector]
         public bool IsPooled = false;
 
         const float G = 9.8f;
@@ -64,7 +65,6 @@ namespace Obstacles
                 //Pool¿¡ ¹Ý³³
                 //Debug.Log("Released Cat");
                 PoolingManager.ReleaseObject();
-
             }
             else
                 Destroy(this);

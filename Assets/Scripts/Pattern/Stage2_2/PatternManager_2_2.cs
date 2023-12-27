@@ -42,6 +42,7 @@ namespace PatternManager_2_2
         public bool IsReady { get; set; }
         private float startTime = 3f;
 
+        private float randomY7_a;
         //패턴 타임라인에 대해서는 이름을 바꾼다거나하는 등, 절대 건들지 마시오.
         [SerializeField]
         private float[] Pattern1_aTimeLine_1;
@@ -49,6 +50,12 @@ namespace PatternManager_2_2
         private float[] Pattern1_aTimeLine_2;
         private float[] DelayedPattern1_a_1;
         private float[] DelayedPattern1_a_2;
+        [SerializeField]
+        private float[] Pattern6TimeLine;
+        private float[] DelayedPattern6;
+        [SerializeField]
+        private float[] Pattern7_aTimeLine;
+        private float[] DelayedPattern7_a;
 
 
         void Awake()
@@ -66,6 +73,8 @@ namespace PatternManager_2_2
 
             DelayedPattern1_a_1 = new float[Pattern1_aTimeLine_1.Length];
             DelayedPattern1_a_2 = new float[Pattern1_aTimeLine_2.Length];
+            DelayedPattern6 = new float[Pattern6TimeLine.Length];
+            DelayedPattern7_a = new float[Pattern7_aTimeLine.Length];
 
             for (int i = 0; i < objectInfos.Length; i++)
             {
@@ -103,6 +112,10 @@ namespace PatternManager_2_2
                 DelayedPattern1_a_1[i] = Pattern1_aTimeLine_1[i] + delaytime;
             for (int i = 0; i < Pattern1_aTimeLine_2.Length; i++)
                 DelayedPattern1_a_2[i] = Pattern1_aTimeLine_2[i] + delaytime;
+            for (int i = 0; i < Pattern6TimeLine.Length; i++)
+                DelayedPattern6[i] = Pattern6TimeLine[i] + delaytime;
+            for (int i = 0; i < Pattern7_aTimeLine.Length; i++)
+                DelayedPattern7_a[i] = Pattern7_aTimeLine[i] + delaytime;
         }
 
         private void PatternMake()
@@ -110,15 +123,21 @@ namespace PatternManager_2_2
             float startTime = audioSource.time;
 
             for (int i = 0; i < DelayedPattern1_a_1.Length; i++)
-            {
-                StartCoroutine(Pattern1_a(DelayedPattern1_a_1[i], startTime));
-            }
+                StartCoroutine(pattern1_a(DelayedPattern1_a_1[i], startTime));
             for (int i = 0; i < DelayedPattern1_a_2.Length; i++)
-                StartCoroutine(Pattern1_a(DelayedPattern1_a_2[i], startTime));
+                StartCoroutine(pattern1_a(DelayedPattern1_a_2[i], startTime));
+            for (int i = 0; i < DelayedPattern6.Length; i++)
+                StartCoroutine(Pattern6(DelayedPattern6[i], startTime));
+            for (int i = 0; i < DelayedPattern7_a.Length; i++)
+            {
+                randomY7_a = Random.Range(-2f, 4.5f);
+                StartCoroutine(Pattern7_a(DelayedPattern7_a[i], startTime, randomY7_a));
+                StartCoroutine(Pattern7_a_WarningBox(DelayedPattern7_a[i], startTime, randomY7_a));
+            }
 
         }
 
-        IEnumerator Pattern1_a(float t, float startTime)
+        IEnumerator pattern1_a(float t, float startTime)
         {
             string objectName = objectInfos[0].objectName;
 
@@ -154,8 +173,101 @@ namespace PatternManager_2_2
                 yield return new WaitForSeconds(1f);
 
                 //고양이 생성
-                SetPrefabIndex(0);
+                SetPrefabInfos(0);
                 MakingCat(objectName, randomX);
+            }
+            yield break;
+        }
+
+        IEnumerator Pattern6(float t, float startTime)
+        {
+            string objectName = objectInfos[1].objectName;
+
+            float randomX;
+
+            void MakingCat(string ObjectName, float X)
+            {
+                GameObject cat2;
+
+                cat2 = ObjectPoolDic[ObjectName].Get();
+
+                cat2.gameObject.transform.position = new Vector3(X, 5, 0); //위치 이동
+                cat2.gameObject.GetComponent<Cat_2>().Setting();
+                cat2.gameObject.GetComponent<Cat_2>().IsPooled = true;
+
+                //return PoolingManager;
+            }
+
+            if (0 <= t - startTime)
+            {
+                //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
+                yield return new WaitForSeconds(t - (startTime + 1f));
+                //변수 캐싱
+                randomX = Random.Range(-8f, 8f);
+                //경고 표식 생성
+                eventManager.playerEvent.markActivationEvent();
+                yield return new WaitForSeconds(1f);
+                eventManager.playerEvent.markInactivationEvent();
+
+                //고양이 생성
+                SetPrefabInfos(1);
+                MakingCat(objectName, randomX);
+            }
+            yield break;
+        }
+
+        IEnumerator Pattern7_a(float t, float startTime, float RandomY)
+        {
+            string objectName = objectInfos[2].objectName;
+
+            float randomY = RandomY;
+
+            void MakingCat(string ObjectName, float Y)
+            {
+                GameObject cat3;
+                cat3 = ObjectPoolDic[ObjectName].Get();
+                cat3.gameObject.GetComponent<Pattern1_a>().time = 0;
+                cat3.gameObject.transform.position = new Vector3(10.5f, Y, 0); //위치 이동
+                cat3.gameObject.GetComponent<Pattern1_a>().IsPooled = true;
+
+            }
+
+            if (0 <= t - startTime)
+            {
+                //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
+                yield return new WaitForSeconds(t - (startTime + 1));
+
+                //고양이 생성
+                SetPrefabInfos(2);
+                MakingCat(objectName, randomY);
+            }
+            yield break;
+        }
+
+        IEnumerator Pattern7_a_WarningBox(float t, float startTime, float RandomY)
+        {
+            string objectName = objectInfos[3].objectName;
+
+            float randomY = RandomY;
+
+            void MakingWarningBox(string WarningBox, float Y)
+            {
+                GameObject cat3_WarningBox;
+                cat3_WarningBox = ObjectPoolDic[objectName].Get();
+                cat3_WarningBox.gameObject.GetComponent<Warning1_a>().time = 0f;
+                cat3_WarningBox.gameObject.transform.position = new Vector3(9f, Y, 0);
+                cat3_WarningBox.gameObject.GetComponent<Warning1_a>().IsPooled = true;
+
+                //return PoolingManager;
+            }
+
+            if (0 <= t - startTime)
+            {
+                //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
+                yield return new WaitForSeconds(t - (startTime + 1));
+
+                SetPrefabInfos(3);
+                MakingWarningBox(objectName, randomY);
             }
             yield break;
         }
@@ -166,9 +278,10 @@ namespace PatternManager_2_2
             audioSource.Play();
         }
 
-        private void SetPrefabIndex(int prefabIndex)
+        private void SetPrefabInfos(int prefabIndex)
         {
             PrefabIndex = prefabIndex;
+            objectName = objectInfos[prefabIndex].objectName;
         }
 
 

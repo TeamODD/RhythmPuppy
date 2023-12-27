@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4904516389055038634}
   - component: {fileID: 4904516389055038635}
   - component: {fileID: 5311542786810400890}
+  - component: {fileID: 402161958769956858}
   m_Layer: 5
   m_Name: Warning_1_a
   m_TagString: Untagged
@@ -96,6 +97,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1953cd3347c7b34385fba9fbd77af66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 0
+  IsPooled: 0
+--- !u!114 &402161958769956858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4904516389055038612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b097231910c775e4abea355ad228bfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5985770537290447107
@@ -190,8 +205,9 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5985770537290447107}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 166df3e4b80ca6948a15ba6da9675cd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventManager: {fileID: 0}

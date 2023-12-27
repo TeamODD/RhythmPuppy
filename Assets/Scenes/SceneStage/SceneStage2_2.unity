@@ -140,11 +140,11 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 60a7988051a2822469249408149f5f5b, type: 3}
     - target: {fileID: 1089668451346874250, guid: 75dae6d2775dd3740876f7df1dd22b18, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8966098459940017490, guid: 75dae6d2775dd3740876f7df1dd22b18, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8966098459940017491, guid: 75dae6d2775dd3740876f7df1dd22b18, type: 3}
       propertyPath: m_Pivot.x
@@ -1147,9 +1147,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectInfos:
-  - objectName: 1-a
+  - objectName: cat1_a
     prefab: {fileID: 4005571409586596380, guid: 01f973f280cc91a4090e89e381b7e14c, type: 3}
     count: 3
+  - objectName: cat6
+    prefab: {fileID: 7425868369605693209, guid: 26cb71d2f187a5f45a55839efe7438a6, type: 3}
+    count: 3
+  - objectName: cat7_a
+    prefab: {fileID: 7506457200119509184, guid: 27f1e9a8219873e45a0ed8b5ad4ccf37, type: 3}
+    count: 5
+  - objectName: cat7_aWarningBox
+    prefab: {fileID: 4904516389055038612, guid: a9e8f56058fb542409b82f99d937bd06, type: 3}
+    count: 5
   audioSource: {fileID: 2117660269}
   audioClip: {fileID: 8300000, guid: 1c8059f5c96281741a2060106ea601d8, type: 3}
   MusicManager: {fileID: 2117660267}
@@ -1290,6 +1299,94 @@ MonoBehaviour:
   - 133.2
   - 134
   - 134.6
+  Pattern6TimeLine:
+  - 5.5
+  - 8.4
+  - 11.2
+  - 14
+  - 16.9
+  - 22.5
+  - 124.2
+  - 127
+  - 129.8
+  - 132.6
+  Pattern7_aTimeLine:
+  - 0.9
+  - 2.3
+  - 3.8
+  - 5.2
+  - 6.6
+  - 8
+  - 9.4
+  - 10.8
+  - 12.3
+  - 13.7
+  - 15.1
+  - 16.5
+  - 17.9
+  - 19.3
+  - 20.8
+  - 22.2
+  - 23.5
+  - 24.9
+  - 26.4
+  - 27.8
+  - 29.2
+  - 30.6
+  - 32
+  - 33.4
+  - 34.8
+  - 36.3
+  - 37.7
+  - 39.1
+  - 68.8
+  - 70.2
+  - 71.5
+  - 73
+  - 74.4
+  - 75.8
+  - 77.2
+  - 78.6
+  - 80
+  - 81.4
+  - 82.9
+  - 84.3
+  - 85.7
+  - 87.1
+  - 88.5
+  - 89.9
+  - 91.3
+  - 92.8
+  - 94.2
+  - 95.6
+  - 97
+  - 98.4
+  - 99.8
+  - 101.2
+  - 102.6
+  - 104
+  - 105.4
+  - 106.9
+  - 108.3
+  - 109.7
+  - 111.1
+  - 112.5
+  - 113.9
+  - 115.3
+  - 116.8
+  - 118.2
+  - 119.6
+  - 121
+  - 122.4
+  - 123.8
+  - 125.3
+  - 126.7
+  - 128
+  - 129.5
+  - 130.9
+  - 132.3
+  - 133.7
+  - 135.1
 --- !u!1 &1245616595
 GameObject:
   m_ObjectHideFlags: 0
@@ -1819,11 +1916,11 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 60a7988051a2822469249408149f5f5b, type: 3}
     - target: {fileID: 1089668451346874250, guid: 75dae6d2775dd3740876f7df1dd22b18, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8966098459940017490, guid: 75dae6d2775dd3740876f7df1dd22b18, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8966098459940017491, guid: 75dae6d2775dd3740876f7df1dd22b18, type: 3}
       propertyPath: m_Pivot.x
