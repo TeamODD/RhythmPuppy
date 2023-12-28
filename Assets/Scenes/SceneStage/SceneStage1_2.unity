@@ -3295,7 +3295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc72f9992f03bf148b4e69d959810e49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShakeAmount: 0.2
+  ShakeAmount: 0.1
 --- !u!1 &2136633901
 GameObject:
   m_ObjectHideFlags: 0
@@ -3340,6 +3340,7 @@ MonoBehaviour:
   pattern9: {fileID: 828353507}
   pattern10: {fileID: 924600124}
   DelayTime: 1
+  MainCamera: {fileID: 2099564461}
 --- !u!4 &2136633903
 Transform:
   m_ObjectHideFlags: 0

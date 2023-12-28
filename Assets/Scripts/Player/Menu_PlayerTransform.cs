@@ -23,6 +23,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     public GameObject Select_Difficulty;
     public GameObject Normal;
     public GameObject Hard;
+    public GameObject ParticleSystem;
 
     private Vector3 endPoint;
     private Vector3 currentPosition;
@@ -93,7 +94,6 @@ public class Menu_PlayerTransform : MonoBehaviour
             PlayerWalkingSound.instance.World2_Walking();
     }
     
-
     void DifficultyOff()
     {
         ReadyToGoStage = false;
@@ -102,6 +102,7 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Update()
     {
+        ParticleSystem.transform.position = transform.position;
         int offset = 1;
         time += Time.deltaTime;
         if (onInputDelay || IsPaused) return;
@@ -179,15 +180,14 @@ public class Menu_PlayerTransform : MonoBehaviour
                     StartCoroutine(LoadingScene());
                     break;
             }
-        }
-        
+        }      
     }
 
     IEnumerator move(string s)
     {
         float offset = 0.01f;
-        
-        switch(s)
+        ParticleSystem.GetComponent<ParticleSystem>().Play();
+        switch (s)
         {
             case "Forward":
                 endPoint = waypoints[currentIndex];
@@ -210,6 +210,7 @@ public class Menu_PlayerTransform : MonoBehaviour
         }
         transform.position = endPoint;
         animator.SetBool("WalkBool", false);
+        ParticleSystem.GetComponent<ParticleSystem>().Stop();
 
         yield break;
     }
