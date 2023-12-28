@@ -7,6 +7,8 @@ using static Menu_PlayerTransform;
 
 public class PlaySelectSound : MonoBehaviour
 {
+
+    //아무래도 잘 못 만들어진 싱글톤 함수인듯 합니다.
     private AudioSource theAudio;
     [SerializeField]
     private AudioClip[] Music_Stage;

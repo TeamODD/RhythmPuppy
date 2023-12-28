@@ -493,7 +493,7 @@ public class Player : MonoBehaviour
 
         yield return new WaitForSeconds(5f);
 
-        if (deathCount <= 3)
+        if (deathCount <= 2)
         {
             eventManager.stageEvent.rewindEvent();
             eventManager.playerEvent.reviveEvent();

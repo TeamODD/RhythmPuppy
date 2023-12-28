@@ -8448,6 +8448,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -2502738262632219132, guid: f09b81a8c25e6854790d0f7b4dd2057a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.003
+      objectReference: {fileID: 0}
     - target: {fileID: -1946264304086119178, guid: f09b81a8c25e6854790d0f7b4dd2057a, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -8475,6 +8479,10 @@ PrefabInstance:
     - target: {fileID: -913914940711924780, guid: f09b81a8c25e6854790d0f7b4dd2057a, type: 3}
       propertyPath: m_SortingOrder
       value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: -553452711977426290, guid: f09b81a8c25e6854790d0f7b4dd2057a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: -553452711977426290, guid: f09b81a8c25e6854790d0f7b4dd2057a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -12946,6 +12954,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Background0 clone
       objectReference: {fileID: 0}
+    - target: {fileID: -8653719598885068355, guid: 724097c62c045e142ae02dbd50ba614c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 724097c62c045e142ae02dbd50ba614c, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -14729,7 +14741,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 8300000, guid: 7c627e27a8a4ce743a2ebe064539d77d, type: 3}
   - {fileID: 0}
-  - {fileID: 8300000, guid: a2fed9f2752b85c42a98157367ccb4fd, type: 3}
+  - {fileID: 8300000, guid: 1c8059f5c96281741a2060106ea601d8, type: 3}
   - {fileID: 0}
   audioSourceSelect: {fileID: 0}
   audioClipSelect:
