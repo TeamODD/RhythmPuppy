@@ -550,7 +550,7 @@ public class Tutorials2Manager : MonoBehaviour
 
         Rigidbody2D TutorialCorgi_Bone_Rig2D = TutorialCorgi_Bone.GetComponent<Rigidbody2D>();
 
-        TutorialCorgi_Bone.transform.position = new Vector3(1f, 0.6f, 0f);
+        TutorialCorgi_Bone.transform.position = new Vector3(0.753f, -0.739f, 0f);
         PlayerCorgi_Bone.transform.position = new Vector3(1f, -0.6f, 0f);
         TutorialCorgi_Bone.transform.SetParent(null);
 
@@ -559,7 +559,7 @@ public class Tutorials2Manager : MonoBehaviour
             TutorialCorgi_Bone_Rig2D.velocity = Vector2.zero;
             TutorialCorgiRig2D.velocity = Vector2.zero;
             TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
-            TutorialCorgi_Bone.transform.position = new Vector3(1f, 0.6f, 0f);
+            TutorialCorgi_Bone.transform.position = new Vector3(0.753f, -0.739f, 0f);
             TutorialCorgi_MouseImage.transform.position = new Vector3(TutorialCorgi_Bone.transform.position.x, TutorialCorgi_Bone.transform.position.y + 1.15f, 0f);
 
             if (TutorialCorgi.transform.localScale.x < 0)
@@ -650,7 +650,6 @@ public class Tutorials2Manager : MonoBehaviour
 
         SceneManager.LoadSceneAsync("SceneMenu_01");
     }
-
 
     private IEnumerator RunOakPattern()
     {

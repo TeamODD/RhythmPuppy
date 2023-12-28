@@ -9,6 +9,8 @@ using static UnityEngine.GraphicsBuffer;
 
 using SceneData;
 using EventManagement;
+using System.Net.Sockets;
+using UnityEditor.Experimental.GraphView;
 
 public class Player : MonoBehaviour
 {
@@ -135,7 +137,7 @@ public class Player : MonoBehaviour
             if (GameObject.Find("Tutorials2Manager") != null)
             {
                 tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
-                if (tutorials2Manager.IsFinishedDashTest == true && tutorials2Manager.IsFinishedTeleportTest == false)
+                if (tutorials2Manager.IsFinishedDashTest == true && tutorials2Manager.IsFinishedTeleportTest == false || tutorials2Manager.IsFinishedJumpTest == false)
                 {
                     return;
                 }
@@ -154,12 +156,30 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown("Shoot"))
         {
+            //텔레포트 사용 방지코드
+            if (GameObject.Find("Tutorials2Manager") != null)
+            {
+                tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
+                if (tutorials2Manager.IsFinishedDashTest == false)
+                {
+                    return;
+                }
+            }
+
             if (!onFired)
             {
                 if (currentStamina < shootStaminaCost)
                     Debug.Log("not enough stamina!");
                 else if (shootCooldownCoroutine == null)
+                {
+                    Projectile projectile = GameObject.Find("Projectile").GetComponent<Projectile>();
+                    if (!projectile.IsBoneRecovered)
+                    {
+                        return;
+                    }
                     eventManager.playerEvent.shootEvent();
+                }
+                    
             }
             else
             {
@@ -172,23 +192,10 @@ public class Player : MonoBehaviour
                 eventManager.playerEvent.shootCancelEvent();
         }
 
-        if (Input.GetKey(KeyCode.F1))
+        if (Input.GetKey(KeyCode.F1)&&Input.GetKey(KeyCode.F12))
         {
             Debug.Log("개발자모드 작동");
-            Collider2D collider2D = gameObject.GetComponent<Collider2D>();
-            if (collider2D != null)
-            {
-                collider2D.enabled = false;
-            }
-
-            foreach (Transform child in gameObject.transform)
-            {
-                Collider2D childCollider = child.GetComponent<Collider2D>();
-                if (childCollider != null)
-                {
-                    childCollider.enabled = false;
-                }
-            }
+            transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled = false;
         }
     }
 
@@ -240,6 +247,15 @@ public class Player : MonoBehaviour
                 return;
             }
 
+            if (dashCoroutine != null) evade(c);
+            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D c)
+    {
+        if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
+        {
             if (dashCoroutine != null) evade(c);
             else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
@@ -504,6 +520,21 @@ public class Player : MonoBehaviour
         setAlpha(1);
         anim.ResetTrigger("Death");
         anim.SetTrigger("Revive");
+
+        if (GameObject.FindGameObjectWithTag("Boss")!=null) //Boss태그를 단 오브젝트가 있는 스테이지에서 죽었고,
+        {
+            BoxCollider2D bosscollider2D = GameObject.FindGameObjectWithTag("Boss").transform.GetChild(0).GetComponent<BoxCollider2D>();
+            Vector2 bosscollider2D_size = bosscollider2D.size;
+            if (-bosscollider2D_size.x < transform.position.x) //보스의 왼쪽에 죽었으면
+            {
+                transform.position -= new Vector3(bosscollider2D_size.x - Mathf.Abs(transform.position.x), 0f, 0f);
+            }
+            else if (transform.position.x < bosscollider2D_size.x) //보스의 오른쪽에 죽었으면
+            {
+                transform.position += new Vector3(bosscollider2D_size.x - Mathf.Abs(transform.position.x), 0f, 0f);
+            }
+        }
+
         StartCoroutine(reviveEventCoroutine());
     }
 

@@ -15,7 +15,7 @@ public class GameRestart : MonoBehaviour
 
         Scene currentScene = SceneManager.GetActiveScene();
         string sceneName = currentScene.name;
-
+        //게임 진행 중 리스타트를 위한 부분
         if (sceneName.StartsWith("SceneStage"))
         {
             string stageInfo = sceneName.Substring("SceneStage".Length);
@@ -35,7 +35,13 @@ public class GameRestart : MonoBehaviour
                 Debug.LogWarning("Failed to parse stage number.");
             }
         }
-        else
+        else if (sceneName == "Tutorials2")
+        {
+            Time.timeScale = 1f;
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        }
+        else //게임오버씬에서 되돌아오기 위한 부분
         {
             string savedSceneName = PlayerPrefs.GetString("PlayingSceneName");
 
