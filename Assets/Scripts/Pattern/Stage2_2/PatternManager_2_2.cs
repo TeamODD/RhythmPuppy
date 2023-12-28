@@ -28,6 +28,9 @@ namespace PatternManager_2_2
         AudioClip audioClip;
         [SerializeField]
         private GameObject MusicManager;
+        [SerializeField]
+        private SpriteRenderer BlackScreen; //패턴3_b 
+
         EventManager eventManager;
         //private ObjectPoolManager PoolingManager;
         private IObjectPool<GameObject> _Pool;
@@ -42,7 +45,6 @@ namespace PatternManager_2_2
         public bool IsReady { get; set; }
         private float startTime = 3f;
 
-        private float randomY7_a;
         //패턴 타임라인에 대해서는 이름을 바꾼다거나하는 등, 절대 건들지 마시오.
         [SerializeField]
         private float[] Pattern1_aTimeLine_1;
@@ -116,11 +118,13 @@ namespace PatternManager_2_2
                 DelayedPattern6[i] = Pattern6TimeLine[i] + delaytime;
             for (int i = 0; i < Pattern7_aTimeLine.Length; i++)
                 DelayedPattern7_a[i] = Pattern7_aTimeLine[i] + delaytime;
+
         }
 
         private void PatternMake()
         {
             float startTime = audioSource.time;
+            float randomY = 0;
 
             for (int i = 0; i < DelayedPattern1_a_1.Length; i++)
                 StartCoroutine(pattern1_a(DelayedPattern1_a_1[i], startTime));
@@ -130,10 +134,11 @@ namespace PatternManager_2_2
                 StartCoroutine(Pattern6(DelayedPattern6[i], startTime));
             for (int i = 0; i < DelayedPattern7_a.Length; i++)
             {
-                randomY7_a = Random.Range(-2f, 4.5f);
-                StartCoroutine(Pattern7_a(DelayedPattern7_a[i], startTime, randomY7_a));
-                StartCoroutine(Pattern7_a_WarningBox(DelayedPattern7_a[i], startTime, randomY7_a));
+                randomY = Random.Range(-2f, 4.5f);
+                StartCoroutine(Pattern7_a(DelayedPattern7_a[i], startTime, randomY));
+                StartCoroutine(Pattern7_a_WarningBox(DelayedPattern7_a[i], startTime, randomY));
             }
+            StartCoroutine(Pattern3_b(39.4f + 3f, startTime)); //3f = (Global) startTime
 
         }
 
@@ -268,6 +273,37 @@ namespace PatternManager_2_2
 
                 SetPrefabInfos(3);
                 MakingWarningBox(objectName, randomY);
+            }
+            yield break;
+        }
+
+        IEnumerator Pattern3_b(float t, float startTime)
+        {
+            if (0 <= t - startTime)
+            {
+                yield return new WaitForSeconds(t - startTime);
+
+                float Faze1Alpha = 225f / 11.5f;
+                float Faze1Time = 0;
+                float Faze2Time = 0;
+
+                while (Faze1Time < 11.5f)
+                {
+                    BlackScreen.color = new Color(0, 0, 0, Faze1Alpha);
+                    Faze1Time += Time.fixedDeltaTime; //실제로 11.5초 걸리는지 확인 해봐야함
+                    Faze1Alpha += Faze1Alpha;
+                    yield return new WaitForFixedUpdate();
+                }
+                yield return new WaitForSeconds(28.1f);
+
+                while (Faze2Time < 11.3f)
+                {
+                    BlackScreen.color = new Color(0, 0, 0, Faze1Alpha);
+                    Faze2Time += Time.fixedDeltaTime;
+                    Faze1Alpha -= Faze1Alpha;
+                    yield return new WaitForFixedUpdate();
+                }
+                BlackScreen.color = new Color(0, 0, 0, 0);
             }
             yield break;
         }

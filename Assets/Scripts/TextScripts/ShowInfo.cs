@@ -30,7 +30,7 @@ public class ShowInfo : MonoBehaviour
                 Info.text = "Music: Start the Engine\nArtist: LemonMusicStudio";
                 break;
             case 10:
-                Info.text = "Music: Gaming 8bit Music\nArtist: AlexiAction";
+                Info.text = "Music: Final Hour\nArtist: isaiah658";
                 break;
             default:
                 Info.text = "";
