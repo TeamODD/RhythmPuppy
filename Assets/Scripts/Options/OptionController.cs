@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class OptionController : MonoBehaviour
@@ -23,6 +24,15 @@ public class OptionController : MonoBehaviour
         {
             if (mainCameraObject != mainCameraToturnOff)
                 mainCameraToturnOff.SetActive(false);
+        }
+
+        // 현재 Scene에서 Event System 찾기
+        EventSystem[] eventSystems = FindObjectsOfType<EventSystem>();
+
+        // 첫 번째 이외의 Event System 비활성화
+        for (int i = 1; i < eventSystems.Length; i++)
+        {
+            eventSystems[i].gameObject.SetActive(false);
         }
     }
 }

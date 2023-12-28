@@ -59,7 +59,7 @@ public class TutorialCorgiScript : MonoBehaviour
 
         TutorialCorgiRig2D = GetComponent<Rigidbody2D>();
 
-        TutorialCorgi_Bone = GameObject.Find("Projectile");
+        TutorialCorgi_Bone = GameObject.Find("TutorialCorgiProjectile");
 
         // 자식 오브젝트에 있는 모든 스프라이트 렌더러를 가져옴
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();

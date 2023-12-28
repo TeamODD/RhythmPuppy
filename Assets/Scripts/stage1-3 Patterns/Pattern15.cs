@@ -29,7 +29,16 @@ public class Pattern15 : MonoBehaviour
     private IEnumerator pattern()
     {
         // 경고 오브젝트 생성
-        float Xpos = Random.Range(-5.05f, 7.868f);
+        float Xpos;
+        if (Random.Range(0, 2) == 0)
+        {
+            Xpos = Random.Range(-7.98f, -2.32f);
+        }
+        else
+        {
+            Xpos = Random.Range(2.32f, 7.98f);
+        }
+
         Vector3 warningPosition = new Vector3(Xpos, -3.416f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 

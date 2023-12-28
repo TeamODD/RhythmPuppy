@@ -270,7 +270,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1711239361244926437, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
       propertyPath: m_Size.x
-      value: 4.2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1711239361244926437, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
       propertyPath: m_Size.y
@@ -278,15 +278,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1711239361244926437, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
       propertyPath: m_Offset.x
-      value: -0.84
+      value: -0.26
       objectReference: {fileID: 0}
     - target: {fileID: 1711239361244926437, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
       propertyPath: m_Offset.y
       value: -0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 1711239361244926437, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2504214358711625576, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
       propertyPath: m_SortingOrder
-      value: 100
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5359566681268600028, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
       propertyPath: m_Layer
@@ -302,11 +306,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8605809328303931651, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 8605809328303931651, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
       propertyPath: m_TagString
-      value: Obstacles
+      value: Boss
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 690d6d3919538c54db8d5db3ba254596, type: 3}
@@ -487,6 +491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cde77d9f3dccf6c46ba3532492a19826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPaused: 0
 --- !u!4 &370963102
 Transform:
   m_ObjectHideFlags: 0
@@ -1521,6 +1526,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerCorgi: {fileID: 527520153}
+--- !u!50 &1219730547
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1219730545}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1295281911
 GameObject:
   m_ObjectHideFlags: 0
@@ -2160,6 +2186,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Img1
       objectReference: {fileID: 0}
+    - target: {fileID: 8990387341346384610, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 4843985084834002234, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
 --- !u!1 &1484036106 stripped
@@ -2678,7 +2708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 808902230414f5547b1b0c1e5a05258e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  music: {fileID: 8300000, guid: 1a40d8bac7b111f4a9577b4f432ce752, type: 3}
+  music: {fileID: 8300000, guid: e197b5ad4f37cc2428a5b0b203abac81, type: 3}
   audioSource: {fileID: 991858439}
   savePointTime:
   - 10
@@ -2690,6 +2720,7 @@ MonoBehaviour:
   pattern14: {fileID: 1426471004}
   pattern15: {fileID: 2037563909}
   DelayTime: 1
+  Boss: {fileID: 1219730545}
 --- !u!1 &1984728876
 GameObject:
   m_ObjectHideFlags: 0
@@ -2742,6 +2773,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -57217199681390872, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
+      propertyPath: m_SleepingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 853321459083148496, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
       propertyPath: m_RootOrder
       value: 12

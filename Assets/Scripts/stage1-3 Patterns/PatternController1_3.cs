@@ -24,6 +24,8 @@ public class PatternController1_3 : MonoBehaviour
     GameObject pattern15;
     [SerializeField]
     float DelayTime;
+    [SerializeField]
+    GameObject Boss;
 
     bool isPuppyShown;
 
@@ -106,6 +108,7 @@ public class PatternController1_3 : MonoBehaviour
         StartCoroutine(RunPattern13());
         StartCoroutine(RunPattern14());
         StartCoroutine(RunPattern15());
+        StartCoroutine(GameClear());
     }
 
     private void Update()
@@ -114,7 +117,7 @@ public class PatternController1_3 : MonoBehaviour
         {
             isPuppyShown = true;
             GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc();
-        }
+        }//2분 38초 보스 사망?
     }
 
     void deathEvent()
@@ -219,5 +222,14 @@ public class PatternController1_3 : MonoBehaviour
             newPattern15.SetActive(true);
         }
         yield return null;
+    }
+
+    private IEnumerator GameClear()
+    {
+        yield return new WaitForSeconds(100f);
+        Rigidbody2D BossRigidbody2D = Boss.GetComponent<Rigidbody2D>();
+        BossRigidbody2D.velocity = Vector2.down * 3f;
+        yield return new WaitUntil(() => Boss.transform.position.y < -8f);
+        BossRigidbody2D.velocity = Vector2.zero;
     }
 }
