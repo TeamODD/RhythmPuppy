@@ -5,7 +5,8 @@ using UnityEngine.Pool;
 using Obstacles;
 using EventManagement;
 
-namespace PatternManager_2_2
+
+namespace Stage_2
 {
     public class PatternManager_2_2 : MonoBehaviour
     {
@@ -30,6 +31,8 @@ namespace PatternManager_2_2
         private GameObject MusicManager;
         [SerializeField]
         private SpriteRenderer BlackScreen; //패턴3_b 
+        [SerializeField]
+        private GameObject ArtifactManager;
 
         EventManager eventManager;
         //private ObjectPoolManager PoolingManager;
@@ -58,7 +61,9 @@ namespace PatternManager_2_2
         [SerializeField]
         private float[] Pattern7_aTimeLine;
         private float[] DelayedPattern7_a;
-
+        [SerializeField]
+        private float[] Pattern8TimeLine;
+        private float[] DelayedPattern8;
 
         void Awake()
         {
@@ -73,10 +78,12 @@ namespace PatternManager_2_2
 
             audioSource.clip = audioClip;
 
+
             DelayedPattern1_a_1 = new float[Pattern1_aTimeLine_1.Length];
             DelayedPattern1_a_2 = new float[Pattern1_aTimeLine_2.Length];
             DelayedPattern6 = new float[Pattern6TimeLine.Length];
             DelayedPattern7_a = new float[Pattern7_aTimeLine.Length];
+            DelayedPattern8 = new float[Pattern8TimeLine.Length];
 
             for (int i = 0; i < objectInfos.Length; i++)
             {
@@ -118,7 +125,8 @@ namespace PatternManager_2_2
                 DelayedPattern6[i] = Pattern6TimeLine[i] + delaytime;
             for (int i = 0; i < Pattern7_aTimeLine.Length; i++)
                 DelayedPattern7_a[i] = Pattern7_aTimeLine[i] + delaytime;
-
+            for (int i = 0; i < Pattern8TimeLine.Length; i++)
+                DelayedPattern8[i] = Pattern8TimeLine[i] + delaytime;
         }
 
         private void PatternMake()
@@ -139,7 +147,8 @@ namespace PatternManager_2_2
                 StartCoroutine(Pattern7_a_WarningBox(DelayedPattern7_a[i], startTime, randomY));
             }
             StartCoroutine(Pattern3_b(39.4f + 3f, startTime)); //3f = (Global) startTime
-
+            for (int i = 0; i < DelayedPattern8.Length; i++)
+                StartCoroutine(Pattern_8(DelayedPattern8[i], startTime));
         }
 
         IEnumerator pattern1_a(float t, float startTime)
@@ -158,7 +167,7 @@ namespace PatternManager_2_2
             {
                 GameObject cat;
 
-                cat = ObjectPoolDic[ObjectName].Get();  
+                cat = ObjectPoolDic[ObjectName].Get();
 
                 cat.gameObject.transform.position = new Vector3(X, -2, 0); //위치 이동
                 cat.gameObject.GetComponent<Cat_1>().Jump(); //점프를 하도록
@@ -227,10 +236,10 @@ namespace PatternManager_2_2
 
             float randomY = RandomY;
 
-            void MakingCat(string ObjectName, float Y)
+            void MakingCat(float Y)
             {
                 GameObject cat3;
-                cat3 = ObjectPoolDic[ObjectName].Get();
+                cat3 = ObjectPoolDic[objectName].Get();
                 cat3.gameObject.GetComponent<Pattern1_a>().time = 0;
                 cat3.gameObject.transform.position = new Vector3(10.5f, Y, 0); //위치 이동
                 cat3.gameObject.GetComponent<Pattern1_a>().IsPooled = true;
@@ -244,7 +253,7 @@ namespace PatternManager_2_2
 
                 //고양이 생성
                 SetPrefabInfos(2);
-                MakingCat(objectName, randomY);
+                MakingCat(randomY);
             }
             yield break;
         }
@@ -255,7 +264,7 @@ namespace PatternManager_2_2
 
             float randomY = RandomY;
 
-            void MakingWarningBox(string WarningBox, float Y)
+            void MakingWarningBox(float Y)
             {
                 GameObject cat3_WarningBox;
                 cat3_WarningBox = ObjectPoolDic[objectName].Get();
@@ -272,38 +281,89 @@ namespace PatternManager_2_2
                 yield return new WaitForSeconds(t - (startTime + 1));
 
                 SetPrefabInfos(3);
-                MakingWarningBox(objectName, randomY);
+                MakingWarningBox(randomY);
             }
             yield break;
         }
 
         IEnumerator Pattern3_b(float t, float startTime)
         {
+            void LampControll(bool s)
+            {
+                ArtifactManager.transform.GetChild(0).gameObject.GetComponent<LampAction>().LampControl(s);
+                ArtifactManager.transform.GetChild(1).gameObject.GetComponent<LampAction>().LampControl(s);
+            }
+
             if (0 <= t - startTime)
             {
                 yield return new WaitForSeconds(t - startTime);
 
-                float Faze1Alpha = 225f / 11.5f;
+                float SpriteAlpha = 0;
                 float Faze1Time = 0;
-                float Faze2Time = 0;
+                float Faze2Time = 11.3f;
 
                 while (Faze1Time < 11.5f)
                 {
-                    BlackScreen.color = new Color(0, 0, 0, Faze1Alpha);
+                    float CalFactor = 1 / 11.5f;
+                    BlackScreen.color = new Color(0, 0, 0, SpriteAlpha);
                     Faze1Time += Time.fixedDeltaTime; //실제로 11.5초 걸리는지 확인 해봐야함
-                    Faze1Alpha += Faze1Alpha;
+                    SpriteAlpha = Faze1Time * CalFactor;
                     yield return new WaitForFixedUpdate();
                 }
+                BlackScreen.color = new Color(0, 0, 0, 1);
+                LampControll(false);
+                SpriteAlpha = 1f;
+
                 yield return new WaitForSeconds(28.1f);
 
-                while (Faze2Time < 11.3f)
+                LampControll(true);
+                while (Faze2Time > 0)
                 {
-                    BlackScreen.color = new Color(0, 0, 0, Faze1Alpha);
-                    Faze2Time += Time.fixedDeltaTime;
-                    Faze1Alpha -= Faze1Alpha;
+                    float CalFactor = 1 / 11.3f;
+                    BlackScreen.color = new Color(0, 0, 0, SpriteAlpha);
+                    Faze2Time -= Time.fixedDeltaTime;
+                    SpriteAlpha = Faze2Time * CalFactor;
                     yield return new WaitForFixedUpdate();
                 }
                 BlackScreen.color = new Color(0, 0, 0, 0);
+            }
+
+            if(0 >= t - startTime && t - startTime - 50.9f <= 0)
+            {
+                //패턴 진행중일시
+
+            }
+            yield break;
+        }
+
+        IEnumerator Pattern_8(float t, float startTime)
+        {
+            string objectName = objectInfos[4].objectName;
+
+            float randomX;
+            float randomY;
+
+            void MakingObject()
+            {
+                GameObject firefly;
+                firefly = ObjectPoolDic[objectName].Get();
+                firefly.gameObject.transform.position = new Vector3(randomX, randomY, 0);
+                firefly.gameObject.GetComponent<Pattern8>().IsPooled = true;
+                firefly.gameObject.GetComponent<Pattern8>().time = 0;
+
+                //return PoolingManager;
+            }
+
+            if (0 <= t - startTime)
+            {
+                //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
+                yield return new WaitForSeconds(t - startTime);
+
+                randomX = Random.Range(-7f, 7f);
+                randomY = Random.Range(-2f, 2f);
+
+                SetPrefabInfos(4);
+                MakingObject();
             }
             yield break;
         }

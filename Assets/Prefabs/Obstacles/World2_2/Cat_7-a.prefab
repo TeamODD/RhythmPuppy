@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7506457200119509197}
   - component: {fileID: 7506457200119509199}
   - component: {fileID: 1733161718021448815}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cat_7-a
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -449,6 +449,7 @@ MonoBehaviour:
   speed: 10
   dir: -1
   XPosition: 10.5
+  time: 0
   IsPooled: 0
 --- !u!114 &1733161718021448815
 MonoBehaviour:
