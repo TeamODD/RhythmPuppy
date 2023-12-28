@@ -9,47 +9,25 @@ public class Curtain : MonoBehaviour
     public GameObject RawImage;
     public GameObject VideoObject;
     public VideoPlayer Video;
-    public VideoClip CloseClip;
-    public VideoClip OpenClip;
-    
+    public VideoClip CurtainClip;
+
     void Start()
     {
-        //Invoke("CurtainOpen", 3f);
+        CurtainEffect();
     }
 
-    void CurtainClose()
+    void CurtainEffect()
     {
-        StartCoroutine(CurtainCloseCoroutine());
+        StartCoroutine(CurtainCoroutine());
     } 
 
-    IEnumerator CurtainCloseCoroutine()
+    IEnumerator CurtainCoroutine()
     {
-        Video.clip = CloseClip;
+        Video.clip = CurtainClip;
         //RawImage.SetActive(true);
         Video.Prepare();
         if (Video.isPrepared)
             Video.Play();
-
-        yield return new WaitForSeconds(3f);
-
-        yield break;
-    }
-
-    void CurtainOpen()
-    {
-        StartCoroutine(CurtainOpenCoroutine());
-    }
-
-    IEnumerator CurtainOpenCoroutine()
-    {
-        Video.clip = OpenClip;
-
-        Video.Prepare();
-        yield return Video.isPrepared;
-        if (Video.isPrepared)
-            Video.Play();
-
-        yield return new WaitForSeconds(3f);
 
         yield break;
     }

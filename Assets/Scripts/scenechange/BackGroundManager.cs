@@ -22,7 +22,27 @@ public class BackGroundManager : MonoBehaviour
         Img = backgrounds[Index].GetComponent<SpriteRenderer>();
         StartCoroutine(Alpha(Index, s));
     }
-    
+
+    public void backgroundReset(int Index, string s)
+    {
+        if (backgrounds[Index] == null) return;
+        Img = backgrounds[Index].GetComponent<SpriteRenderer>();
+        switch (s)
+        {
+            case "appear":
+                Img.color = new Color(1, 1, 1, 1);
+                if (Index > 6)
+                    Text.alpha = 1;
+                break;
+
+            case "disappear":
+                Img.color = new Color(1, 1, 1, 0);
+                if (Index > 6)
+                    Text.alpha = 0;
+                break;
+        }
+    }
+
     IEnumerator Alpha(int Index,string s)
     {
         float offset = 1f;

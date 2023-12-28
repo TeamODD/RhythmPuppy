@@ -63,9 +63,12 @@ public class Menu_PlayerTransform : MonoBehaviour
 
         //메뉴로 돌아왔을 시 인덱스에 따라 배경이 나타나도록.
         if (savingIndex >= 2)
-            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(2, "appear");
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundReset(2, "appear");
         if (savingIndex >= 7)
-            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(7, "appear");
+        {
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundReset(7, "appear");
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundReset(2, "appear");
+        }
 
         corgi_posX = waypoints[currentIndex].x;
     }
