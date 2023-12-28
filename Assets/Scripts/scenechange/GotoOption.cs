@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GotoOption : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class GotoOption : MonoBehaviour
     {
         if (!isPaused && !SceneManager.GetSceneByName("Option_Menu").isLoaded) //정지 중이지 않을 때 중지
         {
+            GameObject.Find("GotoOption").GetComponent<Button>().interactable = false;
+
             Time.timeScale = 0f;
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
             GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Pause();
@@ -31,6 +34,8 @@ public class GotoOption : MonoBehaviour
         {
             if (!isPaused && !SceneManager.GetSceneByName("Option_Menu").isLoaded) //정지 중이지 않을 때 중지
             {
+                GameObject.Find("GotoOption").GetComponent<Button>().interactable = false;
+
                 Time.timeScale = 0f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Pause();
@@ -41,6 +46,8 @@ public class GotoOption : MonoBehaviour
             }
             else if (isPaused && SceneManager.GetSceneByName("Option_Menu").isLoaded) //정지 중일 때 중지 중단
             {
+                GameObject.Find("GotoOption").GetComponent<Button>().interactable = true;
+
                 Time.timeScale = 1f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();

@@ -15,6 +15,7 @@ TagManager:
   - Sound
   - Puppy
   - SoundManager
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -29,10 +30,10 @@ TagManager:
   - Artifact
   - Obstacle
   - Projectile
+  - Boss
   - Player
   - PlayerHitbox
   - Puppy
-  - 
   - 
   - 
   - 

@@ -115,6 +115,8 @@ public class Pattern999 : MonoBehaviour
         }
         Vector2 diagonalDirection = Quaternion.Euler(0f, 0f, RandomZRoation) * Vector2.up;
         squirrelRigidbody.velocity = diagonalDirection.normalized * squirrelSpeed;
+
+        Camera.ShakeAmount = 0.1f;
         Camera.VibrateForTime(0.1f);
 
         yield return StartCoroutine(DestroyIfOutOfBounds(newSquirrel));

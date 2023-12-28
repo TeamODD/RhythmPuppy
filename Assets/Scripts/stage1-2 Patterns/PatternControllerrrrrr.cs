@@ -31,7 +31,13 @@ public class PatternControllerrrrrr : MonoBehaviour
     private GameObject pattern10;
     [SerializeField]
     float DelayTime;
+    [SerializeField]
+    GameObject MainCamera;
+
     bool isPuppyShown;
+    private float startTime;
+    EventManager eventManager;
+    CameraShake Camera;
 
     private List<float> pattern6Timings = new List<float>
     {
@@ -92,11 +98,15 @@ public class PatternControllerrrrrr : MonoBehaviour
     110.9f, 111.9f, 112.9f, 114.1f, 115.1f, 119.8f, 120.8f, 121.8f, 122.8f, 123.9f, 124.9f, 125.9f, 128.1f, 129.1f, 130.2f, 131.2f, 132.2f, 133.2f
     };
 
-    private float startTime;
-    EventManager eventManager;
+    private List<float> camerashakingTimings = new List<float>
+    {
+        42.6f, 43.6f, 44.6f, 45.8f, 46.8f, 51.5f, 52.5f, 53.5f, 54.5f, 55.7f, 56.7f, 57.7f, 59.8f, 60.8f, 61.9f, 62.9f, 63.9f, 64.9f,
+        111.4f, 112.4f, 113.4f, 114.6f, 115.6f, 120.3f, 121.3f, 122.3f, 123.3f, 124.4f, 125.4f, 126.4f, 128.6f, 129.6f, 130.7f, 131.7f, 132.7f, 133.7f
+    };
 
     private void Start()
     {
+        Camera = MainCamera.GetComponent<CameraShake>();
         isPuppyShown = false;
         eventManager = FindObjectOfType<EventManager>();
         audioSource.clip = music;
@@ -132,6 +142,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         StartCoroutine(Pattern8cTiming());
         StartCoroutine(Pattern9Timing());
         StartCoroutine(Pattern10Timing());
+        StartCoroutine(CameraShakingTiming());
     }
 
     void Update()
@@ -334,6 +345,28 @@ public class PatternControllerrrrrr : MonoBehaviour
         // 패턴을 복제하고 활성화
         GameObject newPattern10 = Instantiate(pattern10, pattern10.transform.position, pattern10.transform.rotation);
         newPattern10.SetActive(true);
+    }
+
+    private IEnumerator CameraShakingTiming()
+    {
+        for (int i = 0; i < camerashakingTimings.Count; i++)
+        {
+            float timing = camerashakingTimings[i];
+
+            if (timing < startTime)
+            {
+                continue;
+            }
+            StartCoroutine(CameraShaking(timing));
+            yield return null;
+        }
+    }
+
+    private IEnumerator CameraShaking(float timing)
+    {
+        yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+        Camera.ShakeAmount = 0.2f;
+        Camera.VibrateForTime(0.1f);
     }
 
     void deathEvent()

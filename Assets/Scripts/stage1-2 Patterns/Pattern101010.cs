@@ -31,7 +31,6 @@ public class Pattern101010 : MonoBehaviour
 
     private IEnumerator DropChestnuts()
     {
-
         float xPos = Random.Range(-8.124f, 8.124f);
         Vector3 chestnutPosition = new Vector3(xPos, 4.201f, 0f);
 
@@ -80,6 +79,7 @@ public class Pattern101010 : MonoBehaviour
         Destroy(newWarning);
 
         // ChestNut 오브젝트 생성
+        chestnutPosition = new Vector3(chestnutPosition.x, chestnutPosition.y + 1.52900f, chestnutPosition.z);
         GameObject newChestnut = Instantiate(chestnut, chestnutPosition, Quaternion.identity);
         Rigidbody2D chestnutRigidbody = newChestnut.GetComponent<Rigidbody2D>();
 
