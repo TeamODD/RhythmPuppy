@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Pattern8 : MonoBehaviour
 {
     private ObjectPoolManager PoolingManager;
-    private SpriteRenderer ObjectSprite;
+    private Image ObjectImage;
     [HideInInspector]
     public bool IsPooled = false;
     [HideInInspector]
@@ -16,15 +17,15 @@ public class Pattern8 : MonoBehaviour
         time += Time.fixedDeltaTime;
         if (time < 0.8f)
         {
-            ObjectSprite.color = new Color(1, 1, 1, time * (5 / 4));
+            ObjectImage.color = new Color(1, 1, 1, time * (5 / 4));
         }
         else if (time > 0.8f && time < 1f)
         {
-            ObjectSprite.color = new Color(1, 1, 1, 1);
+            ObjectImage.color = new Color(1, 1, 1, 1);
         }
         else if (time > 1f && time < 2.5f)
         {
-            ObjectSprite.color = new Color(1, 1, 1, 1 - ((time-1) * (2/3)));
+            ObjectImage.color = new Color(1, 1, 1, 1 - ((time-1) * (2/3)));
         }
         else
             DestroyObject();
@@ -37,7 +38,7 @@ public class Pattern8 : MonoBehaviour
 
     void init()
     {
-        ObjectSprite = gameObject.GetComponent<SpriteRenderer>();
+        ObjectImage = gameObject.GetComponent<Image>();
         PoolingManager = FindObjectOfType<ObjectPoolManager>();
     }
 

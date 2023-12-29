@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Pool;
 using Obstacles;
 using EventManagement;
@@ -30,9 +31,13 @@ namespace Stage_2
         [SerializeField]
         private GameObject MusicManager;
         [SerializeField]
-        private SpriteRenderer BlackScreen; //패턴3_b 
+        private Image BlackScreen; //패턴3_b 
         [SerializeField]
         private GameObject ArtifactManager;
+        [SerializeField]
+        private GameObject Pattern8_Canvas;
+        [SerializeField]
+        private GameObject OverlayCanvas;
 
         EventManager eventManager;
         //private ObjectPoolManager PoolingManager;
@@ -64,6 +69,9 @@ namespace Stage_2
         [SerializeField]
         private float[] Pattern8TimeLine;
         private float[] DelayedPattern8;
+        [SerializeField]
+        private float[] Pattern9TimeLine;
+        private float[] DelayedPattern9;
 
         void Awake()
         {
@@ -84,6 +92,7 @@ namespace Stage_2
             DelayedPattern6 = new float[Pattern6TimeLine.Length];
             DelayedPattern7_a = new float[Pattern7_aTimeLine.Length];
             DelayedPattern8 = new float[Pattern8TimeLine.Length];
+            DelayedPattern9 = new float[Pattern9TimeLine.Length];
 
             for (int i = 0; i < objectInfos.Length; i++)
             {
@@ -127,12 +136,15 @@ namespace Stage_2
                 DelayedPattern7_a[i] = Pattern7_aTimeLine[i] + delaytime;
             for (int i = 0; i < Pattern8TimeLine.Length; i++)
                 DelayedPattern8[i] = Pattern8TimeLine[i] + delaytime;
+            for (int i = 0; i < Pattern9TimeLine.Length; i++)
+                DelayedPattern9[i] = Pattern9TimeLine[i] + delaytime;
         }
 
         private void PatternMake()
         {
             float startTime = audioSource.time;
             float randomY = 0;
+            float randomX = 0;
 
             for (int i = 0; i < DelayedPattern1_a_1.Length; i++)
                 StartCoroutine(pattern1_a(DelayedPattern1_a_1[i], startTime));
@@ -142,13 +154,19 @@ namespace Stage_2
                 StartCoroutine(Pattern6(DelayedPattern6[i], startTime));
             for (int i = 0; i < DelayedPattern7_a.Length; i++)
             {
-                randomY = Random.Range(-2f, 4.5f);
+                randomY = Random.Range(-3.5f, 0f);
                 StartCoroutine(Pattern7_a(DelayedPattern7_a[i], startTime, randomY));
                 StartCoroutine(Pattern7_a_WarningBox(DelayedPattern7_a[i], startTime, randomY));
             }
             StartCoroutine(Pattern3_b(39.4f + 3f, startTime)); //3f = (Global) startTime
             for (int i = 0; i < DelayedPattern8.Length; i++)
                 StartCoroutine(Pattern_8(DelayedPattern8[i], startTime));
+            for (int i = 0; i < DelayedPattern9.Length; i++)
+            {
+                randomX = Random.Range(-8.7f, 8.7f);
+                StartCoroutine(Pattern_9(DelayedPattern9[i], startTime, randomX));
+                StartCoroutine(Pattern_9_WarningBox(DelayedPattern9[i], startTime, randomX));
+            }
         }
 
         IEnumerator pattern1_a(float t, float startTime)
@@ -268,8 +286,12 @@ namespace Stage_2
             {
                 GameObject cat3_WarningBox;
                 cat3_WarningBox = ObjectPoolDic[objectName].Get();
+                cat3_WarningBox.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+                cat3_WarningBox.gameObject.transform.SetParent(OverlayCanvas.transform, true);
+                Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(9, Y, 0));
+                cat3_WarningBox.gameObject.transform.position = v;
+                //cat3_WarningBox.gameObject.transform.parent = OverlayCanvas.transform;
                 cat3_WarningBox.gameObject.GetComponent<Warning1_a>().time = 0f;
-                cat3_WarningBox.gameObject.transform.position = new Vector3(9f, Y, 0);
                 cat3_WarningBox.gameObject.GetComponent<Warning1_a>().IsPooled = true;
 
                 //return PoolingManager;
@@ -304,22 +326,24 @@ namespace Stage_2
 
                 while (Faze1Time < 11.5f)
                 {
-                    float CalFactor = 1 / 11.5f;
+                    float CalFactor = 1f / 11.5f;
                     BlackScreen.color = new Color(0, 0, 0, SpriteAlpha);
                     Faze1Time += Time.fixedDeltaTime; //실제로 11.5초 걸리는지 확인 해봐야함
                     SpriteAlpha = Faze1Time * CalFactor;
                     yield return new WaitForFixedUpdate();
                 }
-                BlackScreen.color = new Color(0, 0, 0, 1);
-                LampControll(false);
                 SpriteAlpha = 1f;
-
-                yield return new WaitForSeconds(28.1f);
+                BlackScreen.color = new Color(0, 0, 0, SpriteAlpha);
+                LampControll(false);
+                yield return new WaitForSeconds(5.5f);
+                SpriteAlpha = 30f / 31f;
+                BlackScreen.color = new Color(0, 0, 0, SpriteAlpha);
+                yield return new WaitForSeconds(22.6f);
 
                 LampControll(true);
                 while (Faze2Time > 0)
                 {
-                    float CalFactor = 1 / 11.3f;
+                    float CalFactor = 30f / 350.3f; // (1 / 11.3) * (30 / 31) 알파가 250이어야함.
                     BlackScreen.color = new Color(0, 0, 0, SpriteAlpha);
                     Faze2Time -= Time.fixedDeltaTime;
                     SpriteAlpha = Faze2Time * CalFactor;
@@ -347,7 +371,10 @@ namespace Stage_2
             {
                 GameObject firefly;
                 firefly = ObjectPoolDic[objectName].Get();
-                firefly.gameObject.transform.position = new Vector3(randomX, randomY, 0);
+                //firefly.gameObject.transform.parent = Pattern8_Canvas.transform;
+                Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(randomX, randomY, 0));
+                firefly.gameObject.transform.SetParent(Pattern8_Canvas.transform, true);
+                firefly.gameObject.transform.position = v;
                 firefly.gameObject.GetComponent<Pattern8>().IsPooled = true;
                 firefly.gameObject.GetComponent<Pattern8>().time = 0;
 
@@ -359,10 +386,70 @@ namespace Stage_2
                 //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
                 yield return new WaitForSeconds(t - startTime);
 
-                randomX = Random.Range(-7f, 7f);
+                randomX = Random.Range(-7f, 7);
                 randomY = Random.Range(-2f, 2f);
 
                 SetPrefabInfos(4);
+                MakingObject();
+            }
+            yield break;
+        }
+
+        IEnumerator Pattern_9(float t, float startTime, float RandomX)
+        {
+            string objectName = objectInfos[5].objectName;
+
+            float randomX = RandomX;
+
+            void MakingObject()
+            {
+                GameObject Cat9;
+                Cat9 = ObjectPoolDic[objectName].Get();
+                Cat9.gameObject.transform.position = new Vector3(randomX, 6.5f, 0);
+                Cat9.gameObject.GetComponent<Pattern9>().IsPooled = true;
+                Cat9.gameObject.GetComponent<Pattern9>().velocity.y = 0;
+
+                //return PoolingManager;
+            }
+
+            if (0 <= t - startTime)
+            {
+                //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
+                yield return new WaitForSeconds(t - startTime);
+
+                SetPrefabInfos(5);
+                MakingObject();
+            }
+            yield break;
+        }
+
+        IEnumerator Pattern_9_WarningBox(float t, float startTime, float RandomX)
+        {
+            string objectName = objectInfos[3].objectName;
+
+            float randomX = RandomX;
+
+            void MakingObject()
+            {
+                GameObject WarningBox;
+                WarningBox = ObjectPoolDic[objectName].Get();
+                WarningBox.gameObject.transform.rotation = Quaternion.Euler(0, 0, 90);
+                WarningBox.gameObject.transform.SetParent(OverlayCanvas.transform, true);
+                Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(randomX, 4.75f, 0));
+                WarningBox.gameObject.transform.position = v;
+                //cat3_WarningBox.gameObject.transform.parent = OverlayCanvas.transform;
+                WarningBox.gameObject.GetComponent<Warning1_a>().time = 0f;
+                WarningBox.gameObject.GetComponent<Warning1_a>().IsPooled = true;
+
+                //return PoolingManager;
+            }
+
+            if (0 <= t - startTime)
+            {
+                //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
+                yield return new WaitForSeconds(t - startTime);
+
+                SetPrefabInfos(3);
                 MakingObject();
             }
             yield break;
