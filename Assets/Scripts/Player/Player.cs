@@ -190,10 +190,18 @@ public class Player : MonoBehaviour
                 eventManager.playerEvent.shootCancelEvent();
         }
 
-        if (Input.GetKey(KeyCode.F1)&&Input.GetKey(KeyCode.F12))
+        if (Input.GetKey(KeyCode.F1)&&Input.GetKeyDown(KeyCode.F12))
         {
-            Debug.Log("개발자모드 작동");
-            transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled = false;
+            if (transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled)
+            {
+                transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled = false;
+                Debug.Log("개발자모드 활성화");
+            }
+            else
+            {
+                transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled = true;
+                Debug.Log("개발자모드 비활성화");
+            }
         }
     }
 
@@ -523,7 +531,7 @@ public class Player : MonoBehaviour
         {
             BoxCollider2D bosscollider2D = GameObject.FindGameObjectWithTag("Boss").transform.GetChild(0).GetComponent<BoxCollider2D>();
             Vector2 bosscollider2D_size = bosscollider2D.size;
-            if (-bosscollider2D_size.x < transform.position.x) //보스의 왼쪽에 죽었으면
+            if (-bosscollider2D_size.x <= transform.position.x) //보스의 왼쪽에 죽었으면
             {
                 transform.position -= new Vector3(bosscollider2D_size.x - Mathf.Abs(transform.position.x), 0f, 0f);
             }
