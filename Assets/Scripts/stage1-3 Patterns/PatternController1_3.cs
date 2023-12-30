@@ -47,7 +47,12 @@ public class PatternController1_3 : MonoBehaviour
 
     private List<float> pattern15Timings = new List<float>
     {
-    24.9f, 26.2f, 27.8f, 28.5f, 29.4f, 30.2f, 31.1f, 32.6f, 34.2f, 35.0f, 35.8f, 36.7f, 37.6f, 38.6f, 40.2f, 40.9f, 41.7f, 42.5f, 43.3f, 45.4f, 46.5f, 47.3f, 48.1f, 48.9f, 75.8f, 77.4f, 79.0f, 79.7f, 80.6f, 81.4f, 82.3f, 83.5f, 85.4f, 86.2f, 87.0f, 87.9f, 88.8f, 90.3f, 91.9f, 92.6f, 93.4f, 94.2f, 95.0f, 96.6f, 98.2f, 99.0f, 99.8f
+        24.9f, 26.2f, 27.8f, 28.5f, 29.4f, 30.2f, 31.1f, 32.6f,
+        34.2f, 35.0f, 35.8f, 36.7f, 37.6f, 38.6f, 40.2f, 40.9f, 
+        41.7f, 42.5f, 43.3f, 45.4f, 46.5f, 47.3f, 48.1f, 48.9f, 
+        75.8f, 77.4f, 79.0f, 79.7f, 80.6f, 81.4f, 82.3f, 83.5f, 
+        85.4f, 86.2f, 87.0f, 87.9f, 88.8f, 90.3f, 91.9f, 92.6f, 
+        93.4f, 94.2f, 95.0f, 96.6f, 98.2f, 99.0f, 99.8f
     };
 
 
@@ -195,7 +200,7 @@ public class PatternController1_3 : MonoBehaviour
 
     private IEnumerator GameClear()
     {
-        yield return new WaitForSeconds(100f);
+        yield return new WaitForSeconds(100f - startTime);
         Rigidbody2D BossRigidbody2D = Boss.GetComponent<Rigidbody2D>();
         BossRigidbody2D.velocity = Vector2.down * 3f;
         yield return new WaitUntil(() => Boss.transform.position.y < -8f);
@@ -204,11 +209,12 @@ public class PatternController1_3 : MonoBehaviour
 
     private IEnumerator RunBlurEffect()
     {
+        BlurEffect.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f);
         for (int i = 0; i < BlurTimings.Count; i++)
         {
             float timing = BlurTimings[i];
 
-            if (timing < startTime)
+            if (timing < startTime) //안개 10초에 시작, 12초 완성, 24.9초에 종료, 26.9초에 사라짐 //24.9초에 첫 세이브
             {
                 continue;
             }
