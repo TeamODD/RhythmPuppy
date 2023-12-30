@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class Gradation : MonoBehaviour
         // 그라데이션 텍스처 생성
         Texture2D texture = new Texture2D(1, 4);
         texture.SetPixel(0, 0, color1);
-        texture.SetPixel(0, 1, color2);
+        texture.SetPixel(0, 4, color2);
         texture.Apply();
 
         // 이미지에 텍스처 적용

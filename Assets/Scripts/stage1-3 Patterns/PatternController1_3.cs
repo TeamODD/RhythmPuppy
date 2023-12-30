@@ -2,6 +2,7 @@ using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static PlayerEvent;
 
 public class PatternController1_3 : MonoBehaviour
@@ -19,13 +20,13 @@ public class PatternController1_3 : MonoBehaviour
     [SerializeField]
     GameObject pattern13;
     [SerializeField]
-    GameObject pattern14;
-    [SerializeField]
     GameObject pattern15;
     [SerializeField]
     float DelayTime;
     [SerializeField]
     GameObject Boss;
+    [SerializeField]
+    GameObject BlurEffect;
 
     bool isPuppyShown;
 
@@ -44,14 +45,15 @@ public class PatternController1_3 : MonoBehaviour
     16.3f, 21.7f, 66.5f, 72.9f
     };
 
-    private List<float> pattern14Timings = new List<float>
-    {
-
-    };
-
     private List<float> pattern15Timings = new List<float>
     {
     24.9f, 26.2f, 27.8f, 28.5f, 29.4f, 30.2f, 31.1f, 32.6f, 34.2f, 35.0f, 35.8f, 36.7f, 37.6f, 38.6f, 40.2f, 40.9f, 41.7f, 42.5f, 43.3f, 45.4f, 46.5f, 47.3f, 48.1f, 48.9f, 75.8f, 77.4f, 79.0f, 79.7f, 80.6f, 81.4f, 82.3f, 83.5f, 85.4f, 86.2f, 87.0f, 87.9f, 88.8f, 90.3f, 91.9f, 92.6f, 93.4f, 94.2f, 95.0f, 96.6f, 98.2f, 99.0f, 99.8f
+    };
+
+
+    private List<float> BlurTimings = new List<float>
+    {
+        10.0f, 60.1f
     };
 
     private float startTime;
@@ -73,7 +75,6 @@ public class PatternController1_3 : MonoBehaviour
         pattern11.SetActive(false);
         pattern12.SetActive(false);
         pattern13.SetActive(false);
-        pattern14.SetActive(false);
         pattern15.SetActive(false);
 
         StartCoroutine(StartMusicWithDelay());
@@ -94,9 +95,9 @@ public class PatternController1_3 : MonoBehaviour
         StartCoroutine(RunPattern11());
         StartCoroutine(RunPattern12());
         StartCoroutine(RunPattern13());
-        StartCoroutine(RunPattern14());
         StartCoroutine(RunPattern15());
         StartCoroutine(GameClear());
+        StartCoroutine(RunBlurEffect());
     }
 
     private void Update()
@@ -172,26 +173,6 @@ public class PatternController1_3 : MonoBehaviour
         yield return null;
     }
 
-    private IEnumerator RunPattern14()
-    {
-        for (int i = 0; i < pattern14Timings.Count; i++)
-        {
-            float timing = pattern14Timings[i];
-
-            if (timing < startTime)
-            {
-                continue;
-            }
-
-            yield return new WaitForSeconds(timing - audioSource.time + 3f);
-
-            // 패턴을 복제하고 활성화
-            GameObject newPattern14 = Instantiate(pattern14, pattern14.transform.position, pattern14.transform.rotation);
-            newPattern14.SetActive(true);
-        }
-        yield return null;
-    }
-
     private IEnumerator RunPattern15()
     {
         for (int i = 0; i < pattern15Timings.Count; i++)
@@ -219,5 +200,75 @@ public class PatternController1_3 : MonoBehaviour
         BossRigidbody2D.velocity = Vector2.down * 3f;
         yield return new WaitUntil(() => Boss.transform.position.y < -8f);
         BossRigidbody2D.velocity = Vector2.zero;
+    }
+
+    private IEnumerator RunBlurEffect()
+    {
+        for (int i = 0; i < BlurTimings.Count; i++)
+        {
+            float timing = BlurTimings[i];
+
+            if (timing < startTime)
+            {
+                continue;
+            }
+            yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+
+            if (i == 0)
+                StartCoroutine(Fading(BlurEffect, 0f, 255f, 2f, 12.9f));
+            else if (i == 1)
+                StartCoroutine(Fading(BlurEffect, 0f, 255f, 2f, 13.7f));
+        }
+    }
+
+    private IEnumerator Fading(GameObject obj, float initialAlpha, float finalAlpha, float fadeDuration, float holdingtime)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            float currentAlpha = Mathf.Lerp(initialAlpha, finalAlpha, elapsedTime / fadeDuration); //최종 투명도값과 초기 투명도값을 바꿔 작성한 게 맞음.
+
+            // 0에서 255 사이의 값으로 투명도 제한
+            currentAlpha = Mathf.Clamp(currentAlpha, 0f, 255f);
+
+            Image image = obj.GetComponent<Image>();
+
+            Color color = image.color;
+
+            // 0부터 255 범위의 값을 0부터 1 사이의 실수로 변환
+            float normalizedAlpha = currentAlpha / 255.0f;
+
+            color.a = normalizedAlpha; // 투명도 값 변경
+            image.color = color; // 변경된 투명도 설정
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(holdingtime);
+
+        elapsedTime = 0f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            float currentAlpha = Mathf.Lerp(finalAlpha, initialAlpha, elapsedTime / fadeDuration); //최종 투명도값과 초기 투명도값을 바꿔 작성한 게 맞음.
+
+            // 0에서 255 사이의 값으로 투명도 제한
+            currentAlpha = Mathf.Clamp(currentAlpha, 0f, 255f);
+
+            Image image = obj.GetComponent<Image>();
+
+            Color color = image.color;
+
+            // 0부터 255 범위의 값을 0부터 1 사이의 실수로 변환
+            float normalizedAlpha = currentAlpha / 255.0f;
+
+            color.a = normalizedAlpha; // 투명도 값 변경
+            image.color = color; // 변경된 투명도 설정
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
     }
 }
