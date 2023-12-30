@@ -477,6 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cde77d9f3dccf6c46ba3532492a19826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPaused: 0
 --- !u!4 &608818466
 Transform:
   m_ObjectHideFlags: 0
@@ -945,7 +946,7 @@ PrefabInstance:
     - target: {fileID: 1950627420873399745, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: RawImage
       value: 
-      objectReference: {fileID: 1291911557}
+      objectReference: {fileID: 0}
     - target: {fileID: 1950627420873399745, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: RawImage2
       value: 
@@ -1006,6 +1007,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7213357273485754629, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 9ad269c99dcf42b7aedefd83dd5a7b9d, type: 2}
     - target: {fileID: 7785910521463230750, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_VideoClip
       value: 
@@ -1045,11 +1050,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7454c3024a6b0a74cb7ef14eb8fcae4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1291911557 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5400435289035920476, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
-  m_PrefabInstance: {fileID: 1150161766}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1410951429
 GameObject:
   m_ObjectHideFlags: 0
