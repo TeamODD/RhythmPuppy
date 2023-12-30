@@ -38,6 +38,10 @@ namespace Stage_2
         private GameObject Pattern8_Canvas;
         [SerializeField]
         private GameObject OverlayCanvas;
+        [SerializeField]
+        private float[] savePointTime;
+        private bool isPuppyShown;
+        private bool isPattern3Going = false;
 
         EventManager eventManager;
         //private ObjectPoolManager PoolingManager;
@@ -51,7 +55,7 @@ namespace Stage_2
         private int PrefabIndex;
         private string objectName;
         public bool IsReady { get; set; }
-        private float startTime = 3f;
+        private float startTime = 1f;
 
         //패턴 타임라인에 대해서는 이름을 바꾼다거나하는 등, 절대 건들지 마시오.
         [SerializeField]
@@ -83,16 +87,17 @@ namespace Stage_2
         private void init()
         {
             IsReady = false;
+            isPuppyShown = false;
 
             audioSource.clip = audioClip;
+            eventManager.savePointTime = savePointTime;
 
-
-            DelayedPattern1_a_1 = new float[Pattern1_aTimeLine_1.Length];
+            /*DelayedPattern1_a_1 = new float[Pattern1_aTimeLine_1.Length];
             DelayedPattern1_a_2 = new float[Pattern1_aTimeLine_2.Length];
             DelayedPattern6 = new float[Pattern6TimeLine.Length];
             DelayedPattern7_a = new float[Pattern7_aTimeLine.Length];
             DelayedPattern8 = new float[Pattern8TimeLine.Length];
-            DelayedPattern9 = new float[Pattern9TimeLine.Length];
+            DelayedPattern9 = new float[Pattern9TimeLine.Length];*/
 
             for (int i = 0; i < objectInfos.Length; i++)
             {
@@ -112,15 +117,26 @@ namespace Stage_2
                 }*/
             }
 
-            DelayingPattern();
-            PatternMake();
+            eventManager.stageEvent.gameStartEvent += gameStartEvent;
+            eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.playerEvent.reviveEvent += gameStartEvent;
+
+            //DelayingPattern();
 
             IsReady = true;
             Debug.Log("Stage is Ready");
             //음악 재생
-            StartCoroutine(PlayMusic());
+            //StartCoroutine(PlayMusic());
             Debug.Log("Stage Start");
+            StartCoroutine(StartGame());
 
+        }
+
+        IEnumerator StartGame()
+        {
+            PatternMake();
+            yield return new WaitForSeconds(startTime);
+            audioSource.Play();
         }
 
         private void DelayingPattern()
@@ -142,30 +158,39 @@ namespace Stage_2
 
         private void PatternMake()
         {
+            float delayTime = 1f;
             float startTime = audioSource.time;
             float randomY = 0;
             float randomX = 0;
+            float RandomX = 0;
+            float RandomY = 0;
 
-            for (int i = 0; i < DelayedPattern1_a_1.Length; i++)
-                StartCoroutine(pattern1_a(DelayedPattern1_a_1[i], startTime));
-            for (int i = 0; i < DelayedPattern1_a_2.Length; i++)
-                StartCoroutine(pattern1_a(DelayedPattern1_a_2[i], startTime));
-            for (int i = 0; i < DelayedPattern6.Length; i++)
-                StartCoroutine(Pattern6(DelayedPattern6[i], startTime));
-            for (int i = 0; i < DelayedPattern7_a.Length; i++)
+            for (int i = 0; i < Pattern1_aTimeLine_1.Length; i++)
+                StartCoroutine(pattern1_a(Pattern1_aTimeLine_1[i] + delayTime, startTime));
+            for (int i = 0; i < Pattern1_aTimeLine_2.Length; i++)
+                StartCoroutine(pattern1_a(Pattern1_aTimeLine_2[i] + delayTime, startTime));
+            for (int i = 0; i < Pattern6TimeLine.Length; i++)
+                StartCoroutine(Pattern6(Pattern6TimeLine[i] + delayTime, startTime));
+            for (int i = 0; i < Pattern7_aTimeLine.Length; i++)
             {
                 randomY = Random.Range(-3.5f, 0f);
-                StartCoroutine(Pattern7_a(DelayedPattern7_a[i], startTime, randomY));
-                StartCoroutine(Pattern7_a_WarningBox(DelayedPattern7_a[i], startTime, randomY));
+                StartCoroutine(Pattern7_a(Pattern7_aTimeLine[i] + delayTime, startTime, randomY));
+                StartCoroutine(Pattern7_a_WarningBox(Pattern7_aTimeLine[i] + delayTime, startTime, randomY));
             }
-            StartCoroutine(Pattern3_b(39.4f + 3f, startTime)); //3f = (Global) startTime
-            for (int i = 0; i < DelayedPattern8.Length; i++)
-                StartCoroutine(Pattern_8(DelayedPattern8[i], startTime));
-            for (int i = 0; i < DelayedPattern9.Length; i++)
+            StartCoroutine(Pattern3_b(39.4f, startTime)); 
+            for (int i = 0; i < Pattern8TimeLine.Length; i++)
+            {
+                RandomX = Random.Range(-7f, 7);
+                RandomY = Random.Range(-2f, 2f);
+                StartCoroutine(Pattern_8(Pattern8TimeLine[i] + delayTime, startTime, RandomX, RandomY));
+                StartCoroutine(Pattern_8_Obstacle(Pattern8TimeLine[i] + delayTime, startTime, RandomX, RandomY));
+                StartCoroutine(Pattern_8_WarningBox(Pattern8TimeLine[i] + delayTime, startTime, RandomX, RandomY));
+            }
+            for (int i = 0; i < Pattern9TimeLine.Length; i++)
             {
                 randomX = Random.Range(-8.7f, 8.7f);
-                StartCoroutine(Pattern_9(DelayedPattern9[i], startTime, randomX));
-                StartCoroutine(Pattern_9_WarningBox(DelayedPattern9[i], startTime, randomX));
+                StartCoroutine(Pattern_9(Pattern9TimeLine[i] + delayTime, startTime, randomX));
+                StartCoroutine(Pattern_9_WarningBox(Pattern9TimeLine[i] + delayTime, startTime, randomX));
             }
         }
 
@@ -314,6 +339,15 @@ namespace Stage_2
             {
                 ArtifactManager.transform.GetChild(0).gameObject.GetComponent<LampAction>().LampControl(s);
                 ArtifactManager.transform.GetChild(1).gameObject.GetComponent<LampAction>().LampControl(s);
+                try
+                {
+                    ArtifactManager.transform.GetChild(2).gameObject.GetComponent<LampAction>().LampControl(s);
+                    ArtifactManager.transform.GetChild(3).gameObject.GetComponent<LampAction>().LampControl(s);
+                }
+                catch
+                {
+                    Debug.Log("자식 오브젝트 없음 - 램프");
+                }
             }
 
             if (0 <= t - startTime)
@@ -338,7 +372,12 @@ namespace Stage_2
                 yield return new WaitForSeconds(5.5f);
                 SpriteAlpha = 30f / 31f;
                 BlackScreen.color = new Color(0, 0, 0, SpriteAlpha);
-                yield return new WaitForSeconds(22.6f);
+                //불이 꺼진 상태의 램프를 유지하기 위해 지속적으로 메소드 실행 (총 22.6초)
+                LampControll(false);
+                yield return new WaitForSeconds(11f);
+                LampControll(false);
+                yield return new WaitForSeconds(11.6f);
+                isPattern3Going = true;
 
                 LampControll(true);
                 while (Faze2Time > 0)
@@ -352,20 +391,32 @@ namespace Stage_2
                 BlackScreen.color = new Color(0, 0, 0, 0);
             }
 
-            if(0 >= t - startTime && t - startTime - 50.9f <= 0)
+            if(0 > t - startTime && isPattern3Going) //startTime = 79f
             {
-                //패턴 진행중일시
+                float SpriteAlpha = 0;
+                    float Faze2Time = 11.3f;
 
+                //패턴 진행중일시
+                LampControll(true);
+                while (Faze2Time > 0)
+                {
+                    float CalFactor = 30f / 350.3f; // (1 / 11.3) * (30 / 31) 알파가 250이어야함.
+                    BlackScreen.color = new Color(0, 0, 0, SpriteAlpha);
+                    Faze2Time -= Time.fixedDeltaTime;
+                    SpriteAlpha = Faze2Time * CalFactor;
+                    yield return new WaitForFixedUpdate();
+                }
+                BlackScreen.color = new Color(0, 0, 0, 0);
             }
             yield break;
         }
 
-        IEnumerator Pattern_8(float t, float startTime)
+        IEnumerator Pattern_8(float t, float startTime, float RandomX, float RandomY)
         {
             string objectName = objectInfos[4].objectName;
 
-            float randomX;
-            float randomY;
+            float randomX = RandomX;
+            float randomY = RandomY;
 
             void MakingObject()
             {
@@ -386,10 +437,67 @@ namespace Stage_2
                 //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
                 yield return new WaitForSeconds(t - startTime);
 
-                randomX = Random.Range(-7f, 7);
-                randomY = Random.Range(-2f, 2f);
-
                 SetPrefabInfos(4);
+                MakingObject();
+            }
+            yield break;
+        }
+
+        IEnumerator Pattern_8_Obstacle(float t, float startTime, float RandomX, float RandomY)
+        {
+            string objectName = objectInfos[5].objectName;
+
+            float randomX = RandomX;
+            float randomY = RandomY;
+
+            void MakingObject()
+            {
+                GameObject firefly_obstacle;
+                firefly_obstacle = ObjectPoolDic[objectName].Get();
+                //firefly.gameObject.transform.parent = Pattern8_Canvas.transform;
+                firefly_obstacle.gameObject.transform.position = new Vector3(randomX, randomY, 0);
+                firefly_obstacle.gameObject.GetComponent<Pattern8>().IsPooled = true;
+                //return PoolingManager;
+            }
+
+            if (0 <= t - startTime)
+            {
+                //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
+                yield return new WaitForSeconds(t - startTime);
+
+                SetPrefabInfos(5);
+                MakingObject();
+            }
+            yield break;
+        }
+
+        IEnumerator Pattern_8_WarningBox(float t, float startTime, float RandomX, float RandomY)
+        {
+            string objectName = objectInfos[6].objectName;
+
+            float randomX = RandomX;
+            float randomY = RandomY;
+
+            void MakingObject()
+            {
+                GameObject WarningBox;
+                WarningBox = ObjectPoolDic[objectName].Get();
+                //firefly.gameObject.transform.parent = Pattern8_Canvas.transform;
+                Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(randomX, randomY, 0));
+                WarningBox.gameObject.transform.SetParent(OverlayCanvas.transform, true);
+                WarningBox.gameObject.transform.position = v;
+                WarningBox.gameObject.GetComponent<Pattern8_WarningBox>().IsPooled = true;
+                WarningBox.gameObject.GetComponent<Pattern8_WarningBox>().time = 0;
+
+                //return PoolingManager;
+            }
+
+            if (0 <= t - startTime)
+            {
+                //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
+                yield return new WaitForSeconds(t - (startTime + 1f));
+
+                SetPrefabInfos(6);
                 MakingObject();
             }
             yield break;
@@ -397,7 +505,7 @@ namespace Stage_2
 
         IEnumerator Pattern_9(float t, float startTime, float RandomX)
         {
-            string objectName = objectInfos[5].objectName;
+            string objectName = objectInfos[7].objectName;
 
             float randomX = RandomX;
 
@@ -417,7 +525,7 @@ namespace Stage_2
                 //"t-startTime > 0 && t - (startTime + 1) < 0" 인 경우 아직 고려 안 함.
                 yield return new WaitForSeconds(t - startTime);
 
-                SetPrefabInfos(5);
+                SetPrefabInfos(7);
                 MakingObject();
             }
             yield break;
@@ -466,6 +574,32 @@ namespace Stage_2
             PrefabIndex = prefabIndex;
             objectName = objectInfos[prefabIndex].objectName;
         }
+
+        private void gameStartEvent()
+        {
+            PatternMake();
+        }
+
+        private void deathEvent()
+        {
+            StopPattern();
+        }
+
+        private void StopPattern()
+        {
+            StopAllCoroutines();
+        }
+
+        void Update()
+        {
+            if (!isPuppyShown && audioSource.clip.length - 3f < audioSource.time)
+            {
+                isPuppyShown = true;
+                GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc();
+            }
+        }
+
+
 
 
         //풀링 함수들입니다.

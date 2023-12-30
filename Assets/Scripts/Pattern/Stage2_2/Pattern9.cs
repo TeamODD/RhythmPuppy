@@ -18,7 +18,7 @@ namespace Obstacles
 
         const float G = 9.8f;
 
-        public Vector3 velocity;
+        public  Vector3 velocity;
 
 
         void Awake()
@@ -33,7 +33,7 @@ namespace Obstacles
                 rigid.simulated = false;
             else
                 rigid.simulated = true;
-            if (transform.position.y < -4f)
+            if (transform.position.y < -6f)
                 DestroyObject();
         }
 

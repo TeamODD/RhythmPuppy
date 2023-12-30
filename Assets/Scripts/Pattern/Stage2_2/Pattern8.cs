@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Pattern8 : MonoBehaviour
 {
     private ObjectPoolManager PoolingManager;
-    private Image ObjectImage;
+    private Image ObjectImage = null;
     [HideInInspector]
     public bool IsPooled = false;
     [HideInInspector]
@@ -15,17 +15,21 @@ public class Pattern8 : MonoBehaviour
     void Update()
     {
         time += Time.fixedDeltaTime;
+
+        if (time > 4f) DestroyObject();
+        if (ObjectImage == null) return;
+
         if (time < 0.8f)
         {
             ObjectImage.color = new Color(1, 1, 1, time * (5 / 4));
         }
-        else if (time > 0.8f && time < 1f)
+        else if (time > 0.8f && time < 2.5f)
         {
             ObjectImage.color = new Color(1, 1, 1, 1);
         }
-        else if (time > 1f && time < 2.5f)
+        else if (time > 2.5f && time < 4f)
         {
-            ObjectImage.color = new Color(1, 1, 1, 1 - ((time-1) * (2/3)));
+            ObjectImage.color = new Color(1, 1, 1, 1 - ((time-2.5f) * (2/3)));
         }
         else
             DestroyObject();
@@ -38,8 +42,18 @@ public class Pattern8 : MonoBehaviour
 
     void init()
     {
-        ObjectImage = gameObject.GetComponent<Image>();
+        ObjectImage = null;
         PoolingManager = FindObjectOfType<ObjectPoolManager>();
+
+        try
+        {
+            ObjectImage = gameObject.GetComponent<Image>();
+        }
+        catch 
+        {
+            //UI 프리팹과 호환되도록 장애물 프리팹을 위해 제작하였음. 
+        }
+
     }
 
     void DestroyObject()
