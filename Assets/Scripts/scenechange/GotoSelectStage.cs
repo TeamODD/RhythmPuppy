@@ -21,6 +21,8 @@ public class GotoSelectStage : MonoBehaviour
     [SerializeField]
     GameObject PressAnyKeyToPlayGame;
     [SerializeField]
+    GameObject ParticleSystem;
+    [SerializeField]
     float fadeDuration;
     [SerializeField]
     float comedownspeed;
@@ -95,6 +97,8 @@ public class GotoSelectStage : MonoBehaviour
 
     private void Start()
     {
+        ParticleSystem.GetComponent<ParticleSystem>().Stop();
+
         //아무런 행동도 하지 않았을 경우 진행되는 순서
         DevelopmentTeamCoroutine = DevelopmentTeamSetting(DevelopmentTeam, 3f);
         LicenseNoticeCoroutine = LicenseNoticeSetting(LicenseNotice, 3f);
@@ -281,6 +285,8 @@ public class GotoSelectStage : MonoBehaviour
         RhythmPuppyTextRid2D.velocity = Vector2.zero;
         StartCoroutine(FadeInText(PressAnyKeyToPlayGame));
         fadeDuration = 1f;
+
+        ParticleSystem.GetComponent<ParticleSystem>().Play();
 
         TitleSettingDone = true;
     }

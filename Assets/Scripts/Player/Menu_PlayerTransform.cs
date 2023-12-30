@@ -76,6 +76,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     void Start()
     {
         GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
+        ParticleSystem.GetComponent<ParticleSystem>().Stop();
         ReadyToGoStage = false;
         IsPaused = false;
         onInputDelay = false;
@@ -105,7 +106,7 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Update()
     {
-        ParticleSystem.transform.position = transform.position;
+        ParticleSystem.transform.position = new Vector3(transform.position.x, -0.97f, transform.position.z);
         int offset = 1;
         time += Time.deltaTime;
         if (onInputDelay || IsPaused) return;
