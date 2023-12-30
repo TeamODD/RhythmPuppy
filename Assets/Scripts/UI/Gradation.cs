@@ -7,12 +7,7 @@ public class Gradation : MonoBehaviour
 {
     private Image image; // 이미지 컴포넌트
 
-    public int textureX;
-    public int textureY;
-    public int whiteY;
-    public int nullY;
-
-    void Update()
+    void Start()
     {
         image = GetComponent<Image>();
 
@@ -27,9 +22,9 @@ public class Gradation : MonoBehaviour
     void ApplyVerticalGradient(Color color1, Color color2)
     {
         // 그라데이션 텍스처 생성
-        Texture2D texture = new Texture2D(textureX, textureY);
-        texture.SetPixel(0, nullY, color1);
-        texture.SetPixel(0, whiteY, color2);
+        Texture2D texture = new Texture2D(1, 4);
+        texture.SetPixel(0, 0, color1);
+        texture.SetPixel(0, 1, color2);
         texture.Apply();
 
         // 이미지에 텍스처 적용
