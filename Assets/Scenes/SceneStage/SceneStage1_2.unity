@@ -1467,7 +1467,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8440943201525982827, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
       propertyPath: m_SortingOrder
-      value: 200
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8440943201525982827, guid: c16ce22ea5e3f3045b8a657a89fe2cd7, type: 3}
       propertyPath: m_SortingLayerID
@@ -1708,11 +1708,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4899608851116893804, guid: 22a1916622b67c24a95323916bde94f9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.6
+      value: -10.28
       objectReference: {fileID: 0}
     - target: {fileID: 4899608851116893804, guid: 22a1916622b67c24a95323916bde94f9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5700002
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 4899608851116893804, guid: 22a1916622b67c24a95323916bde94f9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3283,7 +3283,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 1, b: 0.038177013, a: 1}
+  m_BackGroundColor: {r: 0.23137257, g: 0.3372549, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

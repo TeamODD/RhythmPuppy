@@ -190,17 +190,17 @@ public class Player : MonoBehaviour
                 eventManager.playerEvent.shootCancelEvent();
         }
 
-        if (Input.GetKey(KeyCode.F1)&&Input.GetKey(KeyCode.F12))
+        if (Input.GetKey(KeyCode.F1)&&Input.GetKeyDown(KeyCode.F12))
         {
             if (transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled)
             {
                 transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled = false;
-                Debug.Log("개발자모드 비활성화");
+                Debug.Log("개발자모드 활성화");
             }
             else
             {
                 transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled = true;
-                Debug.Log("개발자모드 활성화");
+                Debug.Log("개발자모드 비활성화");
             }
         }
     }
