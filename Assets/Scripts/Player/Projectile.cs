@@ -67,11 +67,6 @@ public class Projectile : MonoBehaviour
         {
             if (transform.parent != null)
             {
-                if (!IsBoneRecovered && tutorials2Manager.IsFinishedDashTest == true)
-                {
-                    transform.SetParent(null);
-                    return;
-                }
                 headToMousePos();
             }
         }
