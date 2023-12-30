@@ -498,7 +498,7 @@ MonoBehaviour:
   TitleImage: {fileID: 2137304410}
   RhythmPuppyText: {fileID: 634056027}
   PressAnyKeyToPlayGame: {fileID: 9107375}
-  fadeDuration: 3
+  fadeDuration: 2.7
   comedownspeed: 3
 --- !u!4 &413333803
 Transform:

@@ -5,12 +5,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.U2D.Animation;
-using static UnityEngine.GraphicsBuffer;
 
 using SceneData;
 using EventManagement;
 using System.Net.Sockets;
-using UnityEditor.Experimental.GraphView;
 
 public class Player : MonoBehaviour
 {
