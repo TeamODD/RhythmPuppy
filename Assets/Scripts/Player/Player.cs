@@ -5,10 +5,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.U2D.Animation;
-using static UnityEngine.GraphicsBuffer;
 
 using SceneData;
 using EventManagement;
+using System.Net.Sockets;
 
 public class Player : MonoBehaviour
 {
@@ -61,6 +61,7 @@ public class Player : MonoBehaviour
     SpriteRenderer[] spriteList;
     Animator anim;
     EventManager eventManager;
+    Tutorials2Manager tutorials2Manager;
 
 
     bool onFired, movable;
@@ -130,10 +131,22 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Dash"))
         {
+            //텔레포트 튜토리얼 중 대쉬 사용 방지코드
+            if (GameObject.Find("Tutorials2Manager") != null)
+            {
+                tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
+                if (tutorials2Manager.IsFinishedDashTest == true && tutorials2Manager.IsFinishedTeleportTest == false || tutorials2Manager.IsFinishedJumpTest == false)
+                {
+                    return;
+                }
+            }
+                
+            //정상코드
             if (currentStamina < dashStaminaCost)
-                    Debug.Log("not enough stamina!");
+                Debug.Log("not enough stamina!");
             else if (!Input.GetAxisRaw("Horizontal").Equals(0) && dashCoroutine == null && dashCooldownCoroutine == null)
                 eventManager.playerEvent.dashEvent();
+
         }
         if (Input.GetButtonDown("Jump"))
         {
@@ -141,12 +154,30 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown("Shoot"))
         {
+            //텔레포트 사용 방지코드
+            if (GameObject.Find("Tutorials2Manager") != null)
+            {
+                tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
+                if (tutorials2Manager.IsFinishedDashTest == false)
+                {
+                    return;
+                }
+            }
+
             if (!onFired)
             {
                 if (currentStamina < shootStaminaCost)
                     Debug.Log("not enough stamina!");
                 else if (shootCooldownCoroutine == null)
+                {
+                    Projectile projectile = GameObject.Find("Projectile").GetComponent<Projectile>();
+                    if (!projectile.IsBoneRecovered)
+                    {
+                        return;
+                    }
                     eventManager.playerEvent.shootEvent();
+                }
+                    
             }
             else
             {
@@ -157,6 +188,20 @@ public class Player : MonoBehaviour
         {
             if (onFired)
                 eventManager.playerEvent.shootCancelEvent();
+        }
+
+        if (Input.GetKey(KeyCode.F1)&&Input.GetKeyDown(KeyCode.F12))
+        {
+            if (transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled)
+            {
+                transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled = false;
+                Debug.Log("개발자모드 활성화");
+            }
+            else
+            {
+                transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled = true;
+                Debug.Log("개발자모드 비활성화");
+            }
         }
     }
 
@@ -181,7 +226,11 @@ public class Player : MonoBehaviour
         {
             rig2D.velocity = velocity;
             transform.position = currentPosition;
-            if (!isCollisionVisibleOnTheScreen(c)) return;
+            Collider2D d = c.collider;
+            if (!isCollisionVisibleOnTheScreen(c))
+            {
+                return;
+            }
 
             if (dashCoroutine != null) evade(c.collider);
             else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
@@ -189,6 +238,27 @@ public class Player : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D c)
+    {
+        if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
+        {
+            if (SceneManager.GetActiveScene().name == "Tutorials2")
+            {
+                if (dashCoroutine != null)
+                {
+                    evade(c);
+                    return;
+                }
+
+                transform.position = new Vector3(-7f, -4.3012f, 0f);
+                return;
+            }
+
+            if (dashCoroutine != null) evade(c);
+            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D c)
     {
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
@@ -235,7 +305,7 @@ public class Player : MonoBehaviour
 
     private bool isJump()
     {
-        const float margin = 0.05f;
+        const float margin = 0.05f; //점프했다고 판단하는 최소 속도
 
         if (Mathf.Abs(rig2D.velocity.y) < margin)
         {
@@ -257,7 +327,7 @@ public class Player : MonoBehaviour
     {
         setAlpha(0.5f);
         rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
-        rig2D.gravityScale = 0f;
+        rig2D.gravityScale = 1f;
         anim.SetTrigger("Dash");
 
         yield return dashDelay;
@@ -341,32 +411,64 @@ public class Player : MonoBehaviour
     }
 
     /** Flip body if corgi is heading behind or moving to behind. */
+
     private void flipBody()
     {
-        const float detailCorrFactor = 16f;
-        Vector3 flip = transform.localScale;
+        Vector2 vertex1 = (Vector2)transform.position + new Vector2(-1f, 0f); // 왼쪽
+        Vector2 vertex2 = (Vector2)transform.position + new Vector2(0f, 0f); // 아래
+        Vector2 vertex3 = (Vector2)transform.position + new Vector2(1f, 0f);  // 오른쪽
+        Vector2 vertex4 = (Vector2)transform.position + new Vector2(0f, 3f);  // 위
 
-        float rot = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
-        rot = 0 <= rot ? rot % 360 : rot % 360 + 360;
-        if (110 < rot && rot < 250)
+        //플레이어 중심(정확한 중심은 아닙니다)을 기준으로 다이아몬드 범위 내에 마우스가 들어오면 플립하지 않도록 수정
+        if (!IsMouseInDiamond(mainCamera.ScreenToWorldPoint(Input.mousePosition), vertex1, vertex2, vertex3, vertex4))
         {
-            flip.x = flip.x * -1;
-        }
-        else if (70 < rot && rot < 290)
-        {
-            int xInput = (int)Input.GetAxisRaw("Horizontal");
-            switch (xInput)
+            // 기존 코드
+            const float detailCorrFactor = 16f;
+            Vector3 flip = transform.localScale;
+
+            float rot = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
+            rot = 0 <= rot ? rot % 360 : rot % 360 + 360;
+            if (110 < rot && rot < 250)
             {
-                case -1:
-                    flip.x = Mathf.Abs(flip.x) * -1;
-                    break;
-                case 1:
-                    flip.x = Mathf.Abs(flip.x);
-                    break;
+                flip.x = flip.x * -1;
             }
+            else if (70 < rot && rot < 290)
+            {
+                int xInput = (int)Input.GetAxisRaw("Horizontal");
+                switch (xInput)
+                {
+                    case -1:
+                        flip.x = Mathf.Abs(flip.x) * -1;
+                        break;
+                    case 1:
+                        flip.x = Mathf.Abs(flip.x);
+                        break;
+                }
+            }
+            transform.localScale = flip;
+        }
+    }
+
+    bool IsMouseInDiamond(Vector2 mousePosition, Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4)
+    {
+        // 다이아몬드 모양 범위 내에 있는지 확인
+        if (IsPointInTriangle(mousePosition, v1, v2, v3) || IsPointInTriangle(mousePosition, v1, v3, v4))
+        {
+            return true;
         }
 
-        transform.localScale = flip;
+        return false;
+    }
+
+    // 삼각형의 내부에 점이 있는지 확인하는 함수
+    bool IsPointInTriangle(Vector2 point, Vector2 p1, Vector2 p2, Vector2 p3)
+    {
+        float denominator = ((p2.y - p3.y) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.y - p3.y));
+        float a = ((p2.y - p3.y) * (point.x - p3.x) + (p3.x - p2.x) * (point.y - p3.y)) / denominator;
+        float b = ((p3.y - p1.y) * (point.x - p3.x) + (p1.x - p3.x) * (point.y - p3.y)) / denominator;
+        float c = 1 - a - b;
+
+        return a >= 0 && a <= 1 && b >= 0 && b <= 1 && c >= 0 && c <= 1;
     }
 
     private void playerHitEvent()
@@ -397,7 +499,7 @@ public class Player : MonoBehaviour
 
         yield return new WaitForSeconds(5f);
 
-        if (deathCount <= 3)
+        if (deathCount <= 2)
         {
             eventManager.stageEvent.rewindEvent();
             eventManager.playerEvent.reviveEvent();
@@ -424,6 +526,21 @@ public class Player : MonoBehaviour
         setAlpha(1);
         anim.ResetTrigger("Death");
         anim.SetTrigger("Revive");
+
+        if (GameObject.FindGameObjectWithTag("Boss")!=null) //Boss태그를 단 오브젝트가 있는 스테이지에서 죽었고,
+        {
+            BoxCollider2D bosscollider2D = GameObject.FindGameObjectWithTag("Boss").transform.GetChild(0).GetComponent<BoxCollider2D>();
+            Vector2 bosscollider2D_size = bosscollider2D.size;
+            if (-bosscollider2D_size.x <= transform.position.x) //보스의 왼쪽에 죽었으면
+            {
+                transform.position -= new Vector3(bosscollider2D_size.x - Mathf.Abs(transform.position.x), 0f, 0f);
+            }
+            else if (transform.position.x < bosscollider2D_size.x) //보스의 오른쪽에 죽었으면
+            {
+                transform.position += new Vector3(bosscollider2D_size.x - Mathf.Abs(transform.position.x), 0f, 0f);
+            }
+        }
+
         StartCoroutine(reviveEventCoroutine());
     }
 

@@ -23,6 +23,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     public GameObject Select_Difficulty;
     public GameObject Normal;
     public GameObject Hard;
+    public GameObject[] ParticleSystems;
 
     private Vector3 endPoint;
     private Vector3 currentPosition;
@@ -34,12 +35,20 @@ public class Menu_PlayerTransform : MonoBehaviour
     [SerializeField]
     private float speed;
     private float time;
+    private float lastInputTime;
     private bool onInputDelay;
     public static bool ReadyToGoStage;
     public static bool IsPaused; //�ɼ�â���� Enter Ű �ߴ�
     public static int difficulty_num;
-    
 
+    private enum WorldStage
+    {
+        World1,
+        World2
+    };
+
+    WorldStage world = WorldStage.World1;
+   
     void Awake()
     {
         if (PlayerPrefs.HasKey("clearIndex"))
@@ -61,9 +70,12 @@ public class Menu_PlayerTransform : MonoBehaviour
 
         //�޴��� ���ƿ��� �� �ε����� ���� ����� ��Ÿ������.
         if (savingIndex >= 2)
-            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(2, "appear");
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundReset(2, "appear");
         if (savingIndex >= 7)
-            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(7, "appear");
+        {
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundReset(7, "appear");
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundReset(2, "appear");
+        }
 
         corgi_posX = waypoints[currentIndex].x;
     }
@@ -71,6 +83,11 @@ public class Menu_PlayerTransform : MonoBehaviour
     void Start()
     {
         GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
+        foreach (GameObject ParticleSystem in ParticleSystems)
+        {
+            ParticleSystem.GetComponent<ParticleSystem>().Stop();
+        }
+        
         ReadyToGoStage = false;
         IsPaused = false;
         onInputDelay = false;
@@ -82,15 +99,22 @@ public class Menu_PlayerTransform : MonoBehaviour
         savingIndex = currentIndex;
         PlayerOnPoint.Invoke();
     }
+    
     void OnTriggerExit2D(Collider2D other)
     {
         PlayerOnPointExceptMusicChange.Invoke();
         if (currentIndex < 7)
-            PlaySelectSound.instance.World1_Walking();
+        {
+            PlayerWalkingSound.instance.World1_Walking();
+            world = WorldStage.World1;
+        }
         else
-            PlaySelectSound.instance.World2_Walking();
+        {
+            PlayerWalkingSound.instance.World2_Walking();
+            world = WorldStage.World2;
+        }
     }
-
+    
     void DifficultyOff()
     {
         ReadyToGoStage = false;
@@ -99,6 +123,11 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Update()
     {
+        foreach (GameObject ParticleSystem in ParticleSystems)
+        {
+            ParticleSystem.transform.position = new Vector3(transform.position.x, -0.97f, transform.position.z);
+        }
+
         int offset = 1;
         time += Time.deltaTime;
         if (onInputDelay || IsPaused) return;
@@ -155,6 +184,8 @@ public class Menu_PlayerTransform : MonoBehaviour
             {
                 onInputDelay = true;
                 PlaySelectSound.instance.MenuSelectSound();
+                GetSceneString();
+                if (SceneName == null) return;
                 StartCoroutine(LoadingScene());
                 return;
             }
@@ -174,15 +205,18 @@ public class Menu_PlayerTransform : MonoBehaviour
                     StartCoroutine(LoadingScene());
                     break;
             }
-        }
-
+        }      
     }
 
     IEnumerator move(string s)
     {
         float offset = 0.01f;
-        
-        switch(s)
+        if (world == WorldStage.World1)
+            ParticleSystems[0].GetComponent<ParticleSystem>().Play();
+        else if (world == WorldStage.World2)
+            ParticleSystems[1].GetComponent<ParticleSystem>().Play();
+
+        switch (s)
         {
             case "Forward":
                 endPoint = waypoints[currentIndex];
@@ -205,6 +239,10 @@ public class Menu_PlayerTransform : MonoBehaviour
         }
         transform.position = endPoint;
         animator.SetBool("WalkBool", false);
+        foreach (GameObject ParticleSystem in ParticleSystems)
+        {
+            ParticleSystem.GetComponent<ParticleSystem>().Stop();
+        }
 
         yield break;
     }
@@ -234,7 +272,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     {
         switch(currentIndex)
         {
-            case 1: SceneName = "Tutorials";
+            case 1: SceneName = "Tutorials2";
                 break;
             case 2: SceneName = "SceneStage1_1";
                 break;
@@ -248,6 +286,7 @@ public class Menu_PlayerTransform : MonoBehaviour
                 SceneName = "SceneStage2_1";
                 break;
             case 10:
+                SceneName = "SceneStage2_2";
                 break;
             default:
                 SceneName = null;

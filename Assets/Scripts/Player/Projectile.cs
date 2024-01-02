@@ -20,8 +20,10 @@ public class Projectile : MonoBehaviour
     Camera mainCamera;
     Player player;
     Transform neck, head;
+    Tutorials2Manager tutorials2Manager;
     Vector3 dir;
     ProjectileData data;
+    public bool IsBoneRecovered;
 
     void Awake()
     {
@@ -46,6 +48,17 @@ public class Projectile : MonoBehaviour
         eventManager.playerEvent.shootEvent += shootEvent;
         eventManager.playerEvent.teleportEvent += stop;
         eventManager.playerEvent.shootCancelEvent += stop;
+
+        GameObject Tutorials2Manager = GameObject.Find("Tutorials2Manager");
+        if (Tutorials2Manager != null)
+        {
+            tutorials2Manager = Tutorials2Manager.GetComponent<Tutorials2Manager>();
+            IsBoneRecovered = false;
+        }
+        else
+        { 
+            IsBoneRecovered = true;
+        }
     }
 
     void FixedUpdate()
@@ -53,7 +66,9 @@ public class Projectile : MonoBehaviour
         if (dir.Equals(Vector3.zero))
         {
             if (transform.parent != null)
+            {
                 headToMousePos();
+            }
         }
         else
         {
@@ -64,6 +79,18 @@ public class Projectile : MonoBehaviour
     void LateUpdate()
     {
         fixPositionIntoScreen();
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (!IsBoneRecovered && tutorials2Manager.IsFinishedDashTest == true) //회수가 되지 않은 상태
+            {
+                IsBoneRecovered = true;
+                transform.SetParent(player.transform);
+            }
+        }
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -81,10 +108,13 @@ public class Projectile : MonoBehaviour
 
     public void shootEvent()
     {
-        transform.SetParent(null);
-        Vector3 dir = mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        dir.z = 0;
-        this.dir = dir.normalized;
+        if (IsBoneRecovered)
+        {
+            transform.SetParent(null);
+            Vector3 dir = mainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            dir.z = 0;
+            this.dir = dir.normalized;
+        }
     }
 
     public void stop()

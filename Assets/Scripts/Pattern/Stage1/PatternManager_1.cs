@@ -258,14 +258,14 @@ public class PatternManager_1 : MonoBehaviour
         }
         float delayTime = 2;
         WaitForSeconds delay = new WaitForSeconds(delayTime);
-        for (int i = 1; i < 4; i++) //Åë³ª¹«°¡ 2È¸ ³ª¿À±æ·¡ i<3À» °íÃÆ½À´Ï´Ù. 
+        for (int i = 1; i < 4; i++) //ï¿½ë³ªï¿½ï¿½ï¿½ï¿½ 2È¸ ï¿½ï¿½ï¿½ï¿½ï¿½æ·¡ i<3ï¿½ï¿½ ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Ï´ï¿½. 
         {
             if (0 <= waitTime - startTime + i * delayTime)
             {
                 Instantiate(Warning_2_b);
                 Instantiate(Oak_2_b);
 
-                yield return delay; //delay°¡ if¹® Ã¹ ½ÃÀÛÀÌ¶ó 2ÃÊ ¹Ð·Á¼­ ¼öÁ¤Çß½À´Ï´Ù. (³ª¸ÓÁö ÆÐÅÏµµ)
+                yield return delay; //delayï¿½ï¿½ ifï¿½ï¿½ Ã¹ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ 2ï¿½ï¿½ ï¿½Ð·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½. (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½)
             }
         }
     }
@@ -409,7 +409,10 @@ public class PatternManager_1 : MonoBehaviour
         if (0 <= t - startTime)
         {
             yield return new WaitForSeconds(t - startTime);
-            GrayScript.GrayEffect();
+
+            //MainCamera.GetComponent<GrayFilmEffect>().GrayEffect();
+            MainCamera.GetComponent<GrayFilmEffect>().enabled = true;
+
         }
         yield break;
         
@@ -446,7 +449,7 @@ public class PatternManager_1 : MonoBehaviour
 
     /*void FixedUpdate()
     {
-        //32È¸ ½ÇÇà½Ã È£Ãâ Áß´Ü
+        //32È¸ ï¿½ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ ï¿½ß´ï¿½
         *//*if (count_1_a == 32)*/
     /*if (patternCount[Type.pattern1_a] >= 32)
     {
@@ -464,7 +467,7 @@ public class PatternManager_1 : MonoBehaviour
     {
         *//*CancelInvoke("Pattern3");*//*
         StopCoroutine("Pattern3");
-        //ÆÐÅÏ1_bÀÇ Ä«¿îÆ® È½¼ö¸¦ ÅëÇØ ÀÎº¸Å© Á¶Àý
+        //ï¿½ï¿½ï¿½ï¿½1_bï¿½ï¿½ Ä«ï¿½ï¿½Æ® È½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½Å© ï¿½ï¿½ï¿½ï¿½
         *//*if (count_1_b == 0)*//*
         if (patternCount[Type.pattern1_b].Equals(0))
         {

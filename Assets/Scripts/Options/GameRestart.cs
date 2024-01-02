@@ -17,17 +17,11 @@ public class GameRestart : MonoBehaviour
         Scene currentScene = SceneManager.GetActiveScene();
         string sceneName = currentScene.name;
 
-        //Ä¿Æ°
-        GameObject CurtainObject = GameObject.FindGameObjectWithTag("Curtain");
-        CurtainObject.transform.SetParent(null, false); //worldpositionstays bool ÀÎÀÚ false·Î
-        Curtain curtain = GameObject.FindGameObjectWithTag("Curtain").GetComponent<Curtain>();
-        DontDestroyOnLoad(curtain);
-        curtain.CurtainClose();
-
+        
         if (sceneName.StartsWith("SceneStage"))
         {
             string stageInfo = sceneName.Substring("SceneStage".Length);
-            Debug.Log("½ºÅ×ÀÌÁö Á¤º¸: " + stageInfo);
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + stageInfo);
 
             int stageNumber;
             if (int.TryParse(stageInfo.Split('_')[0], out stageNumber))
@@ -43,7 +37,13 @@ public class GameRestart : MonoBehaviour
                 Debug.LogWarning("Failed to parse stage number.");
             }
         }
-        else
+        else if (sceneName == "Tutorials2")
+        {
+            Time.timeScale = 1f;
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        }
+        else //ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Çµï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½
         {
             string savedSceneName = PlayerPrefs.GetString("PlayingSceneName");
 

@@ -7,9 +7,14 @@ using UnityEngine.Video;
 public class Curtain : MonoBehaviour
 {
     public GameObject RawImage;
-    public GameObject CloseObject;
-    public VideoPlayer Open;
-    public VideoPlayer Close;
+    public GameObject VideoObject;
+    public VideoPlayer Video;
+    public VideoClip CurtainClip;
+
+    void Start()
+    {
+        CurtainEffect();
+    }
 
     public void CurtainClose()
     {
@@ -23,20 +28,12 @@ public class Curtain : MonoBehaviour
 
     IEnumerator CurtainCloseCoroutine()
     {
-        RawImage.SetActive(true);
-        CloseObject.SetActive(true);
-        Close.time = 0f;
-        Close.Play();
-        
-        yield break;
-    }
+        Video.clip = CurtainClip;
+        //RawImage.SetActive(true);
+        Video.Prepare();
+        if (Video.isPrepared)
+            Video.Play();
 
-    IEnumerator CurtainOpenCoroutine()
-    {
-        Open.time = 0f;
-        Open.Play();
-
-        RawImage.SetActive(false);
         yield break;
     }
 }

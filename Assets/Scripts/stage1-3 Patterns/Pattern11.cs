@@ -5,25 +5,25 @@ using UnityEngine;
 public class Pattern11 : MonoBehaviour
 {
     [SerializeField]
-    GameObject Oak;
+    GameObject RedApple;
     [SerializeField]
     GameObject warning;
     [SerializeField]
-    float OakSpeed;
+    float RedAppleSpeed;
 
-    private List<float> patternTimings = new List<float> { 0f, 0.4f, 0.7f, 1.0f };
+    private List<float> patternTimings = new List<float> {0f, 0.4f, 0.7f, 1.0f};
     private float startTime;
     private float time;
 
     private void OnEnable()
     {
         startTime = Time.time; // 패턴이 활성화될 때 시작 시간 저장
-        StartCoroutine(pattern());
+        StartCoroutine(patterntiming());
     }
 
     private void OnDisable()
     {
-        StopCoroutine(pattern());
+        StopAllCoroutines();
     }
 
     private IEnumerator patterntiming()
@@ -41,52 +41,69 @@ public class Pattern11 : MonoBehaviour
 
             StartCoroutine(pattern());
         }
+        yield return new WaitForSeconds(10f);
+        Destroy(gameObject);
     }
 
     private IEnumerator pattern()
     {
+        float Xpos;
+        if (Random.Range(-1f, 1f) < 0f){
+            Xpos = Random.Range(-2f, -8f);
+        }
+        else
+        {
+            Xpos = Random.Range(2f, 8f);
+        }
+
         // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(8.02f, -3.15f, 0f);
+        Vector3 warningPosition = new Vector3(Xpos, 5.1f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
-        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
-        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        Color originalColor = warningRenderer.color;
-        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        SpriteRenderer[] warningRenderers = newWarning.GetComponentsInChildren<SpriteRenderer>();
 
-        float totalTime = 0.5f; // 전체 시간 (0.5초)
-        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
+        Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+        foreach (SpriteRenderer renderer in warningRenderers)
+        {
+            renderer.color = targetColor;
+        }
 
+        float totalTime = 0.25f;
         float elapsedTime = 0f;
-
         while (elapsedTime < totalTime)
         {
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3초 동안은 완전히 불투명하게 유지
-            if (elapsedTime <= fadeInDuration)
+            foreach (SpriteRenderer renderer in warningRenderers)
             {
-                warningRenderer.color = originalColor;
-            }
-            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
-            else //0.3초가 지남
-            {
-                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
-                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+                renderer.color = Color.Lerp(targetColor, Color.red, t);
             }
 
             yield return null;
         }
-        // 경고 오브젝트 제거
+
+        elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
+            {
+                renderer.color = Color.Lerp(Color.red, targetColor, t);
+            }
+
+            yield return null;
+        }
         Destroy(newWarning);
 
-        Vector3 OakPosition = new Vector3(8.02f, -3.45f, 0f);
-        GameObject newOak = Instantiate(Oak, OakPosition, Quaternion.identity);
-        Rigidbody2D RedAppleRigidbody = newOak.GetComponent<Rigidbody2D>();
-        RedAppleRigidbody.velocity = Vector2.left * OakSpeed;
+        Vector3 RedApplePosition = new Vector3(Xpos, 5.5f, 0f);
+        GameObject NewRedApple = Instantiate(RedApple, RedApplePosition, Quaternion.identity);
+        Rigidbody2D RedAppleRigidbody = NewRedApple.GetComponent<Rigidbody2D>();
+        RedAppleRigidbody.velocity = Vector2.down * RedAppleSpeed;
 
-        StartCoroutine(DestroyIfOutOfBounds(newOak));
+        StartCoroutine(DestroyIfOutOfBounds(NewRedApple));
     }
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
@@ -96,7 +113,6 @@ public class Pattern11 : MonoBehaviour
             if (!IsWithinMapBounds(obj.transform.position))
             {
                 Destroy(obj);
-                Destroy(gameObject);
                 yield break;
             }
             yield return null;
@@ -105,7 +121,6 @@ public class Pattern11 : MonoBehaviour
 
     private bool IsWithinMapBounds(Vector3 position)
     {
-        // IsWithinMapBounds 메서드 내용 그대로 가져옵니다.
         float minX = -10f;
         float maxX = 10f;
         float minY = -5.5f;

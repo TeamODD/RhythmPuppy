@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using EventManagement;
+using TMPro;
 using SceneData;
 
 public class GameClear : MonoBehaviour
@@ -29,10 +31,13 @@ public class GameClear : MonoBehaviour
     [SerializeField]
     private SpriteRenderer ScreenAlpha;
     [SerializeField]
+    private Image Screen_UI;
+    [SerializeField]
     private SpriteRenderer Rank;
     [SerializeField]
     private Sprite[] RankImgs;
     [SerializeField]
+    private TMP_Text RankText;
     private CanvasGroup canvas;
 
     public static bool clear;
@@ -102,18 +107,25 @@ public class GameClear : MonoBehaviour
         if (S_Rank_True == true)
             Rank.sprite = RankImgs[3];
         //health 관련해서 S 판정 내는 if문 작성하기
-        while (Rank.color.a < 1)
+
+        byte RankAlpha = 0;
+        while (Rank.color.a < 1 || RankAlpha < 255)
         {
             Rank.color = new Color(1, 1, 1, alpha);
-            canvas.alpha = alpha;
+            RankText.color = new Color32(255, 255, 255, RankAlpha);
             alpha += 0.01f;
+            RankAlpha += 1;
             yield return new WaitForFixedUpdate();
         }
         alpha = 0;
         //여기까지 랭크가 나오도록.
+        //
+        /*페이드인 페이드 아웃 효과는 UI때문에 UI image와 기본 스프라이트 이미지
+         * 두 가지를 활용하였습니다. */
         yield return new WaitForSeconds(5f);
-        while (ScreenAlpha.color.a < 1)
+        while (Screen_UI.color.a < 1 || ScreenAlpha.color.a < 1)
         {
+            Screen_UI.color = new Color(0, 0, 0, alpha);
             ScreenAlpha.color = new Color(0, 0, 0, alpha);
             alpha += 0.02f;
             yield return new WaitForFixedUpdate();

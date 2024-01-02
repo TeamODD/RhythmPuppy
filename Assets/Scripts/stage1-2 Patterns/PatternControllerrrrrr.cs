@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,8 +30,14 @@ public class PatternControllerrrrrr : MonoBehaviour
     [SerializeField]
     private GameObject pattern10;
     [SerializeField]
-    /*private GameObject gameprogress;*/
+    float DelayTime;
+    [SerializeField]
+    GameObject MainCamera;
+
     bool isPuppyShown;
+    private float startTime;
+    EventManager eventManager;
+    CameraShake Camera;
 
     private List<float> pattern6Timings = new List<float>
     {
@@ -42,14 +49,11 @@ public class PatternControllerrrrrr : MonoBehaviour
         21.3f, 22.3f, 23.3f, 24.3f,
         25.4f, 26.4f, 27.5f, 28.5f,
         29.6f, 30.6f,
-        69.2f, 70.2f, 71.2f, 72.2f,
-        73.4f, 74.4f, 75.4f, 76.4f,
-        77.6f, 78.6f, 79.6f, 80.6f,
-        81.7f, 82.7f, 83.7f, 84.7f,
+        68.7f, 69.7f, 70.7f, 71.7f, 72.9f, 73.9f, 74.9f, 75.9f, 77.1f, 78.1f, 79.1f, 80.1f, 81.2f, 82.2f, 83.2f, 84.2f, 85.3f,
         85.9f, 86.9f, 87.9f, 88.9f,
         90.1f, 91.1f, 92.1f, 93.1f,
         94.2f, 95.2f, 96.3f, 97.3f,
-        98.4f, 99.4f
+        98.4f
     };
 
     private List<float> pattern7aTimings = new List<float>
@@ -65,8 +69,8 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private List<float> pattern8aTimings = new List<float>
     {
-        16.5f, 20.7f, 24.9f,
-        85.3f, 89.5f, 93.7f,
+        16.2f, 20.4f, 24.6f,
+        85.0f, 89.2f, 93.4f
     };
 
     private List<float> pattern8bTimings = new List<float>
@@ -76,8 +80,8 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private List<float> pattern8cTimings = new List<float>
     {
-        33.3f, 37.5f, 41.7f, 45.9f, 50.1f, 54.3f, 58.5f, 62.7f,
-        102.1f, 106.3f, 110.5f, 114.7f, 118.9f, 123.1f, 127.3f, 131.5f
+        33.0f, 36.8f, 41.0f, 45.2f, 49.4f, 53.6f, 57.8f, 62.0f,
+        101.8f, 105.6f, 109.8f, 114.0f, 118.2f, 122.4f, 126.6f, 130.8f
     };
 
     private List<float> pattern9Timings = new List<float>
@@ -90,16 +94,19 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private List<float> pattern10Timings = new List<float>
     {
-        42.1f, 43.1f, 44.1f, 45.3f, 46.3f, 51.0f, 52.0f, 53.0f, 54.0f, 55.2f, 56.2f, 57.2f, 59.3f, 60.3f, 61.4f, 62.4f, 63.4f, 64.4f,
-110.9f, 111.9f, 112.9f, 114.1f, 115.1f, 119.8f, 120.8f, 121.8f, 122.8f, 123.2f, 124.2f, 125.2f, 128.1f, 129.1f, 130.2f, 131.2f, 132.2f, 133.2f
+    42.1f, 43.1f, 44.1f, 45.3f, 46.3f, 51.0f, 52.0f, 53.0f, 54.0f, 55.2f, 56.2f, 57.2f, 59.3f, 60.3f, 61.4f, 62.4f, 63.4f, 64.4f,
+    110.9f, 111.9f, 112.9f, 114.1f, 115.1f, 119.8f, 120.8f, 121.8f, 122.8f, 123.9f, 124.9f, 125.9f, 128.1f, 129.1f, 130.2f, 131.2f, 132.2f, 133.2f
     };
 
-    private float startTime;
-    /*private float savePointTime;*/
-    EventManager eventManager;
+    private List<float> camerashakingTimings = new List<float>
+    {
+        43.1f, 44.1f, 45.1f, 46.3f, 47.3f, 52.0f, 53.0f, 54.0f, 55.0f, 56.2f, 57.2f, 58.2f, 60.3f, 61.3f, 62.4f, 63.4f, 64.4f, 65.4f,
+        111.9f, 112.9f, 113.9f, 115.1f, 116.1f, 120.8f, 121.8f, 122.8f, 123.8f, 124.9f, 125.9f, 126.9f, 129.1f, 130.1f, 131.2f, 132.2f, 133.2f, 134.2f
+    };
 
     private void Start()
     {
+        Camera = MainCamera.GetComponent<CameraShake>();
         isPuppyShown = false;
         eventManager = FindObjectOfType<EventManager>();
         audioSource.clip = music;
@@ -119,85 +126,23 @@ public class PatternControllerrrrrr : MonoBehaviour
         pattern8c.SetActive(false);
         pattern9.SetActive(false);
         pattern10.SetActive(false);
-        /*Checkingsavepoint();*/
-        /*gameprogress.GetComponent<GameProgress>().SettingCheckPoint();*/
-
-        /*// 패턴1, 패턴2, 패턴3 스크립트를 비활성화
-        pattern6.SetActive(false);
-        pattern7a.SetActive(false);
-        pattern7b.SetActive(false);
-        pattern8a.SetActive(false);
-        pattern8b.SetActive(false);
-        pattern8c.SetActive(false);
-        pattern9.SetActive(false);
-        pattern10.SetActive(false);
-        // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
-
-        StartCoroutine(RunPattern6());
-        StartCoroutine(RunPattern7a());
-        StartCoroutine(RunPattern7b());
-        StartCoroutine(RunPattern8a());
-        StartCoroutine(RunPattern8b());
-        StartCoroutine(RunPattern8c());
-        StartCoroutine(RunPattern9());
-        StartCoroutine(RunPattern10());*/
-        // 추가 패턴 실행 메서드들도 필요에 따라 추가
     }
 
-    /*
-    private void OnEnable()
-    {
-        Checkingsavepoint();
-        gameprogress.GetComponent<GameProgress>().SettingCheckPoint();
-
-        // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
-        pattern6.SetActive(false);
-        pattern7a.SetActive(false);
-        pattern7b.SetActive(false);
-        pattern8a.SetActive(false);
-        pattern8b.SetActive(false);
-        pattern8c.SetActive(false);
-        pattern9.SetActive(false);
-        pattern10.SetActive(false);
-        // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
-
-        StartCoroutine(RunPattern6());
-        StartCoroutine(RunPattern7a());
-        StartCoroutine(RunPattern7b());
-        StartCoroutine(RunPattern8a());
-        StartCoroutine(RunPattern8b());
-        StartCoroutine(RunPattern8c());
-        StartCoroutine(RunPattern9());
-        StartCoroutine(RunPattern10());
-        // 추가 패턴 실행 메서드들도 필요에 따라 추가
-    }
-    */
-
-    /*private void OnDisable()
-    {
-        StopCoroutine(RunPattern6());
-        StopCoroutine(RunPattern7a());
-        StopCoroutine(RunPattern7b());
-        StopCoroutine(RunPattern8a());
-        StopCoroutine(RunPattern8b());
-        StopCoroutine(RunPattern8c());
-        StopCoroutine(RunPattern9());
-        StopCoroutine(RunPattern10());
-    }*/
     void run()
     {
-        startTime = audioSource.time;
+        startTime = audioSource.time; //현재 음악 시간
 
         // 추가 패턴 GameObject 변수들에 대해도 필요에 따라 비활성화 처리
 
-        StartCoroutine(RunPattern6());
-        StartCoroutine(RunPattern7a());
-        StartCoroutine(RunPattern7b());
-        StartCoroutine(RunPattern8a());
-        StartCoroutine(RunPattern8b());
-        StartCoroutine(RunPattern8c());
-        StartCoroutine(RunPattern9());
-        StartCoroutine(RunPattern10());
+        StartCoroutine(Pattern6Timing());
+        StartCoroutine(Pattern7aTiming());
+        StartCoroutine(Pattern7bTiming());
+        StartCoroutine(Pattern8aTiming());
+        StartCoroutine(Pattern8bTiming());
+        StartCoroutine(Pattern8cTiming());
+        StartCoroutine(Pattern9Timing());
+        StartCoroutine(Pattern10Timing());
+        StartCoroutine(CameraShakingTiming());
     }
 
     void Update()
@@ -207,243 +152,225 @@ public class PatternControllerrrrrr : MonoBehaviour
             isPuppyShown = true;
             GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc();
         }
+        //Debug.Log(Time.time);
     }
 
-    /*private void Checkingsavepoint() //현재 GameProgress에서 음악 구간과 진행도 바는 설정해주는 상황
-    {
-        float  checkpointTime = PlayerPrefs.GetFloat("checkpointTime");
-       
-        if (checkpointTime == 0)
-        {
-            startTime = Time.time;
-        }
-        else if (checkpointTime == 39.6669f)
-        {
-            startTime = Time.time - 39.6669f;
-        }
-        else if (checkpointTime == 79.3338f)
-        {
-            startTime = Time.time - 79.3338f;
-        }
-        else if (checkpointTime == 119.0008f)
-        {
-            startTime = Time.time - 119.0008f;
-        }
-    }*/
-
-    /*private float GetElapsedTime()
-    {
-        float elapsedTime = Time.time - startTime;
-        float roundedElapsedTime = Mathf.Round(elapsedTime * 10f) / 10f; // 소수 첫째 자리까지 반올림
-        return roundedElapsedTime;
-    }*/
-
-    /*private void Update()
-    {
-        //Debug.Log("GetElapsedTime : " + GetElapsedTime());
-    }*/
-
-    private IEnumerator RunPattern6()
+    private IEnumerator Pattern6Timing()
     {
         for (int i = 0; i < pattern6Timings.Count; i++)
         {
             float timing = pattern6Timings[i];
 
-            /*if (timing < GetElapsedTime())*/
             if (timing < startTime)
             {
                 continue;
             }
 
-            /*while (GetElapsedTime() != timing)
-            {
-                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                yield return null;
-            }*/
-            yield return new WaitForSeconds(timing - audioSource.time);
-            // 패턴을 복제하고 활성화
-            GameObject newPattern6 = Instantiate(pattern6, pattern6.transform.position, pattern6.transform.rotation);
-            newPattern6.SetActive(true);
+            StartCoroutine(RunPattern6(timing));
+            yield return null;
         }
     }
 
-    private IEnumerator RunPattern7a()
+    private IEnumerator RunPattern6(float timing)
+    {
+        yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+        // 패턴을 복제하고 활성화
+        GameObject newPattern6 = Instantiate(pattern6, pattern6.transform.position, pattern6.transform.rotation);
+        newPattern6.SetActive(true);
+    }
+
+    private IEnumerator Pattern7aTiming()
     {
         for (int i = 0; i < pattern7aTimings.Count; i++)
         {
             float timing = pattern7aTimings[i];
 
-            /*if (timing < GetElapsedTime())*/
             if (timing < startTime)
             {
                 continue;
             }
 
-            /*while (GetElapsedTime() != timing)
-            {
-                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                yield return null;
-            }*/
-            yield return new WaitForSeconds(timing - audioSource.time);
-            // 패턴을 복제하고 활성화
-            GameObject newPattern7a = Instantiate(pattern7a, pattern7a.transform.position, pattern7a.transform.rotation);
-            newPattern7a.SetActive(true);
+            StartCoroutine(RunPattern7a(timing));
+            yield return null;
         }
     }
-    private IEnumerator RunPattern7b()
+
+    private IEnumerator RunPattern7a(float timing)
+    {
+        yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+        // 패턴을 복제하고 활성화
+        GameObject newPattern7a = Instantiate(pattern7a, pattern7a.transform.position, pattern7a.transform.rotation);
+        newPattern7a.SetActive(true);
+    }
+
+    private IEnumerator Pattern7bTiming()
     {
         for (int i = 0; i < pattern7bTimings.Count; i++)
         {
             float timing = pattern7bTimings[i];
 
-            /*if (timing < GetElapsedTime())  */
             if (timing < startTime)
             {
                 continue;
             }
 
-            /*while (GetElapsedTime() != timing)
-            {
-                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                yield return null;
-            }*/
-            yield return new WaitForSeconds(timing - audioSource.time);
-            // 패턴을 복제하고 활성화
-            GameObject newPattern7b = Instantiate(pattern7b, pattern7b.transform.position, pattern7b.transform.rotation);
-            newPattern7b.SetActive(true);
+            StartCoroutine(RunPattern7b(timing));
+            yield return null;            
         }
     }
 
-    private IEnumerator RunPattern8a()
+    private IEnumerator RunPattern7b(float timing)
+    {
+        yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+        // 패턴을 복제하고 활성화
+        GameObject newPattern7b = Instantiate(pattern7b, pattern7b.transform.position, pattern7b.transform.rotation);
+        newPattern7b.SetActive(true);
+    }
+
+    private IEnumerator Pattern8aTiming()
     {
         for (int i = 0; i < pattern8aTimings.Count; i++)
         {
             float timing = pattern8aTimings[i];
 
-            /*if (timing < GetElapsedTime())*/
             if ( timing < startTime)
             {
                 continue;
             }
 
-            /*while (GetElapsedTime() != timing)
-            {
-                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                yield return null;
-            }*/
-            yield return new WaitForSeconds(timing - audioSource.time);
-            // 패턴을 복제하고 활성화
-            GameObject newPattern8a = Instantiate(pattern8a, pattern8a.transform.position, pattern8a.transform.rotation);
-            newPattern8a.SetActive(true);
+            StartCoroutine (RunPattern8a(timing));
+            yield return null;
         }
     }
 
-    private IEnumerator RunPattern8b()
+    private IEnumerator RunPattern8a(float timing)
+    {
+        yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+        // 패턴을 복제하고 활성화
+        GameObject newPattern8a = Instantiate(pattern8a, pattern8a.transform.position, pattern8a.transform.rotation);
+        newPattern8a.SetActive(true);
+    }
+
+    private IEnumerator Pattern8bTiming()
     {
         for (int i = 0; i < pattern8bTimings.Count; i++)
         {
             float timing = pattern8bTimings[i];
 
-            /*if (timing < GetElapsedTime())*/
             if ( timing < startTime)
             {
                 continue;
             }
 
-            /*while (GetElapsedTime() != timing)
-            {
-                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                yield return null;
-            }*/
-            yield return new WaitForSeconds(timing - audioSource.time);
-            // 패턴을 복제하고 활성화
-            GameObject newPattern8b = Instantiate(pattern8b, pattern8b.transform.position, pattern8b.transform.rotation);
-            newPattern8b.SetActive(true);
+            StartCoroutine(RunPattern8b(timing));
+            yield return null;
         }
     }
 
-    private IEnumerator RunPattern8c()
+    private IEnumerator RunPattern8b(float timing)
+    {
+        yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+        // 패턴을 복제하고 활성화
+        GameObject newPattern8b = Instantiate(pattern8b, pattern8b.transform.position, pattern8b.transform.rotation);
+        newPattern8b.SetActive(true);
+    }
+
+    private IEnumerator Pattern8cTiming()
     {
         for (int i = 0; i < pattern8cTimings.Count; i++)
         {
             float timing = pattern8cTimings[i];
 
-            /*if (timing < GetElapsedTime())*/
             if (timing < startTime)
             {
                 continue;
             }
 
-            /*            while (GetElapsedTime() != timing)
-                        {
-                            // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                            yield return null;
-                        }*/
-            yield return new WaitForSeconds(timing - audioSource.time);
-            // 패턴을 복제하고 활성화
-            GameObject newPattern8c = Instantiate(pattern8c, pattern8c.transform.position, pattern8c.transform.rotation);
-            newPattern8c.SetActive(true);
+            StartCoroutine(RunPattern8c(timing));
+            yield return null;
         }
     }
 
-    private IEnumerator RunPattern9()
+    private IEnumerator RunPattern8c(float timing) 
+    {
+        yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+        // 패턴을 복제하고 활성화
+        GameObject newPattern8c = Instantiate(pattern8c, pattern8c.transform.position, pattern8c.transform.rotation);
+        newPattern8c.SetActive(true);
+    }
+
+    private IEnumerator Pattern9Timing()
     {
         for (int i = 0; i < pattern9Timings.Count; i++)
         {
             float timing = pattern9Timings[i];
 
-            /*if (timing < GetElapsedTime())*/
             if (timing < startTime)
             {
                 continue;
             }
 
-            /*while (GetElapsedTime() != timing)
-            {
-                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                yield return null;
-            }*/
-            yield return new WaitForSeconds(timing - audioSource.time);
-            // 패턴을 복제하고 활성화
-            GameObject newPattern9 = Instantiate(pattern9, pattern9.transform.position, pattern9.transform.rotation);
-            newPattern9.SetActive(true);
+            StartCoroutine(RunPattern9(timing));
+            yield return null;
         }
     }
 
-    private IEnumerator RunPattern10()
+    private IEnumerator RunPattern9(float timing)
+    {
+        yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+        // 패턴을 복제하고 활성화
+        GameObject newPattern9 = Instantiate(pattern9, pattern9.transform.position, pattern9.transform.rotation);
+        newPattern9.SetActive(true);
+    }
+
+    private IEnumerator Pattern10Timing()
     {
         for (int i = 0; i < pattern10Timings.Count; i++)
         {
             float timing = pattern10Timings[i];
 
-            /*if (timing < GetElapsedTime())*/
             if (timing < startTime)
             {
                 continue;
             }
-
-            /*while (GetElapsedTime() != timing)
-            {
-                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
-                yield return null;
-            }*/
-            yield return new WaitForSeconds(timing - audioSource.time);
-            // 패턴을 복제하고 활성화
-            GameObject newPattern10 = Instantiate(pattern10, pattern10.transform.position, pattern10.transform.rotation);
-            newPattern10.SetActive(true);
+            
+            StartCoroutine(RunPattern10(timing));
+            yield return null;
         }
+    }
+
+    private IEnumerator RunPattern10(float timing)
+    {
+        yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+        // 패턴을 복제하고 활성화
+        GameObject newPattern10 = Instantiate(pattern10, pattern10.transform.position, pattern10.transform.rotation);
+        newPattern10.SetActive(true);
+    }
+
+    private IEnumerator CameraShakingTiming()
+    {
+        for (int i = 0; i < camerashakingTimings.Count; i++)
+        {
+            float timing = camerashakingTimings[i];
+
+            if (timing < startTime)
+            {
+                continue;
+            }
+            StartCoroutine(CameraShaking(timing));
+            yield return null;
+        }
+    }
+
+    private IEnumerator CameraShaking(float timing)
+    {
+        yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
+        Camera.ShakeAmount = 0.2f;
+        Camera.VibrateForTime(0.1f);
     }
 
     void deathEvent()
     {
-        /*StopCoroutine(RunPattern6());
-        StopCoroutine(RunPattern7a());
-        StopCoroutine(RunPattern7b());
-        StopCoroutine(RunPattern8a());
-        StopCoroutine(RunPattern8b());
-        StopCoroutine(RunPattern8c());
-        StopCoroutine(RunPattern9());
-        StopCoroutine(RunPattern10());*/
         StopAllCoroutines();
     }
 }

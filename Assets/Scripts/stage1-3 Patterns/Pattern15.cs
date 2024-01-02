@@ -29,35 +29,51 @@ public class Pattern15 : MonoBehaviour
     private IEnumerator pattern()
     {
         // 경고 오브젝트 생성
-        float Xpos = Random.Range(-5.05f, 7.868f);
+        float Xpos;
+        if (Random.Range(0, 2) == 0)
+        {
+            Xpos = Random.Range(-7.98f, -2.32f);
+        }
+        else
+        {
+            Xpos = Random.Range(2.32f, 7.98f);
+        }
+
         Vector3 warningPosition = new Vector3(Xpos, -3.416f, 0f);
         GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
 
-        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
-        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        Color originalColor = warningRenderer.color;
-        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        SpriteRenderer[] warningRenderers = newWarning.GetComponentsInChildren<SpriteRenderer>();
 
-        float totalTime = 0.5f; // 전체 시간 (0.5초)
-        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
+        Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+        foreach (SpriteRenderer renderer in warningRenderers)
+        {
+            renderer.color = targetColor;
+        }
 
+        float totalTime = 0.25f;
         float elapsedTime = 0f;
-
         while (elapsedTime < totalTime)
         {
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp01(elapsedTime / totalTime);
 
-            // 0.3초 동안은 완전히 불투명하게 유지
-            if (elapsedTime <= fadeInDuration)
+            foreach (SpriteRenderer renderer in warningRenderers)
             {
-                warningRenderer.color = originalColor;
+                renderer.color = Color.Lerp(targetColor, Color.red, t);
             }
-            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
-            else //0.3초가 지남
+
+            yield return null;
+        }
+
+        elapsedTime = 0f;
+        while (elapsedTime < totalTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+            foreach (SpriteRenderer renderer in warningRenderers)
             {
-                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
-                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+                renderer.color = Color.Lerp(Color.red, targetColor, t);
             }
 
             yield return null;
@@ -80,7 +96,7 @@ public class Pattern15 : MonoBehaviour
 
         flowerRigidBody2D.velocity = Vector2.zero;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.4f);
         ChangeImg(newflower);
 
         //본 모습 등장

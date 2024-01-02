@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Pattern13 : MonoBehaviour
@@ -9,14 +10,24 @@ public class Pattern13 : MonoBehaviour
     [SerializeField]
     private GameObject warning;
     [SerializeField]
-    private float reachspeed; //가시덤불이 솓아나는 속도
+    private float speed; //가시덤불이 솓아나는 속도
     [SerializeField]
-    private float swingspeed; //가시덤불이 휘둘러지는 속도
-    [SerializeField]
-    private float rotationDuration; //가시덤불이 유지되는 시간
+    private List<float> patternTimings = new List<float> { 0f, 0.4f, 0.7f, 1.0f };
+
+    private float startTime;
+    private float time;
+
+    List<GameObject> ThorstemsList = new List<GameObject>();
+    GameObject PlayerCorgi;
+    float PlayerCorgi_Xpos;
 
     private void OnEnable()
     {
+        startTime = Time.time;
+
+        PlayerCorgi = GameObject.Find("corgi");
+        PlayerCorgi_Xpos = PlayerCorgi.transform.position.x;
+
         StartCoroutine(pattern());
     }
 
@@ -27,84 +38,153 @@ public class Pattern13 : MonoBehaviour
 
     private IEnumerator pattern()
     {
-        // 경고 오브젝트 생성
-        Vector3 warningPosition = new Vector3(-4.86f, -0.84f, 0f);
-        GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
-
-        // 경고 오브젝트가 0.5초에 걸쳐서 투명해지도록 알파값 조정
-        SpriteRenderer warningRenderer = newWarning.GetComponent<SpriteRenderer>();
-        Color originalColor = warningRenderer.color;
-        Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
-
-        float totalTime = 0.5f; // 전체 시간 (0.5초)
-        float fadeInDuration = 0.3f; // 0.3초 동안은 완전히 불투명하게 유지
-
-        float elapsedTime = 0f;
-
-        while (elapsedTime < totalTime)
+        float Xpos;
+        if (PlayerCorgi_Xpos < 0f)
         {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / totalTime);
+            Xpos = -5.14f;
+        }
+        else
+        {
+            Xpos = 5.14f;
+        }
 
-            // 0.3초 동안은 완전히 불투명하게 유지
-            if (elapsedTime <= fadeInDuration)
+        // 경고 오브젝트 생성 및 파괴
+        {
+            Vector3 warningPosition = new Vector3(Xpos, -0.88f, 0f);
+            GameObject newWarning = Instantiate(warning, warningPosition, Quaternion.identity);
+
+            SpriteRenderer[] warningRenderers = newWarning.GetComponentsInChildren<SpriteRenderer>();
+
+            Color targetColor = new Color(1f, 0.3f, 0.3f, 0f);
+            foreach (SpriteRenderer renderer in warningRenderers)
             {
-                warningRenderer.color = originalColor;
-            }
-            // 그 이후 0.2초 동안에는 빠르게 투명해지도록 알파값 조정
-            else //0.3초가 지남
-            {
-                float fadeOutDuration = totalTime - fadeInDuration; // 투명해지는 시간 (0.2초)
-                warningRenderer.color = Color.Lerp(originalColor, targetColor, t);
+                renderer.color = targetColor;
             }
 
-            yield return null;
-        }
-
-        // 경고 오브젝트 제거
-        Destroy(newWarning);
-
-        Vector3 thorstemPosition = new Vector3(-4.86f, -15.3f, 0f);
-        GameObject newthorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);
-
-        Rigidbody2D newthorstemRigidbody = newthorstem.GetComponent<Rigidbody2D>();
-        newthorstemRigidbody.velocity = Vector2.up * reachspeed;
-
-        // 자식 오브젝트도 함께 움직이도록 설정
-        foreach (Transform childTransform in newthorstem.transform)
-        {
-            Rigidbody2D childRigidbody = childTransform.GetComponent<Rigidbody2D>();
-            if (childRigidbody != null)
+            float totalTime = 0.25f;
+            float elapsedTime = 0f;
+            while (elapsedTime < totalTime)
             {
-                childRigidbody.velocity = newthorstemRigidbody.velocity;
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+                foreach (SpriteRenderer renderer in warningRenderers)
+                {
+                    renderer.color = Color.Lerp(targetColor, Color.red, t);
+                }
+
+                yield return null;
             }
-        }
 
-        while (newthorstem.transform.position.y < -4.60f)
-        {
-            yield return null;
-        }
-
-        // 부모 오브젝트와 자식 오브젝트의 속도 초기화
-        newthorstemRigidbody.velocity = Vector2.zero;
-        foreach (Transform childTransform in newthorstem.transform)
-        {
-            Rigidbody2D childRigidbody = childTransform.GetComponent<Rigidbody2D>();
-            if (childRigidbody != null)
+            elapsedTime = 0f;
+            while (elapsedTime < totalTime)
             {
-                childRigidbody.velocity = Vector2.zero;
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / totalTime);
+
+                foreach (SpriteRenderer renderer in warningRenderers)
+                {
+                    renderer.color = Color.Lerp(Color.red, targetColor, t);
+                }
+
+                yield return null;
             }
+
+            // 경고 오브젝트 제거
+            Destroy(newWarning);
         }
 
-        newthorstem.transform.Rotate(Vector3.back * swingspeed * Time.deltaTime);
-
-        while (newthorstem.transform.rotation.eulerAngles.z > 250f)
+        for (int Order = 0; Order < patternTimings.Count; Order++)
         {
-            newthorstem.transform.Rotate(Vector3.back * swingspeed * Time.deltaTime);
-            yield return null;
+            float timing = patternTimings[Order];
+
+            while (GetElapsedTime() < timing)
+            {
+                // 현재 경과 시간이 지정된 타이밍에 도달할 때까지 기다립니다.
+                yield return null;
+            }
+            StartCoroutine(ShotThorstem(Order));
         }
 
-        Destroy(newthorstem);
+        yield return new WaitUntil(() => ThorstemsList.Count == 4 && ThorstemsList[3] != null && ThorstemsList[3].transform.position.y >= 0f);
+
+        foreach (GameObject Thorstem in ThorstemsList)
+        {
+            StartCoroutine(FadeOutAndDestroy(Thorstem, 255f, 0f));
+        }
+        yield return new WaitForSeconds(2f);
         Destroy(gameObject);
+    }
+
+    private IEnumerator ShotThorstem(int Order)
+    {
+        float randomZRotation;
+        float ThorstemXpos;
+
+        if (Order % 2 == 0) // 짝수인 경우(실제론 첫번째, 세번째)
+        {
+            randomZRotation = Random.Range(-5f, -20f);
+            ThorstemXpos = (Order == 0) ? -8f : -4f;
+        }
+        else  // 홀수인 경우(실제론 두번째, 네번째)
+        {
+            randomZRotation = Random.Range(5f, 20f);
+            ThorstemXpos = (Order == 1) ? -6f : -2f;
+        }
+        ThorstemXpos = (PlayerCorgi_Xpos < 0f) ? -Mathf.Abs(ThorstemXpos) : Mathf.Abs(ThorstemXpos);
+
+        float tanValue = Mathf.Tan(Mathf.Deg2Rad * (90 + randomZRotation));
+        float thorstemPosY = -12f;
+
+        Vector3 thorstemPosition = new Vector3(ThorstemXpos, thorstemPosY, 0f);
+        GameObject NewThorstem = Instantiate(thorstem, thorstemPosition, Quaternion.identity);
+        ThorstemsList.Add(NewThorstem);
+
+        NewThorstem.transform.rotation = Quaternion.Euler(0f, 0f, randomZRotation);
+
+        Rigidbody2D newthorstemRigidbody = NewThorstem.GetComponent<Rigidbody2D>();
+        Vector2 diagonalDirection = Quaternion.Euler(0f, 0f, randomZRotation) * Vector2.up;
+        Vector2 diagonalVelocity = diagonalDirection.normalized * speed;
+        newthorstemRigidbody.velocity = diagonalVelocity;
+
+        yield return new WaitUntil(() => NewThorstem.transform.position.y >= 0f);
+
+        newthorstemRigidbody.velocity = Vector2.zero;
+    }
+
+    private IEnumerator FadeOutAndDestroy(GameObject obj, float initialAlpha, float finalAlpha)
+    {
+        float elapsedTime = 0f;
+        float fadeDuration = 1.0f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            float currentAlpha = Mathf.Lerp(initialAlpha, finalAlpha, elapsedTime / fadeDuration); //최종 투명도값과 초기 투명도값을 바꿔 작성한 게 맞음.
+
+            // 0에서 255 사이의 값으로 투명도 제한
+            currentAlpha = Mathf.Clamp(currentAlpha, 0f, 255f);
+
+            SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>();
+
+            foreach (SpriteRenderer renderer in renderers)
+            {
+                Color color = renderer.color;
+
+                // 0부터 255 범위의 값을 0부터 1 사이의 실수로 변환
+                float normalizedAlpha = currentAlpha / 255.0f;
+
+                color.a = normalizedAlpha; // 투명도 값 변경
+                renderer.color = color; // 변경된 투명도 설정
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        Destroy(obj);
+    }
+
+    private float GetElapsedTime()
+    {
+        return Time.time - startTime;
     }
 }
