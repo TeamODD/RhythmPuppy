@@ -28,14 +28,14 @@ public class Pattern8_WarningBox : MonoBehaviour
     {
         time += Time.deltaTime;
 
-            if (time < 0.5f)
-            {
-                gameObjectAlpha.color = new Color(1, 0.3f, 0.3f, time / 1f);
-            }
-            else
-            {
-                gameObjectAlpha.color = new Color(1, 0.3f, 0.3f, 1f - time / 1f);
-            }
+        if (time < 0.5f)
+        {
+            gameObjectAlpha.color = new Color(1, 0.3f, 0.3f, time / 1f);
+        }
+        else
+        {
+            gameObjectAlpha.color = new Color(1, 0.3f, 0.3f, 1f - time / 1f);
+        }
 
 
         if (time > 1f)

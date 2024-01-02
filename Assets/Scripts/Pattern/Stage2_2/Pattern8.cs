@@ -12,9 +12,9 @@ public class Pattern8 : MonoBehaviour
     [HideInInspector]
     public float time = 0;
     
-    void Update()
+    void FixedUpdate()
     {
-        time += Time.fixedDeltaTime;
+        time += Time.deltaTime;
 
         if (time > 4f) DestroyObject();
         if (ObjectImage == null) return;
@@ -31,8 +31,6 @@ public class Pattern8 : MonoBehaviour
         {
             ObjectImage.color = new Color(1, 1, 1, 1 - ((time-2.5f) * (2/3)));
         }
-        else
-            DestroyObject();
     }
 
     void Awake()

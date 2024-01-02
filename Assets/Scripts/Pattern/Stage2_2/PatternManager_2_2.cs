@@ -37,7 +37,7 @@ namespace Stage_2
         [SerializeField]
         private GameObject Pattern8_Canvas;
         [SerializeField]
-        private GameObject OverlayCanvas;
+        private GameObject Warning_Canvas;
         [SerializeField]
         private float[] savePointTime;
         private bool isPuppyShown;
@@ -312,7 +312,7 @@ namespace Stage_2
                 GameObject cat3_WarningBox;
                 cat3_WarningBox = ObjectPoolDic[objectName].Get();
                 cat3_WarningBox.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-                cat3_WarningBox.gameObject.transform.SetParent(OverlayCanvas.transform, true);
+                cat3_WarningBox.gameObject.transform.SetParent(Warning_Canvas.transform, true);
                 Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(9, Y, 0));
                 cat3_WarningBox.gameObject.transform.position = v;
                 //cat3_WarningBox.gameObject.transform.parent = OverlayCanvas.transform;
@@ -484,7 +484,7 @@ namespace Stage_2
                 WarningBox = ObjectPoolDic[objectName].Get();
                 //firefly.gameObject.transform.parent = Pattern8_Canvas.transform;
                 Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(randomX, randomY, 0));
-                WarningBox.gameObject.transform.SetParent(OverlayCanvas.transform, true);
+                WarningBox.gameObject.transform.SetParent(Warning_Canvas.transform, true);
                 WarningBox.gameObject.transform.position = v;
                 WarningBox.gameObject.GetComponent<Pattern8_WarningBox>().IsPooled = true;
                 WarningBox.gameObject.GetComponent<Pattern8_WarningBox>().time = 0;
@@ -542,7 +542,7 @@ namespace Stage_2
                 GameObject WarningBox;
                 WarningBox = ObjectPoolDic[objectName].Get();
                 WarningBox.gameObject.transform.rotation = Quaternion.Euler(0, 0, 90);
-                WarningBox.gameObject.transform.SetParent(OverlayCanvas.transform, true);
+                WarningBox.gameObject.transform.SetParent(Warning_Canvas.transform, true);
                 Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(randomX, 4.75f, 0));
                 WarningBox.gameObject.transform.position = v;
                 //cat3_WarningBox.gameObject.transform.parent = OverlayCanvas.transform;
