@@ -46,7 +46,6 @@ public class GameClear : MonoBehaviour
     private int deathcount;
     private bool S_Rank_True;
     EventManager eventManager;
-    
 
     void Start()
     {
@@ -69,7 +68,7 @@ public class GameClear : MonoBehaviour
     IEnumerator CommingOut()
     {
         float speed = 0.1f;
-        //노래 끝나고 2초 후 퍼피 등장(3초 전에 이 함수를 부르므로)
+        //노래 끝나고 2초 후 퍼피 등장(스테이지 2-1과 2-2에서 3초 전에 이 함수를 부르므로)
         yield return new WaitForSeconds(5f);
         while(gameObject.transform.position.x > 3.5f)
         {

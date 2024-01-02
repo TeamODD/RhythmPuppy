@@ -22,6 +22,8 @@ namespace Stage_2
             public int count;
         }
 
+        public int WaitTimeBeforeGameStart;
+
         [SerializeField]
         private ObjectInfo[] objectInfos = null;
 
@@ -134,6 +136,7 @@ namespace Stage_2
 
         IEnumerator StartGame()
         {
+            yield return new WaitForSeconds(WaitTimeBeforeGameStart);
             PatternMake();
             yield return new WaitForSeconds(startTime);
             audioSource.Play();
@@ -457,6 +460,7 @@ namespace Stage_2
                 //firefly.gameObject.transform.parent = Pattern8_Canvas.transform;
                 firefly_obstacle.gameObject.transform.position = new Vector3(randomX, randomY, 0);
                 firefly_obstacle.gameObject.GetComponent<Pattern8>().IsPooled = true;
+                firefly_obstacle.gameObject.GetComponent<Pattern8>().time = 0;
                 //return PoolingManager;
             }
 

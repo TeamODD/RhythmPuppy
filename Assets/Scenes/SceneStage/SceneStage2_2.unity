@@ -449,10 +449,26 @@ PrefabInstance:
       propertyPath: RawImage
       value: 
       objectReference: {fileID: 365126106}
+    - target: {fileID: 1950627420873399745, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: CurtainOpen
+      value: 
+      objectReference: {fileID: 32900000, guid: 9946038a1d14a544a8e0fdd83b8a94d4, type: 3}
+    - target: {fileID: 1950627420873399745, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: CurtainClose
+      value: 
+      objectReference: {fileID: 32900000, guid: b18883aca4c8f304f98c921416bcf01a, type: 3}
+    - target: {fileID: 1950627420873399745, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: CurtainCloseOpen
+      value: 
+      objectReference: {fileID: 32900000, guid: d9a88339dafa8b746b9901b80b66fcd0, type: 3}
     - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_Looping
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: m_VideoClip
+      value: 
+      objectReference: {fileID: 32900000, guid: 9946038a1d14a544a8e0fdd83b8a94d4, type: 3}
     - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_AspectRatio
       value: 0
@@ -463,7 +479,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4404979972005592021, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_WaitForFirstFrame
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5400435289035920476, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_IsActive
@@ -483,7 +499,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6563087761037258569, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
@@ -1385,6 +1401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ae2570e5b41944192830a26862f59c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WaitTimeBeforeGameStart: 3
   objectInfos:
   - objectName: cat1_a
     prefab: {fileID: 4005571409586596380, guid: 01f973f280cc91a4090e89e381b7e14c, type: 3}
