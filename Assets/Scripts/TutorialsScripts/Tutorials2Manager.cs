@@ -550,9 +550,10 @@ public class Tutorials2Manager : MonoBehaviour
 
         Rigidbody2D TutorialCorgi_Bone_Rig2D = TutorialCorgi_Bone.GetComponent<Rigidbody2D>();
 
-        TutorialCorgi_Bone.transform.position = new Vector3(0.753f, -0.739f, 0f);
-        PlayerCorgi_Bone.transform.position = new Vector3(1f, -0.6f, 0f);
         TutorialCorgi_Bone.transform.SetParent(null);
+        TutorialCorgi_Bone.transform.position = new Vector3(0.753f, -0.739f, 0f);
+        PlayerCorgi_Bone.transform.SetParent(null);
+        PlayerCorgi_Bone.transform.position = new Vector3(1f, -0.6f, 0f);
 
         while (!IsFinishedTeleportTest)
         {

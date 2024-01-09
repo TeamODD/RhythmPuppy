@@ -69,8 +69,8 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private List<float> pattern8aTimings = new List<float>
     {
-        16.5f, 20.7f, 24.9f,
-        85.3f, 89.5f, 93.7f,
+        16.2f, 20.4f, 24.6f,
+        85.0f, 89.2f, 93.4f
     };
 
     private List<float> pattern8bTimings = new List<float>
@@ -80,8 +80,8 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private List<float> pattern8cTimings = new List<float>
     {
-        33.3f, 37.5f, 41.7f, 45.9f, 50.1f, 54.3f, 58.5f, 62.7f,
-        102.1f, 106.3f, 110.5f, 114.7f, 118.9f, 123.1f, 127.3f, 131.5f
+        33.0f, 36.8f, 41.0f, 45.2f, 49.4f, 53.6f, 57.8f, 62.0f,
+        101.8f, 105.6f, 109.8f, 114.0f, 118.2f, 122.4f, 126.6f, 130.8f
     };
 
     private List<float> pattern9Timings = new List<float>
@@ -100,8 +100,8 @@ public class PatternControllerrrrrr : MonoBehaviour
 
     private List<float> camerashakingTimings = new List<float>
     {
-        42.6f, 43.6f, 44.6f, 45.8f, 46.8f, 51.5f, 52.5f, 53.5f, 54.5f, 55.7f, 56.7f, 57.7f, 59.8f, 60.8f, 61.9f, 62.9f, 63.9f, 64.9f,
-        111.4f, 112.4f, 113.4f, 114.6f, 115.6f, 120.3f, 121.3f, 122.3f, 123.3f, 124.4f, 125.4f, 126.4f, 128.6f, 129.6f, 130.7f, 131.7f, 132.7f, 133.7f
+        43.1f, 44.1f, 45.1f, 46.3f, 47.3f, 52.0f, 53.0f, 54.0f, 55.0f, 56.2f, 57.2f, 58.2f, 60.3f, 61.3f, 62.4f, 63.4f, 64.4f, 65.4f,
+        111.9f, 112.9f, 113.9f, 115.1f, 116.1f, 120.8f, 121.8f, 122.8f, 123.8f, 124.9f, 125.9f, 126.9f, 129.1f, 130.1f, 131.2f, 132.2f, 133.2f, 134.2f
     };
 
     private void Start()
