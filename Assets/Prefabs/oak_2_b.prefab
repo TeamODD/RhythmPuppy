@@ -117,8 +117,8 @@ GameObject:
   - component: {fileID: 4094049363494105940}
   - component: {fileID: 4094049363494105939}
   - component: {fileID: 4094049363494105938}
-  - component: {fileID: 4094049363494105937}
   - component: {fileID: 4094049363494105936}
+  - component: {fileID: 1357589271968011704}
   m_Layer: 11
   m_Name: oak_2_b
   m_TagString: Untagged
@@ -134,7 +134,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4094049363494105903}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.5, y: -3.46, z: 0}
+  m_LocalPosition: {x: 10.5, y: -3.55, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 3.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -215,32 +215,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &4094049363494105937
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4094049363494105903}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.010466099, y: -0.00000011920929}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.26, y: 1.6}
-    newSize: {x: 5.12, y: 5.12}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 4.136181, y: 1.6452339}
-  m_EdgeRadius: 0
 --- !u!114 &4094049363494105936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,3 +228,82 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 6.5
+--- !u!60 &1357589271968011704
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4094049363494105903}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 4.26, y: 1.6}
+    newSize: {x: 5.12, y: 5.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.26, y: -0.7}
+      - {x: 0.22, y: -0.69}
+      - {x: 0.22999999, y: -0.7}
+      - {x: 0.37, y: -0.71}
+      - {x: 0.72999996, y: -0.71999997}
+      - {x: 0.72999996, y: -0.74}
+      - {x: 0.95, y: -0.76}
+      - {x: 1.49, y: -0.76}
+      - {x: 1.67, y: -0.72999996}
+      - {x: 1.74, y: -0.71}
+      - {x: 1.86, y: -0.65}
+      - {x: 1.99, y: -0.53999996}
+      - {x: 2.08, y: -0.41}
+      - {x: 2.12, y: -0.32}
+      - {x: 2.1299999, y: -0.22}
+      - {x: 2.1299999, y: 0.21}
+      - {x: 2.06, y: 0.39}
+      - {x: 1.9599999, y: 0.56}
+      - {x: 1.87, y: 0.65999997}
+      - {x: 1.7199999, y: 0.77}
+      - {x: 1.5699999, y: 0.79999995}
+      - {x: 1.4599999, y: 0.79999995}
+      - {x: 1.26, y: 0.75}
+      - {x: 1.06, y: 0.71}
+      - {x: 0.69, y: 0.62}
+      - {x: 0.53999996, y: 0.57}
+      - {x: 0.25, y: 0.52}
+      - {x: -0.19, y: 0.5}
+      - {x: -0.48999998, y: 0.47}
+      - {x: -0.72999996, y: 0.48999998}
+      - {x: -0.88, y: 0.52}
+      - {x: -1.26, y: 0.57}
+      - {x: -1.3199999, y: 0.59}
+      - {x: -1.4399999, y: 0.58}
+      - {x: -1.54, y: 0.53999996}
+      - {x: -1.67, y: 0.5}
+      - {x: -1.8, y: 0.48}
+      - {x: -1.87, y: 0.42999998}
+      - {x: -1.9599999, y: 0.34}
+      - {x: -2.04, y: 0.21}
+      - {x: -2.06, y: 0.14}
+      - {x: -2.1299999, y: 0.03}
+      - {x: -2.1299999, y: -0.17}
+      - {x: -2.01, y: -0.53}
+      - {x: -1.9, y: -0.61}
+      - {x: -1.91, y: -0.63}
+      - {x: -1.91, y: -0.65}
+      - {x: -1.88, y: -0.69}
+      - {x: -1.67, y: -0.78}
+      - {x: -1.5999999, y: -0.79999995}
+      - {x: -1.31, y: -0.79999995}
+      - {x: -0.84999996, y: -0.72999996}
+      - {x: -0.62, y: -0.71999997}
+      - {x: -0.5, y: -0.71}

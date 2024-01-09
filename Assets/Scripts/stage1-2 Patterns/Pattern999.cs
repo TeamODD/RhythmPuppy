@@ -14,10 +14,15 @@ public class Pattern999 : MonoBehaviour
     private GameObject warning;
     [SerializeField]
     private float squirrelSpeed = 4f;
+    [SerializeField]
+    GameObject MainCamera;
+
+    CameraShake Camera;
 
     private void OnEnable()
     {
         StartCoroutine(SpawnFlyingSquirrels());
+        Camera = MainCamera.GetComponent<CameraShake>();
     }
 
     private void OnDisable()
@@ -85,9 +90,10 @@ public class Pattern999 : MonoBehaviour
 
             yield return null;
         }
-
+        //경고오브젝트 파괴
         Destroy(newWarning);
 
+        //실질적인 패턴 시작
         Vector3 spawnPosition = new Vector3(xPos, yPos, 0f);
 
         // 대각선 방향을 설정합니다.
@@ -101,15 +107,17 @@ public class Pattern999 : MonoBehaviour
         scaleY = newSquirrel.transform.localScale.y;
         scaleZ = newSquirrel.transform.localScale.z;
 
-        Vector2 targetPosition = new Vector2(-9f, 0f);
+        float RandomZRoation = Random.Range(-240f, -265f);
         if (xPos == -8.16f) // 왼쪽 위에서 시작
         {
             newSquirrel.transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
-            targetPosition = new Vector2(9f, 0f);
+            RandomZRoation = Random.Range(240f, 265f);
         }
+        Vector2 diagonalDirection = Quaternion.Euler(0f, 0f, RandomZRoation) * Vector2.up;
+        squirrelRigidbody.velocity = diagonalDirection.normalized * squirrelSpeed;
 
-        Vector2 direction = (targetPosition - new Vector2(xPos, yPos)).normalized;
-        squirrelRigidbody.velocity = direction.normalized * squirrelSpeed;
+        Camera.ShakeAmount = 0.1f;
+        Camera.VibrateForTime(0.1f);
 
         yield return StartCoroutine(DestroyIfOutOfBounds(newSquirrel));
     }

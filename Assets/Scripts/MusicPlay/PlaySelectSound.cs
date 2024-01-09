@@ -7,6 +7,8 @@ using static Menu_PlayerTransform;
 
 public class PlaySelectSound : MonoBehaviour
 {
+
+    //아무래도 잘 못 만들어진 싱글톤 함수인듯 합니다.
     private AudioSource theAudio;
     [SerializeField]
     private AudioClip[] Music_Stage;
@@ -37,6 +39,7 @@ public class PlaySelectSound : MonoBehaviour
     {
         theAudio.PlayOneShot(audioClipSelect[1]);
     }
+    /*
     public void World1_Walking()
     {
         theAudio.clip = Walking[0];
@@ -47,6 +50,7 @@ public class PlaySelectSound : MonoBehaviour
         theAudio.clip = Walking[1];
         theAudio.Play();
     }
+    */
     public void ChangeMusic()
     {
         if (Music_Stage[currentIndex] == null)

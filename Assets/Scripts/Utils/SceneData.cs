@@ -8,6 +8,8 @@ namespace SceneData
         STAGE1_1,
         STAGE1_2,
         STAGE2_1,
+        STAGE2_2,
+        STAGE2_3,
         GAMEOVER,
         CREDIT,
         OPTION,
@@ -31,6 +33,10 @@ namespace SceneData
                     return "SceneStage1_2";
                 case SceneName.STAGE2_1:
                     return "SceneStage2_1";
+                case SceneName.STAGE2_2:
+                    return "SceneStage2_2";
+                case SceneName.STAGE2_3:
+                    return "SceneStage2_3";
                 case SceneName.GAMEOVER:
                     return "GameOver";
                 case SceneName.CREDIT:

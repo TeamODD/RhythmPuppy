@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class GamePasue : MonoBehaviour
 {
-    private bool isPaused = false;
+    public bool isPaused = false;
     AudioSource BGM;
     EventManager eventManager;
 

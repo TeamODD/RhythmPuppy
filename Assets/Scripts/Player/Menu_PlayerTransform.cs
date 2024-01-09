@@ -34,6 +34,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     [SerializeField]
     private float speed;
     private float time;
+    private float lastInputTime;
     private bool onInputDelay;
     public static bool ReadyToGoStage;
     public static bool IsPaused; //옵션창에서 Enter 키 중단
@@ -61,15 +62,19 @@ public class Menu_PlayerTransform : MonoBehaviour
 
         //메뉴로 돌아왔을 시 인덱스에 따라 배경이 나타나도록.
         if (savingIndex >= 2)
-            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(2, "appear");
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundReset(2, "appear");
         if (savingIndex >= 7)
-            BackGroundManager.GetComponent<BackGroundManager>().backgroundAlpha(7, "appear");
+        {
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundReset(7, "appear");
+            BackGroundManager.GetComponent<BackGroundManager>().backgroundReset(2, "appear");
+        }
 
         corgi_posX = waypoints[currentIndex].x;
     }
 
     void Start()
     {
+        difficulty_num = 0;
         GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
         ReadyToGoStage = false;
         IsPaused = false;
@@ -82,14 +87,16 @@ public class Menu_PlayerTransform : MonoBehaviour
         savingIndex = currentIndex;
         PlayerOnPoint.Invoke();
     }
+    
     void OnTriggerExit2D(Collider2D other)
     {
         PlayerOnPointExceptMusicChange.Invoke();
         if (currentIndex < 7)
-            PlaySelectSound.instance.World1_Walking();
+            PlayerWalkingSound.instance.World1_Walking();
         else
-            PlaySelectSound.instance.World2_Walking();
+            PlayerWalkingSound.instance.World2_Walking();
     }
+    
 
     void DifficultyOff()
     {
@@ -122,6 +129,7 @@ public class Menu_PlayerTransform : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 Select_Difficulty.SetActive(false);
+                difficulty_num = 0;
                 onInputDelay = true;
                 Invoke("DifficultyOff", 0.1f);
             }
@@ -155,6 +163,8 @@ public class Menu_PlayerTransform : MonoBehaviour
             {
                 onInputDelay = true;
                 PlaySelectSound.instance.MenuSelectSound();
+                GetSceneString();
+                if (SceneName == null) return;
                 StartCoroutine(LoadingScene());
                 return;
             }
@@ -175,7 +185,7 @@ public class Menu_PlayerTransform : MonoBehaviour
                     break;
             }
         }
-
+        
     }
 
     IEnumerator move(string s)
@@ -234,7 +244,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     {
         switch(currentIndex)
         {
-            case 1: SceneName = "Tutorials";
+            case 1: SceneName = "Tutorials2";
                 break;
             case 2: SceneName = "SceneStage1_1";
                 break;
@@ -248,6 +258,7 @@ public class Menu_PlayerTransform : MonoBehaviour
                 SceneName = "SceneStage2_1";
                 break;
             case 10:
+                SceneName = "SceneStage2_2";
                 break;
             default:
                 SceneName = null;

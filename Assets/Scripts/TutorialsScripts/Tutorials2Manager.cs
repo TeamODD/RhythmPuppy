@@ -1,8 +1,11 @@
 using Cysharp.Threading.Tasks.Triggers;
 using EventManagement;
+using SceneData;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
@@ -72,6 +75,8 @@ public class Tutorials2Manager : MonoBehaviour
     GameObject ThorStems;
     [SerializeField]
     GameObject UICanvas;
+    [SerializeField]
+    GameObject BlackBox;
 
     SpriteRenderer Asprite;
     SpriteRenderer Dsprite;
@@ -233,7 +238,7 @@ public class Tutorials2Manager : MonoBehaviour
         }
 
         //플레이어가 처음으로 오른쪽에 도달했을 때
-        if (PlayerCorgi.transform.position.x >= 5 && IsArrivedRightSide == false)
+        if (PlayerCorgi.transform.position.x >= 6 && IsArrivedRightSide == false)
         {
             IsArrivedRightSide = true;
 
@@ -250,7 +255,7 @@ public class Tutorials2Manager : MonoBehaviour
         }
 
         //플레이어가 오른쪽으로 도달한 이후 왼쪽에 도달했을 때
-        if (PlayerCorgi.transform.position.x <= -5 && IsArrivedRightSide == true && IsFinishedMoveLeftAndRightTest == false)
+        else if (PlayerCorgi.transform.position.x <= -6 && IsArrivedRightSide == true && IsFinishedMoveLeftAndRightTest == false)
         {
             IsFinishedMoveLeftAndRightTest = true;
 
@@ -268,13 +273,13 @@ public class Tutorials2Manager : MonoBehaviour
         }
 
         //플레이어가 점프 테스트를 끝냈을 경우
-        if (PlayerCorgi.transform.position.x >= 5 && IsFinishedMoveLeftAndRightTest == true && IsFinishedJumpTest == false)
+        else if (PlayerCorgi.transform.position.x >= 6 && IsFinishedMoveLeftAndRightTest == true && IsFinishedJumpTest == false)
         {
             IsFinishedJumpTest = true;
 
             SpaceBarImage.SetActive(false);
 
-            if (NewOakObstacle.activeSelf == true && NewOakObstacle != null)
+            if (NewOakObstacle != null && NewOakObstacle.activeSelf == true )
             {
                 Destroy(NewOakObstacle);
             }
@@ -286,12 +291,13 @@ public class Tutorials2Manager : MonoBehaviour
         }
 
         //플레이어가 대쉬 테스트를 끝냈을 경우
-        if (PlayerCorgi.transform.position.x >= 5 && IsFinishedJumpTest == true && IsFinishedDashTest == false)
+        else if (PlayerCorgi.transform.position.x >= 6 && IsFinishedJumpTest == true && IsFinishedDashTest == false)
         {
             IsFinishedDashTest = true;
 
             Shift_ButtonImage.SetActive(false);
-            if (NewThorStemObstacle.activeSelf == true && NewThorStemObstacle != null)
+
+            if (NewThorStemObstacle != null && NewThorStemObstacle.activeSelf == true)
             {
                 Destroy(NewThorStemObstacle);
             }
@@ -303,7 +309,7 @@ public class Tutorials2Manager : MonoBehaviour
         }
 
         //플레이어가 텔레포스 테스트를 끝냈을 경우
-        if (PlayerCorgi.transform.position.x >= 5 && IsFinishedDashTest==true && IsFinishedTeleportTest == false)
+        else if (PlayerCorgi.transform.position.x >= 6 && IsFinishedDashTest == true && IsFinishedTeleportTest == false)
         {
             IsFinishedTeleportTest = true;
 
@@ -311,6 +317,8 @@ public class Tutorials2Manager : MonoBehaviour
             MouseImage.SetActive(false);
 
             StopCoroutine(TeleportTest);
+
+            StartCoroutine(TutorialEnd());
         }
     }
 
@@ -542,7 +550,7 @@ public class Tutorials2Manager : MonoBehaviour
 
         Rigidbody2D TutorialCorgi_Bone_Rig2D = TutorialCorgi_Bone.GetComponent<Rigidbody2D>();
 
-        TutorialCorgi_Bone.transform.position = new Vector3(1f, 0.6f, 0f);
+        TutorialCorgi_Bone.transform.position = new Vector3(0.753f, -0.739f, 0f);
         PlayerCorgi_Bone.transform.position = new Vector3(1f, -0.6f, 0f);
         TutorialCorgi_Bone.transform.SetParent(null);
 
@@ -551,7 +559,7 @@ public class Tutorials2Manager : MonoBehaviour
             TutorialCorgi_Bone_Rig2D.velocity = Vector2.zero;
             TutorialCorgiRig2D.velocity = Vector2.zero;
             TutorialCorgi.transform.position = new Vector3(-4, -4.3012f, 0);
-            TutorialCorgi_Bone.transform.position = new Vector3(1f, 0.6f, 0f);
+            TutorialCorgi_Bone.transform.position = new Vector3(0.753f, -0.739f, 0f);
             TutorialCorgi_MouseImage.transform.position = new Vector3(TutorialCorgi_Bone.transform.position.x, TutorialCorgi_Bone.transform.position.y + 1.15f, 0f);
 
             if (TutorialCorgi.transform.localScale.x < 0)
@@ -568,20 +576,16 @@ public class Tutorials2Manager : MonoBehaviour
 
             yield return new WaitForSeconds(1f); //회수 전 1초 대기
 
-            TutorialCorgi_MouseSprite.sprite = TutorialCorgi_RightMouseClickedImage; //튜토리얼 코기 마우스 이미지 변경
+            yield return StartCoroutine(BlinkingMouseClick(TutorialCorgi_RightMouseClickedImage, 3)); //튜토리얼 코기 마우스 이미지 우클릭 3번
             TutorialCorgi_Bone.transform.position = new Vector3(-3.082999f, -3.219f, 0f); //튜토리얼 코기 뼈다귀 이동
 
-            yield return new WaitForSeconds(0.4f); //튜코의 마우스 이미지 0.2초간 유지
-
-            TutorialCorgi_MouseImage.transform.position = new Vector3(TutorialCorgi_Bone.transform.position.x, TutorialCorgi_Bone.transform.position.y + 1.15f, 0f);
+            TutorialCorgi_MouseImage.transform.position = new Vector3(TutorialCorgi_Bone.transform.position.x, TutorialCorgi_Bone.transform.position.y + 1.15f, 0f); //튜코 마우스 이미지 이동
             TutorialCorgi_MouseSprite.sprite = TutorialCorgi_MouseUnClickedImage; //튜코의 마우스 이미지 복구
 
             yield return new WaitForSeconds(1f); //뼈다귀를 던지기 전 1초 지연
 
-            TutorialCorgi_MouseSprite.sprite = TutorialCorgi_LeftMouseClickedImage; 
+            yield return StartCoroutine(BlinkingMouseClick(TutorialCorgi_LeftMouseClickedImage, 3)); //튜토리얼 코기 마우스 이미지 좌클릭 3번
             TutorialCorgi_Bone_Rig2D.velocity = Vector2.right * 6f; //뼈다귀에 가속도 부여
-
-            yield return new WaitForSeconds(0.4f);  
 
             TutorialCorgi_MouseSprite.sprite = TutorialCorgi_MouseUnClickedImage;
             TutorialCorgi_MouseImage.transform.position = new Vector3(6.016997f, -2.069f, 0f);
@@ -589,7 +593,7 @@ public class Tutorials2Manager : MonoBehaviour
             yield return new WaitUntil(() => TutorialCorgi_Bone.transform.position.x >= 6f); //뼈다귀의 상대적 x좌표가 80f를 넘을 때까지 대기
 
             TutorialCorgi_Bone_Rig2D.velocity = Vector2.zero;
-            TutorialCorgi.transform.position = new Vector3(TutorialCorgi_Bone.transform.position.x- 0.983002f, TutorialCorgi.transform.position.y, TutorialCorgi.transform.position.z); //뼈다귀의 x좌표가 5f를 넘으면 그 위치로 이동
+            TutorialCorgi.transform.position = new Vector3(TutorialCorgi_Bone.transform.position.x - 0.983002f, TutorialCorgi.transform.position.y, TutorialCorgi.transform.position.z); //뼈다귀의 x좌표가 5f를 넘으면 그 위치로 이동
             TutorialCorgi_MouseSprite.sprite = TutorialCorgi_LeftMouseClickedImage;
 
             yield return new WaitForSeconds(0.4f);
@@ -600,6 +604,51 @@ public class Tutorials2Manager : MonoBehaviour
 
         }
         yield return null;
+    }
+
+    private IEnumerator TutorialEnd()
+    {
+        float elapsedTime = 0f;
+        float fadeDuration = 2f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            float currentAlphaBlackBox = Mathf.Lerp(0f, 255f, elapsedTime / fadeDuration); // fade in
+            float currentAlphaPlayerCorgi = Mathf.Lerp(255f, 0f, elapsedTime / fadeDuration); // fade out
+
+            // 0에서 255 사이의 값으로 투명도 제한
+            currentAlphaBlackBox = Mathf.Clamp(currentAlphaBlackBox, 0f, 255f);
+            currentAlphaPlayerCorgi = Mathf.Clamp(currentAlphaPlayerCorgi, 0f, 255f);
+
+            SpriteRenderer BlackBoxrenderer = BlackBox.GetComponent<SpriteRenderer>();
+            SpriteRenderer[] PlayerCorgirenderers = PlayerCorgi.GetComponentsInChildren<SpriteRenderer>();
+
+            // 두 배열 합치기
+            SpriteRenderer[] renderers = new SpriteRenderer[] { BlackBoxrenderer }.Concat(PlayerCorgirenderers).ToArray();
+
+            foreach (SpriteRenderer renderer in renderers)
+            {
+                Color color = renderer.color;
+
+                if (renderer == BlackBoxrenderer)
+                {
+                    float normalizedAlpha = currentAlphaBlackBox / 255.0f;
+                    color.a = normalizedAlpha; // 투명도 값 변경
+                }
+                else
+                {
+                    float normalizedAlpha = currentAlphaPlayerCorgi / 255.0f;
+                    color.a = normalizedAlpha; // 투명도 값 변경
+                }
+
+                renderer.color = color; // 변경된 투명도 설정
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        SceneManager.LoadSceneAsync("SceneMenu_01");
     }
 
     private IEnumerator RunOakPattern()
@@ -755,6 +804,18 @@ public class Tutorials2Manager : MonoBehaviour
 
             color.a = normalizedAlpha; // 투명도 값 변경
             renderer.color = color; // 변경된 투명도 설정
+        }
+        yield return null;
+    }
+
+    private IEnumerator BlinkingMouseClick(Sprite sprite, int times)
+    {
+        for (int i = 0; i < times; i++)
+        {
+            TutorialCorgi_MouseSprite.sprite = sprite;
+            yield return new WaitForSeconds(0.4f);
+            TutorialCorgi_MouseSprite.sprite = TutorialCorgi_MouseUnClickedImage;
+            yield return new WaitForSeconds(0.4f);
         }
         yield return null;
     }
