@@ -49,6 +49,12 @@ public class Menu_CorgiFace : MonoBehaviour
                     corgi[i].SetActive(true);
                 }
                 break;
+            case 14:
+                for (int i = 0; i < 7; i++)
+                {
+                    corgi[i].SetActive(true);
+                }
+                break;
         }
     }
 }

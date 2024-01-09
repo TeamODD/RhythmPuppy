@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using PatternManager_2_2;
+
 
 public class ObjectPoolManager : MonoBehaviour
 {
