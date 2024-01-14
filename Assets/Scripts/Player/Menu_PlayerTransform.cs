@@ -82,6 +82,7 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Start()
     {
+        difficulty_num = 0;
         GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
         foreach (GameObject ParticleSystem in ParticleSystems)
         {
@@ -151,6 +152,7 @@ public class Menu_PlayerTransform : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 Select_Difficulty.SetActive(false);
+                difficulty_num = 0;
                 onInputDelay = true;
                 Invoke("DifficultyOff", 0.1f);
             }

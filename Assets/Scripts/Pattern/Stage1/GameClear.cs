@@ -40,14 +40,16 @@ public class GameClear : MonoBehaviour
     private TMP_Text RankText;
     private CanvasGroup canvas;
 
+    //private AudioSource MusicManager;
+
     public static bool clear;
     private int deathcount;
     private bool S_Rank_True;
     EventManager eventManager;
-    
 
     void Start()
     {
+        //MusicManager = GameObject.FindWithTag("MusicManager").GetComponent<AudioSource>();
         corgi = GameObject.FindGameObjectWithTag("Player");
         eventManager = FindObjectOfType<EventManager>();
         eventManager.stageEvent.clearEvent += Clear;
@@ -66,8 +68,8 @@ public class GameClear : MonoBehaviour
     IEnumerator CommingOut()
     {
         float speed = 0.1f;
-        //노래 끝나고 3초 후 퍼피 등장
-        /*yield return new WaitForSeconds(WaitTime - StartTime + 3f);*/
+        //노래 끝나고 2초 후 퍼피 등장(스테이지 2-1과 2-2에서 3초 전에 이 함수를 부르므로)
+        yield return new WaitForSeconds(5f);
         while(gameObject.transform.position.x > 3.5f)
         {
             gameObject.transform.position -= new Vector3(speed, 0, 0);
@@ -132,7 +134,7 @@ public class GameClear : MonoBehaviour
         }
         //로딩창 등장
 
-        /*Save();*/
+        Save();
 
         DontDestroyOnLoad(LoadingScreen);
         yield return new WaitForSeconds(2f); //2초후 로딩
@@ -162,15 +164,20 @@ public class GameClear : MonoBehaviour
 
     void Save() //클리어 스테이지 인덱스 저장 함수
     {
-        if (Menu_PlayerTransform.clearIndex > 4) return;
-        Menu_PlayerTransform.clearIndex = 4;
-        PlayerPrefs.SetInt("clearIndex", 4);
-        if(S_Rank_True == true)
+        Scene scene = SceneManager.GetActiveScene();
+
+        if (Menu_PlayerTransform.clearIndex > Menu_PlayerTransform.currentIndex + 2) return;
+        Menu_PlayerTransform.clearIndex = Menu_PlayerTransform.currentIndex + 2;
+        PlayerPrefs.SetInt("clearIndex", Menu_PlayerTransform.currentIndex + 2);
+
+        //1이 하드, 0은 노말(랭크 저장 안 함)
+        if (Menu_PlayerTransform.difficulty_num != 1) return;
+        if (S_Rank_True == true)
         {
-            PlayerPrefs.SetInt("1-1", 3);
+            PlayerPrefs.SetInt(scene.name, 3);
             return;
         }
-        PlayerPrefs.SetInt("1-1", deathcount);
+        PlayerPrefs.SetInt(scene.name, deathcount);
     }
 
     void FixedUpdate()
