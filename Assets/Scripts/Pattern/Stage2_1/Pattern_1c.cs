@@ -1,14 +1,19 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using Patterns;
+using Unity.VisualScripting;
 using UnityEngine;
 using EventManagement;
+using static EventManagement.StageEvent;
 using System.Collections;
 
 namespace Stage_2
 {
-    public class Pattern_1a : MonoBehaviour
+    public class Pattern_1c : MonoBehaviour
     {
-        public PatternPlaylist patternPlaylist;
+        public Timeline patternPlaylist;
         public GameObject cat;
 
         EventManager eventManager;
@@ -27,7 +32,7 @@ namespace Stage_2
         {
             this.objectList = new List<GameObject>();
             patternPlaylist.init(action);
-            patternPlaylist.sortTimeline();
+            patternPlaylist.sortPatternInfo();
 
             coroutine = StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
@@ -36,12 +41,11 @@ namespace Stage_2
         {
             StopCoroutine(coroutine);
         }
-
-        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
+        public bool action(Timeline timeline, PatternInfo patterninfo)
         {
             try
             {
-                StartCoroutine(createObjects());
+                StartCoroutine(runPattern());
                 return true;
             }
             catch
@@ -49,13 +53,20 @@ namespace Stage_2
                 return false;
             }
         }
+
+        private IEnumerator runPattern()
+        {
+            StartCoroutine(createObjects());
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(createObjects());
+        }
         private IEnumerator createObjects()
         {
-            float r = Random.Range(-8f, 8f);
+            float r = UnityEngine.Random.Range(-8f, 8f);
 
-            if (gameObject != null) warn(r);
+            warn(r);
             yield return new WaitForSeconds(1);
-            if (gameObject != null) createCat(r);
+            createCat(r);
         }
 
         private void createCat(float x)

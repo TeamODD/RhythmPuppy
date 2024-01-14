@@ -8,7 +8,7 @@ namespace Stage_2_2
 {
     public class Pattern_1_a : MonoBehaviour
     {
-        public PatternPlaylist patternPlaylist;
+        public Timeline patternPlaylist;
         public GameObject cat;
 
         EventManager eventManager;
@@ -27,7 +27,7 @@ namespace Stage_2_2
         {
             this.objectList = new List<GameObject>();
             patternPlaylist.init(action);
-            patternPlaylist.sortTimeline();
+            patternPlaylist.sortPatternInfo();
 
             coroutine = StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
@@ -37,7 +37,7 @@ namespace Stage_2_2
             StopCoroutine(coroutine);
         }
 
-        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
+        public bool action(Timeline patternPlaylist, PatternInfo patterninfo)
         {
             try
             {

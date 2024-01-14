@@ -15,7 +15,7 @@ namespace Stage_2
 {
     public class Pattern_3 : MonoBehaviour
     {
-        public PatternPlaylist patternPlaylist;
+        public Timeline patternPlaylist;
         [SerializeField] float[] startDelay;
         [SerializeField] float duration;
 
@@ -33,20 +33,20 @@ namespace Stage_2
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             patternPlaylist.init(action);
-            patternPlaylist.sortTimeline();
+            patternPlaylist.sortPatternInfo();
 
             coroutine = StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
-        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
+        public bool action(Timeline timeline, PatternInfo patterninfo)
         {
             try
             {
-                if (!timeline.duration.Equals(0))
-                    setDuration(timeline.duration - startDelay[startDelay.Length - 1]);
-                else if (!timeline.endAt.Equals(0))
-                    setDuration(timeline.startAt, timeline.endAt);
+                if (!patterninfo.duration.Equals(0))
+                    setDuration(patterninfo.duration - startDelay[startDelay.Length - 1]);
+                else if (!patterninfo.endAt.Equals(0))
+                    setDuration(patterninfo.startAt, patterninfo.endAt);
 
-                StartCoroutine(runPattern(timeline));
+                StartCoroutine(runPattern(patterninfo));
                 return true;
             }
             catch
@@ -65,7 +65,7 @@ namespace Stage_2
             this.duration = end - start - startDelay[startDelay.Length - 1];
         }
 
-        private IEnumerator runPattern(Timeline timeline)
+        private IEnumerator runPattern(PatternInfo patterninfo)
         {
             if (startDelay.Length % 2 == 0)
             {

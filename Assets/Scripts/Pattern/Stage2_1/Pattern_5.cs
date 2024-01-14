@@ -15,7 +15,7 @@ namespace Stage_2
 {
     public class Pattern_5 : MonoBehaviour
     {
-        public PatternPlaylist patternPlaylist;
+        public Timeline patternPlaylist;
         public GameObject ratSwarm;
         public float startDelay;
         public float duration;
@@ -36,19 +36,19 @@ namespace Stage_2
             audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
             patternPlaylist.init(action);
-            patternPlaylist.sortTimeline();
+            patternPlaylist.sortPatternInfo();
 
 
             StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
-        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
+        public bool action(Timeline timeline, PatternInfo patterninfo)
         {
             try
             {
-                if (!timeline.duration.Equals(0))
-                    setDuration(timeline.duration - startDelay);
-                else if (!timeline.endAt.Equals(0))
-                    setDuration(timeline.startAt, timeline.endAt);
+                if (!patterninfo.duration.Equals(0))
+                    setDuration(patterninfo.duration - startDelay);
+                else if (!patterninfo.endAt.Equals(0))
+                    setDuration(patterninfo.startAt, patterninfo.endAt);
 
                 StartCoroutine(runPattern());
                 return true;

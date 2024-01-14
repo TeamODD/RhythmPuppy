@@ -1,20 +1,14 @@
-using Cysharp.Threading.Tasks;
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using Patterns;
-using Unity.VisualScripting;
 using UnityEngine;
 using EventManagement;
-using static EventManagement.StageEvent;
 using System.Collections;
-
 
 namespace Stage_2
 {
-    public class Pattern_1b : MonoBehaviour
+    public class Pattern_1a : MonoBehaviour
     {
-        public PatternPlaylist patternPlaylist;
+        public Timeline patternPlaylist;
         public GameObject cat;
 
         EventManager eventManager;
@@ -33,7 +27,7 @@ namespace Stage_2
         {
             this.objectList = new List<GameObject>();
             patternPlaylist.init(action);
-            patternPlaylist.sortTimeline();
+            patternPlaylist.sortPatternInfo();
 
             coroutine = StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
@@ -42,11 +36,12 @@ namespace Stage_2
         {
             StopCoroutine(coroutine);
         }
-        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
+
+        public bool action(Timeline timeline, PatternInfo patterninfo)
         {
             try
             {
-                StartCoroutine(runPattern());
+                StartCoroutine(createObjects());
                 return true;
             }
             catch
@@ -54,23 +49,13 @@ namespace Stage_2
                 return false;
             }
         }
-
-        private IEnumerator runPattern()
-        {
-            StartCoroutine(createObjects());
-            yield return new WaitForSeconds(0.4f);
-            StartCoroutine(createObjects());
-            yield return new WaitForSeconds(0.3f);
-            StartCoroutine(createObjects());
-        }
-
         private IEnumerator createObjects()
         {
-            float r = UnityEngine.Random.Range(-8f, 8f);
+            float r = Random.Range(-8f, 8f);
 
-            warn(r);
+            if (gameObject != null) warn(r);
             yield return new WaitForSeconds(1);
-            createCat(r);
+            if (gameObject != null) createCat(r);
         }
 
         private void createCat(float x)

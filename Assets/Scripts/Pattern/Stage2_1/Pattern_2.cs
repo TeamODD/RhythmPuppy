@@ -4,15 +4,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Patterns;
+using Unity.VisualScripting;
 using UnityEngine;
 using EventManagement;
+using static EventManagement.StageEvent;
 
 namespace Stage_2
 {
-    public class Pattern_6 : MonoBehaviour
+    public class Pattern_2 : MonoBehaviour
     {
-        public PatternPlaylist patternPlaylist;
-        public GameObject cat;
+        public Timeline patternPlaylist;
+        public GameObject paw;
 
         EventManager eventManager;
         AudioSource audioSource;
@@ -29,12 +31,11 @@ namespace Stage_2
             audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
             patternPlaylist.init(action);
-            patternPlaylist.sortTimeline();
-
+            patternPlaylist.sortPatternInfo();
 
             StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
-        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
+        public bool action(Timeline timeline, PatternInfo patterninfo)
         {
             try
             {
@@ -49,20 +50,27 @@ namespace Stage_2
 
         private IEnumerator runPattern()
         {
-            eventManager.playerEvent.markActivationEvent();
-            yield return new WaitForSeconds(1);
-            eventManager.playerEvent.markInactivationEvent();
-
             float r = UnityEngine.Random.Range(-8f, 8f);
-            GameObject catObject = Instantiate(cat);
-            catObject.transform.SetParent(transform.parent, false);
-            catObject.transform.position = new Vector3(r, 5, 0);
-            catObject.SetActive(true);
-            objectList.Add(catObject);
+
+            warn(r);
+            yield return new WaitForSeconds(1);
+
+            GameObject paw = MonoBehaviour.Instantiate(this.paw);
+            paw.transform.position = new Vector3(r, paw.transform.position.y, paw.transform.position.z);
+            paw.transform.SetParent(transform.parent);
+            paw.SetActive(true);
+            objectList.Add(paw);
+        }
+
+        private void warn(float x)
+        {
+            Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, -4.3f - 0.5f));
+            eventManager.stageEvent.warnWithBox(v, new Vector3(200, 500, 0));
         }
 
         public void deathEvent()
         {
+            StopAllCoroutines();
             for (int i = 0; i < objectList.Count; i++)
             {
                 Destroy(objectList[i]);

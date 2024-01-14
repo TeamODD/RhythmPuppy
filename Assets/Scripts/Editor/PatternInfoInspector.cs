@@ -8,8 +8,8 @@ using Unity.VisualScripting;
 
 namespace Patterns
 {
-    [CustomPropertyDrawer(typeof(TimelineElementTitleAttribute))]
-    public class TimelineDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(PatternInfoElementTitleAttribute))]
+    public class PatternInfoDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -18,7 +18,7 @@ namespace Patterns
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            Timeline t = (Timeline)property.GetUnderlyingValue();
+            PatternInfo t = (PatternInfo)property.GetUnderlyingValue();
             string newLabel = "";
 
             newLabel += t.startAt.ToString() + "√ ";
