@@ -14,7 +14,6 @@ namespace Patterns
         public Timeline[] timeline;
 
         PatternAction patternAction;
-        GameObject self;
 
         public void init(PatternAction patternAction)
         {
