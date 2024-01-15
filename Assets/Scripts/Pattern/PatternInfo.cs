@@ -9,6 +9,8 @@ namespace Patterns
     [Serializable]
     public class PatternInfo
     {
+        // 공통된 패턴의 정보를 가진 클래스.
+
         [Tooltip("패턴 시작 시간")]
         public float startAt;
         [Header("End At")]
