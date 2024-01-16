@@ -2202,6 +2202,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PatternManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5901459855511751504, guid: 4147df10fc4e86547954e32b4db8a3c7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5901459855511751505, guid: 4147df10fc4e86547954e32b4db8a3c7, type: 3}
       propertyPath: music
       value: 
@@ -2210,6 +2214,10 @@ PrefabInstance:
       propertyPath: stage
       value: 
       objectReference: {fileID: 2028422510174846913, guid: 743441a081cac604ba926695b4bbb142, type: 3}
+    - target: {fileID: 5901459855511751505, guid: 4147df10fc4e86547954e32b4db8a3c7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5901459855511751505, guid: 4147df10fc4e86547954e32b4db8a3c7, type: 3}
       propertyPath: audioSource
       value: 
@@ -2284,6 +2292,134 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4147df10fc4e86547954e32b4db8a3c7, type: 3}
+--- !u!1 &5901459856667131463 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5901459855511751504, guid: 4147df10fc4e86547954e32b4db8a3c7, type: 3}
+  m_PrefabInstance: {fileID: 5901459856667131462}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5901459856667131464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5901459856667131463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec391264e8682fd48958dde97bfe4f8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patterninfo:
+  - prefab: {fileID: 1273078494639283698, guid: 635b8b9bad47a454f83769fd4116f4c8, type: 3}
+    startAt: 0.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 301684448673772372, guid: 93739551ab2ea0b41a8a80386b051420, type: 3}
+    startAt: 0.6
+    endAt: 1
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 14
+  - prefab: {fileID: 1273078494639283698, guid: 635b8b9bad47a454f83769fd4116f4c8, type: 3}
+    startAt: 2.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 1273078494639283698, guid: 82d176c519e13b443b9ae00c018a52e9, type: 3}
+    startAt: 3.4
+    endAt: 0
+    duration: 0.7
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 1273078494639283698, guid: 82d176c519e13b443b9ae00c018a52e9, type: 3}
+    startAt: 7.4
+    endAt: 0
+    duration: 0.7
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 1273078494639283698, guid: 635b8b9bad47a454f83769fd4116f4c8, type: 3}
+    startAt: 10.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 1273078494639283698, guid: 82d176c519e13b443b9ae00c018a52e9, type: 3}
+    startAt: 11.4
+    endAt: 0
+    duration: 0.7
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 1140727680767832825, guid: 3897701ccea922c4abc1dc9037b06cd4, type: 3}
+    startAt: 14.3
+    endAt: 32.1
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 7938996007636120948, guid: 9b0da4571f3617c4db72596f97e2b226, type: 3}
+    startAt: 15.6
+    endAt: 32.1
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 5713159027828826166, guid: a2754807d97924c41a609b4a4e247837, type: 3}
+    startAt: 16.1
+    endAt: 0
+    duration: 1
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 1273078494639283698, guid: 40fd3b78aee8b6b44a6645f80d224056, type: 3}
+    startAt: 16.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 5713159027828826166, guid: a2754807d97924c41a609b4a4e247837, type: 3}
+    startAt: 18.1
+    endAt: 0
+    duration: 1
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 1273078494639283698, guid: ad3700ff893832d41bf908377d21da0a, type: 3}
+    startAt: 18.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 5713159027828826166, guid: a2754807d97924c41a609b4a4e247837, type: 3}
+    startAt: 20.1
+    endAt: 0
+    duration: 1
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 1273078494639283698, guid: 40fd3b78aee8b6b44a6645f80d224056, type: 3}
+    startAt: 20.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 5713159027828826166, guid: a2754807d97924c41a609b4a4e247837, type: 3}
+    startAt: 22.1
+    endAt: 0
+    duration: 1
+    repeatNo: 0
+    repeatDelayTime: 0
+  - prefab: {fileID: 1273078494639283698, guid: 40fd3b78aee8b6b44a6645f80d224056, type: 3}
+    startAt: 22.1
+    endAt: 0
+    duration: 0
+    repeatNo: 0
+    repeatDelayTime: 0
+  savePointTime:
+  - 14.3
+  - 46.4
+  - 80.1
+  startDelayTime: 1
+  music: {fileID: 8300000, guid: 7c627e27a8a4ce743a2ebe064539d77d, type: 3}
+  audioSource: {fileID: 496841131}
+  eventManager: {fileID: 0}
 --- !u!1001 &8918365313571226409
 PrefabInstance:
   m_ObjectHideFlags: 0

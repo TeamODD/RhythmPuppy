@@ -22,7 +22,7 @@ public class PatternManager : MonoBehaviour
     List<Coroutine> coroutineList;
     bool isPuppyShown;
 
-    void Awake()
+    void Start()
     {
         StartCoroutine(init());
     }

@@ -27,21 +27,12 @@ namespace Stage_2
 
         void Awake()
         {
-            init();
-        }
-
-        public void init()
-        {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
-            patternPlaylist.init(action);
-            patternPlaylist.sortPatternInfo();
-
-
-            StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
-        public bool action(Timeline timeline, PatternInfo patterninfo)
+
+        public bool action(PatternInfo patterninfo)
         {
             try
             {

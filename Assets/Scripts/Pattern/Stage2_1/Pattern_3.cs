@@ -15,7 +15,6 @@ namespace Stage_2
 {
     public class Pattern_3 : MonoBehaviour
     {
-        public Timeline patternPlaylist;
         [SerializeField] float[] startDelay;
         [SerializeField] float duration;
 
@@ -25,19 +24,11 @@ namespace Stage_2
 
         void Awake()
         {
-            init();
-        }
-
-        public void init()
-        {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
-            patternPlaylist.init(action);
-            patternPlaylist.sortPatternInfo();
-
-            coroutine = StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
-        public bool action(Timeline timeline, PatternInfo patterninfo)
+
+        public bool action(PatternInfo patterninfo)
         {
             try
             {

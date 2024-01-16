@@ -2,32 +2,48 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using EventManagement;
-using Patterns;
 using UnityEngine;
+using static EventManagement.StageEvent;
+using static PlayerEvent;
 
 namespace Patterns
 {
-    /*public delegate bool PatternAction(Timeline timeline, PatternInfo patterninfo);
-    [Serializable, CreateAssetMenu(menuName="Create New Timeline")]*/
+    public delegate bool PatternAction(PatternInfo patterninfo);
     public class PatternList : MonoBehaviour
     {
-        [PatternInfoElementTitle()]
-        public PatternInfo[] patterninfo;
         public float[] savePointTime;
         [SerializeField] float startDelayTime;
         [SerializeField] AudioClip music;
         [SerializeField] AudioSource audioSource;
+        [PatternInfoElementTitle()]
+        public PatternInfo[] patterninfo;
 
         PatternAction action;
         [HideInInspector]
         public EventManager eventManager;
-        //GameObject stage;
         List<Coroutine> coroutineList;
         bool isPuppyShown;
 
         void Start()
         {
+            isPuppyShown = false;
+            eventManager = FindObjectOfType<EventManager>();
+            audioSource = FindObjectOfType<AudioSource>();
+            audioSource.clip = music;
 
+            eventManager.stageEvent.gameStartEvent += gameStartEvent;
+            //eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.playerEvent.reviveEvent += gameStartEvent;
+            eventManager.savePointTime = savePointTime;
+
+            StartCoroutine(StartWithDelay());
+        }
+
+        private IEnumerator StartWithDelay()
+        {
+            sortPatternByTime();
+            yield return new WaitForSeconds(startDelayTime);
+            eventManager.stageEvent.gameStartEvent();
         }
 
         public void init(PatternAction action)
@@ -35,7 +51,24 @@ namespace Patterns
             this.action += action;
         }
 
-        public void sortPatternInfo()
+
+        private void gameStartEvent()
+        {
+            this.Run(audioSource.time);
+        }
+
+        void Update()
+        {
+            if (!isPuppyShown && audioSource.clip.length - 3f < audioSource.time)
+            {
+                isPuppyShown = true;
+                GameObject.Find("puppy").GetComponent<GameClear>().CommingOutFunc();
+            }
+        }
+
+        /* Sorting Pattern List Func - 패턴 리스트를 정렬하는 함수들 */
+        [ContextMenu("Sort By BeginTime(시간순)")]
+        public void sortPatternByTime()
         {
             int i, j;
             PatternInfo key;
@@ -50,6 +83,29 @@ namespace Patterns
             }
         }
 
+        [ContextMenu("Sort By Same Pattern(같은 패턴끼리)")]
+        public void sortPatternWithIdentical()
+        {
+            /* 
+             * 다시 구현해야 함!!!
+             * 
+             * 
+             * 
+             * 
+            int i, j;
+            PatternInfo key;
+            for (i = 1; i < patterninfo.Length; i++)
+            {
+                key = patterninfo[i];
+                for (j = i - 1; 0 <= j && i < j; j--)
+                {
+                    patterninfo[j + 1] = patterninfo[j];
+                }
+                patterninfo[j + 1] = key;
+            }*/
+        }
+
+        /* Running Pattern List Func - 패턴 리스트를 실행하는 함수들 */
         public IEnumerator Run(float startTime)
         {
             WaitForSeconds delay, repeatDelay;
@@ -68,7 +124,7 @@ namespace Patterns
                     if (patterninfo[i].startAt < startTime) continue;
                     delay = new WaitForSeconds(delayTime);
                     yield return delay;
-                    if (!this.action(this, patterninfo[i])) yield break;
+                    if (!this.action(patterninfo[i])) yield break;
                 }
                 else
                 {
@@ -87,7 +143,7 @@ namespace Patterns
                         {
                             yield return repeatDelay;
                         }
-                        if (!this.action(this, patterninfo[i])) yield break;
+                        if (!this.action(patterninfo[i])) yield break;
                     }
                 }
             }

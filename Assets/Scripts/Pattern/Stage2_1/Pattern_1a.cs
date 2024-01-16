@@ -8,7 +8,6 @@ namespace Stage_2
 {
     public class Pattern_1a : MonoBehaviour
     {
-        public Timeline patternPlaylist;
         public GameObject cat;
 
         EventManager eventManager;
@@ -20,24 +19,10 @@ namespace Stage_2
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
-            init();
-        }
-
-        public void init()
-        {
             this.objectList = new List<GameObject>();
-            patternPlaylist.init(action);
-            patternPlaylist.sortPatternInfo();
-
-            coroutine = StartCoroutine(patternPlaylist.Run(audioSource.time));
         }
 
-        void OnDestroy()
-        {
-            StopCoroutine(coroutine);
-        }
-
-        public bool action(Timeline timeline, PatternInfo patterninfo)
+        public bool action(PatternInfo patterninfo)
         {
             try
             {

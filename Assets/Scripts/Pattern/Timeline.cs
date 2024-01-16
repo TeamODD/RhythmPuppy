@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Patterns;
 using UnityEngine;
 
 namespace Patterns
 {
-    public delegate bool PatternAction(Timeline timeline, PatternInfo patterninfo);
-    [Serializable, CreateAssetMenu(menuName="Create New Timeline")]
+    //public delegate bool PatternAction(PatternInfo patterninfo);
+    //[Serializable, CreateAssetMenu(menuName="Create New Timeline")]
     public class Timeline : ScriptableObject
     {
         [PatternInfoElementTitle()]
@@ -20,7 +19,24 @@ namespace Patterns
             this.action += action;
         }
 
-        public void sortPatternInfo()
+        [ContextMenu("Sort By BeginTime")]
+        public void sortPatternByTime()
+        {
+            int i, j;
+            PatternInfo key;
+            for (i = 1; i < patterninfo.Length; i++)
+            {
+                key = patterninfo[i];
+                for (j = i - 1; 0 <= j && key.startAt < patterninfo[j].startAt; j--)
+                {
+                    patterninfo[j + 1] = patterninfo[j];
+                }
+                patterninfo[j + 1] = key;
+            }
+        }
+
+        [ContextMenu("Sort By Same Pattern")]
+        public void sortPatternWithIdentical()
         {
             int i, j;
             PatternInfo key;
@@ -53,7 +69,7 @@ namespace Patterns
                     if (patterninfo[i].startAt < startTime) continue;
                     delay = new WaitForSeconds(delayTime);
                     yield return delay;
-                    if (!this.action(this, patterninfo[i])) yield break;
+                    if (!this.action(patterninfo[i])) yield break;
                 }
                 else
                 {
@@ -72,7 +88,7 @@ namespace Patterns
                         {
                             yield return repeatDelay;
                         }
-                        if (!this.action(this, patterninfo[i])) yield break;
+                        if (!this.action(patterninfo[i])) yield break;
                     }
                 }
             }

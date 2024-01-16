@@ -19,7 +19,8 @@ namespace Patterns
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             PatternInfo t = (PatternInfo)property.GetUnderlyingValue();
-            string newLabel = "";
+            string newLabel = "", patternName = "None";
+
 
             newLabel += t.startAt.ToString() + "√ ";
 
@@ -45,6 +46,8 @@ namespace Patterns
                     newLabel += " ~ " + (t.startAt + t.repeatDelayTime * (t.repeatNo - 1)).ToString() + "√ ";
                 }
             }
+            if (t.prefab != null) patternName = t.prefab.name;
+            newLabel += " : " + patternName;
 
             EditorGUI.PropertyField(position, property, new GUIContent(newLabel, label.tooltip), true);
         }

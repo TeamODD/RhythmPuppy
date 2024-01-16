@@ -17,11 +17,6 @@ namespace Stage_2
         Transform patternManager;
         GameObject[] patternList;
 
-        void Awake()
-        {
-            init();
-        }
-
         public void init()
         {
             eventManager = FindObjectOfType<EventManager>();
