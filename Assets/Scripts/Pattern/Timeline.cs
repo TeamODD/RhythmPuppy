@@ -69,6 +69,7 @@ namespace Patterns
                     if (patterninfo[i].startAt < startTime) continue;
                     delay = new WaitForSeconds(delayTime);
                     yield return delay;
+                    /* Run Pattern(Action) - 패턴(액션) 실행 */
                     if (!this.action(patterninfo[i])) yield break;
                 }
                 else
@@ -88,6 +89,7 @@ namespace Patterns
                         {
                             yield return repeatDelay;
                         }
+                        /* Run Pattern(Action) - 패턴(액션) 실행 */
                         if (!this.action(patterninfo[i])) yield break;
                     }
                 }

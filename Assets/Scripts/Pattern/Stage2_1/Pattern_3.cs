@@ -22,7 +22,7 @@ namespace Stage_2
         AudioSource audioSource;
         Coroutine coroutine;
 
-        void Awake()
+        void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
@@ -37,7 +37,7 @@ namespace Stage_2
                 else if (!patterninfo.endAt.Equals(0))
                     setDuration(patterninfo.startAt, patterninfo.endAt);
 
-                StartCoroutine(runPattern(patterninfo));
+                StartCoroutine(runPattern());
                 return true;
             }
             catch
@@ -56,7 +56,7 @@ namespace Stage_2
             this.duration = end - start - startDelay[startDelay.Length - 1];
         }
 
-        private IEnumerator runPattern(PatternInfo patterninfo)
+        private IEnumerator runPattern()
         {
             if (startDelay.Length % 2 == 0)
             {

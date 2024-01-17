@@ -20,7 +20,7 @@ namespace Stage_2
         AudioSource audioSource;
         Coroutine coroutine;
 
-        void Awake()
+        void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();

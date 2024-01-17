@@ -21,6 +21,8 @@ namespace Patterns
         PatternAction action;
         [HideInInspector]
         public EventManager eventManager;
+        [HideInInspector]
+        public GetPatternInfo getPatternInfo;
         List<Coroutine> coroutineList;
         bool isPuppyShown;
 
@@ -109,6 +111,7 @@ namespace Patterns
         public IEnumerator Run(float startTime)
         {
             WaitForSeconds delay, repeatDelay;
+            GameObject pattern;
             float delayTime, repeatDelayTime;
             int i = 0, j = 0, repeat;
 
@@ -124,7 +127,10 @@ namespace Patterns
                     if (patterninfo[i].startAt < startTime) continue;
                     delay = new WaitForSeconds(delayTime);
                     yield return delay;
-                    if (!this.action(patterninfo[i])) yield break;
+                    /* Run Pattern - 패턴 실행 */
+                    pattern = Instantiate(patterninfo[i].prefab);
+                    pattern.transform.SetParent(this.transform);
+                    pattern.SetActive(true);
                 }
                 else
                 {
@@ -143,10 +149,15 @@ namespace Patterns
                         {
                             yield return repeatDelay;
                         }
-                        if (!this.action(patterninfo[i])) yield break;
+                        /* Run Pattern - 패턴 실행 */
+                        pattern = Instantiate(patterninfo[i].prefab);
+                        pattern.transform.SetParent(this.transform);
+                        pattern.SetActive(true);
                     }
                 }
             }
         }
+
+
     }
 }

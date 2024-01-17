@@ -25,7 +25,7 @@ namespace Stage_2
         List<GameObject> objectList;
         AudioSource audioSource;
 
-        void Awake()
+        void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
