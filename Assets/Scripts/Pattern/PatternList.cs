@@ -21,6 +21,7 @@ namespace Patterns
         public EventManager eventManager;
         List<Coroutine> coroutineList;
         bool isPuppyShown;
+        Coroutine coroutine;
 
         void Start()
         {
@@ -30,7 +31,7 @@ namespace Patterns
             audioSource.clip = music;
 
             eventManager.stageEvent.gameStartEvent += gameStartEvent;
-            //eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.playerEvent.deathEvent += deathEvent;
             eventManager.playerEvent.reviveEvent += gameStartEvent;
             eventManager.savePointTime = savePointTime;
 
@@ -46,7 +47,7 @@ namespace Patterns
 
         private void gameStartEvent()
         {
-            StartCoroutine(Run(audioSource.time));
+            coroutine = StartCoroutine(Run(audioSource.time));
         }
 
         void Update()
@@ -100,9 +101,10 @@ namespace Patterns
         /* Running Pattern List Func - 패턴 리스트를 실행하는 함수들 */
         public IEnumerator Run(float startTime)
         {
-            WaitForSeconds delay, repeatDelay;
+            WaitForSeconds repeatDelay;
             GameObject pattern;
             float delayTime, repeatDelayTime;
+            bool isFirstAction;
             int i = 0, j = 0, repeat;
 
             for (; i < patternInfo.Length; i++)
@@ -115,8 +117,7 @@ namespace Patterns
                 if (repeat <= 1)
                 {
                     if (patternInfo[i].startAt < startTime) continue;
-                    delay = new WaitForSeconds(delayTime);
-                    yield return delay;
+                    yield return new WaitForSeconds(patternInfo[i].startAt - audioSource.time - 1);
                     /* Run Pattern - 패턴 실행 */
                     pattern = Instantiate(patternInfo[i].prefab);
                     pattern.transform.SetParent(this.transform);
@@ -128,7 +129,7 @@ namespace Patterns
                 {
                     repeatDelayTime = patternInfo[i].repeatDelayTime;
                     repeatDelay = new WaitForSeconds(repeatDelayTime);
-                    bool isFirstAction = true;
+                    isFirstAction = true;
                     for (j = 0; j < repeat; j++)
                     {
                         if (patternInfo[i].startAt + j * repeatDelayTime < startTime) continue;
@@ -152,6 +153,10 @@ namespace Patterns
             }
         }
 
+        private void deathEvent()
+        {
+            StopCoroutine(coroutine);
+        }
 
     }
 }

@@ -2309,6 +2309,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec391264e8682fd48958dde97bfe4f8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  savePointTime:
+  - 14.3
+  - 46.4
+  - 80.1
+  startDelayTime: 1
+  music: {fileID: 8300000, guid: 7c627e27a8a4ce743a2ebe064539d77d, type: 3}
+  audioSource: {fileID: 496841131}
   patternInfo:
   - prefab: {fileID: 1273078494639283698, guid: 635b8b9bad47a454f83769fd4116f4c8, type: 3}
     startAt: 0.1
@@ -2412,13 +2419,6 @@ MonoBehaviour:
     duration: 0
     repeatNo: 0
     repeatDelayTime: 0
-  savePointTime:
-  - 14.3
-  - 46.4
-  - 80.1
-  startDelayTime: 1
-  music: {fileID: 8300000, guid: 7c627e27a8a4ce743a2ebe064539d77d, type: 3}
-  audioSource: {fileID: 496841131}
   eventManager: {fileID: 0}
 --- !u!1001 &8918365313571226409
 PrefabInstance:

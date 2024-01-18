@@ -1,3 +1,4 @@
+/* 미사용 스크립트 (현 PatternList.cs) */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Stage_2
 {
     public class Stage_2_1 : MonoBehaviour
     {
+#if false
         public GameObject[] patternPrefab;
 
         AudioSource audioSource;
@@ -45,5 +47,6 @@ namespace Stage_2
             }
             Destroy(gameObject);
         }*/
+#endif
     }
 }

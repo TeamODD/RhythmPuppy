@@ -29,12 +29,14 @@ namespace Stage_2
             audioSource = FindObjectOfType<AudioSource>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
 
+            eventManager.playerEvent.deathEvent += deathEvent;
+
             if (!patternInfo.duration.Equals(0))
                 setDuration(patternInfo.duration - startDelay[startDelay.Length - 1]);
             else if (!patternInfo.endAt.Equals(0))
                 setDuration(patternInfo.startAt, patternInfo.endAt);
 
-            StartCoroutine(runPattern());
+            coroutine = StartCoroutine(runPattern());
         }
 
         public void setDuration(float duration)
@@ -72,7 +74,8 @@ namespace Stage_2
 
         void deathEvent()
         {
-            StopAllCoroutines();
+            StopCoroutine(coroutine);
+            Destroy(gameObject);
         }
     }
 }

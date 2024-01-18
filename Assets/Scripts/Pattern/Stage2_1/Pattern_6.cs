@@ -16,6 +16,7 @@ namespace Stage_2
         EventManager eventManager;
         AudioSource audioSource;
         List<GameObject> objectList;
+        Coroutine coroutine;
         PatternInfo patternInfo;
 
         void Start()
@@ -25,7 +26,9 @@ namespace Stage_2
             this.objectList = new List<GameObject>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
 
-            StartCoroutine(runPattern());
+            eventManager.playerEvent.deathEvent += deathEvent;
+
+            coroutine = StartCoroutine(runPattern());
         }
 
         private IEnumerator runPattern()
@@ -44,11 +47,13 @@ namespace Stage_2
 
         public void deathEvent()
         {
+            StopCoroutine(coroutine);
             for (int i = 0; i < objectList.Count; i++)
             {
                 Destroy(objectList[i]);
             }
             objectList.Clear();
+            Destroy(gameObject);
         }
     }
 }

@@ -23,7 +23,9 @@ namespace Stage_2
             this.objectList = new List<GameObject>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
 
-            StartCoroutine(createObjects());
+            eventManager.playerEvent.deathEvent += deathEvent;
+
+            coroutine = StartCoroutine(createObjects());
         }
 
         private IEnumerator createObjects()
@@ -58,6 +60,7 @@ namespace Stage_2
                 Destroy(objectList[i]);
             }
             objectList.Clear();
+            Destroy(gameObject);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace Stage_2
         EventManager eventManager;
         Transform parent;
         List<GameObject> objectList;
+        Coroutine coroutine;
         AudioSource audioSource;
         PatternInfo patternInfo;
 
@@ -32,12 +33,14 @@ namespace Stage_2
             this.objectList = new List<GameObject>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
 
+            eventManager.playerEvent.deathEvent += deathEvent;
+
             if (!patternInfo.duration.Equals(0))
                 setDuration(patternInfo.duration - startDelay);
             else if (!patternInfo.endAt.Equals(0))
                 setDuration(patternInfo.startAt, patternInfo.endAt);
 
-            StartCoroutine(runPattern());
+            coroutine = StartCoroutine(runPattern());
         }
 
         public void setDuration(float duration)
@@ -58,7 +61,7 @@ namespace Stage_2
 
             yield return new WaitForSeconds(1);
 
-            GameObject o = MonoBehaviour.Instantiate(ratSwarm);
+            GameObject o = Instantiate(ratSwarm);
             o.transform.SetParent(parent);
             o.GetComponent<RatSwarm>().setCooltime(startDelay);
             Vector2 pos = new Vector2(0, o.transform.position.y);
@@ -97,11 +100,13 @@ namespace Stage_2
 
         public void deathEvent()
         {
+            StopCoroutine(coroutine);
             for (int i = 0; i < objectList.Count; i++)
             {
                 Destroy(objectList[i]);
             }
             objectList.Clear();
+            Destroy(gameObject);
         }
     }
 }
