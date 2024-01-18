@@ -21,29 +21,20 @@ namespace Stage_2
         EventManager eventManager;
         AudioSource audioSource;
         Coroutine coroutine;
+        PatternInfo patternInfo;
 
         void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
-        }
+            patternInfo = GetComponent<PatternBase>().patternInfo;
 
-        public bool action(PatternInfo patterninfo)
-        {
-            try
-            {
-                if (!patterninfo.duration.Equals(0))
-                    setDuration(patterninfo.duration - startDelay[startDelay.Length - 1]);
-                else if (!patterninfo.endAt.Equals(0))
-                    setDuration(patterninfo.startAt, patterninfo.endAt);
+            if (!patternInfo.duration.Equals(0))
+                setDuration(patternInfo.duration - startDelay[startDelay.Length - 1]);
+            else if (!patternInfo.endAt.Equals(0))
+                setDuration(patternInfo.startAt, patternInfo.endAt);
 
-                StartCoroutine(runPattern());
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            StartCoroutine(runPattern());
         }
 
         public void setDuration(float duration)

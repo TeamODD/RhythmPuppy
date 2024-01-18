@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4448442043865576026}
   - component: {fileID: 9085290898308305454}
+  - component: {fileID: 4776669024106594243}
   m_Layer: 0
   m_Name: Pattern_3
   m_TagString: Untagged
@@ -44,7 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea34880901804642aa3996ddc5033ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patternPlaylist: {fileID: 11400000, guid: b3b46adf75b20c64c8f1e4d2d411e44b, type: 2}
   startDelay:
   - 0
   - 0.5
@@ -54,3 +54,15 @@ MonoBehaviour:
   - 1.4
   - 1.5
   duration: 30
+--- !u!114 &4776669024106594243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1140727680767832825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80fc674f43d74a84aaccb2d66896ccc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

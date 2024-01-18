@@ -18,25 +18,16 @@ namespace Stage_2
         EventManager eventManager;
         AudioSource audioSource;
         List<GameObject> objectList;
+        PatternInfo patternInfo;
 
         void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
-        }
+            patternInfo = GetComponent<PatternBase>().patternInfo;
 
-        public bool action(PatternInfo patterninfo)
-        {
-            try
-            {
-                StartCoroutine(runPattern());
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            StartCoroutine(runPattern());
         }
 
         private IEnumerator runPattern()

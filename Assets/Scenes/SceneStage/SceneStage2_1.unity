@@ -2309,7 +2309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec391264e8682fd48958dde97bfe4f8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patterninfo:
+  patternInfo:
   - prefab: {fileID: 1273078494639283698, guid: 635b8b9bad47a454f83769fd4116f4c8, type: 3}
     startAt: 0.1
     endAt: 0

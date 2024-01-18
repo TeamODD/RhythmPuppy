@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 876998299014185945}
   - component: {fileID: 822484274307788860}
+  - component: {fileID: 6361080280191891396}
   m_Layer: 0
   m_Name: Pattern_2
   m_TagString: Untagged
@@ -44,5 +45,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb34c9626a781944a844899456e2368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patternPlaylist: {fileID: 11400000, guid: 350e4a37384634d47917ea2d5acd05f2, type: 2}
   paw: {fileID: 2761808441138798636, guid: 1280a3ae35379834aa149cb7c7899afe, type: 3}
+--- !u!114 &6361080280191891396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301684448673772372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80fc674f43d74a84aaccb2d66896ccc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

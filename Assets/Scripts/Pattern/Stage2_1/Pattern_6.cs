@@ -11,31 +11,21 @@ namespace Stage_2
 {
     public class Pattern_6 : MonoBehaviour
     {
-        public Timeline patternPlaylist;
         public GameObject cat;
 
         EventManager eventManager;
         AudioSource audioSource;
         List<GameObject> objectList;
+        PatternInfo patternInfo;
 
         void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
-        }
+            patternInfo = GetComponent<PatternBase>().patternInfo;
 
-        public bool action(PatternInfo patterninfo)
-        {
-            try
-            {
-                StartCoroutine(runPattern());
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            StartCoroutine(runPattern());
         }
 
         private IEnumerator runPattern()

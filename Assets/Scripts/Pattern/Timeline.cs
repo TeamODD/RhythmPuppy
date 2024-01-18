@@ -1,3 +1,5 @@
+/* 미사용 스크립트 (현 PatternList.cs) */
+#if false
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -97,3 +99,4 @@ namespace Patterns
         }
     }
 }
+#endif

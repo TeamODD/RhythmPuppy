@@ -14,26 +14,18 @@ namespace Stage_2
         List<GameObject> objectList;
         AudioSource audioSource;
         Coroutine coroutine;
+        PatternInfo patternInfo;
 
         void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
+            patternInfo = GetComponent<PatternBase>().patternInfo;
+
+            StartCoroutine(createObjects());
         }
 
-        public bool action(PatternInfo patterninfo)
-        {
-            try
-            {
-                StartCoroutine(createObjects());
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
         private IEnumerator createObjects()
         {
             float r = Random.Range(-8f, 8f);
