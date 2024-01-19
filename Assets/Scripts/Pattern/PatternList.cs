@@ -21,11 +21,11 @@ namespace Patterns
         public EventManager eventManager;
         List<Coroutine> coroutineList;
         bool isPuppyShown;
-        Coroutine coroutine;
 
-        void Start()
+        void Awake()
         {
             isPuppyShown = false;
+            coroutineList = new List<Coroutine>();
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             audioSource.clip = music;
@@ -34,20 +34,23 @@ namespace Patterns
             eventManager.playerEvent.deathEvent += deathEvent;
             eventManager.playerEvent.reviveEvent += gameStartEvent;
             eventManager.savePointTime = savePointTime;
+        }
 
+        void Start()
+        {
             StartCoroutine(StartWithDelay());
         }
 
         private IEnumerator StartWithDelay()
         {
             sortPatternByTime();
-            yield return new WaitForSeconds(startDelayTime);
+            yield return new WaitForSeconds(startDelayTime - 1);
             eventManager.stageEvent.gameStartEvent();
         }
 
         private void gameStartEvent()
         {
-            coroutine = StartCoroutine(Run(audioSource.time));
+            coroutineList.Add(StartCoroutine(Run(audioSource.time)));
         }
 
         void Update()
@@ -101,22 +104,17 @@ namespace Patterns
         /* Running Pattern List Func - 패턴 리스트를 실행하는 함수들 */
         public IEnumerator Run(float startTime)
         {
-            WaitForSeconds repeatDelay;
             GameObject pattern;
-            float delayTime, repeatDelayTime;
-            bool isFirstAction;
-            int i = 0, j = 0, repeat;
+            int repeat;
 
-            for (; i < patternInfo.Length; i++)
+            for (int i=0; i < patternInfo.Length; i++)
             {
                 repeat = patternInfo[i].repeatNo;
-                delayTime = patternInfo[i].startAt;
-                if (i == 0) delayTime -= startTime;
-                else delayTime -= patternInfo[i - 1].startAt + ((j - 1) * patternInfo[i - 1].repeatDelayTime);
 
                 if (repeat <= 1)
                 {
                     if (patternInfo[i].startAt < startTime) continue;
+                    /* Delay Until StartAt - 패턴 시작시간까지 딜레이 */
                     yield return new WaitForSeconds(patternInfo[i].startAt - audioSource.time - 1);
                     /* Run Pattern - 패턴 실행 */
                     pattern = Instantiate(patternInfo[i].prefab);
@@ -127,35 +125,47 @@ namespace Patterns
                 }
                 else
                 {
-                    repeatDelayTime = patternInfo[i].repeatDelayTime;
-                    repeatDelay = new WaitForSeconds(repeatDelayTime);
-                    isFirstAction = true;
-                    for (j = 0; j < repeat; j++)
-                    {
-                        if (patternInfo[i].startAt + j * repeatDelayTime < startTime) continue;
-                        if (isFirstAction)
-                        {
-                            yield return new WaitForSeconds(delayTime + j * repeatDelayTime - startTime);
-                            isFirstAction = false;
-                        }
-                        else
-                        {
-                            yield return repeatDelay;
-                        }
-                        /* Run Pattern - 패턴 실행 */
-                        pattern = Instantiate(patternInfo[i].prefab);
-                        pattern.transform.SetParent(this.transform);
-                        /* Send PatetrnInfo - 패턴 정보 전달 */
-                        pattern.GetComponent<PatternBase>().patternInfo = patternInfo[i];
-                        pattern.SetActive(true);
-                    }
+                    /* If Repeating Pattern - 반복되는 패턴일 경우 */
+                    coroutineList.Add(
+                        StartCoroutine(
+                            RunRepeating(startTime, patternInfo[i], new WaitForSeconds(patternInfo[i].repeatDelayTime))
+                            )
+                        );
+                    
                 }
+            }
+        }
+
+        /* Running Only Repeating Patterns - 반복 패턴만을 실행하는 함수 */
+        private IEnumerator RunRepeating(float startTime, PatternInfo patternInfo, WaitForSeconds delay)
+        {
+            yield return new WaitForSeconds(patternInfo.startAt - audioSource.time - 1);
+            for (int i=0; i < patternInfo.repeatNo; i++)
+            {
+                /* 
+                 * If Pattern[i]'s StartTime is Before Current StageTime, Skip to Next Loop.
+                 * i번째(반복패턴)의 시작시간이 현재 스테이지 시간보다 이전이라면, 스킵하고 다음 루프로 진행. (continue;)
+                 */
+                if (patternInfo.startAt + i * patternInfo.repeatDelayTime < startTime) continue;
+
+                /* Run Pattern - 패턴 실행 */
+                GameObject pattern = Instantiate(patternInfo.prefab);
+                pattern.transform.SetParent(this.transform);
+
+                /* Send PatetrnInfo - 패턴 정보 전달 */
+                pattern.GetComponent<PatternBase>().patternInfo = patternInfo;
+                pattern.SetActive(true);
+                yield return delay;
             }
         }
 
         private void deathEvent()
         {
-            StopCoroutine(coroutine);
+            /*StopAllCoroutines();*/
+            foreach (Coroutine c in coroutineList)
+            {
+                StopCoroutine(c);
+            }
         }
 
     }

@@ -18,22 +18,20 @@ namespace Stage_2
 
         void Awake() 
         {
-            init();
-        }
-
-        void init()
-        {
             sp = GetComponentInChildren<SpriteRenderer>();
             eventManager = FindObjectOfType<EventManager>();
+
+            eventManager.uiEvent.enableBlindEvent += enableBlindEvent;
+            eventManager.uiEvent.disableBlindEvent += disableBlindEvent;
         }
 
-        void Update()
+        /*void Update()
         {
             if (UsedByOutScript) return;
 
-            if (eventManager.uiEvent.onBlindEvent)  sp.sprite = lampOff;
-            else  sp.sprite = lampOn;
-        }
+            if (eventManager.uiEvent.onBlindEvent) sp.sprite = lampOff;
+            else sp.sprite = lampOn;
+        }*/
 
         public void LampControl(bool Status)
         {
@@ -50,6 +48,16 @@ namespace Stage_2
                     UsedByOutScript = false;
                     break;
             }
+        }
+
+        private void enableBlindEvent()
+        {
+            sp.sprite = lampOff;
+        }
+
+        private void disableBlindEvent()
+        {
+            sp.sprite = lampOn;
         }
     }
 }

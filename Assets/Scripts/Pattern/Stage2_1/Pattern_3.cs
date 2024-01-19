@@ -74,7 +74,6 @@ namespace Stage_2
 
         void deathEvent()
         {
-            StopCoroutine(coroutine);
             Destroy(gameObject);
         }
     }

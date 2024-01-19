@@ -55,7 +55,6 @@ namespace Stage_2
 
         public void deathEvent()
         {
-            StopCoroutine(coroutine);
             for (int i = 0; i < objectList.Count; i++)
             {
                 Destroy(objectList[i]);
