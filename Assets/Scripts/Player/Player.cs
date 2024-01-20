@@ -433,7 +433,7 @@ public class Player : MonoBehaviour
             {
                 flip.x = flip.x * -1;
             }
-            else if (70 < rot && rot < 290)
+            else if (80 < rot && rot < 280)
             {
                 int xInput = (int)Input.GetAxisRaw("Horizontal");
                 switch (xInput)
