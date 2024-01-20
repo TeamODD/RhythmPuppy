@@ -11,7 +11,7 @@ namespace Stage_2
     {
         public Sprite lampOn;
         public Sprite lampOff;
-        private bool UsedByOutScript = false;
+        /*private bool UsedByOutScript = false;*/
 
         EventManager eventManager;
         SpriteRenderer sp;
@@ -41,11 +41,11 @@ namespace Stage_2
             {
                 case false:
                     sp.sprite = lampOff;
-                    UsedByOutScript = true;
+                    /*UsedByOutScript = true;*/
                     break;
                 case true:
                     sp.sprite = lampOn;
-                    UsedByOutScript = false;
+                    /*UsedByOutScript = false;*/
                     break;
             }
         }

@@ -72,7 +72,7 @@ public class Player : MonoBehaviour
     Vector3 velocity, currentPosition;
     Coroutine dashCoroutine, dashCooldownCoroutine, shootCooldownCoroutine, invincibilityCoroutine;
 
-    WaitForSeconds invincibleDelay, dashDelay, dashCooldownDelay, shootCooldownDelay;
+    WaitForSeconds invincibleDelay, reviveInvincibleDelay, dashDelay, dashCooldownDelay, shootCooldownDelay;
 
     void Awake()
     {
@@ -93,6 +93,7 @@ public class Player : MonoBehaviour
         eventManager = FindObjectOfType<EventManager>();
 
         invincibleDelay = new WaitForSeconds(invincibleDuration);
+        reviveInvincibleDelay = new WaitForSeconds(3);
         dashDelay = new WaitForSeconds(dashDuration);
         dashCooldownDelay = new WaitForSeconds(dashCooltime);
         shootCooldownDelay = new WaitForSeconds(shootCooltime);
@@ -540,14 +541,29 @@ public class Player : MonoBehaviour
                 transform.position += new Vector3(bosscollider2D_size.x - Mathf.Abs(transform.position.x), 0f, 0f);
             }
         }
+        else
+        {
+            /* 기본적으로 부활 시 x좌표를 0으로 변경 */
+            Vector3 v = transform.position;
+            v.x = 0;
+            transform.position = v;
+        }
 
-        StartCoroutine(reviveEventCoroutine());
+        StartCoroutine(reviveCoroutine());
     }
 
-    private IEnumerator reviveEventCoroutine()
+    private IEnumerator reviveCoroutine()
     {
-        yield return new WaitForSeconds(1f);
+        /* revive 이벤트 1초뒤에 음악이 시작됨, 또 1초동안 경고등 표시됨 */
+        yield return new WaitForSeconds(2);
         anim.ResetTrigger("Revive");
+
+        /* 부활 무적 발동 - 'reviveInvincibleDelay' 시간만큼 무적 발동 */
+        hitbox.enabled = false;
+        setAlpha(0.5f);
+        yield return reviveInvincibleDelay;
+        hitbox.enabled = true;
+        setAlpha(1f);
     }
 
     private IEnumerator activateInvincibility()

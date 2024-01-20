@@ -136,6 +136,7 @@ public class ProgressBar : MonoBehaviour
 
     private IEnumerator playMusic()
     {
+        /* gameStart 이벤트 1초뒤에 음악이 시작됨 (패턴 경고등을 보여주는 시간 때문) */
         yield return new WaitForSeconds(1);
         musicAudioSource.Play();
     }

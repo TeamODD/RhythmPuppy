@@ -1148,6 +1148,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 853321459083148496, guid: 815307205ab246b4bbeef73d73e76d56, type: 3}
   m_PrefabInstance: {fileID: 1989851125167521190}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &1211134898 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6091170342716129868, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+  m_PrefabInstance: {fileID: 664177933212231856}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1335762292
 GameObject:
   m_ObjectHideFlags: 0
@@ -1993,6 +1998,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1338004346022117869, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
+      propertyPath: worldSpaceCanvas.basicTimer
+      value: 
+      objectReference: {fileID: 1211134898}
     - target: {fileID: 1338004346022117870, guid: 3cac65f73aa08b348a8152fa513cea66, type: 3}
       propertyPath: m_RootOrder
       value: 1
