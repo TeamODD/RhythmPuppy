@@ -415,25 +415,29 @@ public class Player : MonoBehaviour
 
     private void flipBody()
     {
+        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         Vector2 vertex1 = (Vector2)transform.position + new Vector2(-1f, 0f); // 왼쪽
         Vector2 vertex2 = (Vector2)transform.position + new Vector2(0f, 0f); // 아래
         Vector2 vertex3 = (Vector2)transform.position + new Vector2(1f, 0f);  // 오른쪽
         Vector2 vertex4 = (Vector2)transform.position + new Vector2(0f, 3f);  // 위
 
         //플레이어 중심(정확한 중심은 아닙니다)을 기준으로 다이아몬드 범위 내에 마우스가 들어오면 플립하지 않도록 수정
-        if (!IsMouseInDiamond(mainCamera.ScreenToWorldPoint(Input.mousePosition), vertex1, vertex2, vertex3, vertex4))
+        if (!IsMouseInDiamond(mousePos, vertex1, vertex2, vertex3, vertex4))
         {
             // 기존 코드
             const float detailCorrFactor = 16f;
             Vector3 flip = transform.localScale;
+            float mouseAngle = Quaternion.FromToRotation(Vector3.right, mousePos - neck.transform.position).eulerAngles.z;
+            float neckAngle = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
 
-            float rot = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
-            rot = 0 <= rot ? rot % 360 : rot % 360 + 360;
-            if (110 < rot && rot < 250)
+            Debug.Log("[" + Time.deltaTime + "] mouseAngle : " + mouseAngle);
+            neckAngle = 0 <= neckAngle ? neckAngle % 360 : neckAngle % 360 + 360;
+
+            if (110 < neckAngle && neckAngle < 250)
             {
                 flip.x = flip.x * -1;
             }
-            else if (80 < rot && rot < 280)
+            else if (80 < neckAngle && neckAngle < 280)
             {
                 int xInput = (int)Input.GetAxisRaw("Horizontal");
                 switch (xInput)
