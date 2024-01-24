@@ -87,13 +87,14 @@ public class Head : MonoBehaviour
         dir = mousePos - neck.position;
         rot = 0 < dir.y ? Vector2.Angle(dir, Vector2.right) : 360f - Vector3.Angle(dir, Vector2.right);
         headAngle = rot + correctFactor;
-        if (player.transform.localScale.x < 0) headAngle = rot + (180 - correctFactor);
+        //if (player.transform.localScale.x < 0) headAngle = rot + (180 - correctFactor);
         headAngle = 0 <= headAngle ? headAngle % 360 : headAngle % 360 + 360;
 
         /* 
         * If Calculated Angle is Valid, Apply to Current Player (To Prevent the Player's Head from Breaking)
         * 계산이 완료된 각도가 문제없을 경우 적용하기 (목이 이상하게/심하게 꺾이는 현상 방지)
         */
+        Debug.Log("[" + Time.deltaTime + "] headAngle : " + headAngle);
         if (FRONT_ANGLE - 45 < headAngle && headAngle < FRONT_ANGLE + 45)
         {
             neck.transform.rotation = Quaternion.Euler(0, 0, headAngle);

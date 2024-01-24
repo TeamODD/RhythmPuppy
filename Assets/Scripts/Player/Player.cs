@@ -427,13 +427,14 @@ public class Player : MonoBehaviour
             // 기존 코드
             const float detailCorrFactor = 16f;
             Vector3 flip = transform.localScale;
-            float mouseAngle = Quaternion.FromToRotation(Vector3.right, mousePos - neck.transform.position).eulerAngles.z;
+            float mouseAngle = Quaternion.FromToRotation(Vector3.up, mousePos - neck.transform.position).eulerAngles.z;
             float neckAngle = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
 
-            Debug.Log("[" + Time.deltaTime + "] mouseAngle : " + mouseAngle);
+            if (flip.x < 0)
+                mouseAngle = 360 - mouseAngle;
             neckAngle = 0 <= neckAngle ? neckAngle % 360 : neckAngle % 360 + 360;
 
-            if (110 < neckAngle && neckAngle < 250)
+            if (20 < mouseAngle && mouseAngle < 160)
             {
                 flip.x = flip.x * -1;
             }
