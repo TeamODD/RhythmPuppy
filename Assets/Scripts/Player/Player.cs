@@ -9,6 +9,8 @@ using UnityEngine.U2D.Animation;
 using SceneData;
 using EventManagement;
 using System.Net.Sockets;
+using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -55,7 +57,9 @@ public class Player : MonoBehaviour
     public float shootCooltime;
 
     Camera mainCamera;
-    GameObject projectile, head, neck;
+    Transform projectile, head, neck;
+    Head headScript;
+    Projectile projectileScript;
     Collider2D hitbox;
     Rigidbody2D rig2D;
     SpriteRenderer[] spriteList;
@@ -66,7 +70,6 @@ public class Player : MonoBehaviour
 
     bool onFired, movable;
     [HideInInspector] public float currentHP, currentStamina;
-    float headCorrectFactor;
     [HideInInspector] public float deathCount;
     [HideInInspector] public bool S_Rank_True;
     Vector3 velocity, currentPosition;
@@ -82,9 +85,11 @@ public class Player : MonoBehaviour
     public void init()
     {
         mainCamera = Camera.main;
-        projectile = transform.Find("Projectile").gameObject;
-        head = transform.Find("Head").gameObject;
-        neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
+        projectile = transform.Find("Projectile").transform;
+        projectileScript = projectile.GetComponent<Projectile>();
+        head = transform.Find("Head").transform;
+        headScript = head.GetComponent<Head>();
+        neck = head.GetComponent<SpriteSkin>().rootBone.transform;
 
         rig2D = GetComponent<Rigidbody2D>();
         hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
@@ -101,7 +106,6 @@ public class Player : MonoBehaviour
         onFired = false;
         movable = true;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = shootCooldownCoroutine = null;
-        headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
         deathCount = 0;
         S_Rank_True = true;
         if (Menu_PlayerTransform.difficulty_num == 0)
@@ -171,8 +175,9 @@ public class Player : MonoBehaviour
                     Debug.Log("not enough stamina!");
                 else if (shootCooldownCoroutine == null)
                 {
-                    Projectile projectile = GameObject.Find("Projectile").GetComponent<Projectile>();
-                    if (!projectile.IsBoneRecovered)
+                    //Projectile projectile = GameObject.Find("Projectile").GetComponent<Projectile>();
+                    //if (!projectile.IsBoneRecovered)
+                    if (!projectileScript.IsBoneRecovered)
                     {
                         return;
                     }
@@ -369,7 +374,7 @@ public class Player : MonoBehaviour
     private void teleportEvent()
     {
         int count = anim.GetInteger("JumpCount");
-        Vector3 pos = projectile.transform.position;
+        Vector3 pos = projectile.position;
         transform.position = pos;
         if (2 <= count)
             anim.SetInteger("JumpCount", count - 1);
@@ -379,7 +384,7 @@ public class Player : MonoBehaviour
     private void shootCancelEvent()
     {
         currentStamina = maxStamina < currentStamina + shootCancelStaminaGen ? maxStamina : currentStamina + shootCancelStaminaGen;
-        projectile.transform.position = neck.transform.position;
+        projectile.position = neck.transform.position;
         onFired = false;
         shootCooldownCoroutine = StartCoroutine(runShootCooldown());
     }
@@ -422,37 +427,38 @@ public class Player : MonoBehaviour
         Vector2 vertex4 = (Vector2)transform.position + new Vector2(0f, 3f);  // 위
 
         //플레이어 중심(정확한 중심은 아닙니다)을 기준으로 다이아몬드 범위 내에 마우스가 들어오면 플립하지 않도록 수정
-        if (!IsMouseInDiamond(mousePos, vertex1, vertex2, vertex3, vertex4))
+        if (IsMouseInDiamond(mousePos, vertex1, vertex2, vertex3, vertex4))
+            return;
+        
+        // 기존 코드
+        Vector3 flip = transform.localScale, headDir;
+        float mouseAngle, backSide, frontSide = headScript.frontAngle;
+
+        headDir = mousePos - neck.position;
+        mouseAngle = Mathf.Atan2(headDir.y, headDir.x) * Mathf.Rad2Deg + 360;
+        if (flip.x < 0)
+            backSide = 0f;
+        else
+            backSide = 180f;
+
+        if (headScript.isBetweenAngles(mouseAngle, backSide - headScript.rotationLimit, backSide + headScript.rotationLimit))
         {
-            // 기존 코드
-            const float detailCorrFactor = 16f;
-            Vector3 flip = transform.localScale;
-            float mouseAngle = Quaternion.FromToRotation(Vector3.up, mousePos - neck.transform.position).eulerAngles.z;
-            float neckAngle = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
-
-            if (flip.x < 0)
-                mouseAngle = 360 - mouseAngle;
-            neckAngle = 0 <= neckAngle ? neckAngle % 360 : neckAngle % 360 + 360;
-
-            if (20 < mouseAngle && mouseAngle < 160)
-            {
-                flip.x = flip.x * -1;
-            }
-            else if (80 < neckAngle && neckAngle < 280)
-            {
-                int xInput = (int)Input.GetAxisRaw("Horizontal");
-                switch (xInput)
-                {
-                    case -1:
-                        flip.x = Mathf.Abs(flip.x) * -1;
-                        break;
-                    case 1:
-                        flip.x = Mathf.Abs(flip.x);
-                        break;
-                }
-            }
-            transform.localScale = flip;
+            flip.x = flip.x * -1;
         }
+        else if (!headScript.isBetweenAngles(mouseAngle, frontSide - headScript.rotationLimit, frontSide + headScript.rotationLimit))
+        {
+            int xInput = (int)Input.GetAxisRaw("Horizontal");
+            switch (xInput)
+            {
+                case -1:
+                    flip.x = Mathf.Abs(flip.x) * -1;
+                    break;
+                case 1:
+                    flip.x = Mathf.Abs(flip.x);
+                    break;
+            }
+        }
+        transform.localScale = flip;
     }
 
     bool IsMouseInDiamond(Vector2 mousePosition, Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4)

@@ -20,32 +20,40 @@ public class Head : MonoBehaviour
     [SerializeField] Face face;
     [SerializeField] Sprite sweat;
 
-    [HideInInspector] public const float FRONT_ANGLE = 50f;
+    /* The angle Player heads to front normally
+     * 플레이어가 자연스럽게 앞을 보게 되는 각도  */
+    public float frontAngle {
+        get
+        {
+            if (player.localScale.x < 0)
+                return 130f;
+            return 50f;
+        }
+    }
+    /* Limit of head rotation angle (half of each side)
+     * Head의 회전 가능한 각도 (각 양쪽에서 절반의 각도) */
+    public float rotationLimit { get => 65f; }
 
     EventManager eventManager;
     SpriteRenderer sp;
-    Player player;
-    Transform neck, head, puppy;
-    float correctFactor;
+    Player playerScript;
+    Transform player, neck, head, puppy;
     bool isEnabled;
     WaitForSeconds invincibleDelay;
     Camera mainCamera;
-    Quaternion lowAngle, highAngle;
 
     void Awake()
     {
         eventManager = FindObjectOfType<EventManager>();
-        player = FindObjectOfType<Player>();
+        playerScript = FindObjectOfType<Player>();
+        player = playerScript.transform;
         mainCamera = Camera.main;
         sp = GetComponent<SpriteRenderer>();
         neck = GetComponent<SpriteSkin>().rootBone;
         head = neck.Find("head");
-        lowAngle = Quaternion.Euler(0, 0, FRONT_ANGLE - 45);
-        highAngle = Quaternion.Euler(0, 0, FRONT_ANGLE + 45);
         puppy = null;
-        correctFactor = neck.rotation.eulerAngles.z + head.rotation.eulerAngles.z;
         isEnabled = true;
-        invincibleDelay = new WaitForSeconds(player.invincibleDuration);
+        invincibleDelay = new WaitForSeconds(playerScript.invincibleDuration);
 
         eventManager.playerEvent.playerHitEvent += playerHitEvent;
         eventManager.playerEvent.deathEvent += deathEvent;
@@ -64,13 +72,12 @@ public class Head : MonoBehaviour
 
         if (puppy != null &&  eventManager.stageEvent.onClear)
         {
-            lookAt(puppy.transform.position);
+            lookAt(puppy.position);
         }
         else
         {
-            lookAt(mainCamera.ScreenToWorldPoint(Input.mousePosition));
+            lookAt((Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition));
         }
-
     }
 
     private void clearEvent()
@@ -78,35 +85,33 @@ public class Head : MonoBehaviour
         puppy = GameObject.FindGameObjectWithTag("Puppy").transform;
     }
 
-    private void lookAt(Vector3 mousePos)
+    private void lookAt(Vector3 target)
     {
-        Vector2 dir;
-        float rot, headAngle;
+        Vector3 headDir = target - neck.position;
+        float targetAngle = Mathf.Atan2(headDir.y, headDir.x) * Mathf.Rad2Deg + frontAngle;
 
-        /* Calculate Head Angle with MousePosition - 마우스 위치를 통해 플레이어 머리 각도 계산 */
-        dir = mousePos - neck.position;
-        rot = 0 < dir.y ? Vector2.Angle(dir, Vector2.right) : 360f - Vector3.Angle(dir, Vector2.right);
-        headAngle = rot + correctFactor;
-        //if (player.transform.localScale.x < 0) headAngle = rot + (180 - correctFactor);
-        headAngle = 0 <= headAngle ? headAngle % 360 : headAngle % 360 + 360;
-
-        /* 
-        * If Calculated Angle is Valid, Apply to Current Player (To Prevent the Player's Head from Breaking)
-        * 계산이 완료된 각도가 문제없을 경우 적용하기 (목이 이상하게/심하게 꺾이는 현상 방지)
-        */
-        Debug.Log("[" + Time.deltaTime + "] headAngle : " + headAngle);
-        if (FRONT_ANGLE - 45 < headAngle && headAngle < FRONT_ANGLE + 45)
+        if (!isBetweenAngles(targetAngle, frontAngle-rotationLimit, frontAngle+rotationLimit))
         {
-            neck.transform.rotation = Quaternion.Euler(0, 0, headAngle);
-        }
-        else
-        {
-            if ((headAngle < FRONT_ANGLE - 40) || (180 + FRONT_ANGLE < headAngle))
-                neck.transform.rotation = lowAngle;
+            float xAxis, fixedAngle;
+            xAxis = player.localScale.x < 0 ? -180 : 0;
+            fixedAngle = 180 - Mathf.Atan2(headDir.y, headDir.x) * Mathf.Rad2Deg - xAxis;
+            if (fixedAngle < 0)
+                targetAngle = frontAngle - rotationLimit;
             else
-                neck.transform.rotation = highAngle;
+                targetAngle = frontAngle + rotationLimit;
         }
+        neck.rotation = Quaternion.Euler(0, 0, getPositiveAngle(targetAngle));
+    }
 
+    public bool isBetweenAngles(float targetAngle, float lowAngle, float highAngle)
+    {
+        float fixedTargetAngle = getPositiveAngle(targetAngle - lowAngle);
+        return 0 < fixedTargetAngle && fixedTargetAngle < getPositiveAngle(highAngle - lowAngle);
+    }
+
+    private float getPositiveAngle(float angle)
+    {
+        return angle < 0 ? (angle % 360) + 360 : angle % 360;
     }
 
     public void setNormalFace()
