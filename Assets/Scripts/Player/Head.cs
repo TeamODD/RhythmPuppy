@@ -31,8 +31,8 @@ public class Head : MonoBehaviour
         }
     }
     /* Limit of head rotation angle (half of each side)
-     * Head의 회전 가능한 각도 (각 양쪽에서 절반의 각도) */
-    public float rotationLimit { get => 65f; }
+     * Head의 회전 가능한 각도 */
+    public float rotationLimit { get => 55f; }
 
     EventManager eventManager;
     SpriteRenderer sp;
@@ -88,18 +88,19 @@ public class Head : MonoBehaviour
     private void lookAt(Vector3 target)
     {
         Vector3 headDir = target - neck.position;
-        float targetAngle = Mathf.Atan2(headDir.y, headDir.x) * Mathf.Rad2Deg + frontAngle;
+        float targetAngle, rotLimit;
 
-        if (!isBetweenAngles(targetAngle, frontAngle-rotationLimit, frontAngle+rotationLimit))
+        targetAngle = Mathf.Atan2(headDir.y, headDir.x) * Mathf.Rad2Deg + frontAngle;
+        rotLimit = player.localScale.x < 0 ? -rotationLimit : rotationLimit;
+        /* If neck is broken - 만약 목이 비정상적으로 꺾였다면 */
+        if (!isBetweenAngles(targetAngle, frontAngle-rotLimit, frontAngle+rotLimit))
         {
-            float xAxis, fixedAngle;
-            xAxis = player.localScale.x < 0 ? -180 : 0;
-            fixedAngle = 180 - Mathf.Atan2(headDir.y, headDir.x) * Mathf.Rad2Deg - xAxis;
-            if (fixedAngle < 0)
+            if (targetAngle < frontAngle)
                 targetAngle = frontAngle - rotationLimit;
             else
                 targetAngle = frontAngle + rotationLimit;
         }
+        Debug.Log(string.Format("[{0}] frontAngle : {1}, target : {2}", Time.deltaTime, frontAngle, targetAngle));
         neck.rotation = Quaternion.Euler(0, 0, getPositiveAngle(targetAngle));
     }
 
