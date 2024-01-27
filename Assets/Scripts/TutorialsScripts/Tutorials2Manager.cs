@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
+using static Menu_PlayerTransform;
 
 public class Tutorials2Manager : MonoBehaviour
 {
@@ -611,6 +612,8 @@ public class Tutorials2Manager : MonoBehaviour
     {
         float elapsedTime = 0f;
         float fadeDuration = 2f;
+        if(!PlayerPrefs.HasKey("clearIndex"))
+            PlayerPrefs.SetInt("clearIndex", 2);
 
         while (elapsedTime < fadeDuration)
         {
@@ -648,6 +651,10 @@ public class Tutorials2Manager : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+
+        if (!(GameObject.FindWithTag("CurtainObject") == null))
+            GameObject.FindWithTag("CurtainObject").GetComponent<Curtain>().CurtainEffect("Close", 0);
+        yield return new WaitForSeconds(3f);
 
         SceneManager.LoadSceneAsync("SceneMenu_01");
     }

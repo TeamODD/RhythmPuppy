@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using EventManagement;
 using TMPro;
 using SceneData;
+#pragma warning disable 0642 //Possible mistaken empty statement (182, 196)
 
 public class GameClear : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class GameClear : MonoBehaviour
     private Collider2D Collider;
     private GameObject corgi;
     private Vector3 CorgiTransform;
+    [SerializeField]
+    private Sprite corgi_happy;
+    [SerializeField]
+    private SpriteRenderer corgi_head;
     [SerializeField]
     private GameObject corgiEnd;
     [SerializeField]
@@ -28,8 +33,10 @@ public class GameClear : MonoBehaviour
     private SpriteRenderer heartAlpha;
     [SerializeField]
     private GameObject LoadingScreen;
+    //[SerializeField]
+    //private SpriteRenderer ScreenAlpha;
     [SerializeField]
-    private SpriteRenderer ScreenAlpha;
+    private Canvas UI_Canvas;
     [SerializeField]
     private Image Screen_UI;
     [SerializeField]
@@ -81,6 +88,7 @@ public class GameClear : MonoBehaviour
     IEnumerator Moving()
     {
         float alpha = 0;
+        corgi_head.sprite = corgi_happy;
         gameObject.transform.position = new Vector3(3,-3.25f,0);
         corgi.SetActive(false);
         corgiEnd.transform.position = new Vector3(-3,-4.3f,0);
@@ -111,35 +119,46 @@ public class GameClear : MonoBehaviour
         //health 관련해서 S 판정 내는 if문 작성하기
 
         byte RankAlpha = 0;
-        while (Rank.color.a < 1 || RankAlpha < 255)
+        while (alpha < 1)
+        {
+            //RankText.color = new Color32(255, 255, 255, RankAlpha);
+            UI_Canvas.GetComponent<CanvasGroup>().alpha = alpha;
+            alpha += 0.01f;
+            RankAlpha += (byte)3;
+            yield return new WaitForFixedUpdate();
+        }
+        //여기까지 랭크가 나오도록.
+        //RankText.color = new Color32(255, 255, 255, 255);
+        UI_Canvas.GetComponent<CanvasGroup>().alpha = 1;
+        alpha = 0;
+
+        while (Rank.color.a < 1)
         {
             Rank.color = new Color(1, 1, 1, alpha);
-            RankText.color = new Color32(255, 255, 255, RankAlpha);
             alpha += 0.01f;
-            RankAlpha += 1;
             yield return new WaitForFixedUpdate();
         }
-        alpha = 0;
-        //여기까지 랭크가 나오도록.
-        //
-        /*페이드인 페이드 아웃 효과는 UI때문에 UI image와 기본 스프라이트 이미지
-         * 두 가지를 활용하였습니다. */
-        yield return new WaitForSeconds(5f);
-        while (Screen_UI.color.a < 1 || ScreenAlpha.color.a < 1)
-        {
-            Screen_UI.color = new Color(0, 0, 0, alpha);
-            ScreenAlpha.color = new Color(0, 0, 0, alpha);
-            alpha += 0.02f;
-            yield return new WaitForFixedUpdate();
-        }
-        //로딩창 등장
 
         Save();
 
-        DontDestroyOnLoad(LoadingScreen);
+        yield return new WaitForSeconds(5f);
+        if (!(GameObject.FindWithTag("CurtainObject") == null))
+            GameObject.FindWithTag("CurtainObject").GetComponent<Curtain>().CurtainEffect("Close", 0);
+
+        //로딩창 등장
+
+        while (Screen_UI.color.a < 1 /*|| ScreenAlpha.color.a < 1*/)
+        {
+            Screen_UI.color = new Color(0, 0, 0, alpha);
+            //ScreenAlpha.color = new Color(0, 0, 0, alpha);
+            alpha += 0.02f;
+            yield return new WaitForFixedUpdate();
+        }
+
+        //DontDestroyOnLoad(UI_Canvas);
         yield return new WaitForSeconds(2f); //2초후 로딩
         var mAsymcOperation = SceneManager.LoadSceneAsync(SceneInfo.getSceneName(SceneName.STAGEMENU), LoadSceneMode.Single);
-        LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
+        //LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
         yield return mAsymcOperation;
 
         /*LoadingScreen.transform.position = new Vector3(0, 0, 0);
@@ -164,20 +183,43 @@ public class GameClear : MonoBehaviour
 
     void Save() //클리어 스테이지 인덱스 저장 함수
     {
+        Debug.Log("Saving Clear Data");
         Scene scene = SceneManager.GetActiveScene();
 
+        //1이 하드, 0은 노말(랭크 저장 안 함)
+        if (Menu_PlayerTransform.difficulty_num == 0 || PlayerPrefs.GetInt(scene.name) == 3) ;
+        else
+        {
+            if (S_Rank_True)
+            {
+                //PlayerPrefs.DeleteKey(scene.name);
+                Debug.Log("S랭크 저장");
+                PlayerPrefs.SetInt(scene.name, 3);
+            }
+            else
+            {
+                if(PlayerPrefs.HasKey(scene.name))
+                {
+                    //0 == A, 1 == B, 2 == C, 3 == S
+                    if (PlayerPrefs.GetInt(scene.name) > deathcount)
+                    {
+                        Debug.Log(deathcount + "랭크 저장");
+                        //PlayerPrefs.DeleteKey(scene.name);
+                        PlayerPrefs.SetInt(scene.name, deathcount);
+                    }
+                    else;
+                }
+                else
+                    PlayerPrefs.SetInt(scene.name, deathcount);
+
+            }
+        }
+        PlayerPrefs.Save();
+        //clearIndex 저장
         if (Menu_PlayerTransform.clearIndex > Menu_PlayerTransform.currentIndex + 2) return;
         Menu_PlayerTransform.clearIndex = Menu_PlayerTransform.currentIndex + 2;
         PlayerPrefs.SetInt("clearIndex", Menu_PlayerTransform.currentIndex + 2);
 
-        //1이 하드, 0은 노말(랭크 저장 안 함)
-        if (Menu_PlayerTransform.difficulty_num != 1) return;
-        if (S_Rank_True == true)
-        {
-            PlayerPrefs.SetInt(scene.name, 3);
-            return;
-        }
-        PlayerPrefs.SetInt(scene.name, deathcount);
     }
 
     void FixedUpdate()

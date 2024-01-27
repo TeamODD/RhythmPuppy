@@ -103,8 +103,7 @@ public class UICanvas : MonoBehaviour
 
     public void enableClearSpotlight()
     {
-
-        StartCoroutine(runClearSpotlightFadeIn());
+        //StartCoroutine(runClearSpotlightFadeIn());
     }
 
     private IEnumerator runClearSpotlightFadeIn()

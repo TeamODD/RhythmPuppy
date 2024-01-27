@@ -16,6 +16,7 @@ TagManager:
   - Puppy
   - SoundManager
   - Boss
+  - CurtainObject
   layers:
   - Default
   - TransparentFX
@@ -34,7 +35,7 @@ TagManager:
   - Player
   - PlayerHitbox
   - Puppy
-  - 
+  - Curtain
   - 
   - 
   - 

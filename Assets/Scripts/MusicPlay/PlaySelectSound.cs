@@ -70,11 +70,18 @@ public class PlaySelectSound : MonoBehaviour
 
     public IEnumerator asd(string NextScene, GameObject LoadingScreen)
     {
-        LoadingScreen.transform.SetParent(null, false); //worldpositionstays bool 인자 false로
-        DontDestroyOnLoad(LoadingScreen);
+        //LoadingScreen.transform.SetParent(null, false); //worldpositionstays bool 인자 false로
+        //DontDestroyOnLoad(LoadingScreen);
         yield return new WaitForSeconds(2f); //2초후 로딩
         var mAsymcOperation = SceneManager.LoadSceneAsync(NextScene, LoadSceneMode.Single);
-        LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
+        //LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
+        if(!(GameObject.FindWithTag("CurtainObject") == null))
+            GameObject.FindWithTag("CurtainObject").GetComponent<Curtain>().CurtainEffect("Open", 0);
+
+        Debug.Log("Destroy Loading Screen");
+        Destroy(LoadingScreen);
+        //로딩 시 메뉴 화면이 잠깐 보이는 버그가 있음. 
+        //로딩 스크린 디스트로이를 약간 늦추면 자연스럽게 해결이 되지만, UI 이미지 사용이 어려움(loading corgi 스프라이트 떄문에)
         yield return mAsymcOperation;
         LoadingScreen.transform.position = new Vector3(0, 0, 0);
         /*mAsymcOperation = SceneManager.UnloadSceneAsync("SceneMenu_01");

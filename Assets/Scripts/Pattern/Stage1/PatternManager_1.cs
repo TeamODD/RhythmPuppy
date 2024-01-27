@@ -408,10 +408,12 @@ public class PatternManager_1 : MonoBehaviour
         {
             yield return new WaitForSeconds(t - startTime);
             //MainCamera.GetComponent<GrayFilmEffect>().GrayEffect();
-            MainCamera.GetComponent<GrayFilmEffect>().enabled = true;
+            //MainCamera.GetComponent<GrayFilmEffect>().enabled = true;
+            MainCamera.GetComponent<GrayFilmEffect>().StopGrayEffect();
+            GrayFilmEffect Gray = MainCamera.GetComponent<GrayFilmEffect>();
+            yield return Gray.StartCoroutine(Gray.GrayPatternOn());
         }
-        yield break;
-        
+        //yield break;
     }
 
     IEnumerator PatternShake(float t, float startTime)
@@ -438,6 +440,7 @@ public class PatternManager_1 : MonoBehaviour
 
     private void deathEvent()
     {
+        MainCamera.GetComponent<GrayFilmEffect>().StopGrayEffect();
         StopAllCoroutines();
     }
 

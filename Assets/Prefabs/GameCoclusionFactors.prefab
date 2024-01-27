@@ -488,13 +488,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HappyPuppy: {fileID: 21300000, guid: 58452a9a72989fe46aa9ebdd728afbb7, type: 3}
+  corgi_happy: {fileID: 21300000, guid: f9433a412112de143a06556af3a1181c, type: 3}
+  corgi_head: {fileID: 7173281996649539042}
   corgiEnd: {fileID: 560135526927714442}
   spot1: {fileID: 626644232567924391}
   spot2: {fileID: 626644233582490356}
   heart: {fileID: 626644234011733852}
   heartAlpha: {fileID: 626644234011733853}
-  LoadingScreen: {fileID: 0}
-  ScreenAlpha: {fileID: 0}
+  LoadingScreen: {fileID: 5919606996611223262, guid: 3a81acf6f8099e74d9ed3b29cab70416, type: 3}
+  UI_Canvas: {fileID: 5919606996611223260, guid: 3a81acf6f8099e74d9ed3b29cab70416, type: 3}
   Screen_UI: {fileID: 0}
   Rank: {fileID: 626644232855696515}
   RankImgs:
@@ -700,5 +702,10 @@ GameObject:
 --- !u!4 &1661293485653823721 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7552582706839291426, guid: b33e8bdf6fe4f4d4494e24b1b2a7b00a, type: 3}
+  m_PrefabInstance: {fileID: 9516911176247607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7173281996649539042 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7182487608461937877, guid: b33e8bdf6fe4f4d4494e24b1b2a7b00a, type: 3}
   m_PrefabInstance: {fileID: 9516911176247607}
   m_PrefabAsset: {fileID: 0}
