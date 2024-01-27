@@ -421,41 +421,36 @@ public class Player : MonoBehaviour
     /** Flip body if player is heading behind or moving to behind. */
     private void flipBody()
     {
-        /** [ Priority list for flip player : 플립(좌우반전)에 대한 우선순위 리스트 ]
-         
-            1. Mouse Position (마우스 위치) 
-                : If the mouse is facing the opposite direction, it will always flip. 
-                    (만약 마우스가 반대쪽(뒤쪽)을 바라보는 경우, 무조건 좌우반전한다.)
-
-            2. Arrow Key Input(Left/Right) with Mouse Position (좌우키 입력 + 마우스 위치)
-                : If mouse is heading where player's head cannot rotate, it flips according to arrow key input.
-                    (마우스가 반대쪽을 바라보는 경우엔, 키보드 입력에 따라서 플립한다)
-        */
-        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition), // 마우스 좌표
-                flip = transform.localScale;    // Player 좌우 반전 여부
-        float mouseAngle, frontAngle, backSide;
+        Vector3 flip, mousePos;
+        float mouseAngle, frontSide, backSide;
+        flip = transform.localScale;    // Player 좌우 반전 여부
+        mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition); // 마우스 좌표
+        mouseAngle = headScript.getHeadingAngle(mainCamera.ScreenToWorldPoint(Input.mousePosition));
         //플레이어 중심(정확한 중심은 아닙니다)을 기준으로 다이아몬드 범위 내에 마우스가 들어오면 플립하지 않도록 수정
         if (IsMouseInDiamond(mousePos)) return;
         
-        /** 기존 코드 (flip 동작 코드) */
-        mouseAngle = headScript.getHeadingAngle(mousePos);
-        frontAngle = flip.x < 0 ? 180 + headScript.frontAngle : headScript.frontAngle;
-        backSide = 180f + frontAngle;
+        /** [ Priority list for flip player - 플립(좌우반전)에 대한 우선순위 리스트 ]
+            1. Mouse Position (마우스 위치)
+                : 만약 마우스가 반대쪽(뒤쪽)을 바라보는 경우, 무조건 좌우반전한다.
+            2. Arrow Key Input(Left/Right) with Mouse Position (좌우키 입력 + 마우스 위치)
+                : 마우스가 반대쪽을 바라보는 경우엔, 키보드 입력에 따라서 플립한다.       */
+        frontSide = flip.x < 0 ? headScript.frontAngle + 180f : headScript.frontAngle;
+        backSide = frontSide + 180f;
         /** 현재 마우스 위치가 플레이어의 뒤쪽(반대쪽)이라면 : flip 실행 */
         if (headScript.isBetweenAngles(mouseAngle, backSide - headScript.rotationLimit, backSide + headScript.rotationLimit))
         {
             flip.x = flip.x * -1;
         }
         /** 현재 마우스 위치가 목이 꺾이는 각도의 위치라면 : 키보드 좌우 입력대로 flip 실행 */
-        else if (!headScript.isBetweenAngles(mouseAngle, frontAngle - headScript.rotationLimit, frontAngle + headScript.rotationLimit))
+        else if (!headScript.isBetweenAngles(mouseAngle, frontSide - headScript.rotationLimit, frontSide + headScript.rotationLimit))
         {
             int xInput = (int)Input.GetAxisRaw("Horizontal");
-            flip.x = Mathf.Abs(flip.x);
-            if (xInput < 0) flip.x = -flip.x;
+            /** It works(flips) only there is keyboard input - 오직 키보드 입력이 있을때만 작동함.  */
+            if (xInput != 0)
+            {
+                flip.x = 0 < xInput ? Mathf.Abs(flip.x) : -Mathf.Abs(flip.x);
+            }
         }
-        Debug.Log(string.Format("[{0}] backSide : {1}, mouse : {2}", Time.deltaTime, headScript.getPositiveAngle(backSide), headScript.getPositiveAngle(mouseAngle)));
-
-        return;
         transform.localScale = flip;
     }
 
@@ -470,7 +465,6 @@ public class Player : MonoBehaviour
         {
             return true;
         }
-
         return false;
     }
 
