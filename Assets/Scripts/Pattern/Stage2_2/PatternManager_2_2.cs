@@ -315,12 +315,12 @@ namespace Stage_2
                 GameObject cat3_WarningBox;
                 cat3_WarningBox = ObjectPoolDic[objectName].Get();
                 cat3_WarningBox.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-                cat3_WarningBox.gameObject.transform.SetParent(Warning_Canvas.transform, true);
+                cat3_WarningBox.gameObject.transform.SetParent(Warning_Canvas.transform, false);
                 Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(9, Y, 0));
                 cat3_WarningBox.gameObject.transform.position = v;
                 //cat3_WarningBox.gameObject.transform.parent = OverlayCanvas.transform;
-                cat3_WarningBox.gameObject.GetComponent<Warning1_a>().time = 0f;
-                cat3_WarningBox.gameObject.GetComponent<Warning1_a>().IsPooled = true;
+                cat3_WarningBox.gameObject.GetComponent<Warning7_a>().time = 0f;
+                cat3_WarningBox.gameObject.GetComponent<Warning7_a>().IsPooled = true;
 
                 //return PoolingManager;
             }
@@ -342,15 +342,15 @@ namespace Stage_2
             {
                 ArtifactManager.transform.GetChild(0).gameObject.GetComponent<LampAction>().LampControl(s);
                 ArtifactManager.transform.GetChild(1).gameObject.GetComponent<LampAction>().LampControl(s);
-                try
-                {
-                    ArtifactManager.transform.GetChild(2).gameObject.GetComponent<LampAction>().LampControl(s);
-                    ArtifactManager.transform.GetChild(3).gameObject.GetComponent<LampAction>().LampControl(s);
-                }
-                catch
-                {
-                    Debug.Log("자식 오브젝트 없음 - 램프");
-                }
+                ArtifactManager.transform.GetChild(2).gameObject.GetComponent<LampAction>().LampControl(s);
+                ArtifactManager.transform.GetChild(3).gameObject.GetComponent<LampAction>().LampControl(s);
+                if (ArtifactManager.transform.GetChild(4).gameObject == null) return;
+                else ArtifactManager.transform.GetChild(4).gameObject.GetComponent<LampAction>().LampControl(s);
+                if (ArtifactManager.transform.GetChild(5).gameObject == null) return;
+                else ArtifactManager.transform.GetChild(5).gameObject.GetComponent<LampAction>().LampControl(s);
+                if (ArtifactManager.transform.GetChild(6).gameObject == null) return;
+                else ArtifactManager.transform.GetChild(6).gameObject.GetComponent<LampAction>().LampControl(s);
+
             }
 
             if (0 <= t - startTime)
@@ -372,13 +372,13 @@ namespace Stage_2
                 SpriteAlpha = 1f;
                 BlackScreen.color = new Color(0, 0, 0, SpriteAlpha);
                 LampControll(false);
-                yield return new WaitForSeconds(5.5f);
+                yield return new WaitForSeconds(6.5f);
                 SpriteAlpha = 30f / 31f;
                 BlackScreen.color = new Color(0, 0, 0, SpriteAlpha);
                 //불이 꺼진 상태의 램프를 유지하기 위해 지속적으로 메소드 실행 (총 22.6초)
-                LampControll(false);
-                yield return new WaitForSeconds(11f);
-                LampControll(false);
+                //LampControll(false);
+                yield return new WaitForSeconds(10f);
+                //LampControll(false);
                 yield return new WaitForSeconds(11.6f);
                 isPattern3Going = true;
 
@@ -394,10 +394,10 @@ namespace Stage_2
                 BlackScreen.color = new Color(0, 0, 0, 0);
             }
 
-            if(0 > t - startTime && isPattern3Going) //startTime = 79f
+            if (0 > t - startTime && isPattern3Going) //startTime = 79f
             {
                 float SpriteAlpha = 0;
-                    float Faze2Time = 11.3f;
+                float Faze2Time = 11.3f;
 
                 //패턴 진행중일시
                 LampControll(true);
@@ -427,7 +427,7 @@ namespace Stage_2
                 firefly = ObjectPoolDic[objectName].Get();
                 //firefly.gameObject.transform.parent = Pattern8_Canvas.transform;
                 Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(randomX, randomY, 0));
-                firefly.gameObject.transform.SetParent(Pattern8_Canvas.transform, true);
+                firefly.gameObject.transform.SetParent(Pattern8_Canvas.transform, false);
                 firefly.gameObject.transform.position = v;
                 firefly.gameObject.GetComponent<Pattern8>().IsPooled = true;
                 firefly.gameObject.GetComponent<Pattern8>().time = 0;
@@ -488,7 +488,7 @@ namespace Stage_2
                 WarningBox = ObjectPoolDic[objectName].Get();
                 //firefly.gameObject.transform.parent = Pattern8_Canvas.transform;
                 Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(randomX, randomY, 0));
-                WarningBox.gameObject.transform.SetParent(Warning_Canvas.transform, true);
+                WarningBox.gameObject.transform.SetParent(Warning_Canvas.transform, false);
                 WarningBox.gameObject.transform.position = v;
                 WarningBox.gameObject.GetComponent<Pattern8_WarningBox>().IsPooled = true;
                 WarningBox.gameObject.GetComponent<Pattern8_WarningBox>().time = 0;
@@ -546,12 +546,12 @@ namespace Stage_2
                 GameObject WarningBox;
                 WarningBox = ObjectPoolDic[objectName].Get();
                 WarningBox.gameObject.transform.rotation = Quaternion.Euler(0, 0, 90);
-                WarningBox.gameObject.transform.SetParent(Warning_Canvas.transform, true);
+                WarningBox.gameObject.transform.SetParent(Warning_Canvas.transform, false);
                 Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(randomX, 4.75f, 0));
                 WarningBox.gameObject.transform.position = v;
                 //cat3_WarningBox.gameObject.transform.parent = OverlayCanvas.transform;
-                WarningBox.gameObject.GetComponent<Warning1_a>().time = 0f;
-                WarningBox.gameObject.GetComponent<Warning1_a>().IsPooled = true;
+                WarningBox.gameObject.GetComponent<Warning7_a>().time = 0f;
+                WarningBox.gameObject.GetComponent<Warning7_a>().IsPooled = true;
 
                 //return PoolingManager;
             }

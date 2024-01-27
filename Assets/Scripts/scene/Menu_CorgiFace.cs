@@ -55,6 +55,7 @@ public class Menu_CorgiFace : MonoBehaviour
                     corgi[i].SetActive(true);
                 }
                 break;
+            default: break;
         }
     }
 }

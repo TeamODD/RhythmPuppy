@@ -15,7 +15,7 @@ public class GrayFilmEffect : MonoBehaviour
         grayScale = 0f; 
         applytime = 2f;
         CameraMaterial = new Material(Shader.Find("Custom/Grayscale"));
-        GrayEffect();
+        //StartCoroutine(GrayPatternOn());
     }
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
@@ -24,12 +24,13 @@ public class GrayFilmEffect : MonoBehaviour
         Graphics.Blit(src, dest, CameraMaterial);
     }
 
-    public void GrayEffect()
+    public void StopGrayEffect()
     {
-        StartCoroutine(GrayPatternOn());
+        StopAllCoroutines();
+        grayScale = 0f;
     }
 
-    IEnumerator GrayPatternOn()
+    public IEnumerator GrayPatternOn()
     {
 
         float elapsedtime = 0f;

@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Video;
+
 
 public class GotoSelectStage : MonoBehaviour
 {
@@ -26,9 +28,12 @@ public class GotoSelectStage : MonoBehaviour
     float fadeDuration;
     [SerializeField]
     float comedownspeed;
+    [SerializeField]
+    GameObject CurtainObject;
 
     private bool FadeInDone = false;
     private bool FadeOutDone = false;
+    private bool InputDelay = false;
 
     private bool IsDevelopmentTeamSettingDone = false;
     private bool IsLicenseNoticeSettingDone = false;
@@ -39,15 +44,19 @@ public class GotoSelectStage : MonoBehaviour
     IEnumerator LicenseNoticeCoroutine;
     IEnumerator HeadphoneCoroutine;
     IEnumerator TitleImageCoroutine;
-
+    
     void Update()
     {
+        if (InputDelay) return;
+
         if ((Input.GetMouseButtonDown(0) || Input.anyKeyDown) && TitleSettingDone)
         {
             PlaySelectSound.instance.SelectSound();
             PlaySelectSound.instance.audioSourceSelect.Play();
-
-            SceneManager.LoadScene("SceneMenu_01");
+            //연타 방지
+            InputDelay = true;
+            StartCoroutine(LoadingCoroutine());
+            //SceneManager.LoadScene("SceneMenu_01");
         }
 
         if ((Input.GetMouseButtonDown(0)))
@@ -95,9 +104,18 @@ public class GotoSelectStage : MonoBehaviour
         }
     }
 
+    IEnumerator LoadingCoroutine()
+    {
+        CurtainObject.GetComponent<Curtain>().CurtainEffect("Close", 0);
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("SceneMenu_01");
+        yield break;
+    }
+
     private void Start()
     {
         ParticleSystem.GetComponent<ParticleSystem>().Stop();
+        CurtainObject.GetComponent<Curtain>().Pause();
 
         //아무런 행동도 하지 않았을 경우 진행되는 순서
         DevelopmentTeamCoroutine = DevelopmentTeamSetting(DevelopmentTeam, 3f);

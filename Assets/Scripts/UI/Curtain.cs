@@ -1,51 +1,74 @@
 using System.Collections;
 using System.Collections.Generic;
+using EventManagement;
 using UnityEngine;
 using UnityEngine.Video;
 
-namespace Curtain
+public class Curtain : MonoBehaviour
 {
-    public class Curtain : MonoBehaviour
+    [SerializeField]
+    private GameObject Canvas;
+    public GameObject RawImage;
+    public GameObject VideoObject;
+    public VideoPlayer Video;
+    public VideoClip CurtainClose;
+    public VideoClip CurtainOpen;
+    public VideoClip CurtainCloseOpen;
+
+
+    void Start()
     {
-        public GameObject RawImage;
-        public GameObject VideoObject;
-        public VideoPlayer Video;
-        public VideoClip CurtainClose;
-        public VideoClip CurtainOpen;
-        public VideoClip CurtainCloseOpen;
+        init();
+    }
 
+    void init()
+    {
+        DontDestroyOnLoad(Canvas);
 
-        void Start()
+        //Video.Pause();
+        Video.time = 0;
+        //Video.playOnAwake = false;
+    }
+
+    public void CurtainEffect(string Status, float time)
+    {
+        StartCoroutine(CurtainCoroutine(Status, time));
+    }
+
+    public IEnumerator CurtainCoroutine(string Status, float WaitTime)
+    {
+        yield return new WaitForSeconds(WaitTime);
+        VideoObject.SetActive(true);
+        switch (Status)
         {
+            case "Close":
+                Video.clip = CurtainClose;
+                break;
+            case "Open":
+                Video.clip = CurtainOpen;
+                break;
+            case "CloseOpen":
+                Video.clip = CurtainCloseOpen;
+                break;
         }
+        //RawImage.SetActive(true);
+        //Video.time = 0;
+        //Video.Prepare();
+        /*if (Video.isPrepared)
+            Video.Play();*/
+        //Video.Play();
+        float offset = 1f;
+        Debug.Log("Curtain Action");
+        //Destroy(Canvas, 5f);
+        yield return new WaitForSeconds((float)Video.length + offset);
+        VideoObject.SetActive(false);
 
-        void CurtainEffect(string Status)
-        {
-            StartCoroutine(CurtainCoroutine(Status));
-        }
+        yield return Video;
+    }
 
-        IEnumerator CurtainCoroutine(string Status)
-        {
-            switch (Status)
-            {
-                case "Close":
-                    Video.clip = CurtainClose;
-                    break;
-                case "Open":
-                    Video.clip = CurtainOpen;
-                    break;
-                case "CloseOpen":
-                    Video.clip = CurtainCloseOpen;
-                    break;
-            }
-            //RawImage.SetActive(true);
-            Video.time = 0;
-            /*Video.Prepare();
-            if (Video.isPrepared)
-                Video.Play();*/
-            Video.Play();
-
-            yield return Video;
-        }
+    public void Pause()
+    {
+        Video.Pause();
     }
 }
+

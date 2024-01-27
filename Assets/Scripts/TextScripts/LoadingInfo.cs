@@ -11,6 +11,8 @@ public class LoadingInfo : MonoBehaviour
     private TMP_Text SongInfo;
     [SerializeField]
     private TMP_Text StageInfo;
+    [SerializeField]
+    private TMP_Text Tip;
 
     public void LoadingInfoModify()
     {
@@ -63,6 +65,35 @@ public class LoadingInfo : MonoBehaviour
                 break;
             default:
                 StageInfo.text = "";
+                break;
+        }
+    }
+    public void TipInfoFunc()
+    {
+        int randomX = Random.Range(1, 8);
+
+        switch (randomX)
+        {
+            case 1:
+                Tip.text = "Tip: Retrieving a thrown bone by right-clicking restores\r\nthe Corgi's stamina slightly.";
+                break;
+            case 2:
+                Tip.text = "Tip: The reason Corgi always carries a bone in his mouth\r\nis to give it to Pomerania.";
+                break;
+            case 3:
+                Tip.text = "Tip: Corgi can double jump by pressing the space bar\r\nonce more.";
+                break;
+            case 4:
+                Tip.text = "Tip: Corgi's dash and bone throwing consume stamina.\r\nBe careful of stamina depletion!";
+                break;
+            case 5:
+                Tip.text = "Tip: In hard mode, your rank is recorded. If you are\r\nconfident in your skills, try hard mode!\r\n";
+                break;
+            case 6:
+                Tip.text = "Tip: The Corgi's stamina automatically recovers little by little.\r\n";
+                break;
+            case 7:
+                Tip.text = "Tip: Clear ranks range from S to C ranks.\r\nChallenge yourself to a high rank!\r\n";
                 break;
         }
     }

@@ -9,7 +9,10 @@ public class Pattern3 : MonoBehaviour
 {
     private float time;
     public Rigidbody2D rb;
-    public BoxCollider2D bc;
+    [SerializeField]
+    private PolygonCollider2D originalPC;
+    [SerializeField]
+    private PolygonCollider2D changePC;
 
     public Sprite changeImg;
     public SpriteRenderer thisImg;
@@ -50,6 +53,8 @@ public class Pattern3 : MonoBehaviour
     void ChangeImg()
     {
         thisImg.sprite = changeImg;
+        originalPC.enabled = false;
+        changePC.enabled = true;
     }
 
     void deathEvent()

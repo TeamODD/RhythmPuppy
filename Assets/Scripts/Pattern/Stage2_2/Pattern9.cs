@@ -29,10 +29,7 @@ namespace Obstacles
         void FixedUpdate()
         {
             physicalCalculation();
-            if (transform.position.y < 0)
-                rigid.simulated = false;
-            else
-                rigid.simulated = true;
+
             if (transform.position.y < -6f)
                 DestroyObject();
         }

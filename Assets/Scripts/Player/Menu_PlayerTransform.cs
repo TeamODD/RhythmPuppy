@@ -10,6 +10,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     public Vector3[] waypoints;
     public GameObject AudioListener;
     public GameObject BackGroundManager;
+    //public Image LoadingScreenSprite;
     public SpriteRenderer LoadingScreenSprite;
     public GameObject LoadingScreen;
     public CanvasGroup LoadingCanvas;
@@ -34,12 +35,14 @@ public class Menu_PlayerTransform : MonoBehaviour
     private string SceneName;
     [SerializeField]
     private float speed;
-    private float time;
+    //private float time;
     private float lastInputTime;
     private bool onInputDelay;
     public static bool ReadyToGoStage;
     public static bool IsPaused; //옵션창에서 Enter 키 중단
     public static int difficulty_num;
+    [SerializeField]
+    private GameObject Canvas;
 
     private enum WorldStage
     {
@@ -82,13 +85,14 @@ public class Menu_PlayerTransform : MonoBehaviour
 
     void Start()
     {
+        //Invoke("OpenCurtain", 1f);
         difficulty_num = 0;
         GameObject.Find("MusicSoundManager").GetComponent<AudioSource>().Play();
         foreach (GameObject ParticleSystem in ParticleSystems)
         {
             ParticleSystem.GetComponent<ParticleSystem>().Stop();
         }
-        
+        DontDestroyOnLoad(Canvas);
         ReadyToGoStage = false;
         IsPaused = false;
         onInputDelay = false;
@@ -130,7 +134,6 @@ public class Menu_PlayerTransform : MonoBehaviour
         }
 
         int offset = 1;
-        time += Time.deltaTime;
         if (onInputDelay || IsPaused) return;
 
         //난이도 선택창 스크립트.
@@ -188,6 +191,7 @@ public class Menu_PlayerTransform : MonoBehaviour
                 PlaySelectSound.instance.MenuSelectSound();
                 GetSceneString();
                 if (SceneName == null) return;
+                ReadyToGoStage = true;
                 StartCoroutine(LoadingScene());
                 return;
             }
@@ -222,7 +226,8 @@ public class Menu_PlayerTransform : MonoBehaviour
         {
             case "Forward":
                 endPoint = waypoints[currentIndex];
-                while(transform.position.x < endPoint.x - offset)
+                gameObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                while (transform.position.x < endPoint.x - offset)
                 {
                     transform.position += new Vector3(speed, 0, 0) * Time.fixedDeltaTime;
                     yield return new WaitForFixedUpdate();
@@ -231,6 +236,7 @@ public class Menu_PlayerTransform : MonoBehaviour
                 break;
             case "Back":
                 endPoint = waypoints[currentIndex];
+                gameObject.transform.localScale = new Vector3(-0.2f, 0.2f, 0.2f);
                 while (transform.position.x > endPoint.x + offset)
                 {
                     transform.position -= new Vector3(speed, 0, 0) * Time.fixedDeltaTime;
@@ -253,9 +259,11 @@ public class Menu_PlayerTransform : MonoBehaviour
     {
         DefaultCanvas.alpha = 0;
         Loading.Invoke();
-        time = 0;
+        float time = 0;
+        corgiLoading.GetComponent<Loading_corgi>().IsLoading = true;
         while (time < 1f)
         {
+            time += Time.fixedDeltaTime * 0.8f;
             LoadingScreenSprite.color = new Color(0, 0, 0, time);
             LoadingCanvas.alpha = time;
             volume.volume = 1f - time;
@@ -266,8 +274,8 @@ public class Menu_PlayerTransform : MonoBehaviour
         
         AudioListener.GetComponent<AudioListener>().enabled = false;
         volume.enabled = false;
-        corgiLoading.gameObject.SetActive(true);
-        PlaySelectSound.instance.StartLoading(SceneName, LoadingScreen);
+        //corgiLoading.gameObject.SetActive(true);
+        PlaySelectSound.instance.StartLoading(SceneName, Canvas);
         yield break;
     }
     void GetSceneString()
@@ -289,6 +297,9 @@ public class Menu_PlayerTransform : MonoBehaviour
                 break;
             case 10:
                 SceneName = "SceneStage2_2";
+                break;
+            case 12:
+                SceneName = "SceneStage2_3";
                 break;
             default:
                 SceneName = null;
