@@ -15,44 +15,28 @@ namespace Stage_2
 {
     public class Pattern_3 : MonoBehaviour
     {
-        public PatternPlaylist patternPlaylist;
         [SerializeField] float[] startDelay;
         [SerializeField] float duration;
 
         EventManager eventManager;
         AudioSource audioSource;
         Coroutine coroutine;
+        PatternInfo patternInfo;
 
-        void Awake()
-        {
-            init();
-        }
-
-        public void init()
+        void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
-            patternPlaylist.init(action);
-            patternPlaylist.sortTimeline();
+            patternInfo = GetComponent<PatternBase>().patternInfo;
 
-            coroutine = StartCoroutine(patternPlaylist.Run(audioSource.time));
-        }
-        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
-        {
-            try
-            {
-                if (!timeline.duration.Equals(0))
-                    setDuration(timeline.duration - startDelay[startDelay.Length - 1]);
-                else if (!timeline.endAt.Equals(0))
-                    setDuration(timeline.startAt, timeline.endAt);
+            eventManager.playerEvent.deathEvent += deathEvent;
 
-                StartCoroutine(runPattern(timeline));
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            if (!patternInfo.duration.Equals(0))
+                setDuration(patternInfo.duration - startDelay[startDelay.Length - 1]);
+            else if (!patternInfo.endAt.Equals(0))
+                setDuration(patternInfo.startAt, patternInfo.endAt);
+
+            coroutine = StartCoroutine(runPattern());
         }
 
         public void setDuration(float duration)
@@ -65,7 +49,7 @@ namespace Stage_2
             this.duration = end - start - startDelay[startDelay.Length - 1];
         }
 
-        private IEnumerator runPattern(Timeline timeline)
+        private IEnumerator runPattern()
         {
             if (startDelay.Length % 2 == 0)
             {
@@ -90,7 +74,7 @@ namespace Stage_2
 
         void deathEvent()
         {
-            StopAllCoroutines();
+            Destroy(gameObject);
         }
     }
 }

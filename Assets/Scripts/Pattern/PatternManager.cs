@@ -1,3 +1,4 @@
+/* 미사용 스크립트 (현 PatternList.cs) */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ using EventManagement;
 
 public class PatternManager : MonoBehaviour
 {
+#if false
     [SerializeField] GameObject stagePrefab;
     public float[] savePointTime;
     [SerializeField] float startDelayTime;
@@ -22,7 +24,7 @@ public class PatternManager : MonoBehaviour
     List<Coroutine> coroutineList;
     bool isPuppyShown;
 
-    void Awake()
+    void Start()
     {
         StartCoroutine(init());
     }
@@ -65,4 +67,5 @@ public class PatternManager : MonoBehaviour
     {
         stage = null;
     }
+#endif
 }

@@ -11,40 +11,24 @@ namespace Stage_2
 {
     public class Pattern_6 : MonoBehaviour
     {
-        public PatternPlaylist patternPlaylist;
         public GameObject cat;
 
         EventManager eventManager;
         AudioSource audioSource;
         List<GameObject> objectList;
+        Coroutine coroutine;
+        PatternInfo patternInfo;
 
-        void Awake()
-        {
-            init();
-        }
-
-        public void init()
+        void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
-            patternPlaylist.init(action);
-            patternPlaylist.sortTimeline();
+            patternInfo = GetComponent<PatternBase>().patternInfo;
 
+            eventManager.playerEvent.deathEvent += deathEvent;
 
-            StartCoroutine(patternPlaylist.Run(audioSource.time));
-        }
-        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
-        {
-            try
-            {
-                StartCoroutine(runPattern());
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            coroutine = StartCoroutine(runPattern());
         }
 
         private IEnumerator runPattern()
@@ -68,6 +52,7 @@ namespace Stage_2
                 Destroy(objectList[i]);
             }
             objectList.Clear();
+            Destroy(gameObject);
         }
     }
 }

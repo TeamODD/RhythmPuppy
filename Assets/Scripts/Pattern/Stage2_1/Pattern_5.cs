@@ -15,7 +15,6 @@ namespace Stage_2
 {
     public class Pattern_5 : MonoBehaviour
     {
-        public PatternPlaylist patternPlaylist;
         public GameObject ratSwarm;
         public float startDelay;
         public float duration;
@@ -23,40 +22,25 @@ namespace Stage_2
         EventManager eventManager;
         Transform parent;
         List<GameObject> objectList;
+        Coroutine coroutine;
         AudioSource audioSource;
+        PatternInfo patternInfo;
 
-        void Awake()
-        {
-            init();
-        }
-
-        public void init()
+        void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
-            patternPlaylist.init(action);
-            patternPlaylist.sortTimeline();
+            patternInfo = GetComponent<PatternBase>().patternInfo;
 
+            eventManager.playerEvent.deathEvent += deathEvent;
 
-            StartCoroutine(patternPlaylist.Run(audioSource.time));
-        }
-        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
-        {
-            try
-            {
-                if (!timeline.duration.Equals(0))
-                    setDuration(timeline.duration - startDelay);
-                else if (!timeline.endAt.Equals(0))
-                    setDuration(timeline.startAt, timeline.endAt);
+            if (!patternInfo.duration.Equals(0))
+                setDuration(patternInfo.duration - startDelay);
+            else if (!patternInfo.endAt.Equals(0))
+                setDuration(patternInfo.startAt, patternInfo.endAt);
 
-                StartCoroutine(runPattern());
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            coroutine = StartCoroutine(runPattern());
         }
 
         public void setDuration(float duration)
@@ -77,7 +61,7 @@ namespace Stage_2
 
             yield return new WaitForSeconds(1);
 
-            GameObject o = MonoBehaviour.Instantiate(ratSwarm);
+            GameObject o = Instantiate(ratSwarm);
             o.transform.SetParent(parent);
             o.GetComponent<RatSwarm>().setCooltime(startDelay);
             Vector2 pos = new Vector2(0, o.transform.position.y);
@@ -121,6 +105,7 @@ namespace Stage_2
                 Destroy(objectList[i]);
             }
             objectList.Clear();
+            Destroy(gameObject);
         }
     }
 }

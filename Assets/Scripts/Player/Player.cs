@@ -9,6 +9,9 @@ using UnityEngine.U2D.Animation;
 using SceneData;
 using EventManagement;
 using System.Net.Sockets;
+using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UIElements;
+using Cysharp.Threading.Tasks.Triggers;
 
 public class Player : MonoBehaviour
 {
@@ -55,7 +58,9 @@ public class Player : MonoBehaviour
     public float shootCooltime;
 
     Camera mainCamera;
-    GameObject projectile, head, neck;
+    Transform projectile, head, neck;
+    Head headScript;
+    Projectile projectileScript;
     Collider2D hitbox;
     Rigidbody2D rig2D;
     SpriteRenderer[] spriteList;
@@ -66,13 +71,12 @@ public class Player : MonoBehaviour
 
     bool onFired, movable;
     [HideInInspector] public float currentHP, currentStamina;
-    float headCorrectFactor;
     [HideInInspector] public float deathCount;
     [HideInInspector] public bool S_Rank_True;
     Vector3 velocity, currentPosition;
     Coroutine dashCoroutine, dashCooldownCoroutine, shootCooldownCoroutine, invincibilityCoroutine;
 
-    WaitForSeconds invincibleDelay, dashDelay, dashCooldownDelay, shootCooldownDelay;
+    WaitForSeconds invincibleDelay, reviveInvincibleDelay, dashDelay, dashCooldownDelay, shootCooldownDelay;
 
     void Awake()
     {
@@ -82,9 +86,11 @@ public class Player : MonoBehaviour
     public void init()
     {
         mainCamera = Camera.main;
-        projectile = transform.Find("Projectile").gameObject;
-        head = transform.Find("Head").gameObject;
-        neck = head.GetComponent<SpriteSkin>().rootBone.gameObject;
+        projectile = transform.Find("Projectile").transform;
+        projectileScript = projectile.GetComponent<Projectile>();
+        head = transform.Find("Head").transform;
+        headScript = head.GetComponent<Head>();
+        neck = head.GetComponent<SpriteSkin>().rootBone.transform;
 
         rig2D = GetComponent<Rigidbody2D>();
         hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
@@ -93,6 +99,7 @@ public class Player : MonoBehaviour
         eventManager = FindObjectOfType<EventManager>();
 
         invincibleDelay = new WaitForSeconds(invincibleDuration);
+        reviveInvincibleDelay = new WaitForSeconds(3);
         dashDelay = new WaitForSeconds(dashDuration);
         dashCooldownDelay = new WaitForSeconds(dashCooltime);
         shootCooldownDelay = new WaitForSeconds(shootCooltime);
@@ -100,7 +107,6 @@ public class Player : MonoBehaviour
         onFired = false;
         movable = true;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = shootCooldownCoroutine = null;
-        headCorrectFactor = neck.transform.rotation.eulerAngles.z + head.transform.rotation.eulerAngles.z;
         deathCount = 0;
         S_Rank_True = true;
         if (Menu_PlayerTransform.difficulty_num == 0)
@@ -170,8 +176,9 @@ public class Player : MonoBehaviour
                     Debug.Log("not enough stamina!");
                 else if (shootCooldownCoroutine == null)
                 {
-                    Projectile projectile = GameObject.Find("Projectile").GetComponent<Projectile>();
-                    if (!projectile.IsBoneRecovered)
+                    //Projectile projectile = GameObject.Find("Projectile").GetComponent<Projectile>();
+                    //if (!projectile.IsBoneRecovered)
+                    if (!projectileScript.IsBoneRecovered)
                     {
                         return;
                     }
@@ -368,7 +375,7 @@ public class Player : MonoBehaviour
     private void teleportEvent()
     {
         int count = anim.GetInteger("JumpCount");
-        Vector3 pos = projectile.transform.position;
+        Vector3 pos = projectile.position;
         transform.position = pos;
         if (2 <= count)
             anim.SetInteger("JumpCount", count - 1);
@@ -378,7 +385,7 @@ public class Player : MonoBehaviour
     private void shootCancelEvent()
     {
         currentStamina = maxStamina < currentStamina + shootCancelStaminaGen ? maxStamina : currentStamina + shootCancelStaminaGen;
-        projectile.transform.position = neck.transform.position;
+        projectile.position = neck.transform.position;
         onFired = false;
         shootCooldownCoroutine = StartCoroutine(runShootCooldown());
     }
@@ -410,53 +417,54 @@ public class Player : MonoBehaviour
         transform.position = mainCamera.ViewportToWorldPoint(pos);
     }
 
-    /** Flip body if corgi is heading behind or moving to behind. */
 
+    /** Flip body if player is heading behind or moving to behind. */
     private void flipBody()
     {
-        Vector2 vertex1 = (Vector2)transform.position + new Vector2(-1f, 0f); // 왼쪽
-        Vector2 vertex2 = (Vector2)transform.position + new Vector2(0f, 0f); // 아래
-        Vector2 vertex3 = (Vector2)transform.position + new Vector2(1f, 0f);  // 오른쪽
-        Vector2 vertex4 = (Vector2)transform.position + new Vector2(0f, 3f);  // 위
-
+        Vector3 flip, mousePos;
+        float mouseAngle, frontSide, backSide;
+        flip = transform.localScale;    // Player 좌우 반전 여부
+        mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition); // 마우스 좌표
+        mouseAngle = headScript.getHeadingAngle(mainCamera.ScreenToWorldPoint(Input.mousePosition));
         //플레이어 중심(정확한 중심은 아닙니다)을 기준으로 다이아몬드 범위 내에 마우스가 들어오면 플립하지 않도록 수정
-        if (!IsMouseInDiamond(mainCamera.ScreenToWorldPoint(Input.mousePosition), vertex1, vertex2, vertex3, vertex4))
+        if (IsMouseInDiamond(mousePos)) return;
+        
+        /** [ Priority list for flip player - 플립(좌우반전)에 대한 우선순위 리스트 ]
+            1. Mouse Position (마우스 위치)
+                : 만약 마우스가 반대쪽(뒤쪽)을 바라보는 경우, 무조건 좌우반전한다.
+            2. Arrow Key Input(Left/Right) with Mouse Position (좌우키 입력 + 마우스 위치)
+                : 마우스가 반대쪽을 바라보는 경우엔, 키보드 입력에 따라서 플립한다.       */
+        frontSide = flip.x < 0 ? headScript.frontAngle + 180f : headScript.frontAngle;
+        backSide = frontSide + 180f;
+        /** 현재 마우스 위치가 플레이어의 뒤쪽(반대쪽)이라면 : flip 실행 */
+        if (headScript.isBetweenAngles(mouseAngle, backSide - headScript.rotationLimit, backSide + headScript.rotationLimit))
         {
-            // 기존 코드
-            const float detailCorrFactor = 16f;
-            Vector3 flip = transform.localScale;
-
-            float rot = neck.transform.localRotation.eulerAngles.z - headCorrectFactor + detailCorrFactor;
-            rot = 0 <= rot ? rot % 360 : rot % 360 + 360;
-            if (110 < rot && rot < 250)
-            {
-                flip.x = flip.x * -1;
-            }
-            else if (70 < rot && rot < 290)
-            {
-                int xInput = (int)Input.GetAxisRaw("Horizontal");
-                switch (xInput)
-                {
-                    case -1:
-                        flip.x = Mathf.Abs(flip.x) * -1;
-                        break;
-                    case 1:
-                        flip.x = Mathf.Abs(flip.x);
-                        break;
-                }
-            }
-            transform.localScale = flip;
+            flip.x = flip.x * -1;
         }
+        /** 현재 마우스 위치가 목이 꺾이는 각도의 위치라면 : 키보드 좌우 입력대로 flip 실행 */
+        else if (!headScript.isBetweenAngles(mouseAngle, frontSide - headScript.rotationLimit, frontSide + headScript.rotationLimit))
+        {
+            int xInput = (int)Input.GetAxisRaw("Horizontal");
+            /** It works(flips) only there is keyboard input - 오직 키보드 입력이 있을때만 작동함.  */
+            if (xInput != 0)
+            {
+                flip.x = 0 < xInput ? Mathf.Abs(flip.x) : -Mathf.Abs(flip.x);
+            }
+        }
+        transform.localScale = flip;
     }
 
-    bool IsMouseInDiamond(Vector2 mousePosition, Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4)
+    bool IsMouseInDiamond(Vector2 mousePosition)
     {
+        Vector2 v1 = (Vector2)transform.position + new Vector2(-1f, 0f), // 왼쪽
+                v2 = (Vector2)transform.position + new Vector2(0f, 0f), // 아래
+                v3 = (Vector2)transform.position + new Vector2(1f, 0f),  // 오른쪽
+                v4 = (Vector2)transform.position + new Vector2(0f, 3f);  // 위
         // 다이아몬드 모양 범위 내에 있는지 확인
         if (IsPointInTriangle(mousePosition, v1, v2, v3) || IsPointInTriangle(mousePosition, v1, v3, v4))
         {
             return true;
         }
-
         return false;
     }
 
@@ -540,14 +548,29 @@ public class Player : MonoBehaviour
                 transform.position += new Vector3(bosscollider2D_size.x - Mathf.Abs(transform.position.x), 0f, 0f);
             }
         }
+        else
+        {
+            /* 기본적으로 부활 시 x좌표를 0으로 변경 */
+            Vector3 v = transform.position;
+            v.x = 0;
+            transform.position = v;
+        }
 
-        StartCoroutine(reviveEventCoroutine());
+        StartCoroutine(reviveCoroutine());
     }
 
-    private IEnumerator reviveEventCoroutine()
+    private IEnumerator reviveCoroutine()
     {
-        yield return new WaitForSeconds(1f);
+        /* revive 이벤트 1초뒤에 음악이 시작됨, 또 1초동안 경고등 표시됨 */
+        yield return new WaitForSeconds(2);
         anim.ResetTrigger("Revive");
+
+        /* 부활 무적 발동 - 'reviveInvincibleDelay' 시간만큼 무적 발동 */
+        hitbox.enabled = false;
+        setAlpha(0.5f);
+        yield return reviveInvincibleDelay;
+        hitbox.enabled = true;
+        setAlpha(1f);
     }
 
     private IEnumerator activateInvincibility()

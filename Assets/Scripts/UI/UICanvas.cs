@@ -28,6 +28,7 @@ public class UICanvas : MonoBehaviour
         [Header("Sub Transform")]
         public Transform dashTimer;
         public Transform hitTimer;
+        public Transform basicTimer;
     }
 
     [SerializeField] GameObject warningBoxPrefab, warningArrowPrefab;
@@ -36,17 +37,13 @@ public class UICanvas : MonoBehaviour
 
     Player player;
     EventManager eventManager;
-    Image darkImage, redImage, clearSpotlightImage, dashTimerImage, hitTimerImage;
+    Image darkImage, redImage, clearSpotlightImage, dashTimerImage, hitTimerImage, basicTimerImage;
     Color c;
     CanvasScaler overlayCanvasScaler;
+    WaitForSeconds reviveDelay;
     Vector2 baseResolution, currentResolution;
 
     void Awake()
-    {
-        init();
-    }
-
-    public void init()
     {
         baseResolution = new Vector2(1920, 1080);
         currentResolution = new Vector2(Screen.width, Screen.height);
@@ -55,10 +52,12 @@ public class UICanvas : MonoBehaviour
         overlayCanvasScaler = overlayCanvas.overlayCanvas.GetComponent<CanvasScaler>();
 
         darkImage = overlayCanvas.darkEffect.GetComponent<Image>();
-        redImage= overlayCanvas.redEffect.GetComponent<Image>();
+        redImage = overlayCanvas.redEffect.GetComponent<Image>();
         clearSpotlightImage = overlayCanvas.clearSpotlight.GetComponent<Image>();
         dashTimerImage = worldSpaceCanvas.dashTimer.GetComponent<Image>();
         hitTimerImage = worldSpaceCanvas.hitTimer.GetComponent<Image>();
+        basicTimerImage = worldSpaceCanvas.basicTimer.GetComponent<Image>();
+        reviveDelay = new WaitForSeconds(2);
 
         eventManager.stageEvent.warnWithBox += warnWithBox;
         eventManager.stageEvent.pauseEvent += enableBlindEvent;
@@ -253,6 +252,14 @@ public class UICanvas : MonoBehaviour
         hitTimerImage.fillAmount = 0;
         setImageAlpha(ref redImage, 0);
         eventManager.uiEvent.fadeOutEvent();
+
+        StartCoroutine(reviveCoroutine());
+    }
+
+    private IEnumerator reviveCoroutine()
+    {
+        yield return reviveDelay;
+        StartCoroutine(runTimer(basicTimerImage, 3));
     }
 
     public void warnWithBox(Vector3 pos, Vector3 size)

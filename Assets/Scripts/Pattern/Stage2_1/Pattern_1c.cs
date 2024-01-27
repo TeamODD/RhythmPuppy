@@ -1,47 +1,46 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using Patterns;
+using Unity.VisualScripting;
 using UnityEngine;
 using EventManagement;
+using static EventManagement.StageEvent;
 using System.Collections;
 
 namespace Stage_2
 {
-    public class Pattern_1a : MonoBehaviour
+    public class Pattern_1c : MonoBehaviour
     {
-        public PatternPlaylist patternPlaylist;
         public GameObject cat;
 
         EventManager eventManager;
         List<GameObject> objectList;
         AudioSource audioSource;
         Coroutine coroutine;
+        PatternInfo patternInfo;
+        Vector3 warnBoxPos, warnBoxSize;
 
-        void Awake()
+        void Start()
         {
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
-            init();
-        }
-
-        public void init()
-        {
             this.objectList = new List<GameObject>();
-            patternPlaylist.init(action);
-            patternPlaylist.sortTimeline();
+            patternInfo = GetComponent<PatternBase>().patternInfo;
+            warnBoxPos = new Vector3(0, 0, 0);
+            warnBoxSize = new Vector3(300, 700, 0);
 
-            coroutine = StartCoroutine(patternPlaylist.Run(audioSource.time));
+            eventManager.playerEvent.deathEvent += deathEvent;
+
+            coroutine = StartCoroutine(runPattern());
         }
 
-        void OnDestroy()
-        {
-            StopCoroutine(coroutine);
-        }
-
-        public bool action(PatternPlaylist patternPlaylist, Timeline timeline)
+        public bool action(PatternInfo patterninfo)
         {
             try
             {
-                StartCoroutine(createObjects());
+                StartCoroutine(runPattern());
                 return true;
             }
             catch
@@ -49,13 +48,20 @@ namespace Stage_2
                 return false;
             }
         }
+
+        private IEnumerator runPattern()
+        {
+            StartCoroutine(createObjects());
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(createObjects());
+        }
         private IEnumerator createObjects()
         {
-            float r = Random.Range(-8f, 8f);
+            float r = UnityEngine.Random.Range(-8f, 8f);
 
-            if (gameObject != null) warn(r);
+            warn(r);
             yield return new WaitForSeconds(1);
-            if (gameObject != null) createCat(r);
+            createCat(r);
         }
 
         private void createCat(float x)
@@ -69,18 +75,20 @@ namespace Stage_2
 
         private void warn(float x)
         {
-            Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, 0));
-            eventManager.stageEvent.warnWithBox(v, new Vector3(300, 1080, 0));
+            warnBoxPos.x = x;
+            warnBoxPos = Camera.main.WorldToScreenPoint(warnBoxPos);
+            warnBoxPos.y = 810;
+            eventManager.stageEvent.warnWithBox(warnBoxPos, warnBoxSize);
         }
 
         public void deathEvent()
         {
-            StopCoroutine(coroutine);
             for (int i = 0; i < objectList.Count; i++)
             {
                 Destroy(objectList[i]);
             }
             objectList.Clear();
+            Destroy(gameObject);
         }
     }
 }
