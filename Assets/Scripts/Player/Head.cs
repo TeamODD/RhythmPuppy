@@ -20,16 +20,9 @@ public class Head : MonoBehaviour
     [SerializeField] Face face;
     [SerializeField] Sprite sweat;
 
-    /* The angle Player heads to front normally
-     * 플레이어가 자연스럽게 앞을 보게 되는 각도  */
-    public float frontAngle {
-        get
-        {
-            if (player.localScale.x < 0)
-                return 130f;
-            return 50f;
-        }
-    }
+    /* Angles Player heads to front normally, and when flipped.
+     * 플레이어가 자연스럽게 앞을 보게 되는 각도와, 플립(좌우반전)되었을 때 앞을 보는 각도 */
+    public float frontAngle { get => 50f; }
     /* Limit of head rotation angle (half of each side)
      * Head의 회전 가능한 각도 */
     public float rotationLimit { get => 55f; }
@@ -87,30 +80,40 @@ public class Head : MonoBehaviour
 
     private void lookAt(Vector3 target)
     {
-        Vector3 headDir = target - neck.position;
-        float targetAngle, rotLimit;
-
-        targetAngle = Mathf.Atan2(headDir.y, headDir.x) * Mathf.Rad2Deg + frontAngle;
-        rotLimit = player.localScale.x < 0 ? -rotationLimit : rotationLimit;
+        float targetAngle = getHeadingAngle(target), fixedFrontAngle;
+        fixedFrontAngle = player.localScale.x < 0 ? 180 + frontAngle : frontAngle;
+ 
         /* If neck is broken - 만약 목이 비정상적으로 꺾였다면 */
-        if (!isBetweenAngles(targetAngle, frontAngle-rotLimit, frontAngle+rotLimit))
+        if (!isBetweenAngles(targetAngle, fixedFrontAngle - rotationLimit, fixedFrontAngle + rotationLimit))
         {
-            if (targetAngle < frontAngle)
-                targetAngle = frontAngle - rotationLimit;
+            /** 현재 각도에 알맞은 최대(한계치) 각도로 설정 후 적용 */
+            if (targetAngle < fixedFrontAngle)
+                targetAngle = fixedFrontAngle - rotationLimit;
             else
-                targetAngle = frontAngle + rotationLimit;
+                targetAngle = fixedFrontAngle + rotationLimit;
         }
-        Debug.Log(string.Format("[{0}] frontAngle : {1}, target : {2}", Time.deltaTime, frontAngle, targetAngle));
         neck.rotation = Quaternion.Euler(0, 0, getPositiveAngle(targetAngle));
     }
 
-    public bool isBetweenAngles(float targetAngle, float lowAngle, float highAngle)
+    public float getHeadingAngle(Vector3 target)
     {
-        float fixedTargetAngle = getPositiveAngle(targetAngle - lowAngle);
-        return 0 < fixedTargetAngle && fixedTargetAngle < getPositiveAngle(highAngle - lowAngle);
+        Vector3 headDir = target - neck.position;
+        return Mathf.Atan2(headDir.y, headDir.x) * Mathf.Rad2Deg + frontAngle;
     }
 
-    private float getPositiveAngle(float angle)
+    public bool isBetweenAngles(float target, float angleA, float angleB)
+    {
+        float fixedTarget, low = angleA, high = angleB;
+        if (angleA > angleB)
+        {
+            low = angleB;
+            high = angleA;
+        }
+        fixedTarget = getPositiveAngle(target - low);
+        return 0 < fixedTarget && fixedTarget < getPositiveAngle(high - low);
+    }
+
+    public float getPositiveAngle(float angle)
     {
         return angle < 0 ? (angle % 360) + 360 : angle % 360;
     }

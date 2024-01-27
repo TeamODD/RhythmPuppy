@@ -11,6 +11,7 @@ using EventManagement;
 using System.Net.Sockets;
 using static UnityEngine.GraphicsBuffer;
 using UnityEngine.UIElements;
+using Cysharp.Threading.Tasks.Triggers;
 
 public class Player : MonoBehaviour
 {
@@ -416,53 +417,54 @@ public class Player : MonoBehaviour
         transform.position = mainCamera.ViewportToWorldPoint(pos);
     }
 
-    /** Flip body if corgi is heading behind or moving to behind. */
 
+    /** Flip body if player is heading behind or moving to behind. */
     private void flipBody()
     {
-        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 vertex1 = (Vector2)transform.position + new Vector2(-1f, 0f); // 왼쪽
-        Vector2 vertex2 = (Vector2)transform.position + new Vector2(0f, 0f); // 아래
-        Vector2 vertex3 = (Vector2)transform.position + new Vector2(1f, 0f);  // 오른쪽
-        Vector2 vertex4 = (Vector2)transform.position + new Vector2(0f, 3f);  // 위
+        /** [ Priority list for flip player : 플립(좌우반전)에 대한 우선순위 리스트 ]
+         
+            1. Mouse Position (마우스 위치) 
+                : If the mouse is facing the opposite direction, it will always flip. 
+                    (만약 마우스가 반대쪽(뒤쪽)을 바라보는 경우, 무조건 좌우반전한다.)
 
+            2. Arrow Key Input(Left/Right) with Mouse Position (좌우키 입력 + 마우스 위치)
+                : If mouse is heading where player's head cannot rotate, it flips according to arrow key input.
+                    (마우스가 반대쪽을 바라보는 경우엔, 키보드 입력에 따라서 플립한다)
+        */
+        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition), // 마우스 좌표
+                flip = transform.localScale;    // Player 좌우 반전 여부
+        float mouseAngle, frontAngle, backSide;
         //플레이어 중심(정확한 중심은 아닙니다)을 기준으로 다이아몬드 범위 내에 마우스가 들어오면 플립하지 않도록 수정
-        if (IsMouseInDiamond(mousePos, vertex1, vertex2, vertex3, vertex4))
-            return;
+        if (IsMouseInDiamond(mousePos)) return;
         
-        // 기존 코드
-        Vector3 flip = transform.localScale, headDir;
-        float mouseAngle, backSide, frontSide = headScript.frontAngle;
-
-        headDir = mousePos - neck.position;
-        mouseAngle = Mathf.Atan2(headDir.y, headDir.x) * Mathf.Rad2Deg + 360;
-        if (flip.x < 0)
-            backSide = 0f;
-        else
-            backSide = 180f;
-
+        /** 기존 코드 (flip 동작 코드) */
+        mouseAngle = headScript.getHeadingAngle(mousePos);
+        frontAngle = flip.x < 0 ? 180 + headScript.frontAngle : headScript.frontAngle;
+        backSide = 180f + frontAngle;
+        /** 현재 마우스 위치가 플레이어의 뒤쪽(반대쪽)이라면 : flip 실행 */
         if (headScript.isBetweenAngles(mouseAngle, backSide - headScript.rotationLimit, backSide + headScript.rotationLimit))
         {
             flip.x = flip.x * -1;
         }
-        else if (!headScript.isBetweenAngles(mouseAngle, frontSide - headScript.rotationLimit, frontSide + headScript.rotationLimit))
+        /** 현재 마우스 위치가 목이 꺾이는 각도의 위치라면 : 키보드 좌우 입력대로 flip 실행 */
+        else if (!headScript.isBetweenAngles(mouseAngle, frontAngle - headScript.rotationLimit, frontAngle + headScript.rotationLimit))
         {
             int xInput = (int)Input.GetAxisRaw("Horizontal");
-            switch (xInput)
-            {
-                case -1:
-                    flip.x = Mathf.Abs(flip.x) * -1;
-                    break;
-                case 1:
-                    flip.x = Mathf.Abs(flip.x);
-                    break;
-            }
+            flip.x = Mathf.Abs(flip.x);
+            if (xInput < 0) flip.x = -flip.x;
         }
+        Debug.Log(string.Format("[{0}] backSide : {1}, mouse : {2}", Time.deltaTime, headScript.getPositiveAngle(backSide), headScript.getPositiveAngle(mouseAngle)));
+
+        return;
         transform.localScale = flip;
     }
 
-    bool IsMouseInDiamond(Vector2 mousePosition, Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4)
+    bool IsMouseInDiamond(Vector2 mousePosition)
     {
+        Vector2 v1 = (Vector2)transform.position + new Vector2(-1f, 0f), // 왼쪽
+                v2 = (Vector2)transform.position + new Vector2(0f, 0f), // 아래
+                v3 = (Vector2)transform.position + new Vector2(1f, 0f),  // 오른쪽
+                v4 = (Vector2)transform.position + new Vector2(0f, 3f);  // 위
         // 다이아몬드 모양 범위 내에 있는지 확인
         if (IsPointInTriangle(mousePosition, v1, v2, v3) || IsPointInTriangle(mousePosition, v1, v3, v4))
         {
