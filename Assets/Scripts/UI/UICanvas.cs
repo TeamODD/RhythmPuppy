@@ -4,16 +4,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static EventManagement.StageEvent;
-using static UIEvent;
 
 public class UICanvas : MonoBehaviour
 {
     [Serializable]
     struct OverlayCanvas
     {
-        [Header("Main Transform")]
+        [Header("Main(Canvas) Transform")]
         public Transform overlayCanvas;
+        public Transform screenEfffectCanvas;
+        public Transform warningCanvas;
         [Header("Sub Transform")]
         public Transform darkEffect;
         public Transform redEffect;
@@ -264,7 +264,7 @@ public class UICanvas : MonoBehaviour
     public void warnWithBox(Vector3 pos, Vector3 size)
     {
         GameObject o = Instantiate(warningBoxPrefab);
-        o.transform.SetParent(overlayCanvas.overlayCanvas);
+        o.transform.SetParent(overlayCanvas.warningCanvas);
         o.transform.position = pos;
         o.transform.localScale = size;
         o.SetActive(true);

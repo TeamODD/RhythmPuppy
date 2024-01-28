@@ -29,7 +29,7 @@ namespace Stage_2
             this.objectList = new List<GameObject>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
             warnBoxPos = new Vector3(0, 0, 0);
-            warnBoxSize = new Vector3(300, 700, 0);
+            warnBoxSize = new Vector3(200, 700, 0);
 
             eventManager.playerEvent.deathEvent += deathEvent;
 
@@ -77,7 +77,7 @@ namespace Stage_2
         {
             warnBoxPos.x = x;
             warnBoxPos = Camera.main.WorldToScreenPoint(warnBoxPos);
-            warnBoxPos.y = 810;
+            warnBoxPos.y = 395;
             eventManager.stageEvent.warnWithBox(warnBoxPos, warnBoxSize);
         }
 
