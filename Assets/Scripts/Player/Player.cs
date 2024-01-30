@@ -52,9 +52,9 @@ public class Player : MonoBehaviour
     float shootStaminaCost;
     [SerializeField]
     float shootCancelStaminaGen;
-    [Tooltip("íˆ¬ì‚¬ì²´ ë°œì‚¬ ì‹œ ì ìš©ë˜ëŠ” í˜(Force)")]
+    [Tooltip("Åõ»çÃ¼ ¹ß»ç ½Ã Àû¿ëµÇ´Â Èû(Force)")]
     public float shootForce;
-    [Tooltip("ë°œì‚¬ ì¢…ë£Œ í›„ ì¬ì‚¬ìš© ëŒ€ê¸°ì‹œê°„")]
+    [Tooltip("¹ß»ç Á¾·á ÈÄ Àç»ç¿ë ´ë±â½Ã°£")]
     public float shootCooltime;
 
     Camera mainCamera;
@@ -111,7 +111,7 @@ public class Player : MonoBehaviour
         S_Rank_True = true;
         if (Menu_PlayerTransform.difficulty_num == 0)
             maxHP = 6;
-        currentHP = maxHP;   
+        currentHP = maxHP;
         currentStamina = maxStamina;
 
         anim.ResetTrigger("Jump");
@@ -137,7 +137,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Dash"))
         {
-            //í…”ë ˆí¬íŠ¸ íŠœí† ë¦¬ì–¼ ì¤‘ ëŒ€ì‰¬ ì‚¬ìš© ë°©ì§€ì½”ë“œ
+            //ÅÚ·¹Æ÷Æ® Æ©Åä¸®¾ó Áß ´ë½¬ »ç¿ë ¹æÁöÄÚµå
             if (GameObject.Find("Tutorials2Manager") != null)
             {
                 tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
@@ -146,8 +146,8 @@ public class Player : MonoBehaviour
                     return;
                 }
             }
-                
-            //ì •ìƒì½”ë“œ
+
+            //Á¤»óÄÚµå
             if (currentStamina < dashStaminaCost)
                 Debug.Log("not enough stamina!");
             else if (!Input.GetAxisRaw("Horizontal").Equals(0) && dashCoroutine == null && dashCooldownCoroutine == null)
@@ -160,7 +160,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonDown("Shoot"))
         {
-            //í…”ë ˆí¬íŠ¸ ì‚¬ìš© ë°©ì§€ì½”ë“œ
+            //ÅÚ·¹Æ÷Æ® »ç¿ë ¹æÁöÄÚµå
             if (GameObject.Find("Tutorials2Manager") != null)
             {
                 tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
@@ -184,7 +184,7 @@ public class Player : MonoBehaviour
                     }
                     eventManager.playerEvent.shootEvent();
                 }
-                    
+
             }
             else
             {
@@ -197,17 +197,17 @@ public class Player : MonoBehaviour
                 eventManager.playerEvent.shootCancelEvent();
         }
 
-        if (Input.GetKey(KeyCode.F1)&&Input.GetKeyDown(KeyCode.F12))
+        if (Input.GetKey(KeyCode.F1) && Input.GetKeyDown(KeyCode.F12))
         {
-            if (transform.Find("ëª¸/Hitbox").GetComponent<CapsuleCollider2D>().enabled)
+            if (transform.Find("¸ö/Hitbox").GetComponent<CapsuleCollider2D>().enabled)
             {
-                transform.Find("ëª¸/Hitbox").GetComponent<CapsuleCollider2D>().enabled = false;
-                Debug.Log("ê°œë°œìëª¨ë“œ í™œì„±í™”");
+                transform.Find("¸ö/Hitbox").GetComponent<CapsuleCollider2D>().enabled = false;
+                Debug.Log("°³¹ßÀÚ¸ğµå È°¼ºÈ­");
             }
             else
             {
-                transform.Find("ëª¸/Hitbox").GetComponent<CapsuleCollider2D>().enabled = true;
-                Debug.Log("ê°œë°œìëª¨ë“œ ë¹„í™œì„±í™”");
+                transform.Find("¸ö/Hitbox").GetComponent<CapsuleCollider2D>().enabled = true;
+                Debug.Log("°³¹ßÀÚ¸ğµå ºñÈ°¼ºÈ­");
             }
         }
     }
@@ -312,7 +312,7 @@ public class Player : MonoBehaviour
 
     private bool isJump()
     {
-        const float margin = 0.05f; //ì í”„í–ˆë‹¤ê³  íŒë‹¨í•˜ëŠ” ìµœì†Œ ì†ë„
+        const float margin = 0.05f; //Á¡ÇÁÇß´Ù°í ÆÇ´ÜÇÏ´Â ÃÖ¼Ò ¼Óµµ
 
         if (Mathf.Abs(rig2D.velocity.y) < margin)
         {
@@ -347,7 +347,7 @@ public class Player : MonoBehaviour
 
     private void evade(Collider2D c)
     {
-        Debug.Log(string.Format("[{0}] {1}", Time.time, "íšŒí”¼!"));
+        Debug.Log(string.Format("[{0}] {1}", Time.time, "È¸ÇÇ!"));
         currentStamina = maxStamina < currentStamina + dashEvasionGen ? maxStamina : currentStamina + dashEvasionGen;
         StartCoroutine(delayCollision(c, dashDelay));
     }
@@ -392,7 +392,7 @@ public class Player : MonoBehaviour
 
     private void checkJumpStatus()
     {
-        if(isJump())
+        if (isJump())
         {
             if (anim.GetInteger("JumpCount").Equals(0))
             {
@@ -423,29 +423,29 @@ public class Player : MonoBehaviour
     {
         Vector3 flip, mousePos;
         float mouseAngle, frontSide, backSide;
-        flip = transform.localScale;    // Player ì¢Œìš° ë°˜ì „ ì—¬ë¶€
-        mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition); // ë§ˆìš°ìŠ¤ ì¢Œí‘œ
+        flip = transform.localScale;    // Player ÁÂ¿ì ¹İÀü ¿©ºÎ
+        mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition); // ¸¶¿ì½º ÁÂÇ¥
         mouseAngle = headScript.getHeadingAngle(mainCamera.ScreenToWorldPoint(Input.mousePosition));
-        //í”Œë ˆì´ì–´ ì¤‘ì‹¬(ì •í™•í•œ ì¤‘ì‹¬ì€ ì•„ë‹™ë‹ˆë‹¤)ì„ ê¸°ì¤€ìœ¼ë¡œ ë‹¤ì´ì•„ëª¬ë“œ ë²”ìœ„ ë‚´ì— ë§ˆìš°ìŠ¤ê°€ ë“¤ì–´ì˜¤ë©´ í”Œë¦½í•˜ì§€ ì•Šë„ë¡ ìˆ˜ì •
+        //ÇÃ·¹ÀÌ¾î Áß½É(Á¤È®ÇÑ Áß½ÉÀº ¾Æ´Õ´Ï´Ù)À» ±âÁØÀ¸·Î ´ÙÀÌ¾Æ¸óµå ¹üÀ§ ³»¿¡ ¸¶¿ì½º°¡ µé¾î¿À¸é ÇÃ¸³ÇÏÁö ¾Êµµ·Ï ¼öÁ¤
         if (IsMouseInDiamond(mousePos)) return;
-        
-        /** [ Priority list for flip player - í”Œë¦½(ì¢Œìš°ë°˜ì „)ì— ëŒ€í•œ ìš°ì„ ìˆœìœ„ ë¦¬ìŠ¤íŠ¸ ]
-            1. Mouse Position (ë§ˆìš°ìŠ¤ ìœ„ì¹˜)
-                : ë§Œì•½ ë§ˆìš°ìŠ¤ê°€ ë°˜ëŒ€ìª½(ë’¤ìª½)ì„ ë°”ë¼ë³´ëŠ” ê²½ìš°, ë¬´ì¡°ê±´ ì¢Œìš°ë°˜ì „í•œë‹¤.
-            2. Arrow Key Input(Left/Right) with Mouse Position (ì¢Œìš°í‚¤ ì…ë ¥ + ë§ˆìš°ìŠ¤ ìœ„ì¹˜)
-                : ë§ˆìš°ìŠ¤ê°€ ë°˜ëŒ€ìª½ì„ ë°”ë¼ë³´ëŠ” ê²½ìš°ì—”, í‚¤ë³´ë“œ ì…ë ¥ì— ë”°ë¼ì„œ í”Œë¦½í•œë‹¤.       */
+
+        /** [ Priority list for flip player - ÇÃ¸³(ÁÂ¿ì¹İÀü)¿¡ ´ëÇÑ ¿ì¼±¼øÀ§ ¸®½ºÆ® ]
+            1. Mouse Position (¸¶¿ì½º À§Ä¡)
+                : ¸¸¾à ¸¶¿ì½º°¡ ¹İ´ëÂÊ(µÚÂÊ)À» ¹Ù¶óº¸´Â °æ¿ì, ¹«Á¶°Ç ÁÂ¿ì¹İÀüÇÑ´Ù.
+            2. Arrow Key Input(Left/Right) with Mouse Position (ÁÂ¿ìÅ° ÀÔ·Â + ¸¶¿ì½º À§Ä¡)
+                : ¸¶¿ì½º°¡ ¹İ´ëÂÊÀ» ¹Ù¶óº¸´Â °æ¿ì¿£, Å°º¸µå ÀÔ·Â¿¡ µû¶ó¼­ ÇÃ¸³ÇÑ´Ù.       */
         frontSide = flip.x < 0 ? headScript.frontAngle + 180f : headScript.frontAngle;
         backSide = frontSide + 180f;
-        /** í˜„ì¬ ë§ˆìš°ìŠ¤ ìœ„ì¹˜ê°€ í”Œë ˆì´ì–´ì˜ ë’¤ìª½(ë°˜ëŒ€ìª½)ì´ë¼ë©´ : flip ì‹¤í–‰ */
+        /** ÇöÀç ¸¶¿ì½º À§Ä¡°¡ ÇÃ·¹ÀÌ¾îÀÇ µÚÂÊ(¹İ´ëÂÊ)ÀÌ¶ó¸é : flip ½ÇÇà */
         if (headScript.isBetweenAngles(mouseAngle, backSide - headScript.rotationLimit, backSide + headScript.rotationLimit))
         {
             flip.x = flip.x * -1;
         }
-        /** í˜„ì¬ ë§ˆìš°ìŠ¤ ìœ„ì¹˜ê°€ ëª©ì´ êº¾ì´ëŠ” ê°ë„ì˜ ìœ„ì¹˜ë¼ë©´ : í‚¤ë³´ë“œ ì¢Œìš° ì…ë ¥ëŒ€ë¡œ flip ì‹¤í–‰ */
+        /** ÇöÀç ¸¶¿ì½º À§Ä¡°¡ ¸ñÀÌ ²ªÀÌ´Â °¢µµÀÇ À§Ä¡¶ó¸é : Å°º¸µå ÁÂ¿ì ÀÔ·Â´ë·Î flip ½ÇÇà */
         else if (!headScript.isBetweenAngles(mouseAngle, frontSide - headScript.rotationLimit, frontSide + headScript.rotationLimit))
         {
             int xInput = (int)Input.GetAxisRaw("Horizontal");
-            /** It works(flips) only there is keyboard input - ì˜¤ì§ í‚¤ë³´ë“œ ì…ë ¥ì´ ìˆì„ë•Œë§Œ ì‘ë™í•¨.  */
+            /** It works(flips) only there is keyboard input - ¿ÀÁ÷ Å°º¸µå ÀÔ·ÂÀÌ ÀÖÀ»¶§¸¸ ÀÛµ¿ÇÔ.  */
             if (xInput != 0)
             {
                 flip.x = 0 < xInput ? Mathf.Abs(flip.x) : -Mathf.Abs(flip.x);
@@ -456,11 +456,11 @@ public class Player : MonoBehaviour
 
     bool IsMouseInDiamond(Vector2 mousePosition)
     {
-        Vector2 v1 = (Vector2)transform.position + new Vector2(-1f, 0f), // ì™¼ìª½
-                v2 = (Vector2)transform.position + new Vector2(0f, 0f), // ì•„ë˜
-                v3 = (Vector2)transform.position + new Vector2(1f, 0f),  // ì˜¤ë¥¸ìª½
-                v4 = (Vector2)transform.position + new Vector2(0f, 3f);  // ìœ„
-        // ë‹¤ì´ì•„ëª¬ë“œ ëª¨ì–‘ ë²”ìœ„ ë‚´ì— ìˆëŠ”ì§€ í™•ì¸
+        Vector2 v1 = (Vector2)transform.position + new Vector2(-1f, 0f), // ¿ŞÂÊ
+                v2 = (Vector2)transform.position + new Vector2(0f, 0f), // ¾Æ·¡
+                v3 = (Vector2)transform.position + new Vector2(1f, 0f),  // ¿À¸¥ÂÊ
+                v4 = (Vector2)transform.position + new Vector2(0f, 3f);  // À§
+        // ´ÙÀÌ¾Æ¸óµå ¸ğ¾ç ¹üÀ§ ³»¿¡ ÀÖ´ÂÁö È®ÀÎ
         if (IsPointInTriangle(mousePosition, v1, v2, v3) || IsPointInTriangle(mousePosition, v1, v3, v4))
         {
             return true;
@@ -468,7 +468,7 @@ public class Player : MonoBehaviour
         return false;
     }
 
-    // ì‚¼ê°í˜•ì˜ ë‚´ë¶€ì— ì ì´ ìˆëŠ”ì§€ í™•ì¸í•˜ëŠ” í•¨ìˆ˜
+    // »ï°¢ÇüÀÇ ³»ºÎ¿¡ Á¡ÀÌ ÀÖ´ÂÁö È®ÀÎÇÏ´Â ÇÔ¼ö
     bool IsPointInTriangle(Vector2 point, Vector2 p1, Vector2 p2, Vector2 p3)
     {
         float denominator = ((p2.y - p3.y) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.y - p3.y));
@@ -535,22 +535,22 @@ public class Player : MonoBehaviour
         anim.ResetTrigger("Death");
         anim.SetTrigger("Revive");
 
-        if (GameObject.FindGameObjectWithTag("Boss")!=null) //Bossíƒœê·¸ë¥¼ ë‹¨ ì˜¤ë¸Œì íŠ¸ê°€ ìˆëŠ” ìŠ¤í…Œì´ì§€ì—ì„œ ì£½ì—ˆê³ ,
+        if (GameObject.FindGameObjectWithTag("Boss") != null) //BossÅÂ±×¸¦ ´Ü ¿ÀºêÁ§Æ®°¡ ÀÖ´Â ½ºÅ×ÀÌÁö¿¡¼­ Á×¾ú°í,
         {
             BoxCollider2D bosscollider2D = GameObject.FindGameObjectWithTag("Boss").transform.GetChild(0).GetComponent<BoxCollider2D>();
             Vector2 bosscollider2D_size = bosscollider2D.size;
-            if (-bosscollider2D_size.x <= transform.position.x) //ë³´ìŠ¤ì˜ ì™¼ìª½ì— ì£½ì—ˆìœ¼ë©´
+            if (-bosscollider2D_size.x <= transform.position.x) //º¸½ºÀÇ ¿ŞÂÊ¿¡ Á×¾úÀ¸¸é
             {
                 transform.position -= new Vector3(bosscollider2D_size.x - Mathf.Abs(transform.position.x), 0f, 0f);
             }
-            else if (transform.position.x < bosscollider2D_size.x) //ë³´ìŠ¤ì˜ ì˜¤ë¥¸ìª½ì— ì£½ì—ˆìœ¼ë©´
+            else if (transform.position.x < bosscollider2D_size.x) //º¸½ºÀÇ ¿À¸¥ÂÊ¿¡ Á×¾úÀ¸¸é
             {
                 transform.position += new Vector3(bosscollider2D_size.x - Mathf.Abs(transform.position.x), 0f, 0f);
             }
         }
         else
         {
-            /* ê¸°ë³¸ì ìœ¼ë¡œ ë¶€í™œ ì‹œ xì¢Œí‘œë¥¼ 0ìœ¼ë¡œ ë³€ê²½ */
+            /* ±âº»ÀûÀ¸·Î ºÎÈ° ½Ã xÁÂÇ¥¸¦ 0À¸·Î º¯°æ */
             Vector3 v = transform.position;
             v.x = 0;
             transform.position = v;
@@ -561,11 +561,11 @@ public class Player : MonoBehaviour
 
     private IEnumerator reviveCoroutine()
     {
-        /* revive ì´ë²¤íŠ¸ 1ì´ˆë’¤ì— ìŒì•…ì´ ì‹œì‘ë¨, ë˜ 1ì´ˆë™ì•ˆ ê²½ê³ ë“± í‘œì‹œë¨ */
+        /* revive ÀÌº¥Æ® 1ÃÊµÚ¿¡ À½¾ÇÀÌ ½ÃÀÛµÊ, ¶Ç 1ÃÊµ¿¾È °æ°íµî Ç¥½ÃµÊ */
         yield return new WaitForSeconds(2);
         anim.ResetTrigger("Revive");
 
-        /* ë¶€í™œ ë¬´ì  ë°œë™ - 'reviveInvincibleDelay' ì‹œê°„ë§Œí¼ ë¬´ì  ë°œë™ */
+        /* ºÎÈ° ¹«Àû ¹ßµ¿ - 'reviveInvincibleDelay' ½Ã°£¸¸Å­ ¹«Àû ¹ßµ¿ */
         hitbox.enabled = false;
         setAlpha(0.5f);
         yield return reviveInvincibleDelay;
@@ -580,7 +580,7 @@ public class Player : MonoBehaviour
         yield return invincibleDelay;
         hitbox.enabled = true;
         setAlpha(1f);
-        invincibilityCoroutine = null; 
+        invincibilityCoroutine = null;
     }
 
     private void setAlpha(float a)
@@ -588,7 +588,7 @@ public class Player : MonoBehaviour
         const int exceptSortingIndex = 100;
         Color c;
 
-        for(int i=0; i< spriteList.Length; i++)
+        for (int i = 0; i < spriteList.Length; i++)
         {
             if (spriteList[i].sortingOrder.Equals(exceptSortingIndex)) continue;
             c = spriteList[i].color;
