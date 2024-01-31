@@ -8,10 +8,6 @@ using UnityEngine.U2D.Animation;
 
 using SceneData;
 using EventManagement;
-using System.Net.Sockets;
-using static UnityEngine.GraphicsBuffer;
-using UnityEngine.UIElements;
-using Cysharp.Threading.Tasks.Triggers;
 
 public class Player : MonoBehaviour
 {
@@ -57,8 +53,18 @@ public class Player : MonoBehaviour
     [Tooltip("발사 종료 후 재사용 대기시간")]
     public float shootCooltime;
 
+    public float currentHP { get; private set; }
+    public float currentStamina { get; private set; }
+    public float deathCount { get; private set; }
+    public bool S_Rank_True { get; private set; }
+
+    public Transform projectile { get; private set; }
+    public Transform head { get; private set; }
+    public Transform neck { get; private set; }
+    public Transform uiCanvas { get; private set; }
+    public Transform mark { get; private set; }
+
     Camera mainCamera;
-    Transform projectile, head, neck;
     Head headScript;
     Projectile projectileScript;
     Collider2D hitbox;
@@ -66,13 +72,11 @@ public class Player : MonoBehaviour
     SpriteRenderer[] spriteList;
     Animator anim;
     EventManager eventManager;
-    Tutorials2Manager tutorials2Manager;
+    Transform tutorials2Manager;
+    Tutorials2Manager tutorials2ManagerScript;
 
 
     bool onFired, movable;
-    [HideInInspector] public float currentHP, currentStamina;
-    [HideInInspector] public float deathCount;
-    [HideInInspector] public bool S_Rank_True;
     Vector3 velocity, currentPosition;
     Coroutine dashCoroutine, dashCooldownCoroutine, shootCooldownCoroutine, invincibilityCoroutine;
 
@@ -80,43 +84,56 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        init();
-    }
-
-    public void init()
-    {
-        mainCamera = Camera.main;
-        projectile = transform.Find("Projectile").transform;
-        projectileScript = projectile.GetComponent<Projectile>();
-        head = transform.Find("Head").transform;
-        headScript = head.GetComponent<Head>();
+        /* Init object attirutes */
+        projectileScript = transform.GetComponentInChildren<Projectile>();
+        projectile = projectileScript.transform;
+        headScript = transform.GetComponentInChildren<Head>();
+        head = headScript.transform;
         neck = head.GetComponent<SpriteSkin>().rootBone.transform;
+        uiCanvas = transform.Find("UICanvas");
+        mark = uiCanvas.Find("Mark");
+        /* Init value attirutes */
+        if (Menu_PlayerTransform.difficulty_num == 0)
+            maxHP = 6;
+        currentHP = maxHP;
+        currentStamina = maxStamina;
+        deathCount = 0;
+        S_Rank_True = true;
 
+        /* Init object fields */
+        mainCamera = Camera.main;
         rig2D = GetComponent<Rigidbody2D>();
         hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
         eventManager = FindObjectOfType<EventManager>();
-
         invincibleDelay = new WaitForSeconds(invincibleDuration);
         reviveInvincibleDelay = new WaitForSeconds(3);
         dashDelay = new WaitForSeconds(dashDuration);
         dashCooldownDelay = new WaitForSeconds(dashCooltime);
         shootCooldownDelay = new WaitForSeconds(shootCooltime);
-
+        /* Check whether this is Tutorial Scene or not - 튜토리얼 씬인지 아닌지 판단 후 초기화*/
+        if (TryGetComponent(out tutorials2ManagerScript))
+        {
+            /* Success : Tutorial script is initialized.
+                성공 : 튜토리얼 스크립트를 얻어왔으므로, Transform도 해당 스크립트의 transform으로 초기화함. */
+            tutorials2Manager = tutorials2ManagerScript.transform;
+        }
+        else
+        {
+            /* Fail : Tutorial script is null and Transform will be initialized to null.
+                실패 : 튜토리얼 스크립트가 null이므로 Transform도 null로 초기화함. */
+            tutorials2Manager = null;
+        }
+        /* Init value fields */
         onFired = false;
         movable = true;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = shootCooldownCoroutine = null;
-        deathCount = 0;
-        S_Rank_True = true;
-        if (Menu_PlayerTransform.difficulty_num == 0)
-            maxHP = 6;
-        currentHP = maxHP;
-        currentStamina = maxStamina;
-
+        /** Init animator fields */
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
 
+        /** Add event functions to global event manager */
         eventManager.playerEvent.playerHitEvent += playerHitEvent;
         eventManager.stageEvent.clearEvent += freeze;
         eventManager.stageEvent.pauseEvent += freeze;
@@ -138,10 +155,9 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Dash"))
         {
             //텔레포트 튜토리얼 중 대쉬 사용 방지코드
-            if (GameObject.Find("Tutorials2Manager") != null)
+            if (tutorials2Manager != null)
             {
-                tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
-                if (tutorials2Manager.IsFinishedDashTest == true && tutorials2Manager.IsFinishedTeleportTest == false || tutorials2Manager.IsFinishedJumpTest == false)
+                if (tutorials2ManagerScript.IsFinishedDashTest == true && tutorials2ManagerScript.IsFinishedTeleportTest == false || tutorials2ManagerScript.IsFinishedJumpTest == false)
                 {
                     return;
                 }
@@ -161,10 +177,9 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Shoot"))
         {
             //텔레포트 사용 방지코드
-            if (GameObject.Find("Tutorials2Manager") != null)
+            if (tutorials2Manager != null)
             {
-                tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
-                if (tutorials2Manager.IsFinishedDashTest == false)
+                if (tutorials2ManagerScript.IsFinishedDashTest == false)
                 {
                     return;
                 }

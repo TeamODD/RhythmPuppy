@@ -66,7 +66,7 @@ namespace Stage_2
         {
             warnBoxPos.x = x;
             warnBoxPos = Camera.main.WorldToScreenPoint(warnBoxPos);
-            warnBoxPos.y = 395;
+            warnBoxPos.y = 830;
             eventManager.stageEvent.warnWithBox(warnBoxPos, warnBoxSize);
         }
 
