@@ -25,10 +25,6 @@ public class UICanvas : MonoBehaviour
     {
         [Header("Main Transform")]
         public Transform worldSpaceCanvas;
-        [Header("Sub Transform")]
-        public Transform dashTimer;
-        public Transform hitTimer;
-        public Transform basicTimer;
     }
 
     [SerializeField] GameObject warningBoxPrefab, warningArrowPrefab;
@@ -37,10 +33,9 @@ public class UICanvas : MonoBehaviour
 
     Player player;
     EventManager eventManager;
-    Image darkImage, redImage, clearSpotlightImage, dashTimerImage, hitTimerImage, basicTimerImage;
+    Image darkImage, redImage, clearSpotlightImage;
     Color c;
     CanvasScaler overlayCanvasScaler;
-    WaitForSeconds reviveDelay;
     Vector2 baseResolution, currentResolution;
 
     void Awake()
@@ -54,10 +49,6 @@ public class UICanvas : MonoBehaviour
         darkImage = overlayCanvas.darkEffect.GetComponent<Image>();
         redImage = overlayCanvas.redEffect.GetComponent<Image>();
         clearSpotlightImage = overlayCanvas.clearSpotlight.GetComponent<Image>();
-        dashTimerImage = worldSpaceCanvas.dashTimer.GetComponent<Image>();
-        hitTimerImage = worldSpaceCanvas.hitTimer.GetComponent<Image>();
-        basicTimerImage = worldSpaceCanvas.basicTimer.GetComponent<Image>();
-        reviveDelay = new WaitForSeconds(2);
 
         eventManager.stageEvent.warnWithBox += warnWithBox;
         eventManager.stageEvent.pauseEvent += enableBlindEvent;
@@ -65,7 +56,6 @@ public class UICanvas : MonoBehaviour
         eventManager.playerEvent.playerHitEvent += playerHitEvent;
         eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.playerEvent.reviveEvent += reviveEvent;
-        eventManager.playerEvent.dashEvent += dashEvent;
         eventManager.uiEvent.fadeInEvent += fadeIn;
         eventManager.uiEvent.fadeOutEvent += fadeOut;
         eventManager.uiEvent.enableBlindEvent += enableBlindEvent;
@@ -179,7 +169,6 @@ public class UICanvas : MonoBehaviour
     {
         setImageAlpha(ref redImage, 1f);
         StartCoroutine(runHitEffect());
-        StartCoroutine(runTimer(hitTimerImage, player.invincibleDuration));
     }
 
     private IEnumerator runHitEffect()
@@ -205,23 +194,6 @@ public class UICanvas : MonoBehaviour
         setImageAlpha(ref redImage, a);
     }
 
-    public void dashEvent()
-    {
-        StartCoroutine(runTimer(dashTimerImage, player.dashDuration));
-    }
-
-    private IEnumerator runTimer(Image timer, float t)
-    {
-        timer.fillAmount = 1;
-
-        while(0 < timer.fillAmount)
-        {
-            timer.fillAmount -= Time.deltaTime / t;
-            yield return null;
-        }
-        timer.fillAmount = 0;
-    }
-
     private void setImageAlpha(ref Image i, float a)
     {
         c = i.color;
@@ -237,7 +209,6 @@ public class UICanvas : MonoBehaviour
 
     private IEnumerator deathEventCoroutine()
     {
-        hitTimerImage.fillAmount = 0;
         setImageAlpha(ref redImage, 0);
         setImageAlpha(ref darkImage, 0);
         worldSpaceCanvas.worldSpaceCanvas.gameObject.SetActive(false);
@@ -248,17 +219,8 @@ public class UICanvas : MonoBehaviour
     private void reviveEvent()
     {
         worldSpaceCanvas.worldSpaceCanvas.gameObject.SetActive(true);
-        hitTimerImage.fillAmount = 0;
         setImageAlpha(ref redImage, 0);
         eventManager.uiEvent.fadeOutEvent();
-
-        StartCoroutine(reviveCoroutine());
-    }
-
-    private IEnumerator reviveCoroutine()
-    {
-        yield return reviveDelay;
-        StartCoroutine(runTimer(basicTimerImage, 3));
     }
 
     public void warnWithBox(Vector3 pos, Vector3 size)

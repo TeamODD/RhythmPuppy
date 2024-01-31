@@ -61,7 +61,7 @@ public class Player : MonoBehaviour
     public Transform projectile { get; private set; }
     public Transform head { get; private set; }
     public Transform neck { get; private set; }
-    public Transform uiCanvas { get; private set; }
+    public Transform playerUICanvas { get; private set; }
     public Transform mark { get; private set; }
 
     Camera mainCamera;
@@ -90,8 +90,8 @@ public class Player : MonoBehaviour
         headScript = transform.GetComponentInChildren<Head>();
         head = headScript.transform;
         neck = head.GetComponent<SpriteSkin>().rootBone.transform;
-        uiCanvas = transform.Find("UICanvas");
-        mark = uiCanvas.Find("Mark");
+        playerUICanvas = transform.Find("PlayerUICanvas");
+        mark = playerUICanvas.Find("Mark");
         /* Init value attirutes */
         if (Menu_PlayerTransform.difficulty_num == 0)
             maxHP = 6;

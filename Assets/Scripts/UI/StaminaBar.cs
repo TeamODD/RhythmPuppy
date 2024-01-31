@@ -10,16 +10,11 @@ public class StaminaBar : MonoBehaviour
 
     void Awake()
     {
-        init();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     void Update()
     {
         slider.value = player.currentStamina;
-    }
-
-    public void init()
-    {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 }
