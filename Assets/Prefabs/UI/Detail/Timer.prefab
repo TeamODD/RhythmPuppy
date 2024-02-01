@@ -51,10 +51,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 952d55fdc7325044eacb20dfeaabf9cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashTimerColor: {r: 0, g: 0.5758667, b: 1, a: 1}
-  hitTimerColor: {r: 1, g: 0, b: 0, a: 1}
+  timerType: 0
+  dashTimerColor: {r: 0, g: 0, b: 0, a: 0}
+  hitTimerColor: {r: 0, g: 0, b: 0, a: 0}
   reviveDelayTime: 2
-  reviveTimerColor: {r: 0, g: 1, b: 0.019433498, a: 1}
+  reviveTimerColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!222 &3657902174655597899
 CanvasRenderer:
   m_ObjectHideFlags: 0

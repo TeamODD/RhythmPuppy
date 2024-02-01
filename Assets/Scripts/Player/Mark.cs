@@ -1,6 +1,5 @@
 using EventManagement;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,6 +32,7 @@ public class Mark : MonoBehaviour
 
         eventManager.playerEvent.markActivationEvent += markActivationEvent;
         eventManager.playerEvent.markInactivationEvent += markInactivationEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
     }
 
     void Update()
@@ -44,12 +44,14 @@ public class Mark : MonoBehaviour
 
     public void markActivationEvent()
     {
-        if(image.color.a == 0 && task == null)
+        /* 현재 투명 상태라면, Mark를 활성화 */
+        if (image.color.a == 0 && task == null)
             task = StartCoroutine(fadeIn());
     }
 
     public void markInactivationEvent()
     {
+        /* 현재 활성화된 상태라면, Mark를 비활성화(투명화) */
         if (image.color.a == 1 && task == null)
             task = StartCoroutine(fadeOut());
     }
@@ -63,8 +65,7 @@ public class Mark : MonoBehaviour
         from.a = 0f;
         to = image.color;
         to.a = 1f;
-
-        while(progress < 1)
+        while (progress < 1)
         {
             progress += 1f / loop;
             image.color = Color.Lerp(from, to, progress);
@@ -85,8 +86,6 @@ public class Mark : MonoBehaviour
         from.a = 1f;
         to = image.color;
         to.a = 0f;
-
-
         while (progress < 1)
         {
             progress += 1f / loop;
@@ -98,4 +97,15 @@ public class Mark : MonoBehaviour
         task = null;
         yield break;
     }
+
+    private void deathEvent()
+    {
+        if (task != null)
+            StopCoroutine(task);
+        to = image.color;
+        to.a = 0;
+        image.color = to;
+        from = to;
+    }
 }
+

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,11 +6,20 @@ using EventManagement;
 
 public class Timer : MonoBehaviour
 {
+    public enum TimerType
+    {
+        Dash,
+        Hit,
+        Revive,
+    }
+
+    [Header("Type (타이머 종류)")]
+    public TimerType timerType;
     [Header("Dash IFrame(대쉬 무적)")]
     public Color dashTimerColor;
     [Header("Hit IFrame(피격 시 무적)")]
     public Color hitTimerColor;
-    [Header("Revive IFrame(부활 후 무적)")]
+    [Header("Revive IFrame(부활 무적)")]
     public float reviveDelayTime;
     public Color reviveTimerColor;
 
@@ -20,8 +28,10 @@ public class Timer : MonoBehaviour
     Transform player;
     Player playerScript;
     Image timer;
+    RectTransform rectTransform;
     WaitForSeconds reviveDelay;
-    Vector3 pos;
+    Vector3 pos, scale;
+    Coroutine coroutine;
 
     void Awake()
     {
@@ -29,12 +39,30 @@ public class Timer : MonoBehaviour
         eventManager = FindObjectOfType<EventManager>();
         playerScript = transform.GetComponentInParent<Player>();
         player = playerScript.transform;
-        timer = transform.GetComponent<Image>();
-        reviveDelay = new WaitForSeconds(reviveDelayTime);
+        timer = GetComponent<Image>();
+        rectTransform = GetComponent<RectTransform>();
+        scale = rectTransform.localScale;
+        coroutine = null;
 
-        eventManager.playerEvent.dashEvent += dashEvent;
-        eventManager.playerEvent.playerHitEvent += playerHitEvent;
-        eventManager.playerEvent.reviveEvent += reviveEvent;
+        eventManager.playerEvent.deathEvent += deathEvent;
+
+        /* Timer의 종류에 따라 감지하는 global event의 종류가 다름 */
+        switch (timerType)
+        {
+            case TimerType.Dash:
+                rectTransform.localScale = scale * 1.4f;    // 크기 조절
+                eventManager.playerEvent.dashEvent += dashEvent;
+                break;
+            case TimerType.Hit:
+                rectTransform.localScale = scale * 1.0f;    // 크기 조절
+                eventManager.playerEvent.playerHitEvent += playerHitEvent;
+                break;
+            case TimerType.Revive:
+                rectTransform.localScale = scale * 0.7f;    // 크기 조절
+                reviveDelay = new WaitForSeconds(reviveDelayTime);
+                eventManager.playerEvent.reviveEvent += reviveEvent;
+                break;
+        }
     }
 
     void Update()
@@ -46,23 +74,23 @@ public class Timer : MonoBehaviour
 
     public void dashEvent()
     {
-        StartCoroutine(runTimer(dashTimerColor, playerScript.dashDuration));
+        coroutine = StartCoroutine(runTimer(dashTimerColor, playerScript.dashDuration));
     }
-    
+
     public void playerHitEvent()
     {
-        StartCoroutine(runTimer(hitTimerColor, playerScript.invincibleDuration));
+        coroutine = StartCoroutine(runTimer(hitTimerColor, playerScript.invincibleDuration));
     }
 
     private void reviveEvent()
     {
-        StartCoroutine(reviveCoroutine());
+        coroutine = StartCoroutine(reviveCoroutine());
     }
 
     private IEnumerator reviveCoroutine()
     {
         yield return reviveDelay;
-        StartCoroutine(runTimer(reviveTimerColor, 3));
+        coroutine = StartCoroutine(runTimer(reviveTimerColor, 3));
     }
 
     private IEnumerator runTimer(Color c, float t)
@@ -70,11 +98,19 @@ public class Timer : MonoBehaviour
         timer.color = c;
         timer.fillAmount = 1;
 
-        while(0 < timer.fillAmount)
+        while (0 < timer.fillAmount)
         {
             timer.fillAmount -= Time.deltaTime / t;
             yield return null;
         }
         timer.fillAmount = 0;
+    }
+
+    private void deathEvent()
+    {
+        if (coroutine != null)
+            StopCoroutine(coroutine);
+        timer.fillAmount = 0;
+
     }
 }
