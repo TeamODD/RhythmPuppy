@@ -16,7 +16,6 @@ public class Head : MonoBehaviour
         public Sprite sad;
         public Sprite dead;
     }
-
     [SerializeField] Face face;
     [SerializeField] Sprite sweat;
 
@@ -30,7 +29,7 @@ public class Head : MonoBehaviour
     EventManager eventManager;
     SpriteRenderer sp;
     Player playerScript;
-    Transform player, neck, head, puppy;
+    Transform player, neck, puppy;
     bool isEnabled;
     WaitForSeconds invincibleDelay;
     Camera mainCamera;
@@ -43,7 +42,6 @@ public class Head : MonoBehaviour
         mainCamera = Camera.main;
         sp = GetComponent<SpriteRenderer>();
         neck = GetComponent<SpriteSkin>().rootBone;
-        head = neck.Find("head");
         puppy = null;
         isEnabled = true;
         invincibleDelay = new WaitForSeconds(playerScript.invincibleDuration);
@@ -63,7 +61,7 @@ public class Head : MonoBehaviour
     {
         if (!isEnabled) return;
 
-        if (puppy != null &&  eventManager.stageEvent.onClear)
+        if (puppy != null && eventManager.stageEvent.onClear)
         {
             lookAt(puppy.position);
         }
@@ -85,17 +83,17 @@ public class Head : MonoBehaviour
         targetAngle = getHeadingAngle(target);
         frontSide = player.localScale.x < 0 ? frontAngle + 180f : frontAngle;
         backSide = frontSide + 180f;
-        /** If neck is rotated at an abnormal angle - 만약 목(머리)이 비정상적으로 꺾였다면 */
+        /* If neck is rotated at an abnormal angle - 만약 목(머리)이 비정상적으로 꺾였다면 */
         if (isBetweenAngles(targetAngle, frontSide - rotationLimit, backSide))
         {
-            targetAngle = frontSide - rotationLimit;   /** minus 방향의 최대 각도로 설정 */
+            targetAngle = frontSide - rotationLimit;   /* minus 방향의 최대 각도로 설정 */
         }
-        /** If neck is rotated at another abnormal angle - 만약 목(머리)이 비정상적으로 꺾였다면 */
+        /* If neck is rotated at another abnormal angle - 만약 목(머리)이 비정상적으로 꺾였다면 */
         else if (isBetweenAngles(targetAngle, frontSide + rotationLimit, backSide))
         {
-            targetAngle = frontSide + rotationLimit;   /** plus 방향의 최대 각도로 설정 */
+            targetAngle = frontSide + rotationLimit;   /* plus 방향의 최대 각도로 설정 */
         }
-        /** Execute rotation */
+        /* Execute rotation */
         neck.rotation = Quaternion.Euler(0, 0, targetAngle);
     }
 

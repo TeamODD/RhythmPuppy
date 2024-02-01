@@ -37,6 +37,9 @@ public class TutorialCorgiScript : MonoBehaviour
     [SerializeField]
     GameObject MouseImage;
 
+    [SerializeField]
+    public GameObject projectile;
+
     SpriteRenderer Asprite;
     SpriteRenderer Dsprite;
     SpriteRenderer SpaceBarSprite;
@@ -48,9 +51,10 @@ public class TutorialCorgiScript : MonoBehaviour
 
     GameObject TutorialCorgi_Bone;
 
+
     private void Start()
     {
-        tutorials2Manager = GameObject.Find("Tutorials2Manager").GetComponent<Tutorials2Manager>();
+        tutorials2Manager = FindObjectOfType<Tutorials2Manager>();
 
         Asprite = A_ButtonImage.GetComponent<SpriteRenderer>();
         Dsprite = D_ButtonImage.GetComponent<SpriteRenderer>();
@@ -139,7 +143,7 @@ public class TutorialCorgiScript : MonoBehaviour
         if (tutorials2Manager.IsFinishedDashTest == true && tutorials2Manager.IsFinishedTeleportTest == false)
         {
             Shift_ButtonImage.SetActive(false);
-            MouseImage.SetActive(true); 
+            MouseImage.SetActive(true);
 
             StartCoroutine(ForeverBlinking(TutorialCorgi_Bone, 50f, 255f));
         }
@@ -172,8 +176,8 @@ public class TutorialCorgiScript : MonoBehaviour
         float elapsedTime = 0f;
         float fadeDuration = 0.5f;
 
-        while (true) 
-        { 
+        while (true)
+        {
             //TestCorgiFadeIn
             while (elapsedTime < fadeDuration)
             {

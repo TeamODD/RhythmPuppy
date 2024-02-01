@@ -33,7 +33,7 @@ public class Tutorials2Manager : MonoBehaviour
     Sprite SpaceBar_UnPressedImage;
 
     [SerializeField]
-    GameObject Shift_ButtonImage;   
+    GameObject Shift_ButtonImage;
     [SerializeField]
     Sprite Shift_PressedImage;
     [SerializeField]
@@ -135,6 +135,9 @@ public class Tutorials2Manager : MonoBehaviour
     [SerializeField]
     private TestMode testMode = TestMode.None;
 
+    Player playerCorgiScript;
+    TutorialCorgiScript tutorialCorgiScript;
+
     private void Awake()
     {
         float interval = 2.0f;
@@ -145,6 +148,8 @@ public class Tutorials2Manager : MonoBehaviour
         }
 
         startTime = 0f;
+        playerCorgiScript = PlayerCorgi.GetComponent<Player>();
+        tutorialCorgiScript = TutorialCorgi.GetComponent<TutorialCorgiScript>();
     }
 
     void Start()
@@ -159,7 +164,7 @@ public class Tutorials2Manager : MonoBehaviour
         TutorialCorgiRig2D = TutorialCorgi.GetComponent<Rigidbody2D>();
         TutorialCorgiAnim = TutorialCorgi.GetComponent<Animator>();
 
-        TutorialCorgi_Bone = TutorialCorgi.transform.GetChild(0).gameObject;
+        TutorialCorgi_Bone = tutorialCorgiScript.projectile;
 
         audioSource = GameObject.FindWithTag("MusicManager").GetComponent<AudioSource>();
 
@@ -204,7 +209,7 @@ public class Tutorials2Manager : MonoBehaviour
         }
         else
         {
-            Dsprite.sprite= D_UnPressedImage;
+            Dsprite.sprite = D_UnPressedImage;
         }
 
         if (Input.GetKey(KeyCode.Space))
@@ -280,7 +285,7 @@ public class Tutorials2Manager : MonoBehaviour
 
             SpaceBarImage.SetActive(false);
 
-            if (NewOakObstacle != null && NewOakObstacle.activeSelf == true )
+            if (NewOakObstacle != null && NewOakObstacle.activeSelf == true)
             {
                 Destroy(NewOakObstacle);
             }
@@ -546,8 +551,8 @@ public class Tutorials2Manager : MonoBehaviour
         float initialAlpha = 100f; // 초기 투명도 값
         float finalAlpha = 0f;    // 최종 투명도 값
 
-        GameObject TutorialCorgi = GameObject.Find("TutorialCorgi");
-        GameObject PlayerCorgi_Bone = PlayerCorgi.transform.GetChild(0).gameObject;
+        GameObject TutorialCorgi = FindObjectOfType<TutorialCorgiScript>().gameObject;
+        GameObject PlayerCorgi_Bone = playerCorgiScript.projectile.gameObject;
 
         Rigidbody2D TutorialCorgi_Bone_Rig2D = TutorialCorgi_Bone.GetComponent<Rigidbody2D>();
 
@@ -612,7 +617,7 @@ public class Tutorials2Manager : MonoBehaviour
     {
         float elapsedTime = 0f;
         float fadeDuration = 2f;
-        if(!PlayerPrefs.HasKey("clearIndex"))
+        if (!PlayerPrefs.HasKey("clearIndex"))
             PlayerPrefs.SetInt("clearIndex", 2);
 
         while (elapsedTime < fadeDuration)
@@ -759,7 +764,7 @@ public class Tutorials2Manager : MonoBehaviour
         NewThorStemObstacle.SetActive(true);
 
         Rigidbody2D stemRigidbody = NewThorStemObstacle.GetComponent<Rigidbody2D>();
-        
+
         stemRigidbody.velocity = Vector2.left * 5f;
     }
 

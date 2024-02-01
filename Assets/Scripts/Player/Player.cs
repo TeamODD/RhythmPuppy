@@ -84,7 +84,8 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        /* Init object attirutes */
+        /* Init attirutes */
+        // objects
         projectileScript = transform.GetComponentInChildren<Projectile>();
         projectile = projectileScript.transform;
         headScript = transform.GetComponentInChildren<Head>();
@@ -92,15 +93,15 @@ public class Player : MonoBehaviour
         neck = head.GetComponent<SpriteSkin>().rootBone.transform;
         playerUICanvas = transform.Find("PlayerUICanvas");
         mark = playerUICanvas.Find("Mark");
-        /* Init value attirutes */
-        if (Menu_PlayerTransform.difficulty_num == 0)
-            maxHP = 6;
+        // values
+        if (Menu_PlayerTransform.difficulty_num == 0) maxHP = 6;
         currentHP = maxHP;
         currentStamina = maxStamina;
         deathCount = 0;
         S_Rank_True = true;
 
-        /* Init object fields */
+        /* Init fields */
+        // objects
         mainCamera = Camera.main;
         rig2D = GetComponent<Rigidbody2D>();
         hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
@@ -112,23 +113,14 @@ public class Player : MonoBehaviour
         dashDelay = new WaitForSeconds(dashDuration);
         dashCooldownDelay = new WaitForSeconds(dashCooltime);
         shootCooldownDelay = new WaitForSeconds(shootCooltime);
-        /* Check whether this is Tutorial Scene or not - 튜토리얼 씬인지 아닌지 판단 후 초기화*/
-        if (TryGetComponent(out tutorials2ManagerScript))
-        {
-            /* Success : Tutorial script is initialized.
-                성공 : 튜토리얼 스크립트를 얻어왔으므로, Transform도 해당 스크립트의 transform으로 초기화함. */
-            tutorials2Manager = tutorials2ManagerScript.transform;
-        }
-        else
-        {
-            /* Fail : Tutorial script is null and Transform will be initialized to null.
-                실패 : 튜토리얼 스크립트가 null이므로 Transform도 null로 초기화함. */
-            tutorials2Manager = null;
-        }
-        /* Init value fields */
+        // values
         onFired = false;
         movable = true;
         dashCoroutine = dashCooldownCoroutine = invincibilityCoroutine = shootCooldownCoroutine = null;
+
+        /* Check whether this is Tutorial Scene or not - 튜토리얼 씬인지 아닌지 검사 후 변수 초기화*/
+        checkTutorial();
+
         /** Init animator fields */
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
@@ -144,6 +136,23 @@ public class Player : MonoBehaviour
         eventManager.playerEvent.shootEvent += shootEvent;
         eventManager.playerEvent.teleportEvent += teleportEvent;
         eventManager.playerEvent.shootCancelEvent += shootCancelEvent;
+    }
+
+    private void checkTutorial()
+    {
+        tutorials2ManagerScript = FindObjectOfType<Tutorials2Manager>();
+        if (tutorials2ManagerScript != null)
+        {
+            /* Success : Tutorial script is initialized.
+                성공 : 튜토리얼 스크립트를 얻어왔으므로, Transform도 해당 스크립트의 transform으로 초기화함. */
+            tutorials2Manager = tutorials2ManagerScript.transform;
+        }
+        else
+        {
+            /* Fail : Tutorial script is null and Transform will be initialized to null.
+                실패 : 튜토리얼 스크립트가 null이므로 Transform도 null로 초기화함. */
+            tutorials2Manager = null;
+        }
     }
 
     void Update()

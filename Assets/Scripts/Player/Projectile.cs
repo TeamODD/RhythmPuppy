@@ -27,14 +27,9 @@ public class Projectile : MonoBehaviour
 
     void Awake()
     {
-        init();
-    }
-
-    public void init()
-    {
         eventManager = FindObjectOfType<EventManager>();
         mainCamera = Camera.main;
-        player = transform.parent.GetComponent<Player>();
+        player = transform.GetComponentInParent<Player>();
         neck = player.transform.Find("bone_2/neck");
         head = player.transform.Find("bone_2/neck/head");
         dir = Vector3.zero;
@@ -56,7 +51,7 @@ public class Projectile : MonoBehaviour
             IsBoneRecovered = false;
         }
         else
-        { 
+        {
             IsBoneRecovered = true;
         }
     }
