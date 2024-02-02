@@ -31,7 +31,7 @@ public class Head : MonoBehaviour
     Player playerScript;
     Transform player, neck, puppy;
     bool isEnabled;
-    WaitForSeconds invincibleDelay;
+    WaitForSeconds hitInvincibleDelay;
     Camera mainCamera;
 
     void Awake()
@@ -44,7 +44,7 @@ public class Head : MonoBehaviour
         neck = GetComponent<SpriteSkin>().rootBone;
         puppy = null;
         isEnabled = true;
-        invincibleDelay = new WaitForSeconds(playerScript.invincibleDuration);
+        hitInvincibleDelay = new WaitForSeconds(playerScript.hitIFrame);
 
         eventManager.playerEvent.playerHitEvent += playerHitEvent;
         eventManager.playerEvent.deathEvent += deathEvent;
@@ -153,7 +153,7 @@ public class Head : MonoBehaviour
     private IEnumerator hitAction()
     {
         setSadFace();
-        yield return invincibleDelay;
+        yield return hitInvincibleDelay;
         setNormalFace();
     }
 

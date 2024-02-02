@@ -79,7 +79,7 @@ public class Timer : MonoBehaviour
 
     public void playerHitEvent()
     {
-        coroutine = StartCoroutine(runTimer(hitTimerColor, playerScript.invincibleDuration));
+        coroutine = StartCoroutine(runTimer(hitTimerColor, playerScript.hitIFrame));
     }
 
     private void reviveEvent()
@@ -90,7 +90,7 @@ public class Timer : MonoBehaviour
     private IEnumerator reviveCoroutine()
     {
         yield return reviveDelay;
-        coroutine = StartCoroutine(runTimer(reviveTimerColor, 3));
+        coroutine = StartCoroutine(runTimer(reviveTimerColor, playerScript.reviveIFrame));
     }
 
     private IEnumerator runTimer(Color c, float t)

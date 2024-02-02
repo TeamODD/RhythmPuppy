@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GamePasue : MonoBehaviour
+public class GamePause : MonoBehaviour
 {
     public bool isPaused = false;
     AudioSource BGM;
@@ -81,4 +81,4 @@ public class GamePasue : MonoBehaviour
         // 여기에 일시정지 해제 시 수행할 작업을 추가할 수 있습니다.
     }
 }
-    
+

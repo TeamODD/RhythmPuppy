@@ -26,7 +26,12 @@ public class Player : MonoBehaviour
     float staminaGen;
     [SerializeField]
     float speed;
-    public float invincibleDuration;
+
+    [Header("IFrame")]
+    [Tooltip("Hit Invincible Frame(피격 시 무적시간)")]
+    public float hitIFrame;
+    [Tooltip("Revive Invincible Frame(부활 시 무적시간)")]
+    public float reviveIFrame;
 
     [Header("Jump")]
     [SerializeField]
@@ -75,12 +80,10 @@ public class Player : MonoBehaviour
     Transform tutorials2Manager;
     Tutorials2Manager tutorials2ManagerScript;
 
-
     bool onFired, movable;
     Vector3 velocity, currentPosition;
     Coroutine dashCoroutine, dashCooldownCoroutine, shootCooldownCoroutine, invincibilityCoroutine;
-
-    WaitForSeconds invincibleDelay, reviveInvincibleDelay, dashDelay, dashCooldownDelay, shootCooldownDelay;
+    WaitForSeconds hitInvincibleDelay, reviveInvincibleDelay, dashDelay, dashCooldownDelay, shootCooldownDelay;
 
     void Awake()
     {
@@ -108,7 +111,7 @@ public class Player : MonoBehaviour
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
         eventManager = FindObjectOfType<EventManager>();
-        invincibleDelay = new WaitForSeconds(invincibleDuration);
+        hitInvincibleDelay = new WaitForSeconds(hitIFrame);
         reviveInvincibleDelay = new WaitForSeconds(3);
         dashDelay = new WaitForSeconds(dashDuration);
         dashCooldownDelay = new WaitForSeconds(dashCooltime);
@@ -171,7 +174,6 @@ public class Player : MonoBehaviour
                     return;
                 }
             }
-
             //정상코드
             if (currentStamina < dashStaminaCost)
                 Debug.Log("not enough stamina!");
@@ -193,7 +195,6 @@ public class Player : MonoBehaviour
                     return;
                 }
             }
-
             if (!onFired)
             {
                 if (currentStamina < shootStaminaCost)
@@ -208,7 +209,6 @@ public class Player : MonoBehaviour
                     }
                     eventManager.playerEvent.shootEvent();
                 }
-
             }
             else
             {
@@ -220,7 +220,6 @@ public class Player : MonoBehaviour
             if (onFired)
                 eventManager.playerEvent.shootCancelEvent();
         }
-
         if (Input.GetKey(KeyCode.F1) && Input.GetKeyDown(KeyCode.F12))
         {
             if (transform.Find("몸/Hitbox").GetComponent<CapsuleCollider2D>().enabled)
@@ -262,7 +261,6 @@ public class Player : MonoBehaviour
             {
                 return;
             }
-
             if (dashCoroutine != null) evade(c.collider);
             else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
@@ -279,11 +277,9 @@ public class Player : MonoBehaviour
                     evade(c);
                     return;
                 }
-
                 transform.position = new Vector3(-7f, -4.3012f, 0f);
                 return;
             }
-
             if (dashCoroutine != null) evade(c);
             else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
         }
@@ -349,7 +345,6 @@ public class Player : MonoBehaviour
     {
         float dir = Input.GetAxisRaw("Horizontal");
         if (dir == 0) return;
-
         currentStamina -= dashStaminaCost;
         dashCoroutine = StartCoroutine(dash(dir));
     }
@@ -360,7 +355,7 @@ public class Player : MonoBehaviour
         rig2D.velocity = new Vector2(dir * dashForce, rig2D.velocity.y);
         rig2D.gravityScale = 1f;
         anim.SetTrigger("Dash");
-
+        /* 투명도와 물리엔진을 설정한 뒤 dashDelay만큼 지속됨  */
         yield return dashDelay;
         setAlpha(1f);
         rig2D.velocity = new Vector2(0, rig2D.velocity.y);
@@ -588,8 +583,7 @@ public class Player : MonoBehaviour
         /* revive 이벤트 1초뒤에 음악이 시작됨, 또 1초동안 경고등 표시됨 */
         yield return new WaitForSeconds(2);
         anim.ResetTrigger("Revive");
-
-        /* 부활 무적 발동 - 'reviveInvincibleDelay' 시간만큼 무적 발동 */
+        /* 부활 무적 발동 - 'reviveInvincibleDelay'만큼 무적 발동 */
         hitbox.enabled = false;
         setAlpha(0.5f);
         yield return reviveInvincibleDelay;
@@ -600,10 +594,11 @@ public class Player : MonoBehaviour
     private IEnumerator activateInvincibility()
     {
         hitbox.enabled = false;
-        setAlpha(0.5f);
-        yield return invincibleDelay;
+        setAlpha(0.5f);     // Player를 반투명 상태로 설정
+        /* 피격 무적 발동 - 'hitInvincibleDelay'만큼 무적 발동 */
+        yield return hitInvincibleDelay;
         hitbox.enabled = true;
-        setAlpha(1f);
+        setAlpha(1f);     // Player를 정상(불투명) 상태로 되돌림
         invincibilityCoroutine = null;
     }
 

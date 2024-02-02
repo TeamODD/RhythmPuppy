@@ -13,7 +13,7 @@ public class ButtonAction : MonoBehaviour
     public void onContinue()
     {
         GameObject GamePlayManager = GameObject.Find("GamePlayManager");
-        GamePlayManager.GetComponent<GamePasue>().ResumeGame();
+        GamePlayManager.GetComponent<GamePause>().ResumeGame();
 
         Option.SetActive(false);
     }
