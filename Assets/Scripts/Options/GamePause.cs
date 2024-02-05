@@ -11,7 +11,7 @@ public class GamePause : MonoBehaviour
     AudioSource BGM;
     EventManager eventManager;
 
-    private void Start()
+    private void Awake()
     {
         /*stage1_2BGM = GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>();*/
         BGM = FindObjectOfType<AudioSource>();
