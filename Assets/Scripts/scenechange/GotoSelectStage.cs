@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
+using UIManagement;
 
 public class GotoSelectStage : MonoBehaviour
 {
@@ -44,7 +45,7 @@ public class GotoSelectStage : MonoBehaviour
     IEnumerator LicenseNoticeCoroutine;
     IEnumerator HeadphoneCoroutine;
     IEnumerator TitleImageCoroutine;
-    
+
     void Update()
     {
         if (InputDelay) return;

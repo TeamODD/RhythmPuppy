@@ -1,46 +1,40 @@
 using EventManagement;
 using SceneData;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GamePause : MonoBehaviour
 {
-    public bool isPaused = false;
+    [HideInInspector]
+    public bool isPaused;
     AudioSource BGM;
     EventManager eventManager;
 
-    private void Awake()
+    void Awake()
     {
         /*stage1_2BGM = GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>();*/
         BGM = FindObjectOfType<AudioSource>();
         eventManager = FindObjectOfType<EventManager>();
-        eventManager.stageEvent.pauseEvent += PauseGame;
+        isPaused = false;
+
+        eventManager.stageEvent.pauseEvent += PauseEvent;
         eventManager.stageEvent.resumeEvent += ResumeEvent;
     }
 
-    private void Update()
+    public void TogglePause()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) // ESC 키를 누르면 일시정지/해제
-        {
-            TogglePause();
-        }
-    }
-
-    private void TogglePause()
-    {
+        /* 하이어리키의 EventManager 오브젝트에서 이 함수를 참조함 */
         if (isPaused)
         {
-            eventManager.stageEvent.resumeEvent();
+            PauseEvent();
         }
         else
         {
-            eventManager.stageEvent.pauseEvent();
+            ResumeEvent();
         }
     }
 
-    private void PauseGame()
+    private void PauseEvent()
     {
         Time.timeScale = 0f; // 시간 경과를 멈춥니다.
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
@@ -56,11 +50,6 @@ public class GamePause : MonoBehaviour
         SceneManager.LoadScene(SceneInfo.getSceneName(SceneName.OPTION), LoadSceneMode.Additive);
 
         // 여기에 일시정지시 수행할 작업을 추가할 수 있습니다.
-    }
-
-    public void ResumeGame()
-    {
-        eventManager.stageEvent.resumeEvent();
     }
 
     public void ResumeEvent()

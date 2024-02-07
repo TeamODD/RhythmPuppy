@@ -2,37 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HPManager : MonoBehaviour
+namespace UIManagement
 {
-    [SerializeField] List<GameObject> state;
-
-    Player player;
-
-    void Awake()
+    public class HPManager : MonoBehaviour
     {
-        init();
-    }
-    void init()
-    {
-        player = FindObjectOfType<Player>();
-    }
+        [SerializeField] List<GameObject> state;
 
-    void Update()
-    {
-        updateHP();
-    }
+        Player player;
 
-
-    public void updateHP()
-    {
-        int hp = (int)player.currentHP;
-        if (hp < 0) hp = 0;
-        else if (state.Count < hp) hp = state.Count;
-
-        for (int i = 0; i < state.Count; i++)
+        void Awake()
         {
-            if (i == hp) state[i].SetActive(true);
-            if (i != hp) state[i].SetActive(false);
+            init();
+        }
+        void init()
+        {
+            player = FindObjectOfType<Player>();
+        }
+
+        void Update()
+        {
+            updateHP();
+        }
+
+
+        public void updateHP()
+        {
+            int hp = (int)player.currentHP;
+            if (hp < 0) hp = 0;
+            else if (state.Count < hp) hp = state.Count;
+
+            for (int i = 0; i < state.Count; i++)
+            {
+                if (i == hp) state[i].SetActive(true);
+                if (i != hp) state[i].SetActive(false);
+            }
         }
     }
 }

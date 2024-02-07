@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using static Menu_PlayerTransform;
 
+using UIManagement;
+
 public class PlaySelectSound : MonoBehaviour
 {
 
@@ -25,7 +27,7 @@ public class PlaySelectSound : MonoBehaviour
     {
         EmptyAudio = null;
 
-        if(PlaySelectSound.instance == null)
+        if (PlaySelectSound.instance == null)
             PlaySelectSound.instance = this;
 
         theAudio = GetComponent<AudioSource>();
@@ -75,7 +77,7 @@ public class PlaySelectSound : MonoBehaviour
         yield return new WaitForSeconds(2f); //2초후 로딩
         var mAsymcOperation = SceneManager.LoadSceneAsync(NextScene, LoadSceneMode.Single);
         //LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
-        if(!(GameObject.FindWithTag("CurtainObject") == null))
+        if (!(GameObject.FindWithTag("CurtainObject") == null))
             GameObject.FindWithTag("CurtainObject").GetComponent<Curtain>().CurtainEffect("Open", 0);
 
         Debug.Log("Destroy Loading Screen");

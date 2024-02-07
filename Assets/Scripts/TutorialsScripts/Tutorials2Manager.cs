@@ -10,6 +10,8 @@ using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 using static Menu_PlayerTransform;
 
+using UIManagement;
+
 public class Tutorials2Manager : MonoBehaviour
 {
     [SerializeField]

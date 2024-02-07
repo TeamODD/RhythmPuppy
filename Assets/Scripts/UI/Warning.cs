@@ -5,88 +5,92 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Warning : MonoBehaviour
+namespace UIManagement
 {
-    Image image;
-    SpriteRenderer sp;
-    Color c;
-
-    void Awake()
+    /* 패턴 시작 전 표시되는 경고등 */
+    public class Warning : MonoBehaviour
     {
-        if (!TryGetComponent<Image>(out image))
+        Image image;
+        SpriteRenderer sp;
+        Color c;
+
+        void Awake()
         {
-            if (!TryGetComponent<SpriteRenderer>(out sp))
-                Destroy(gameObject);
+            if (!TryGetComponent(out image))
+            {
+                if (!TryGetComponent(out sp))
+                    Destroy(gameObject);
+                else
+                    c = sp.color;
+            }
             else
-                c = sp.color;
-         }
-        else
-        {
-            c = image.color;
-        }
-
-    }
-
-    void Start()
-    {
-        StartCoroutine(ShowWarning());
-    }
-
-    /*void Update()
-    {
-        if (image)
-        {
-            if (image.color.a < 0.7f)
             {
-                c.a += Time.deltaTime / 0.2f;
-                image.color = c;
+                c = image.color;
             }
+
         }
-        else if (sp)
+
+        void Start()
         {
-            if (sp.color.a < 0.7f)
+            StartCoroutine(ShowWarning());
+        }
+
+        /*void Update()
+        {
+            if (image)
             {
-                c.a += Time.deltaTime / 0.2f;
-                sp.color = c;
+                if (image.color.a < 0.7f)
+                {
+                    c.a += Time.deltaTime / 0.2f;
+                    image.color = c;
+                }
             }
-        }
-    }*/
+            else if (sp)
+            {
+                if (sp.color.a < 0.7f)
+                {
+                    c.a += Time.deltaTime / 0.2f;
+                    sp.color = c;
+                }
+            }
+        }*/
 
-    private IEnumerator ShowWarning()
-    {
-        Destroy(gameObject, 1f);
-        const float ALPHA_RATE = 0.7f;
-        float time = 0, alpha = 0;
-        
-        while (time < 0.3f)
+        private IEnumerator ShowWarning()
         {
-            time += Time.deltaTime;
-            alpha = time / 0.3f;
-            c.a = alpha * ALPHA_RATE;
+            Destroy(gameObject, 1f);
+            const float ALPHA_RATE = 0.7f;
+            float time = 0, alpha = 0;
 
-            if (image)  image.color = c;
-            else if (sp)    sp.color = c;
-            yield return null;
-        }
-        while (time < 0.6f)
-        {
-            time += Time.deltaTime;
-            alpha = (time - 0.3f) / -0.6f + 1f;
-            c.a = alpha * ALPHA_RATE;
+            while (time < 0.3f)
+            {
+                time += Time.deltaTime;
+                alpha = time / 0.3f;
+                c.a = alpha * ALPHA_RATE;
 
-            if (image) image.color = c;
-            else if (sp) sp.color = c;
-            yield return null;
-        }
-        while (time < 1)
-        {
-            time += Time.deltaTime;
-            alpha = (time - 0.2f) / 0.8f;
-            c.a = alpha * ALPHA_RATE;
+                if (image) image.color = c;
+                else if (sp) sp.color = c;
+                yield return null;
+            }
+            while (time < 0.6f)
+            {
+                time += Time.deltaTime;
+                alpha = (time - 0.3f) / -0.6f + 1f;
+                c.a = alpha * ALPHA_RATE;
 
-            if (image) image.color = c;
-            else if (sp) sp.color = c;
-            yield return null;
+                if (image) image.color = c;
+                else if (sp) sp.color = c;
+                yield return null;
+            }
+            while (time < 1)
+            {
+                time += Time.deltaTime;
+                alpha = (time - 0.2f) / 0.8f;
+                c.a = alpha * ALPHA_RATE;
+
+                if (image) image.color = c;
+                else if (sp) sp.color = c;
+                yield return null;
+            }
         }
     }
 }

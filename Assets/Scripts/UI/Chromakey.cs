@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Chromakey : MonoBehaviour
+namespace UIManagement
 {
-    Material CameraMaterial;
-
-    void Start()
+    public class Chromakey : MonoBehaviour
     {
-        CameraMaterial = new Material(Shader.Find("Unlit/ChromaKeyUnlit"));
-    }
+        Material CameraMaterial;
 
-    void OnRenderImage(RenderTexture src, RenderTexture dest)
-    {
-        //CameraMaterial.SetFloat("_Grayscale", 1f);
-        Graphics.Blit(src, dest, CameraMaterial);
+        void Start()
+        {
+            CameraMaterial = new Material(Shader.Find("Unlit/ChromaKeyUnlit"));
+        }
+
+        void OnRenderImage(RenderTexture src, RenderTexture dest)
+        {
+            //CameraMaterial.SetFloat("_Grayscale", 1f);
+            Graphics.Blit(src, dest, CameraMaterial);
+        }
     }
 }

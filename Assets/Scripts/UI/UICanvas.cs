@@ -5,230 +5,114 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UICanvas : MonoBehaviour
+namespace UIManagement
 {
-    [Serializable]
-    struct OverlayCanvas
+    public class UICanvas : MonoBehaviour
     {
-        [Header("Main(Canvas) Transform")]
-        public Transform overlayCanvas;
-        public Transform screenEfffectCanvas;
-        public Transform warningCanvas;
-        [Header("Sub Transform")]
-        public Transform darkEffect;
-        public Transform redEffect;
-        public Transform clearSpotlight;
-        public Transform progressBar;
-    }
-    [Serializable]
-    struct WorldSpaceCanvas
-    {
-        [Header("Main Transform")]
-        public Transform worldSpaceCanvas;
-    }
-
-    [SerializeField] GameObject warningBoxPrefab, warningArrowPrefab;
-    [SerializeField] OverlayCanvas overlayCanvas;
-    [SerializeField] WorldSpaceCanvas worldSpaceCanvas;
-
-    Player player;
-    EventManager eventManager;
-    Image darkImage, redImage, clearSpotlightImage;
-    Color c;
-    CanvasScaler overlayCanvasScaler;
-    Vector2 baseResolution, currentResolution;
-
-    void Awake()
-    {
-        baseResolution = new Vector2(1920, 1080);
-        currentResolution = new Vector2(Screen.width, Screen.height);
-        player = FindObjectOfType<Player>();
-        eventManager = FindObjectOfType<EventManager>();
-        overlayCanvasScaler = overlayCanvas.overlayCanvas.GetComponent<CanvasScaler>();
-
-        darkImage = overlayCanvas.darkEffect.GetComponent<Image>();
-        redImage = overlayCanvas.redEffect.GetComponent<Image>();
-        clearSpotlightImage = overlayCanvas.clearSpotlight.GetComponent<Image>();
-
-        eventManager.stageEvent.warnWithBox += warnWithBox;
-        eventManager.stageEvent.pauseEvent += enableBlindEvent;
-        eventManager.stageEvent.resumeEvent += disableBlindEvent;
-        eventManager.playerEvent.playerHitEvent += playerHitEvent;
-        eventManager.playerEvent.deathEvent += deathEvent;
-        eventManager.playerEvent.reviveEvent += reviveEvent;
-        eventManager.uiEvent.fadeInEvent += fadeIn;
-        eventManager.uiEvent.fadeOutEvent += fadeOut;
-        eventManager.uiEvent.enableBlindEvent += enableBlindEvent;
-        eventManager.uiEvent.enableBlindEvent += enableDarkEffect;
-        eventManager.uiEvent.disableBlindEvent += disableBlindEvent;
-        eventManager.uiEvent.disableBlindEvent += disableDarkEffect;
-        eventManager.stageEvent.clearEvent += enableClearSpotlight;
-        eventManager.uiEvent.enableClearSpotlightEvent += enableClearSpotlight;
-        eventManager.uiEvent.disableClearSpotlightEvent += disableClearSpotlight;
-        eventManager.uiEvent.onBlindEvent = false;
-        eventManager.stageEvent.onClear = false;
-    }
-
-    void Update()
-    {
-        if (1 < Time.time % 2)  return;
-        currentResolution.x = Screen.width;
-        currentResolution.y = Screen.height;
-        if (!currentResolution.Equals(baseResolution))
+        [Serializable]
+        struct OverlayCanvas
         {
-            eventManager.uiEvent.resolutionChangeEvent();
-            overlayCanvasScaler.scaleFactor = currentResolution.x / baseResolution.x;
+            [Header("Main(Canvas) Transform")]
+            public Transform overlayCanvas;
+            [Header("Sub Transform")]
+            public Transform clearSpotlight;
         }
-    }
-
-    void restartEvent()
-    {
-        return;
-    }
-
-    public void disableClearSpotlight()
-    {
-        setImageAlpha(ref clearSpotlightImage, 0);
-    }
-
-    public void enableClearSpotlight()
-    {
-        //StartCoroutine(runClearSpotlightFadeIn());
-    }
-
-    private IEnumerator runClearSpotlightFadeIn()
-    {
-        float a = 0;
-
-        while (a < 1)
+        [Serializable]
+        struct WorldSpaceCanvas
         {
-            setImageAlpha(ref clearSpotlightImage, a);
-            a += Time.deltaTime;
-            yield return null;
+            [Header("Main Transform")]
+            public Transform worldSpaceCanvas;
         }
-        setImageAlpha(ref clearSpotlightImage, 1);
-    }
 
-    public void enableBlindEvent()
-    {
-        eventManager.uiEvent.onBlindEvent = true;
-    }
+        [SerializeField] OverlayCanvas overlayCanvas;
+        [SerializeField] WorldSpaceCanvas worldSpaceCanvas;
 
-    public void disableBlindEvent()
-    {
-        eventManager.uiEvent.onBlindEvent = true;
-    }
+        Player player;
+        EventManager eventManager;
+        Image clearSpotlightImage;
+        Color c;
+        CanvasScaler overlayCanvasScaler;
+        Vector2 baseResolution, currentResolution;
 
-    public void enableDarkEffect()
-    {
-        setImageAlpha(ref darkImage, 0.8f);
-    }
-
-    public void disableDarkEffect()
-    {
-        setImageAlpha(ref darkImage, 0f);
-    }
-
-    public void fadeIn()
-    {
-        StartCoroutine(runFadeIn());
-    }
-
-    private IEnumerator runFadeIn()
-    {
-        float a = 0;
-
-        while (a < 1)
+        void Awake()
         {
-            setImageAlpha(ref darkImage, a);
-            a += Time.deltaTime;
-            yield return null;
+            eventManager = FindObjectOfType<EventManager>();
+            player = FindObjectOfType<Player>();
+            baseResolution = new Vector2(1920, 1080);
+            currentResolution = new Vector2(Screen.width, Screen.height);
+            overlayCanvasScaler = overlayCanvas.overlayCanvas.GetComponent<CanvasScaler>();
+            clearSpotlightImage = overlayCanvas.clearSpotlight.GetComponent<Image>();
+
+            eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.playerEvent.reviveEvent += reviveEvent;
+            eventManager.stageEvent.clearEvent += enableClearSpotlight;
+            eventManager.uiEvent.enableClearSpotlightEvent += enableClearSpotlight;
+            eventManager.uiEvent.disableClearSpotlightEvent += disableClearSpotlight;
+            eventManager.stageEvent.onClear = false;
         }
-        setImageAlpha(ref darkImage, 1);
-    }
 
-    public void fadeOut()
-    {
-        StartCoroutine(runFadeOut());
-    }
-
-    private IEnumerator runFadeOut()
-    {
-        float a = 1;
-
-        while (0 < a)
+        void Update()
         {
-            setImageAlpha(ref darkImage, a);
-            a -= Time.deltaTime;
-            yield return null;
+            if (1 < Time.time % 2) return;
+            currentResolution.x = Screen.width;
+            currentResolution.y = Screen.height;
+            if (!currentResolution.Equals(baseResolution))
+            {
+                eventManager.uiEvent.resolutionChangeEvent();
+                overlayCanvasScaler.scaleFactor = currentResolution.x / baseResolution.x;
+            }
         }
-        setImageAlpha(ref darkImage, 0);
-    }
 
-    public void playerHitEvent()
-    {
-        setImageAlpha(ref redImage, 1f);
-        StartCoroutine(runHitEffect());
-    }
-
-    private IEnumerator runHitEffect()
-    {
-        float a = 0f;
-        setImageAlpha(ref redImage, a);
-
-        while (c.a < 0.6f)
+        void restartEvent()
         {
-            a += 0.1f;
-            setImageAlpha(ref redImage, a);
-            yield return new WaitForSeconds(0.02f);
+            return;
         }
-        a = 1f;
-        yield return new WaitForSeconds(0.1f);
-        while (0 < c.a)
+
+        public void disableClearSpotlight()
         {
-            a -= 0.1f;
-            setImageAlpha(ref redImage, a);
-            yield return new WaitForSeconds(0.02f);
+            setImageAlpha(ref clearSpotlightImage, 0);
         }
-        a = 0f;
-        setImageAlpha(ref redImage, a);
-    }
 
-    private void setImageAlpha(ref Image i, float a)
-    {
-        c = i.color;
-        c.a = a;
-        i.color = c;
-    }
+        public void enableClearSpotlight()
+        {
+            //StartCoroutine(runClearSpotlightFadeIn());
+        }
 
-    private void deathEvent()
-    {
-        StopAllCoroutines();
-        StartCoroutine(deathEventCoroutine());
-    }
+        private IEnumerator runClearSpotlightFadeIn()
+        {
+            float a = 0;
 
-    private IEnumerator deathEventCoroutine()
-    {
-        setImageAlpha(ref redImage, 0);
-        setImageAlpha(ref darkImage, 0);
-        worldSpaceCanvas.worldSpaceCanvas.gameObject.SetActive(false);
-        yield return new WaitForSeconds(2f);
-        eventManager.uiEvent.fadeInEvent();
-    }
+            while (a < 1)
+            {
+                setImageAlpha(ref clearSpotlightImage, a);
+                a += Time.deltaTime;
+                yield return null;
+            }
+            setImageAlpha(ref clearSpotlightImage, 1);
+        }
 
-    private void reviveEvent()
-    {
-        worldSpaceCanvas.worldSpaceCanvas.gameObject.SetActive(true);
-        setImageAlpha(ref redImage, 0);
-        eventManager.uiEvent.fadeOutEvent();
-    }
+        private void setImageAlpha(ref Image i, float a)
+        {
+            c = i.color;
+            c.a = a;
+            i.color = c;
+        }
 
-    public void warnWithBox(Vector3 pos, Vector3 size)
-    {
-        GameObject o = Instantiate(warningBoxPrefab);
-        o.transform.SetParent(overlayCanvas.warningCanvas);
-        o.transform.position = pos;
-        o.transform.localScale = size;
-        o.SetActive(true);
+        private void deathEvent()
+        {
+            StopAllCoroutines();
+            StartCoroutine(deathEventCoroutine());
+        }
+
+        private IEnumerator deathEventCoroutine()
+        {
+            yield return new WaitForSeconds(2f);
+            eventManager.uiEvent.fadeInEvent();
+        }
+
+        private void reviveEvent()
+        {
+            eventManager.uiEvent.fadeOutEvent();
+        }
     }
 }

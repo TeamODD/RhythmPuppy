@@ -9,6 +9,8 @@ using TMPro;
 using SceneData;
 #pragma warning disable 0642 //Possible mistaken empty statement (182, 196)
 
+using UIManagement;
+
 public class GameClear : MonoBehaviour
 {
     private Vector3 PuppyTransform;
@@ -77,23 +79,23 @@ public class GameClear : MonoBehaviour
         float speed = 0.1f;
         //노래 끝나고 2초 후 퍼피 등장(스테이지 2-1과 2-2에서 3초 전에 이 함수를 부르므로)
         yield return new WaitForSeconds(5f);
-        while(gameObject.transform.position.x > 3.5f)
+        while (gameObject.transform.position.x > 3.5f)
         {
             gameObject.transform.position -= new Vector3(speed, 0, 0);
             yield return new WaitForFixedUpdate();
         }
         clear = true;
         yield break;
-    }   
+    }
     IEnumerator Moving()
     {
         float alpha = 0;
         corgi_head.sprite = corgi_happy;
-        gameObject.transform.position = new Vector3(3,-3.25f,0);
+        gameObject.transform.position = new Vector3(3, -3.25f, 0);
         corgi.SetActive(false);
-        corgiEnd.transform.position = new Vector3(-3,-4.3f,0);
+        corgiEnd.transform.position = new Vector3(-3, -4.3f, 0);
         yield return new WaitForSeconds(1f);
-        while(gameObject.transform.position.x > 1)
+        while (gameObject.transform.position.x > 1)
         {
             gameObject.transform.position += new Vector3(-0.02f, 0, 0);
             corgiEnd.transform.position += new Vector3(0.02f, 0, 0);
@@ -198,7 +200,7 @@ public class GameClear : MonoBehaviour
             }
             else
             {
-                if(PlayerPrefs.HasKey(scene.name))
+                if (PlayerPrefs.HasKey(scene.name))
                 {
                     //0 == A, 1 == B, 2 == C, 3 == S
                     if (PlayerPrefs.GetInt(scene.name) > deathcount)

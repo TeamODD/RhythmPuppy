@@ -446,8 +446,6 @@ MonoBehaviour:
     overlayCanvas: {fileID: 1338004347152322603}
     screenEfffectCanvas: {fileID: 2098856159751937046}
     warningCanvas: {fileID: 4666216187085666866}
-    darkEffect: {fileID: 1246941122901732631}
-    redEffect: {fileID: 1246941123068985666}
     clearSpotlight: {fileID: 2169022453010016493}
     progressBar: {fileID: 1338004345784677163}
   worldSpaceCanvas:
@@ -2049,6 +2047,7 @@ GameObject:
   - component: {fileID: 4457932926221576009}
   - component: {fileID: 6786899741654970886}
   - component: {fileID: 1159103874358515121}
+  - component: {fileID: 8181103323403240623}
   m_Layer: 5
   m_Name: WarningCanvas
   m_TagString: Untagged
@@ -2137,6 +2136,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8181103323403240623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6680174567852248359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2447d945e31dd1a429071afeb3fb722f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  warningBoxPrefab: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
+  warningArrowPrefab: {fileID: 4833175003564764285, guid: 1ba767352fb096447bdb87fccc5a66b9, type: 3}
 --- !u!1 &7184027808420115088
 GameObject:
   m_ObjectHideFlags: 0
@@ -2360,6 +2373,7 @@ GameObject:
   - component: {fileID: 6218283476001267728}
   - component: {fileID: 4292003268662865523}
   - component: {fileID: 1372346892657164395}
+  - component: {fileID: 5247697002600792733}
   m_Layer: 5
   m_Name: ScreenEffectCanvas
   m_TagString: Untagged
@@ -2450,3 +2464,17 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &5247697002600792733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8815248767868231638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb7d7f24d03b98d4aa0b514e2f055d89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  darkEffect: {fileID: 1246941122901732631}
+  redEffect: {fileID: 1246941123068985666}
