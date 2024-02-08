@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static PlayerEvent;
 
 public class PatternManager_1 : MonoBehaviour
 {

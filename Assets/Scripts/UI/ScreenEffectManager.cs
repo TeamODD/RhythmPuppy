@@ -36,8 +36,6 @@ namespace UIManagement
             eventManager.playerEvent.deathEvent += deathEvent;
             eventManager.playerEvent.reviveEvent += reviveEvent;
             /* Stage Events */
-            /* eventManager.stageEvent.pauseEvent += enableBlindEvent;
-            eventManager.stageEvent.resumeEvent += disableBlindEvent; */
             eventManager.stageEvent.pauseEvent += enableDarkEffect;
             eventManager.stageEvent.resumeEvent += disableDarkEffect;
         }
@@ -124,14 +122,14 @@ namespace UIManagement
             i.color = c;
         }
 
-        private void deathEvent()
+        public void deathEvent()
         {
             StopAllCoroutines();
             setImageAlpha(ref redImage, 0);
             setImageAlpha(ref darkImage, 0);
         }
 
-        private void reviveEvent()
+        public void reviveEvent()
         {
             setImageAlpha(ref redImage, 0);
         }

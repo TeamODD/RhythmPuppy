@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using EventManagement;
 using UnityEngine;
 using static EventManagement.StageEvent;
-using static PlayerEvent;
 
 namespace Patterns
 {
@@ -107,7 +106,7 @@ namespace Patterns
             GameObject pattern;
             int repeat;
 
-            for (int i=0; i < patternInfo.Length; i++)
+            for (int i = 0; i < patternInfo.Length; i++)
             {
                 repeat = patternInfo[i].repeatNo;
 
@@ -120,7 +119,7 @@ namespace Patterns
                     pattern = Instantiate(patternInfo[i].prefab);
                     pattern.transform.SetParent(this.transform);
                     /* Send PatetrnInfo - 패턴 정보 전달 */
-                    pattern.GetComponent<PatternBase>().patternInfo = patternInfo[i]; 
+                    pattern.GetComponent<PatternBase>().patternInfo = patternInfo[i];
                     pattern.SetActive(true);
                 }
                 else
@@ -131,7 +130,7 @@ namespace Patterns
                             RunRepeating(startTime, patternInfo[i], new WaitForSeconds(patternInfo[i].repeatDelayTime))
                             )
                         );
-                    
+
                 }
             }
         }
@@ -140,7 +139,7 @@ namespace Patterns
         private IEnumerator RunRepeating(float startTime, PatternInfo patternInfo, WaitForSeconds delay)
         {
             yield return new WaitForSeconds(patternInfo.startAt - audioSource.time - 1);
-            for (int i=0; i < patternInfo.repeatNo; i++)
+            for (int i = 0; i < patternInfo.repeatNo; i++)
             {
                 /* 
                  * If Pattern[i]'s StartTime is Before Current StageTime, Skip to Next Loop.
