@@ -14,11 +14,13 @@ namespace UIManagement
         Image darkImage, redImage;
         Color c;
         EventManager eventManager;
+        Player playerScript;
         WaitForSeconds loopDelay;
 
         void Awake()
         {
             eventManager = FindObjectOfType<EventManager>();
+            playerScript = FindObjectOfType<Player>();
             darkImage = darkEffect.GetComponent<Image>();
             redImage = redEffect.GetComponent<Image>();
             loopDelay = new WaitForSeconds(0.02f);
@@ -34,7 +36,7 @@ namespace UIManagement
             /* Player Events */
             eventManager.playerEvent.playerHitEvent += playerHitEvent;
             eventManager.playerEvent.deathEvent += deathEvent;
-            eventManager.playerEvent.reviveEvent += reviveEvent;
+            playerScript.playerEvent.onRevive.AddListener(reviveEvent);
             /* Stage Events */
             eventManager.stageEvent.pauseEvent += enableDarkEffect;
             eventManager.stageEvent.resumeEvent += disableDarkEffect;

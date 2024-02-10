@@ -20,6 +20,7 @@ namespace Patterns
         public EventManager eventManager;
         List<Coroutine> coroutineList;
         bool isPuppyShown;
+        Player playerScript;
 
         void Awake()
         {
@@ -27,11 +28,12 @@ namespace Patterns
             coroutineList = new List<Coroutine>();
             eventManager = FindObjectOfType<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
+            playerScript = FindObjectOfType<Player>();
             audioSource.clip = music;
 
             eventManager.stageEvent.gameStartEvent += gameStartEvent;
             eventManager.playerEvent.deathEvent += deathEvent;
-            eventManager.playerEvent.reviveEvent += gameStartEvent;
+            playerScript.playerEvent.onRevive.AddListener(gameStartEvent);
             eventManager.savePointTime = savePointTime;
         }
 

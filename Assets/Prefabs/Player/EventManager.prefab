@@ -44,4 +44,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc27276ead8e6f4c8f5e83eb14b30db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageEvent:
+    onGameStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onGameClear:
+      m_PersistentCalls:
+        m_Calls: []
+    onPause:
+      m_PersistentCalls:
+        m_Calls: []
+    onResume:
+      m_PersistentCalls:
+        m_Calls: []
+    onWarning:
+      m_PersistentCalls:
+        m_Calls: []
+    onClear: 0
+  playerEvent:
+    onDash:
+      m_PersistentCalls:
+        m_Calls: []
+    onShoot:
+      m_PersistentCalls:
+        m_Calls: []
+    onShootCancel:
+      m_PersistentCalls:
+        m_Calls: []
+    onTeleport:
+      m_PersistentCalls:
+        m_Calls: []
+    onAttacked:
+      m_PersistentCalls:
+        m_Calls: []
+    onMarkActivated:
+      m_PersistentCalls:
+        m_Calls: []
+    onMarkInactivated:
+      m_PersistentCalls:
+        m_Calls: []
+    onDeath:
+      m_PersistentCalls:
+        m_Calls: []
+    onRevive:
+      m_PersistentCalls:
+        m_Calls: []
+    onRewind:
+      m_PersistentCalls:
+        m_Calls: []
+  uiEvent:
+    enableDarkening:
+      m_PersistentCalls:
+        m_Calls: []
+    disableDarkening:
+      m_PersistentCalls:
+        m_Calls: []
+    enableClearSpotlighting:
+      m_PersistentCalls:
+        m_Calls: []
+    disableClearSpotlighting:
+      m_PersistentCalls:
+        m_Calls: []
+    onFadeIn:
+      m_PersistentCalls:
+        m_Calls: []
+    onFadeOut:
+      m_PersistentCalls:
+        m_Calls: []
+    onChangingResolution:
+      m_PersistentCalls:
+        m_Calls: []
+    onBlindEvent: 0
   savePointTime: []

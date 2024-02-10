@@ -14,6 +14,7 @@ namespace UIManagement
         AudioSource musicAudioSource;
 
         EventManager eventManager;
+        Player playerScript;
         Image fillImage;
         WaitUntil w;
         GameObject[] emptySavePoint, fullSavePoint;
@@ -23,6 +24,7 @@ namespace UIManagement
         void Awake()
         {
             eventManager = FindObjectOfType<EventManager>();
+            playerScript = FindObjectOfType<Player>();
             fillImage = transform.Find("GameProgressGuage").GetComponent<Image>();
             musicAudioSource = GameObject.FindGameObjectWithTag("MusicManager").GetComponent<AudioSource>();
             w = new WaitUntil(() => musicAudioSource.clip != null);
@@ -33,7 +35,7 @@ namespace UIManagement
             eventManager.stageEvent.gameStartEvent += gameStartEvent;
             eventManager.stageEvent.rewindEvent += rewindEvent;
             eventManager.playerEvent.deathEvent += deathEvent;
-            eventManager.playerEvent.reviveEvent += gameStartEvent;
+            playerScript.playerEvent.onRevive.AddListener(gameStartEvent);
             eventManager.uiEvent.resolutionChangeEvent += resolutionChangeEvent;
         }
 

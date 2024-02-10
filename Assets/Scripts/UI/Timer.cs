@@ -62,7 +62,7 @@ namespace UIManagement
                 case TimerType.Revive:
                     rectTransform.localScale = scale * 0.7f;    // 크기 조절
                     reviveDelay = new WaitForSeconds(reviveDelayTime);
-                    eventManager.playerEvent.reviveEvent += reviveEvent;
+                    playerScript.playerEvent.onRevive.AddListener(reviveEvent);
                     break;
             }
         }
@@ -84,7 +84,7 @@ namespace UIManagement
             coroutine = StartCoroutine(runTimer(hitTimerColor, playerScript.hitIFrame));
         }
 
-        private void reviveEvent()
+        public void reviveEvent()
         {
             coroutine = StartCoroutine(reviveCoroutine());
         }

@@ -440,14 +440,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f0a1e47bfec41649aa442be6888ea37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warningBoxPrefab: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
-  warningArrowPrefab: {fileID: 4833175003564764285, guid: 1ba767352fb096447bdb87fccc5a66b9, type: 3}
   overlayCanvas:
     overlayCanvas: {fileID: 1338004347152322603}
-    screenEfffectCanvas: {fileID: 2098856159751937046}
-    warningCanvas: {fileID: 4666216187085666866}
     clearSpotlight: {fileID: 2169022453010016493}
-    progressBar: {fileID: 1338004345784677163}
   worldSpaceCanvas:
     worldSpaceCanvas: {fileID: 1338004347540094112}
 --- !u!1 &1338004347152322597
@@ -2047,7 +2042,7 @@ GameObject:
   - component: {fileID: 4457932926221576009}
   - component: {fileID: 6786899741654970886}
   - component: {fileID: 1159103874358515121}
-  - component: {fileID: 8181103323403240623}
+  - component: {fileID: 1262874644206449907}
   m_Layer: 5
   m_Name: WarningCanvas
   m_TagString: Untagged
@@ -2136,7 +2131,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8181103323403240623
+--- !u!114 &1262874644206449907
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2145,7 +2140,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6680174567852248359}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2447d945e31dd1a429071afeb3fb722f, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fb7760ed7f6a7848b5d1cb6e0125c8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   warningBoxPrefab: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
@@ -2373,7 +2368,7 @@ GameObject:
   - component: {fileID: 6218283476001267728}
   - component: {fileID: 4292003268662865523}
   - component: {fileID: 1372346892657164395}
-  - component: {fileID: 5247697002600792733}
+  - component: {fileID: 5732243026047479679}
   m_Layer: 5
   m_Name: ScreenEffectCanvas
   m_TagString: Untagged
@@ -2464,7 +2459,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &5247697002600792733
+--- !u!114 &5732243026047479679
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2473,7 +2468,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8815248767868231638}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb7d7f24d03b98d4aa0b514e2f055d89, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a67162aecf0b0e4ca0a6694d5e2319c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   darkEffect: {fileID: 1246941122901732631}

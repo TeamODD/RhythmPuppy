@@ -37,6 +37,7 @@ public class PatternControllerrrrrr : MonoBehaviour
     bool isPuppyShown;
     private float startTime;
     EventManager eventManager;
+    Player playerScript;
     CameraShake Camera;
 
     private List<float> pattern6Timings = new List<float>
@@ -109,11 +110,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         Camera = MainCamera.GetComponent<CameraShake>();
         isPuppyShown = false;
         eventManager = FindObjectOfType<EventManager>();
+        playerScript = FindObjectOfType<Player>();
         audioSource.clip = music;
         eventManager.savePointTime = savePointTime;
         eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.stageEvent.gameStartEvent += run;
-        eventManager.playerEvent.reviveEvent += run;
+        playerScript.playerEvent.onRevive.AddListener(run);
 
         eventManager.stageEvent.gameStartEvent();
 

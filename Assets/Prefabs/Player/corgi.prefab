@@ -270,7 +270,7 @@ MonoBehaviour:
   - {fileID: 8767291085195737410}
   - {fileID: 758539414989406506}
   m_Bounds:
-    m_Center: {x: -0.001598835, y: -0.0000009536743, z: 0}
+    m_Center: {x: -0.001598835, y: 0.0000009536743, z: 0}
     m_Extent: {x: 1.0684004, y: 1.1349992, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -402,6 +402,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fea06dff84fb9c345b186cba27ed90fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerEvent:
+    onDash:
+      m_PersistentCalls:
+        m_Calls: []
+    onShoot:
+      m_PersistentCalls:
+        m_Calls: []
+    onCancelingShoot:
+      m_PersistentCalls:
+        m_Calls: []
+    onTeleport:
+      m_PersistentCalls:
+        m_Calls: []
+    onAttacked:
+      m_PersistentCalls:
+        m_Calls: []
+    onDeath:
+      m_PersistentCalls:
+        m_Calls: []
+    onRevive:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: -4500674409776528799}
+          m_TargetAssemblyTypeName: Player, Assembly-CSharp
+          m_MethodName: reviveEvent
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 6867225597861305606}
+          m_TargetAssemblyTypeName: Head, Assembly-CSharp
+          m_MethodName: revive
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    onActivatingMark:
+      m_PersistentCalls:
+        m_Calls: []
+    onDeactivatingMark:
+      m_PersistentCalls:
+        m_Calls: []
   maxHP: 3
   maxStamina: 100
   staminaGen: 4
@@ -948,7 +1000,7 @@ MonoBehaviour:
   - {fileID: 5680815798145197985}
   - {fileID: 700546630576083229}
   m_Bounds:
-    m_Center: {x: 0.000000834465, y: 0.000002026558, z: 0}
+    m_Center: {x: 0.000000834465, y: 0.00000011920929, z: 0}
     m_Extent: {x: 1.1150002, y: 1.44, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

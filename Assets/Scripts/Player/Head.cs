@@ -49,8 +49,6 @@ public class Head : MonoBehaviour
         eventManager.playerEvent.playerHitEvent += playerHitEvent;
         eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.playerEvent.deathEvent += freeze;
-        eventManager.playerEvent.reviveEvent += reviveEvent;
-        eventManager.playerEvent.reviveEvent += defreeze;
         eventManager.stageEvent.clearEvent += clearEvent;
         eventManager.stageEvent.clearEvent += freeze;
         eventManager.stageEvent.pauseEvent += freeze;
@@ -165,6 +163,7 @@ public class Head : MonoBehaviour
 
     private void reviveEvent()
     {
+        defreeze();
         setNormalFace();
     }
 

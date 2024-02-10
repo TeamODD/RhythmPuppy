@@ -62,6 +62,7 @@ public class PatternController1_3 : MonoBehaviour
 
     private float startTime;
     EventManager eventManager;
+    Player playerScript;
 
     private void Start()
     {
@@ -69,10 +70,11 @@ public class PatternController1_3 : MonoBehaviour
         audioSource.clip = music;
         audioSource.Stop();
         eventManager = FindObjectOfType<EventManager>();
+        playerScript = FindObjectOfType<Player>();
         eventManager.savePointTime = savePointTime;
         eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.stageEvent.gameStartEvent += run;
-        eventManager.playerEvent.reviveEvent += run;
+        playerScript.playerEvent.onRevive.AddListener(run);
 
         eventManager.stageEvent.gameStartEvent();
 

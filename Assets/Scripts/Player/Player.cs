@@ -8,6 +8,7 @@ using UnityEngine.U2D.Animation;
 
 using SceneData;
 using EventManagement;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
@@ -19,6 +20,22 @@ public class Player : MonoBehaviour
         ShootCancel,
     }
 
+    [Serializable]
+    public struct PlayerEvent
+    {
+        public UnityEvent onDash;
+        public UnityEvent onShoot;
+        public UnityEvent onCancelingShoot;
+        public UnityEvent onTeleport;
+        public UnityEvent onAttacked;
+        public UnityEvent onDeath;
+        public UnityEvent onRevive;
+        public UnityEvent onActivatingMark;
+        public UnityEvent onDeactivatingMark;
+    }
+
+    [Header("Player Events in Game")]
+    public PlayerEvent playerEvent;
     [Header("Basic Status")]
     public int maxHP;
     public float maxStamina;
@@ -27,10 +44,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     float speed;
 
-    [Header("IFrame")]
-    [Tooltip("Hit Invincible Frame(피격 시 무적시간)")]
+    [Header("I-Frame (Invincible Frame, 피격 무적시간)")]
+    [Tooltip("Hit I-Frame(피격 시 무적시간)")]
     public float hitIFrame;
-    [Tooltip("Revive Invincible Frame(부활 시 무적시간)")]
+    [Tooltip("Revive I-Frame(부활 시 무적시간)")]
     public float reviveIFrame;
 
     [Header("Jump")]
@@ -134,7 +151,6 @@ public class Player : MonoBehaviour
         eventManager.stageEvent.pauseEvent += freeze;
         eventManager.stageEvent.resumeEvent += defreeze;
         eventManager.playerEvent.deathEvent += deathEvent;
-        eventManager.playerEvent.reviveEvent += reviveEvent;
         eventManager.playerEvent.dashEvent += dashEvent;
         eventManager.playerEvent.shootEvent += shootEvent;
         eventManager.playerEvent.teleportEvent += teleportEvent;
@@ -529,7 +545,7 @@ public class Player : MonoBehaviour
         if (deathCount <= 2)
         {
             eventManager.stageEvent.rewindEvent();
-            eventManager.playerEvent.reviveEvent();
+            playerEvent.onRevive.Invoke();
         }
         else
         {
@@ -543,7 +559,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void reviveEvent()
+    public void reviveEvent()
     {
         currentHP = maxHP;
         currentStamina = maxStamina;

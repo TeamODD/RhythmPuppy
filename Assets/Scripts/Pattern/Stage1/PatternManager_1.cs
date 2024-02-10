@@ -55,6 +55,7 @@ public class PatternManager_1 : MonoBehaviour
     Dictionary<Type, float> patternCount;
     EventManager eventManager;
     bool isPuppyShown;
+    Player playerScript;
     /*private int count_1_a;
     private int count_1_b;
     private int count_3;
@@ -63,7 +64,18 @@ public class PatternManager_1 : MonoBehaviour
 
     void Awake()
     {
-        StartCoroutine(init());
+        Camera = MainCamera.GetComponent<CameraShake>();
+        audioSource.clip = music;
+        eventManager = FindObjectOfType<EventManager>();
+        playerScript = FindObjectOfType<Player>();
+        patternCount = new Dictionary<Type, float>();
+
+        eventManager.savePointTime = savePointTime;
+        eventManager.stageEvent.gameStartEvent += run;
+        eventManager.playerEvent.deathEvent += deathEvent;
+        playerScript.playerEvent.onRevive.AddListener(run);
+
+        StartCoroutine(startGame());
         /*audioSource.clip = music;
         eventManager = FindObjectOfType<EventManager>();
         patternCount = new Dictionary<Type, float>();
@@ -85,17 +97,8 @@ public class PatternManager_1 : MonoBehaviour
                 count_4 = 0;*/
     }
 
-    IEnumerator init()
+    IEnumerator startGame()
     {
-        Camera = MainCamera.GetComponent<CameraShake>();
-        audioSource.clip = music;
-        eventManager = FindObjectOfType<EventManager>();
-        patternCount = new Dictionary<Type, float>();
-
-        eventManager.savePointTime = savePointTime;
-        eventManager.stageEvent.gameStartEvent += run;
-        eventManager.playerEvent.deathEvent += deathEvent;
-        eventManager.playerEvent.reviveEvent += run;
         yield return new WaitForSeconds(1);
 
         eventManager.stageEvent.gameStartEvent();

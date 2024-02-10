@@ -44,7 +44,7 @@ namespace UIManagement
             clearSpotlightImage = overlayCanvas.clearSpotlight.GetComponent<Image>();
 
             eventManager.playerEvent.deathEvent += deathEvent;
-            eventManager.playerEvent.reviveEvent += reviveEvent;
+            player.playerEvent.onRevive.AddListener(reviveEvent);
             eventManager.stageEvent.clearEvent += enableClearSpotlight;
             eventManager.uiEvent.enableClearSpotlightEvent += enableClearSpotlight;
             eventManager.uiEvent.disableClearSpotlightEvent += disableClearSpotlight;

@@ -46,6 +46,7 @@ namespace Stage_2
         private bool isPattern3Going = false;
 
         EventManager eventManager;
+        Player playerScript;
         //private ObjectPoolManager PoolingManager;
         private IObjectPool<GameObject> _Pool;
 
@@ -82,6 +83,7 @@ namespace Stage_2
         void Awake()
         {
             eventManager = FindObjectOfType<EventManager>();
+            playerScript = FindObjectOfType<Player>();
             //PoolingManager = FindObjectOfType<ObjectPoolManager>();
             init();
         }
@@ -121,7 +123,7 @@ namespace Stage_2
 
             eventManager.stageEvent.gameStartEvent += gameStartEvent;
             eventManager.playerEvent.deathEvent += deathEvent;
-            eventManager.playerEvent.reviveEvent += gameStartEvent;
+            playerScript.playerEvent.onRevive.AddListener(gameStartEvent);
 
             //DelayingPattern();
 
