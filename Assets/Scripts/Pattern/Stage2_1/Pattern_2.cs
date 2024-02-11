@@ -7,13 +7,13 @@ using Patterns;
 using Unity.VisualScripting;
 using UnityEngine;
 using EventManagement;
-using static EventManagement.StageEvent;
 
 namespace Stage_2
 {
     public class Pattern_2 : MonoBehaviour
     {
         public GameObject paw;
+        public GameObject warnBox;
 
         EventManager eventManager;
         AudioSource audioSource;
@@ -23,12 +23,12 @@ namespace Stage_2
 
         void Start()
         {
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
-            this.objectList = new List<GameObject>();
+            objectList = new List<GameObject>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
 
-            eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.onDeath.AddListener(deathEvent);
 
             coroutine = StartCoroutine(runPattern());
         }
@@ -50,11 +50,12 @@ namespace Stage_2
         private void warn(float x)
         {
             Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, -4.3f - 0.5f));
-            eventManager.stageEvent.warnWithBox(v, new Vector3(200, 500, 0));
+            eventManager.onWarning.Invoke(warnBox, v, new Vector3(200, 500, 0));
         }
 
         public void deathEvent()
         {
+            StopCoroutine(coroutine);
             for (int i = 0; i < objectList.Count; i++)
             {
                 Destroy(objectList[i]);

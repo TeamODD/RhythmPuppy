@@ -15,10 +15,11 @@ public class Pattern2_a : MonoBehaviour
     void Start()
     {
         eventManager = FindObjectOfType<EventManager>();
-        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.onDeath.AddListener(deathEvent);
         rb = gameObject.GetComponent<Rigidbody2D>();
         time = 0;
-        Destroy(gameObject, 4.2f);
+        //Destroy(gameObject, 4.2f);
+        StartCoroutine(destroySelf(4.2f));
     }
 
     void FixedUpdate()
@@ -34,9 +35,15 @@ public class Pattern2_a : MonoBehaviour
         }
     }
 
+    IEnumerator destroySelf(float t)
+    {
+        yield return new WaitForSeconds(t);
+        Destroy(gameObject);
+    }
+
     private void deathEvent()
     {
-        eventManager.playerEvent.deathEvent -= deathEvent;
+        StopAllCoroutines();
         Destroy(gameObject);
     }
 }

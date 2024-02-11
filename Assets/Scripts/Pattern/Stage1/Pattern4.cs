@@ -13,7 +13,8 @@ public class Pattern4 : MonoBehaviour
 
     void Awake()
     {
-        eventManager = FindObjectOfType<EventManager>();
+        eventManager = GetComponentInParent<EventManager>();
+        eventManager.onDeath.AddListener(deathEvent);
         xPosition = Random.Range(-8.5f, 8.5f);
     }
     void Start()

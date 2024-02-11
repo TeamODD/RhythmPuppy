@@ -20,20 +20,18 @@ namespace Patterns
         public EventManager eventManager;
         List<Coroutine> coroutineList;
         bool isPuppyShown;
-        Player playerScript;
 
         void Awake()
         {
             isPuppyShown = false;
             coroutineList = new List<Coroutine>();
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
-            playerScript = FindObjectOfType<Player>();
             audioSource.clip = music;
 
-            eventManager.stageEvent.gameStartEvent += gameStartEvent;
-            eventManager.playerEvent.deathEvent += deathEvent;
-            playerScript.playerEvent.onRevive.AddListener(gameStartEvent);
+            eventManager.onGameStart.AddListener(gameStartEvent);
+            eventManager.onDeath.AddListener(deathEvent);
+            eventManager.onRevive.AddListener(gameStartEvent);
             eventManager.savePointTime = savePointTime;
         }
 
@@ -46,7 +44,7 @@ namespace Patterns
         {
             sortPatternByTime();
             yield return new WaitForSeconds(startDelayTime - 1);
-            eventManager.stageEvent.gameStartEvent();
+            eventManager.onGameStart.Invoke();
         }
 
         private void gameStartEvent()

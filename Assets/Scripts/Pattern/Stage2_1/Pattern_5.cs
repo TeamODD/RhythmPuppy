@@ -9,13 +9,13 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using EventManagement;
-using static EventManagement.StageEvent;
 
 namespace Stage_2
 {
     public class Pattern_5 : MonoBehaviour
     {
         public GameObject ratSwarm;
+        public GameObject ratWarnBox;
         public float startDelay;
         public float duration;
 
@@ -28,12 +28,12 @@ namespace Stage_2
 
         void Start()
         {
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
-            this.objectList = new List<GameObject>();
+            objectList = new List<GameObject>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
 
-            eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.onDeath.AddListener(deathEvent);
 
             if (!patternInfo.duration.Equals(0))
                 setDuration(patternInfo.duration - startDelay);
@@ -50,7 +50,7 @@ namespace Stage_2
 
         public void setDuration(float start, float end)
         {
-            this.duration = end - start - startDelay;
+            duration = end - start - startDelay;
         }
 
         private IEnumerator runPattern()
@@ -95,11 +95,12 @@ namespace Stage_2
                 pos.x = -10f;
             pos = Camera.main.WorldToScreenPoint(pos);
 
-            eventManager.stageEvent.warnWithBox(pos, new Vector3(700, 150, 0));
+            eventManager.onWarning.Invoke(ratWarnBox, pos, new Vector3(700, 150, 0));
         }
 
         public void deathEvent()
         {
+            StopCoroutine(coroutine);
             for (int i = 0; i < objectList.Count; i++)
             {
                 Destroy(objectList[i]);

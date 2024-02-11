@@ -9,7 +9,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using EventManagement;
-using static EventManagement.StageEvent;
 
 namespace Stage_2
 {
@@ -25,11 +24,11 @@ namespace Stage_2
 
         void Start()
         {
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
 
-            eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.onDeath.AddListener(deathEvent);
 
             if (!patternInfo.duration.Equals(0))
                 setDuration(patternInfo.duration - startDelay[startDelay.Length - 1]);
@@ -58,22 +57,23 @@ namespace Stage_2
 
             int i = 0;
             yield return new WaitForSeconds(startDelay[i++]);
-            eventManager.uiEvent.enableBlindEvent();
+            eventManager.enableDarkening.Invoke();
             while (i < startDelay.Length)
             {
                 yield return new WaitForSeconds(startDelay[i] - startDelay[i - 1]);
                 i++;
-                eventManager.uiEvent.disableBlindEvent();
+                eventManager.disableDarkening.Invoke();
                 yield return new WaitForSeconds(startDelay[i] - startDelay[i - 1]);
                 i++;
-                eventManager.uiEvent.enableBlindEvent();
+                eventManager.enableDarkening.Invoke();
             }
             yield return new WaitForSeconds(duration);
-            eventManager.uiEvent.disableBlindEvent();
+            eventManager.disableDarkening.Invoke();
         }
 
         void deathEvent()
         {
+            StopCoroutine(coroutine);
             Destroy(gameObject);
         }
     }

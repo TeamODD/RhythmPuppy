@@ -14,14 +14,14 @@ public class ButtonAction : MonoBehaviour
 
     void Awake()
     {
-        eventManager = FindObjectOfType<EventManager>();
+        eventManager = GetComponentInParent<EventManager>();
     }
 
     public void onContinue()
     {
-        GameObject GamePlayManager = GameObject.Find("GamePlayManager");
+        //GameObject GamePlayManager = GameObject.Find("GamePlayManager");
         //GamePlayManager.GetComponent<GamePause>().ResumeGame();
-        eventManager.stageEvent.resumeEvent();
+        eventManager.onResume.Invoke();
 
         Option.SetActive(false);
     }

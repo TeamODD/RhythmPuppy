@@ -12,6 +12,9 @@ public class Warning4 : MonoBehaviour
         time = 0;
         gameObject.transform.position = new Vector3(xPosition, 4.3f, 0);
         GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, 0);
+
+        //1초후 gameObject 삭제
+        Destroy(gameObject, 1f);
     }
 
     void Update()
@@ -21,8 +24,5 @@ public class Warning4 : MonoBehaviour
             GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, time / 1f);
         else
             GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, 1f - time / 1f);
-
-        //1초후 gameObject 삭제
-        Destroy(gameObject, 1f);
     }
 }

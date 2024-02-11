@@ -69,14 +69,14 @@ public class PatternController1_3 : MonoBehaviour
         isPuppyShown = false;
         audioSource.clip = music;
         audioSource.Stop();
-        eventManager = FindObjectOfType<EventManager>();
+        eventManager = GetComponentInParent<EventManager>();
         playerScript = FindObjectOfType<Player>();
         eventManager.savePointTime = savePointTime;
-        eventManager.playerEvent.deathEvent += deathEvent;
-        eventManager.stageEvent.gameStartEvent += run;
-        playerScript.playerEvent.onRevive.AddListener(run);
+        eventManager.onDeath.AddListener(deathEvent);
+        eventManager.onGameStart.AddListener(run);
+        eventManager.onRevive.AddListener(run);
 
-        eventManager.stageEvent.gameStartEvent();
+        eventManager.onGameStart.Invoke();
 
         pattern11.SetActive(false);
         pattern12.SetActive(false);

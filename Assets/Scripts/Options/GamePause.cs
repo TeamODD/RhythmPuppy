@@ -5,8 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GamePause : MonoBehaviour
 {
-    [HideInInspector]
-    public bool isPaused;
+    public bool isPaused { get; set; }
     AudioSource BGM;
     EventManager eventManager;
 
@@ -14,11 +13,11 @@ public class GamePause : MonoBehaviour
     {
         /*stage1_2BGM = GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>();*/
         BGM = FindObjectOfType<AudioSource>();
-        eventManager = FindObjectOfType<EventManager>();
+        eventManager = GetComponentInParent<EventManager>();
         isPaused = false;
 
-        eventManager.stageEvent.pauseEvent += PauseEvent;
-        eventManager.stageEvent.resumeEvent += ResumeEvent;
+        eventManager.onPause.AddListener(PauseEvent);
+        eventManager.onResume.AddListener(ResumeEvent);
     }
 
     public void TogglePause()

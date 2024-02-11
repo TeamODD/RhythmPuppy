@@ -22,8 +22,8 @@ public class Pattern666 : MonoBehaviour
 
     private void OnEnable()
     {
-        eventManager = FindObjectOfType<EventManager>();
-        eventManager.playerEvent.deathEvent += StopPattern;
+        eventManager = GetComponentInParent<EventManager>();
+        eventManager.onDeath.AddListener(StopPattern);
         objects = new List<GameObject>();
         StartPattern();
     }
@@ -35,7 +35,7 @@ public class Pattern666 : MonoBehaviour
 
     private void OnDestroy()
     {
-        eventManager.playerEvent.deathEvent -= StopPattern;
+        eventManager.onDeath.RemoveListener(StopPattern);
     }
 
     private void StartPattern()
@@ -128,7 +128,7 @@ public class Pattern666 : MonoBehaviour
 
         StartCoroutine(DestroyIfOutOfBounds(currentStem));
     }
-    
+
 
     private IEnumerator DestroyIfOutOfBounds(GameObject obj)
     {

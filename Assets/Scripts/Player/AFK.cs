@@ -10,11 +10,6 @@ public class AFK : MonoBehaviour
     public Sprite WakeUp;
     private float lastInputTime;
 
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {

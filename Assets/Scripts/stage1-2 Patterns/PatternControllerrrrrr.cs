@@ -37,7 +37,6 @@ public class PatternControllerrrrrr : MonoBehaviour
     bool isPuppyShown;
     private float startTime;
     EventManager eventManager;
-    Player playerScript;
     CameraShake Camera;
 
     private List<float> pattern6Timings = new List<float>
@@ -109,15 +108,14 @@ public class PatternControllerrrrrr : MonoBehaviour
     {
         Camera = MainCamera.GetComponent<CameraShake>();
         isPuppyShown = false;
-        eventManager = FindObjectOfType<EventManager>();
-        playerScript = FindObjectOfType<Player>();
+        eventManager = GetComponentInParent<EventManager>();
         audioSource.clip = music;
         eventManager.savePointTime = savePointTime;
-        eventManager.playerEvent.deathEvent += deathEvent;
-        eventManager.stageEvent.gameStartEvent += run;
-        playerScript.playerEvent.onRevive.AddListener(run);
+        eventManager.onDeath.AddListener(deathEvent);
+        eventManager.onGameStart.AddListener(run);
+        eventManager.onRevive.AddListener(run);
 
-        eventManager.stageEvent.gameStartEvent();
+        eventManager.onGameStart.Invoke();
 
         // 패턴1, 패턴2, 패턴3 스크립트를 비활성화
         pattern6.SetActive(false);
@@ -217,7 +215,7 @@ public class PatternControllerrrrrr : MonoBehaviour
             }
 
             StartCoroutine(RunPattern7b(timing));
-            yield return null;            
+            yield return null;
         }
     }
 
@@ -235,12 +233,12 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8aTimings[i];
 
-            if ( timing < startTime)
+            if (timing < startTime)
             {
                 continue;
             }
 
-            StartCoroutine (RunPattern8a(timing));
+            StartCoroutine(RunPattern8a(timing));
             yield return null;
         }
     }
@@ -259,7 +257,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         {
             float timing = pattern8bTimings[i];
 
-            if ( timing < startTime)
+            if (timing < startTime)
             {
                 continue;
             }
@@ -293,7 +291,7 @@ public class PatternControllerrrrrr : MonoBehaviour
         }
     }
 
-    private IEnumerator RunPattern8c(float timing) 
+    private IEnumerator RunPattern8c(float timing)
     {
         yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
         // 패턴을 복제하고 활성화
@@ -335,7 +333,7 @@ public class PatternControllerrrrrr : MonoBehaviour
             {
                 continue;
             }
-            
+
             StartCoroutine(RunPattern10(timing));
             yield return null;
         }

@@ -16,13 +16,13 @@ namespace Stage_2
         EventManager eventManager;
         SpriteRenderer sp;
 
-        void Awake() 
+        void Awake()
         {
             sp = GetComponentInChildren<SpriteRenderer>();
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
 
-            eventManager.uiEvent.enableBlindEvent += enableBlindEvent;
-            eventManager.uiEvent.disableBlindEvent += disableBlindEvent;
+            eventManager.enableDarkening.AddListener(enableBlindEvent);
+            eventManager.disableDarkening.AddListener(disableBlindEvent);
         }
 
         /*void Update()
@@ -37,7 +37,7 @@ namespace Stage_2
         {
             //true  : 램프 on
             //false : 램프 off
-            switch(Status)
+            switch (Status)
             {
                 case false:
                     sp.sprite = lampOff;

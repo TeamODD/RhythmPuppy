@@ -13,6 +13,8 @@ public class Warning1_b : MonoBehaviour
         gameObject.transform.position = new Vector3(9f, yPosition, 0);
         GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, 0);
 
+        //1초후 gameObject 삭제
+        Destroy(gameObject, 1f);
     }
 
     // Update is called once per frame
@@ -22,9 +24,6 @@ public class Warning1_b : MonoBehaviour
         if (time < 0.5f)
             GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, time / 1f);
         else
-            GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, 1f-time / 1f);
-
-        //1초후 gameObject 삭제
-        Destroy(gameObject, 1f);
+            GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, 1f - time / 1f);
     }
 }

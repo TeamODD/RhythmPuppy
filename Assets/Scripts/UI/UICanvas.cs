@@ -27,7 +27,6 @@ namespace UIManagement
         [SerializeField] OverlayCanvas overlayCanvas;
         [SerializeField] WorldSpaceCanvas worldSpaceCanvas;
 
-        Player player;
         EventManager eventManager;
         Image clearSpotlightImage;
         Color c;
@@ -36,19 +35,18 @@ namespace UIManagement
 
         void Awake()
         {
-            eventManager = FindObjectOfType<EventManager>();
-            player = FindObjectOfType<Player>();
+            eventManager = GetComponentInParent<EventManager>();
             baseResolution = new Vector2(1920, 1080);
             currentResolution = new Vector2(Screen.width, Screen.height);
             overlayCanvasScaler = overlayCanvas.overlayCanvas.GetComponent<CanvasScaler>();
             clearSpotlightImage = overlayCanvas.clearSpotlight.GetComponent<Image>();
 
-            eventManager.playerEvent.deathEvent += deathEvent;
-            player.playerEvent.onRevive.AddListener(reviveEvent);
-            eventManager.stageEvent.clearEvent += enableClearSpotlight;
-            eventManager.uiEvent.enableClearSpotlightEvent += enableClearSpotlight;
-            eventManager.uiEvent.disableClearSpotlightEvent += disableClearSpotlight;
-            eventManager.stageEvent.onClear = false;
+            eventManager.onDeath.AddListener(deathEvent);
+            eventManager.onRevive.AddListener(reviveEvent);
+            eventManager.isGameCleared = false;
+            eventManager.onGameClear.AddListener(enableClearSpotlight);
+            eventManager.enableClearSpotlighting.AddListener(enableClearSpotlight);
+            eventManager.disableClearSpotlighting.AddListener(disableClearSpotlight);
         }
 
         void Update()
@@ -58,7 +56,7 @@ namespace UIManagement
             currentResolution.y = Screen.height;
             if (!currentResolution.Equals(baseResolution))
             {
-                eventManager.uiEvent.resolutionChangeEvent();
+                eventManager.onChangingResolution.Invoke();
                 overlayCanvasScaler.scaleFactor = currentResolution.x / baseResolution.x;
             }
         }
@@ -107,12 +105,12 @@ namespace UIManagement
         private IEnumerator deathEventCoroutine()
         {
             yield return new WaitForSeconds(2f);
-            eventManager.uiEvent.fadeInEvent();
+            eventManager.onFadeIn.Invoke();
         }
 
         private void reviveEvent()
         {
-            eventManager.uiEvent.fadeOutEvent();
+            eventManager.onFadeOut.Invoke();
         }
     }
 }

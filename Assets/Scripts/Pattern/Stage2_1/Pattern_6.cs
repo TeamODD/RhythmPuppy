@@ -12,30 +12,27 @@ namespace Stage_2
     public class Pattern_6 : MonoBehaviour
     {
         public GameObject cat;
+        public GameObject catWarnBox;
 
         EventManager eventManager;
-        AudioSource audioSource;
         List<GameObject> objectList;
         Coroutine coroutine;
-        PatternInfo patternInfo;
 
         void Start()
         {
-            eventManager = FindObjectOfType<EventManager>();
-            audioSource = FindObjectOfType<AudioSource>();
-            this.objectList = new List<GameObject>();
-            patternInfo = GetComponent<PatternBase>().patternInfo;
+            eventManager = GetComponentInParent<EventManager>();
+            objectList = new List<GameObject>();
 
-            eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.onDeath.AddListener(deathEvent);
 
             coroutine = StartCoroutine(runPattern());
         }
 
         private IEnumerator runPattern()
         {
-            eventManager.playerEvent.markActivationEvent();
+            eventManager.onMarkActivated.Invoke();
             yield return new WaitForSeconds(1);
-            eventManager.playerEvent.markInactivationEvent();
+            eventManager.onMarkDeactivated.Invoke();
 
             float r = UnityEngine.Random.Range(-8f, 8f);
             GameObject catObject = Instantiate(cat);
@@ -47,6 +44,7 @@ namespace Stage_2
 
         public void deathEvent()
         {
+            StopCoroutine(coroutine);
             for (int i = 0; i < objectList.Count; i++)
             {
                 Destroy(objectList[i]);

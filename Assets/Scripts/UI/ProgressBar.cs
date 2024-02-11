@@ -23,7 +23,7 @@ namespace UIManagement
 
         void Awake()
         {
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             playerScript = FindObjectOfType<Player>();
             fillImage = transform.Find("GameProgressGuage").GetComponent<Image>();
             musicAudioSource = GameObject.FindGameObjectWithTag("MusicManager").GetComponent<AudioSource>();
@@ -32,11 +32,11 @@ namespace UIManagement
             endPoint = endPointTransform.position;
             fillImage.fillAmount = 0;
 
-            eventManager.stageEvent.gameStartEvent += gameStartEvent;
-            eventManager.stageEvent.rewindEvent += rewindEvent;
-            eventManager.playerEvent.deathEvent += deathEvent;
-            playerScript.playerEvent.onRevive.AddListener(gameStartEvent);
-            eventManager.uiEvent.resolutionChangeEvent += resolutionChangeEvent;
+            eventManager.onGameStart.AddListener(gameStartEvent);
+            eventManager.onRewind.AddListener(rewindEvent);
+            eventManager.onDeath.AddListener(deathEvent);
+            eventManager.onRevive.AddListener(gameStartEvent);
+            eventManager.onChangingResolution.AddListener(resolutionChangeEvent);
         }
 
         void Start()

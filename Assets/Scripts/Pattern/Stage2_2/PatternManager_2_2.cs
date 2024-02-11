@@ -82,7 +82,7 @@ namespace Stage_2
 
         void Awake()
         {
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             playerScript = FindObjectOfType<Player>();
             //PoolingManager = FindObjectOfType<ObjectPoolManager>();
             init();
@@ -121,9 +121,9 @@ namespace Stage_2
                 }*/
             }
 
-            eventManager.stageEvent.gameStartEvent += gameStartEvent;
-            eventManager.playerEvent.deathEvent += deathEvent;
-            playerScript.playerEvent.onRevive.AddListener(gameStartEvent);
+            eventManager.onGameStart.AddListener(gameStartEvent);
+            eventManager.onDeath.AddListener(deathEvent);
+            eventManager.onRevive.AddListener(gameStartEvent);
 
             //DelayingPattern();
 
@@ -182,7 +182,7 @@ namespace Stage_2
                 StartCoroutine(Pattern7_a(Pattern7_aTimeLine[i] + delayTime, startTime, randomY));
                 StartCoroutine(Pattern7_a_WarningBox(Pattern7_aTimeLine[i] + delayTime, startTime, randomY));
             }
-            StartCoroutine(Pattern3_b(39.4f, startTime)); 
+            StartCoroutine(Pattern3_b(39.4f, startTime));
             for (int i = 0; i < Pattern8TimeLine.Length; i++)
             {
                 RandomX = Random.Range(-7f, 7);
@@ -207,8 +207,13 @@ namespace Stage_2
 
             void MakingWarningBox(float x)
             {
+                // 오브젝트 풀링 구현내용을 보고 수정 예정
+                GameObject catWarnBox;
+                catWarnBox = ObjectPoolDic["catWarnBox"].Get();
+                Debug.Log(string.Format("[%f]PatternManager_2_2.cs 211라인 수정필요", Time.time));
+
                 Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, 0));
-                eventManager.stageEvent.warnWithBox(v, new Vector3(300, 1080, 0));
+                eventManager.onWarning.Invoke(catWarnBox, v, new Vector3(300, 1080, 0));
             }
 
             void MakingCat(string ObjectName, float X)
@@ -267,9 +272,9 @@ namespace Stage_2
                 //변수 캐싱
                 randomX = Random.Range(-8f, 8f);
                 //경고 표식 생성
-                eventManager.playerEvent.markActivationEvent();
+                eventManager.onMarkActivated.Invoke();
                 yield return new WaitForSeconds(1f);
-                eventManager.playerEvent.markInactivationEvent();
+                eventManager.onMarkDeactivated.Invoke();
 
                 //고양이 생성
                 SetPrefabInfos(1);

@@ -60,8 +60,8 @@ public class GameClear : MonoBehaviour
     {
         //MusicManager = GameObject.FindWithTag("MusicManager").GetComponent<AudioSource>();
         corgi = GameObject.FindGameObjectWithTag("Player");
-        eventManager = FindObjectOfType<EventManager>();
-        eventManager.stageEvent.clearEvent += Clear;
+        eventManager = GetComponentInParent<EventManager>();
+        eventManager.onGameClear.AddListener(Clear);
         clear = false;
         Collider = gameObject.GetComponent<CircleCollider2D>();
         PuppyTransform = gameObject.transform.position;

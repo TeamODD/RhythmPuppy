@@ -16,15 +16,16 @@ public class Pattern1_b : MonoBehaviour
 
     void Awake()
     {
-        eventManager = FindObjectOfType<EventManager>();
-        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager = GetComponentInParent<EventManager>();
+        eventManager.onDeath.AddListener(deathEvent);
         time = 0;
         yPosition = Random.Range(-1.3f, 3.5f);
     }
     void Start()
     {
         gameObject.transform.position = new Vector3(10f, yPosition, 0);
-        Destroy(gameObject, 3f);
+        //Destroy(gameObject, 3f);
+        StartCoroutine(DestroySelf(3f));
     }
     void FixedUpdate()
     {
@@ -44,9 +45,15 @@ public class Pattern1_b : MonoBehaviour
         }
     }
 
+    IEnumerator DestroySelf(float t)
+    {
+        yield return new WaitForSeconds(t);
+        Destroy(gameObject);
+    }
+
     private void deathEvent()
     {
-        eventManager.playerEvent.deathEvent -= deathEvent;
+        StopAllCoroutines();
         Destroy(gameObject);
     }
 }

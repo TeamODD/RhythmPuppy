@@ -32,7 +32,7 @@ public class PatternManager : MonoBehaviour
     private IEnumerator init()
     {
         isPuppyShown = false;
-        eventManager = FindObjectOfType<EventManager>();
+        eventManager = GetComponentInParent<EventManager>();
         audioSource = FindObjectOfType<AudioSource>();
         if (stage != null) Destroy(stage);
         stage = null;

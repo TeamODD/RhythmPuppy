@@ -21,7 +21,7 @@ namespace Stage_2
 
         public void init()
         {
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             patternManager = transform.parent;
 

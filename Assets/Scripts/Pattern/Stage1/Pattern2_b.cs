@@ -11,21 +11,19 @@ public class Pattern2_b : MonoBehaviour
     private float power;
     // private float RotateSpeed;
     private float time;
-    EventManager eventManager;
 
     void Awake()
     {
-        eventManager = FindObjectOfType<EventManager>();
-        eventManager.playerEvent.deathEvent += deathEvent;
         time = 0;
     }
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
-        
+
         // RotateSpeed = 540;
         //1초 동안 맵 밖에서 굴러가서 경고문보다 1초 늦게 도착 후 4초 동안 맵 안에서 굴러감.
-        Destroy(gameObject, 4.5f);
+        //Destroy(gameObject, 4.5f);
+        StartCoroutine(destroySelf(4.5f));
     }
 
     void FixedUpdate()
@@ -38,9 +36,15 @@ public class Pattern2_b : MonoBehaviour
         }
     }
 
+    IEnumerator destroySelf(float t)
+    {
+        yield return new WaitForSeconds(t);
+        Destroy(gameObject);
+    }
+
     void deathEvent()
     {
-        eventManager.playerEvent.deathEvent -= deathEvent;
+        StopAllCoroutines();
         Destroy(gameObject);
     }
 }

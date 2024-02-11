@@ -8,7 +8,6 @@ using UnityEngine.U2D.Animation;
 
 using SceneData;
 using EventManagement;
-using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
@@ -20,22 +19,6 @@ public class Player : MonoBehaviour
         ShootCancel,
     }
 
-    [Serializable]
-    public struct PlayerEvent
-    {
-        public UnityEvent onDash;
-        public UnityEvent onShoot;
-        public UnityEvent onCancelingShoot;
-        public UnityEvent onTeleport;
-        public UnityEvent onAttacked;
-        public UnityEvent onDeath;
-        public UnityEvent onRevive;
-        public UnityEvent onActivatingMark;
-        public UnityEvent onDeactivatingMark;
-    }
-
-    [Header("Player Events in Game")]
-    public PlayerEvent playerEvent;
     [Header("Basic Status")]
     public int maxHP;
     public float maxStamina;
@@ -127,7 +110,7 @@ public class Player : MonoBehaviour
         hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
-        eventManager = FindObjectOfType<EventManager>();
+        eventManager = GetComponentInParent<EventManager>();
         hitInvincibleDelay = new WaitForSeconds(hitIFrame);
         reviveInvincibleDelay = new WaitForSeconds(3);
         dashDelay = new WaitForSeconds(dashDuration);
@@ -146,15 +129,15 @@ public class Player : MonoBehaviour
         anim.SetInteger("JumpCount", 0);
 
         /** Add event functions to global event manager */
-        eventManager.playerEvent.playerHitEvent += playerHitEvent;
-        eventManager.stageEvent.clearEvent += freeze;
-        eventManager.stageEvent.pauseEvent += freeze;
-        eventManager.stageEvent.resumeEvent += defreeze;
-        eventManager.playerEvent.deathEvent += deathEvent;
-        eventManager.playerEvent.dashEvent += dashEvent;
-        eventManager.playerEvent.shootEvent += shootEvent;
-        eventManager.playerEvent.teleportEvent += teleportEvent;
-        eventManager.playerEvent.shootCancelEvent += shootCancelEvent;
+        eventManager.onDash.AddListener(dashEvent);
+        eventManager.onShoot.AddListener(shootEvent);
+        eventManager.onShootCancel.AddListener(shootCancelEvent);
+        eventManager.onTeleport.AddListener(teleportEvent);
+        eventManager.onAttacked.AddListener(playerHitEvent);
+        eventManager.onDeath.AddListener(deathEvent);
+        eventManager.onGameClear.AddListener(freeze);
+        eventManager.onPause.AddListener(freeze);
+        eventManager.onResume.AddListener(defreeze);
     }
 
     private void checkTutorial()
@@ -194,7 +177,7 @@ public class Player : MonoBehaviour
             if (currentStamina < dashStaminaCost)
                 Debug.Log("not enough stamina!");
             else if (!Input.GetAxisRaw("Horizontal").Equals(0) && dashCoroutine == null && dashCooldownCoroutine == null)
-                eventManager.playerEvent.dashEvent();
+                eventManager.onDash.Invoke();
 
         }
         if (Input.GetButtonDown("Jump"))
@@ -223,18 +206,18 @@ public class Player : MonoBehaviour
                     {
                         return;
                     }
-                    eventManager.playerEvent.shootEvent();
+                    eventManager.onShoot.Invoke();
                 }
             }
             else
             {
-                eventManager.playerEvent.teleportEvent();
+                eventManager.onTeleport.Invoke();
             }
         }
         if (Input.GetButtonDown("ShootCancel"))
         {
             if (onFired)
-                eventManager.playerEvent.shootCancelEvent();
+                eventManager.onShootCancel.Invoke();
         }
         if (Input.GetKey(KeyCode.F1) && Input.GetKeyDown(KeyCode.F12))
         {
@@ -278,7 +261,7 @@ public class Player : MonoBehaviour
                 return;
             }
             if (dashCoroutine != null) evade(c.collider);
-            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
+            else if (invincibilityCoroutine == null) eventManager.onAttacked.Invoke();
         }
     }
 
@@ -297,7 +280,7 @@ public class Player : MonoBehaviour
                 return;
             }
             if (dashCoroutine != null) evade(c);
-            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
+            else if (invincibilityCoroutine == null) eventManager.onAttacked.Invoke();
         }
     }
 
@@ -306,7 +289,7 @@ public class Player : MonoBehaviour
         if (LayerMask.NameToLayer("Obstacle").Equals(c.gameObject.layer))
         {
             if (dashCoroutine != null) evade(c);
-            else if (invincibilityCoroutine == null) eventManager.playerEvent.playerHitEvent();
+            else if (invincibilityCoroutine == null) eventManager.onAttacked.Invoke();
         }
     }
 
@@ -521,7 +504,7 @@ public class Player : MonoBehaviour
         if (currentHP <= 0)
         {
             deathCount++;
-            eventManager.playerEvent.deathEvent();
+            eventManager.onDeath.Invoke();
             return;
         }
         invincibilityCoroutine = StartCoroutine(activateInvincibility());
@@ -544,8 +527,8 @@ public class Player : MonoBehaviour
 
         if (deathCount <= 2)
         {
-            eventManager.stageEvent.rewindEvent();
-            playerEvent.onRevive.Invoke();
+            eventManager.onRewind.Invoke();
+            eventManager.onRevive.Invoke();
         }
         else
         {

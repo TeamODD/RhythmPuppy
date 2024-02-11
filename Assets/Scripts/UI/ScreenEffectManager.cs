@@ -19,27 +19,27 @@ namespace UIManagement
 
         void Awake()
         {
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             playerScript = FindObjectOfType<Player>();
             darkImage = darkEffect.GetComponent<Image>();
             redImage = redEffect.GetComponent<Image>();
             loopDelay = new WaitForSeconds(0.02f);
 
             /* UI Events */
-            eventManager.uiEvent.onBlindEvent = false;
-            eventManager.uiEvent.enableBlindEvent += enableDarkEffect;
-            eventManager.uiEvent.enableBlindEvent += enableBlindEvent;  // Lamp Effect in Stage2
-            eventManager.uiEvent.disableBlindEvent += disableDarkEffect;
-            eventManager.uiEvent.disableBlindEvent += disableBlindEvent;  // Lamp Effect in Stage2
-            eventManager.uiEvent.fadeInEvent += fadeIn;
-            eventManager.uiEvent.fadeOutEvent += fadeOut;
+            //eventManager.uiEvent.onBlindEvent = false;
+            eventManager.enableDarkening.AddListener(enableDarkEffect);
+            //eventManager.uiEvent.enableDarkening.AddListener(enableBlindEvent);  // Lamp Effect in Stage2
+            eventManager.disableDarkening.AddListener(disableDarkEffect);
+            //eventManager.uiEvent.disableDarkening.AddListener(disableBlindEvent);  // Lamp Effect in Stage2
+            eventManager.onFadeIn.AddListener(fadeIn);
+            eventManager.onFadeOut.AddListener(fadeOut);
             /* Player Events */
-            eventManager.playerEvent.playerHitEvent += playerHitEvent;
-            eventManager.playerEvent.deathEvent += deathEvent;
-            playerScript.playerEvent.onRevive.AddListener(reviveEvent);
+            eventManager.onAttacked.AddListener(playerHitEvent);
+            eventManager.onDeath.AddListener(deathEvent);
+            eventManager.onRevive.AddListener(reviveEvent);
             /* Stage Events */
-            eventManager.stageEvent.pauseEvent += enableDarkEffect;
-            eventManager.stageEvent.resumeEvent += disableDarkEffect;
+            eventManager.onPause.AddListener(enableDarkEffect);
+            eventManager.onResume.AddListener(disableDarkEffect);
         }
 
         public void enableDarkEffect()
@@ -136,14 +136,14 @@ namespace UIManagement
             setImageAlpha(ref redImage, 0);
         }
 
-        public void enableBlindEvent()
+        /* public void enableBlindEvent()
         {
             eventManager.uiEvent.onBlindEvent = true;
-        }
+        } */
 
-        public void disableBlindEvent()
+        /* public void disableBlindEvent()
         {
             eventManager.uiEvent.onBlindEvent = true;
-        }
+        } */
     }
 }

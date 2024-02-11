@@ -9,17 +9,16 @@ namespace Stage_2_2
     public class Pattern_1_a : MonoBehaviour
     {
         public GameObject cat;
+        public GameObject catWarnBox;
 
         EventManager eventManager;
         List<GameObject> objectList;
-        AudioSource audioSource;
         Coroutine coroutine;
 
         void Awake()
         {
-            eventManager = FindObjectOfType<EventManager>();
-            audioSource = FindObjectOfType<AudioSource>();
-            this.objectList = new List<GameObject>();
+            eventManager = GetComponentInParent<EventManager>();
+            objectList = new List<GameObject>();
         }
 
         public bool action(PatternInfo patterninfo)
@@ -55,7 +54,7 @@ namespace Stage_2_2
         private void warn(float x)
         {
             Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, 0));
-            eventManager.stageEvent.warnWithBox(v, new Vector3(300, 1080, 0));
+            eventManager.onWarning.Invoke(catWarnBox, v, new Vector3(300, 1080, 0));
         }
 
         public void deathEvent()

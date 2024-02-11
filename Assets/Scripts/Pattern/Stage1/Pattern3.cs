@@ -16,19 +16,21 @@ public class Pattern3 : MonoBehaviour
 
     public Sprite changeImg;
     public SpriteRenderer thisImg;
+
     EventManager eventManager;
 
     void Awake()
     {
-        eventManager = FindObjectOfType<EventManager>();
-        eventManager.playerEvent.deathEvent += deathEvent;
         time = 0;
     }
     void Start()
     {
+        eventManager = GetComponentInParent<EventManager>();
+        eventManager.onDeath.AddListener(deathEvent);
         gameObject.transform.position = new Vector3(xPosition, -6f, 0);
         Invoke("ChangeImg", 1.5f);
-        Destroy(gameObject, 2.5f);
+        //Destroy(gameObject, 2.5f);
+        StartCoroutine(destroySelf(2.5f));
     }
     void FixedUpdate()
     {
@@ -57,9 +59,15 @@ public class Pattern3 : MonoBehaviour
         changePC.enabled = true;
     }
 
+    IEnumerator destroySelf(float t)
+    {
+        yield return new WaitForSeconds(t);
+        Destroy(gameObject);
+    }
+
     void deathEvent()
     {
-        eventManager.playerEvent.deathEvent -= deathEvent;
+        StopAllCoroutines();
         Destroy(gameObject);
     }
 }

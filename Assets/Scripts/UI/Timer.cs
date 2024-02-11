@@ -38,7 +38,7 @@ namespace UIManagement
         void Awake()
         {
             mainCamera = Camera.main;
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             playerScript = transform.GetComponentInParent<Player>();
             player = playerScript.transform;
             timer = GetComponent<Image>();
@@ -46,23 +46,23 @@ namespace UIManagement
             scale = rectTransform.localScale;
             coroutine = null;
 
-            eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.onDeath.AddListener(deathEvent);
 
             /* Timer의 종류에 따라 감지하는 global event의 종류가 다름 */
             switch (timerType)
             {
                 case TimerType.Dash:
                     rectTransform.localScale = scale * 1.4f;    // 크기 조절
-                    eventManager.playerEvent.dashEvent += dashEvent;
+                    eventManager.onDash.AddListener(dashEvent);
                     break;
                 case TimerType.Hit:
                     rectTransform.localScale = scale * 1.0f;    // 크기 조절
-                    eventManager.playerEvent.playerHitEvent += playerHitEvent;
+                    eventManager.onAttacked.AddListener(playerHitEvent);
                     break;
                 case TimerType.Revive:
                     rectTransform.localScale = scale * 0.7f;    // 크기 조절
                     reviveDelay = new WaitForSeconds(reviveDelayTime);
-                    playerScript.playerEvent.onRevive.AddListener(reviveEvent);
+                    eventManager.onRevive.AddListener(reviveEvent);
                     break;
             }
         }

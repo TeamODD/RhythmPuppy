@@ -36,7 +36,7 @@ public class Head : MonoBehaviour
 
     void Awake()
     {
-        eventManager = FindObjectOfType<EventManager>();
+        eventManager = GetComponentInParent<EventManager>();
         playerScript = FindObjectOfType<Player>();
         player = playerScript.transform;
         mainCamera = Camera.main;
@@ -46,21 +46,21 @@ public class Head : MonoBehaviour
         isEnabled = true;
         hitInvincibleDelay = new WaitForSeconds(playerScript.hitIFrame);
 
-        eventManager.playerEvent.playerHitEvent += playerHitEvent;
-        eventManager.playerEvent.deathEvent += deathEvent;
-        eventManager.playerEvent.deathEvent += freeze;
-        eventManager.stageEvent.clearEvent += clearEvent;
-        eventManager.stageEvent.clearEvent += freeze;
-        eventManager.stageEvent.pauseEvent += freeze;
-        eventManager.stageEvent.resumeEvent += defreeze;
+        eventManager.onAttacked.AddListener(playerHitEvent);
+        eventManager.onDeath.AddListener(deathEvent);
+        eventManager.onGameClear.AddListener(clearEvent);
+        //eventManager.stageEvent.onGameClear.AddListener(freeze);
+        eventManager.onPause.AddListener(freeze);
+        eventManager.onResume.AddListener(defreeze);
     }
 
     void Update()
     {
         if (!isEnabled) return;
 
-        if (puppy != null && eventManager.stageEvent.onClear)
+        if (puppy != null && eventManager.isGameCleared)
         {
+            // lookAt() 이 아니라, puppy 방향만 바라보게 하는 별도의 함수 구현 예정
             lookAt(puppy.position);
         }
         else
@@ -157,6 +157,7 @@ public class Head : MonoBehaviour
 
     private void deathEvent()
     {
+        freeze();
         StopAllCoroutines();
         setDeadFace();
     }

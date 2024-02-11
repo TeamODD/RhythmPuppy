@@ -8,16 +8,16 @@ namespace UIManagement
     public class StaminaBar : MonoBehaviour
     {
         [SerializeField] Slider slider;
-        Player player;
+        Player playerScript;
 
         void Awake()
         {
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            playerScript = FindObjectOfType<Player>();
         }
 
         void Update()
         {
-            slider.value = player.currentStamina;
+            slider.value = playerScript.currentStamina;
         }
     }
 }

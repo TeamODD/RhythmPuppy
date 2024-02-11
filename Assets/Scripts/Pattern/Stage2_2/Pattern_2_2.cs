@@ -24,11 +24,11 @@ namespace Stage_2_2
 
         public void init()
         {
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             patternManager = transform.parent;
 
-            eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.onDeath.AddListener(deathEvent);
             Run();
         }
 

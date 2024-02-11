@@ -5,15 +5,19 @@ using UnityEngine;
 
 public class Warning_arrow : MonoBehaviour
 {
-    [SerializeField]
     EventManager eventManager;
     private float time;
     // Start is called before the first frame update
     void Start()
     {
+        eventManager = GetComponentInParent<EventManager>();
+        //eventManager.playerEvent.onDeath.AddListener(deathEvent);
         time = 0;
         GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, 0);
 
+        //1초후 gameObject 삭제
+        Destroy(gameObject, 1f);
+        //StartCoroutine(destroySelf(1f));
     }
 
     // Update is called once per frame
@@ -24,8 +28,17 @@ public class Warning_arrow : MonoBehaviour
             GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, time / 1f);
         else
             GetComponent<SpriteRenderer>().color = new Color(1, 0.3f, 0.3f, 1f - time / 1f);
+    }
 
-        //1초후 gameObject 삭제
-        Destroy(gameObject, 1f);
+    IEnumerator destroySelf(float t)
+    {
+        yield return new WaitForSeconds(t);
+        Destroy(gameObject);
+    }
+
+    void deathEvent()
+    {
+        StopAllCoroutines();
+        Destroy(gameObject);
     }
 }

@@ -13,7 +13,7 @@ public class GameRestart : MonoBehaviour
 
     public void onRestart()
     {
-        eventManager = FindObjectOfType<EventManager>();
+        eventManager = GetComponentInParent<EventManager>();
         if (!(GameObject.FindWithTag("CurtainObject") == null))
             GameObject.FindWithTag("CurtainObject").GetComponent<Curtain>().CurtainEffect("CloseOpen", 0);
         else

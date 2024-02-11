@@ -14,6 +14,7 @@ namespace Stage_2
     public class Pattern_1c : MonoBehaviour
     {
         public GameObject cat;
+        public GameObject warnBox;
 
         EventManager eventManager;
         List<GameObject> objectList;
@@ -24,14 +25,14 @@ namespace Stage_2
 
         void Start()
         {
-            eventManager = FindObjectOfType<EventManager>();
+            eventManager = GetComponentInParent<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             this.objectList = new List<GameObject>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
             warnBoxPos = new Vector3(0, 0, 0);
             warnBoxSize = new Vector3(200, 700, 0);
 
-            eventManager.playerEvent.deathEvent += deathEvent;
+            eventManager.onDeath.AddListener(deathEvent);
 
             coroutine = StartCoroutine(runPattern());
         }
@@ -78,11 +79,12 @@ namespace Stage_2
             warnBoxPos.x = x;
             warnBoxPos = Camera.main.WorldToScreenPoint(warnBoxPos);
             warnBoxPos.y = 830;
-            eventManager.stageEvent.warnWithBox(warnBoxPos, warnBoxSize);
+            eventManager.onWarning.Invoke(warnBox, warnBoxPos, warnBoxSize);
         }
 
         public void deathEvent()
         {
+            StopCoroutine(coroutine);
             for (int i = 0; i < objectList.Count; i++)
             {
                 Destroy(objectList[i]);

@@ -22,15 +22,15 @@ public class Pattern1_a : MonoBehaviour
 
     void Awake()
     {
-        eventManager = FindObjectOfType<EventManager>();
+        eventManager = GetComponentInParent<EventManager>();
         PoolingManager = FindObjectOfType<ObjectPoolManager>();
-        eventManager.playerEvent.deathEvent += deathEvent;
+        eventManager.onDeath.AddListener(deathEvent);
         time = 0;
         yPosition = Random.Range(-2f, 4.5f);
     }
     void Start()
     {
-        if(!IsPooled)
+        if (!IsPooled)
         {
             gameObject.transform.position = new Vector3(XPosition, yPosition, 0);
         }
@@ -45,7 +45,7 @@ public class Pattern1_a : MonoBehaviour
             if (gameObject.transform.position.x <= -10.5f)
                 DestroyObject();
         }
-        
+
     }
 
     private void DestroyObject()
@@ -58,8 +58,8 @@ public class Pattern1_a : MonoBehaviour
     }
     private void deathEvent()
     {
-        eventManager.playerEvent.deathEvent -= deathEvent;
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        DestroyObject();
     }
     //재욱 형님 코드 가지고 온 거(플레이어 충돌 코드 같길래 붙여넣기만 함, 수정 안 함)
     /*void OnCollisionEnter2D(Collision2D col)
