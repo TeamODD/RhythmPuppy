@@ -19,8 +19,11 @@ namespace Stage_2
         void Awake()
         {
             sp = GetComponentInChildren<SpriteRenderer>();
-            eventManager = GetComponentInParent<EventManager>();
+        }
 
+        void Start()
+        {
+            eventManager = GetComponentInParent<EventManager>();
             eventManager.enableDarkening.AddListener(enableBlindEvent);
             eventManager.disableDarkening.AddListener(disableBlindEvent);
         }

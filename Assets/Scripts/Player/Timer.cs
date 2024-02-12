@@ -38,16 +38,18 @@ namespace UIManagement
         void Awake()
         {
             mainCamera = Camera.main;
-            eventManager = GetComponentInParent<EventManager>();
             playerScript = transform.GetComponentInParent<Player>();
             player = playerScript.transform;
             timer = GetComponent<Image>();
             rectTransform = GetComponent<RectTransform>();
             scale = rectTransform.localScale;
             coroutine = null;
+        }
 
+        void Start()
+        {
+            eventManager = GetComponentInParent<EventManager>();
             eventManager.onDeath.AddListener(deathEvent);
-
             /* Timer의 종류에 따라 감지하는 global event의 종류가 다름 */
             switch (timerType)
             {

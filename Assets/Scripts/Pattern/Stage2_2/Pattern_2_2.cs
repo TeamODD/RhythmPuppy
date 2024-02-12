@@ -19,16 +19,15 @@ namespace Stage_2_2
 
         void Awake()
         {
-            init();
-        }
-
-        public void init()
-        {
-            eventManager = GetComponentInParent<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             patternManager = transform.parent;
+        }
 
+        void Start()
+        {
+            eventManager = GetComponentInParent<EventManager>();
             eventManager.onDeath.AddListener(deathEvent);
+
             Run();
         }
 

@@ -18,12 +18,19 @@ namespace Obstacles
 
         const float G = 9.8f;
 
-        public  Vector3 velocity;
+        public Vector3 velocity;
 
 
         void Awake()
         {
             init();
+        }
+
+        public void init()
+        {
+            rigid = gameObject.GetComponent<Rigidbody2D>();
+            PoolingManager = FindObjectOfType<ObjectPoolManager>();
+            //gameObject.GetComponent<Rigidbody2D>().GetShapes(PhysicsShapeType2D.Polygon, gameObject());
         }
 
         void FixedUpdate()
@@ -32,13 +39,6 @@ namespace Obstacles
 
             if (transform.position.y < -6f)
                 DestroyObject();
-        }
-
-        public void init()
-        {
-            rigid = gameObject.GetComponent<Rigidbody2D>();
-            PoolingManager = FindObjectOfType<ObjectPoolManager>();
-            //gameObject.GetComponent<Rigidbody2D>().GetShapes(PhysicsShapeType2D.Polygon, gameObject());
         }
 
         private void physicalCalculation()

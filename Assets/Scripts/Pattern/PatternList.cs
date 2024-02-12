@@ -25,18 +25,19 @@ namespace Patterns
         {
             isPuppyShown = false;
             coroutineList = new List<Coroutine>();
-            eventManager = GetComponentInParent<EventManager>();
             audioSource = FindObjectOfType<AudioSource>();
             audioSource.clip = music;
 
-            eventManager.onGameStart.AddListener(gameStartEvent);
-            eventManager.onDeath.AddListener(deathEvent);
-            eventManager.onRevive.AddListener(gameStartEvent);
-            eventManager.savePointTime = savePointTime;
         }
 
         void Start()
         {
+            eventManager = GetComponentInParent<EventManager>();
+            eventManager.onGameStart.AddListener(gameStartEvent);
+            eventManager.onDeath.AddListener(deathEvent);
+            eventManager.onRevive.AddListener(gameStartEvent);
+            eventManager.savePointTime = savePointTime;
+
             StartCoroutine(StartWithDelay());
         }
 
@@ -117,7 +118,7 @@ namespace Patterns
                     yield return new WaitForSeconds(patternInfo[i].startAt - audioSource.time - 1);
                     /* Run Pattern - 패턴 실행 */
                     pattern = Instantiate(patternInfo[i].prefab);
-                    pattern.transform.SetParent(this.transform);
+                    pattern.transform.SetParent(transform);
                     /* Send PatetrnInfo - 패턴 정보 전달 */
                     pattern.GetComponent<PatternBase>().patternInfo = patternInfo[i];
                     pattern.SetActive(true);
@@ -130,7 +131,6 @@ namespace Patterns
                             RunRepeating(startTime, patternInfo[i], new WaitForSeconds(patternInfo[i].repeatDelayTime))
                             )
                         );
-
                 }
             }
         }

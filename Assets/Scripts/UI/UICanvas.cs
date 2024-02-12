@@ -40,7 +40,11 @@ namespace UIManagement
             currentResolution = new Vector2(Screen.width, Screen.height);
             overlayCanvasScaler = overlayCanvas.overlayCanvas.GetComponent<CanvasScaler>();
             clearSpotlightImage = overlayCanvas.clearSpotlight.GetComponent<Image>();
+        }
 
+        void Start()
+        {
+            eventManager = GetComponentInParent<EventManager>();
             eventManager.onDeath.AddListener(deathEvent);
             eventManager.onRevive.AddListener(reviveEvent);
             eventManager.isGameCleared = false;

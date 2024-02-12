@@ -2042,7 +2042,7 @@ GameObject:
   - component: {fileID: 4457932926221576009}
   - component: {fileID: 6786899741654970886}
   - component: {fileID: 1159103874358515121}
-  - component: {fileID: 1262874644206449907}
+  - component: {fileID: 2269770663903562387}
   m_Layer: 5
   m_Name: WarningCanvas
   m_TagString: Untagged
@@ -2131,7 +2131,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1262874644206449907
+--- !u!114 &2269770663903562387
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2140,11 +2140,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6680174567852248359}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fb7760ed7f6a7848b5d1cb6e0125c8a, type: 3}
+  m_Script: {fileID: 11500000, guid: 2447d945e31dd1a429071afeb3fb722f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warningBoxPrefab: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
-  warningArrowPrefab: {fileID: 4833175003564764285, guid: 1ba767352fb096447bdb87fccc5a66b9, type: 3}
+  warningBox: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
+  warningArrow: {fileID: 4833175003564764285, guid: 1ba767352fb096447bdb87fccc5a66b9, type: 3}
 --- !u!1 &7184027808420115088
 GameObject:
   m_ObjectHideFlags: 0
@@ -2368,7 +2368,7 @@ GameObject:
   - component: {fileID: 6218283476001267728}
   - component: {fileID: 4292003268662865523}
   - component: {fileID: 1372346892657164395}
-  - component: {fileID: 5732243026047479679}
+  - component: {fileID: 1043811682255853789}
   m_Layer: 5
   m_Name: ScreenEffectCanvas
   m_TagString: Untagged
@@ -2459,7 +2459,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &5732243026047479679
+--- !u!114 &1043811682255853789
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2468,7 +2468,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8815248767868231638}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a67162aecf0b0e4ca0a6694d5e2319c, type: 3}
+  m_Script: {fileID: 11500000, guid: bb7d7f24d03b98d4aa0b514e2f055d89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   darkEffect: {fileID: 1246941122901732631}

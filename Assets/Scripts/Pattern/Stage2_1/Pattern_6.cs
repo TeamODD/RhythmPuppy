@@ -1,9 +1,6 @@
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Patterns;
 using UnityEngine;
 using EventManagement;
 
@@ -11,18 +8,20 @@ namespace Stage_2
 {
     public class Pattern_6 : MonoBehaviour
     {
-        public GameObject cat;
-        public GameObject catWarnBox;
+        [SerializeField] GameObject cat;
 
         EventManager eventManager;
         List<GameObject> objectList;
         Coroutine coroutine;
 
+        void Awake()
+        {
+            objectList = new List<GameObject>();
+        }
+
         void Start()
         {
             eventManager = GetComponentInParent<EventManager>();
-            objectList = new List<GameObject>();
-
             eventManager.onDeath.AddListener(deathEvent);
 
             coroutine = StartCoroutine(runPattern());

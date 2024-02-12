@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   runtime: 16
+  warning: {fileID: 4833175003564764285, guid: 1ba767352fb096447bdb87fccc5a66b9, type: 3}
 --- !u!50 &-2511944139863027116
 Rigidbody2D:
   serializedVersion: 4

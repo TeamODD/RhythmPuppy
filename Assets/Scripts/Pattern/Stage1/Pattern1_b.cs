@@ -16,13 +16,13 @@ public class Pattern1_b : MonoBehaviour
 
     void Awake()
     {
-        eventManager = GetComponentInParent<EventManager>();
-        eventManager.onDeath.AddListener(deathEvent);
         time = 0;
         yPosition = Random.Range(-1.3f, 3.5f);
     }
     void Start()
     {
+        eventManager = GetComponentInParent<EventManager>();
+        eventManager.onDeath.AddListener(deathEvent);
         gameObject.transform.position = new Vector3(10f, yPosition, 0);
         //Destroy(gameObject, 3f);
         StartCoroutine(DestroySelf(3f));

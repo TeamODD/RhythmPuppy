@@ -6,33 +6,32 @@ using Patterns;
 using Unity.VisualScripting;
 using UnityEngine;
 using EventManagement;
-using static EventManagement.StageEvent;
 using System.Collections;
+using UIManagement;
 
 
 namespace Stage_2
 {
     public class Pattern_1b : MonoBehaviour
     {
-        public GameObject cat;
-        public GameObject warnBox;
+        [SerializeField] GameObject cat;
+        [SerializeField] WarningType warningType;
 
         EventManager eventManager;
         List<GameObject> objectList;
-        AudioSource audioSource;
         Coroutine coroutine;
-        PatternInfo patternInfo;
         Vector3 warnBoxPos, warnBoxSize;
+
+        void Awake()
+        {
+            objectList = new List<GameObject>();
+            warnBoxPos = new Vector3(0, 0, 0);
+            warnBoxSize = new Vector3(200, 700, 0);
+        }
 
         void Start()
         {
             eventManager = GetComponentInParent<EventManager>();
-            audioSource = FindObjectOfType<AudioSource>();
-            this.objectList = new List<GameObject>();
-            patternInfo = GetComponent<PatternBase>().patternInfo;
-            warnBoxPos = new Vector3(0, 0, 0);
-            warnBoxSize = new Vector3(200, 700, 0);
-
             eventManager.onDeath.AddListener(deathEvent);
 
             coroutine = StartCoroutine(runPattern());
@@ -70,7 +69,7 @@ namespace Stage_2
             warnBoxPos.x = x;
             warnBoxPos = Camera.main.WorldToScreenPoint(warnBoxPos);
             warnBoxPos.y = 830;
-            eventManager.onWarning.Invoke(warnBox, warnBoxPos, warnBoxSize);
+            eventManager.onWarning.Invoke(warningType, warnBoxPos, warnBoxSize, Vector3.zero);
         }
 
         public void deathEvent()

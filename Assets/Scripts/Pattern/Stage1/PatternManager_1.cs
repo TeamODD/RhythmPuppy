@@ -65,15 +65,17 @@ public class PatternManager_1 : MonoBehaviour
     {
         Camera = MainCamera.GetComponent<CameraShake>();
         audioSource.clip = music;
-        eventManager = GetComponentInParent<EventManager>();
         patternCount = new Dictionary<Type, float>();
 
+    }
+
+    void Start()
+    {
+        eventManager = GetComponentInParent<EventManager>();
         eventManager.savePointTime = savePointTime;
         eventManager.onDeath.AddListener(deathEvent);
         eventManager.onRevive.AddListener(run);
         eventManager.onGameStart.AddListener(run);
-
-        StartCoroutine(startGame());
         /*audioSource.clip = music;
         eventManager = GetComponentInParent<EventManager>();
         patternCount = new Dictionary<Type, float>();
@@ -93,6 +95,8 @@ public class PatternManager_1 : MonoBehaviour
                 count_1_b = 0;
                 count_3 = 0;
                 count_4 = 0;*/
+
+        StartCoroutine(startGame());
     }
 
     IEnumerator startGame()

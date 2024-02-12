@@ -24,7 +24,10 @@ namespace Obstacles
 
         void Awake()
         {
-            init();
+            Jump();
+            rigid = gameObject.GetComponent<Rigidbody2D>();
+            PoolingManager = FindObjectOfType<ObjectPoolManager>();
+            //gameObject.GetComponent<Rigidbody2D>().GetShapes(PhysicsShapeType2D.Polygon, gameObject());
         }
 
         void FixedUpdate()
@@ -38,13 +41,6 @@ namespace Obstacles
                 DestroyObject();
         }
 
-        public void init()
-        {
-            Jump();
-            rigid = gameObject.GetComponent<Rigidbody2D>();
-            PoolingManager = FindObjectOfType<ObjectPoolManager>();
-            //gameObject.GetComponent<Rigidbody2D>().GetShapes(PhysicsShapeType2D.Polygon, gameObject());
-        }
 
         private void physicalCalculation()
         {

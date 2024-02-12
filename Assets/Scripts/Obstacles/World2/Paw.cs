@@ -11,7 +11,7 @@ public class Paw : MonoBehaviour
 
     void Awake()
     {
-        init();
+        rotated = 0f;
     }
 
     void FixedUpdate()
@@ -22,8 +22,4 @@ public class Paw : MonoBehaviour
         if (140 < rotated) Destroy(gameObject);
     }
 
-    public void init()
-    {
-        rotated = 0f;
-    }
 }

@@ -8,6 +8,7 @@ namespace Obstacles
     public class Cat_2 : MonoBehaviour
     {
         [SerializeField] float speed;
+
         private ObjectPoolManager PoolingManager;
         [HideInInspector]
         public bool IsPooled;
@@ -16,19 +17,6 @@ namespace Obstacles
         Vector3 dir;
 
         void Awake()
-        {
-            init();
-        }
-
-        void FixedUpdate()
-        {
-            transform.position += dir.normalized * speed * Time.fixedDeltaTime;
-
-            if (transform.position.y < -20)
-                DestroyObject();
-        }
-
-        public void init()
         {
             player = GameObject.FindGameObjectWithTag("Player");
             PoolingManager = FindObjectOfType<ObjectPoolManager>();
@@ -44,6 +32,14 @@ namespace Obstacles
 
             dir = (player.transform.position - transform.position);*/
             Setting();
+        }
+
+        void FixedUpdate()
+        {
+            transform.position += dir.normalized * speed * Time.fixedDeltaTime;
+
+            if (transform.position.y < -20)
+                DestroyObject();
         }
 
         public void Setting()

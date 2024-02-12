@@ -18,7 +18,6 @@ public class Mark : MonoBehaviour
 
     void Awake()
     {
-        eventManager = GetComponentInParent<EventManager>();
         image = GetComponent<Image>();
         progress = 0;
         player = transform.GetComponentInParent<Player>().transform;
@@ -29,7 +28,11 @@ public class Mark : MonoBehaviour
         to.a = 0;
         image.color = to;
         from = to;
+    }
 
+    void Start()
+    {
+        eventManager = GetComponentInParent<EventManager>();
         eventManager.onMarkActivated.AddListener(markActivationEvent);
         eventManager.onMarkDeactivated.AddListener(markInactivationEvent);
         eventManager.onDeath.AddListener(deathEvent);

@@ -36,16 +36,19 @@ public class Head : MonoBehaviour
 
     void Awake()
     {
-        eventManager = GetComponentInParent<EventManager>();
-        playerScript = FindObjectOfType<Player>();
+        playerScript = GetComponentInParent<Player>();
         player = playerScript.transform;
         mainCamera = Camera.main;
         sp = GetComponent<SpriteRenderer>();
         neck = GetComponent<SpriteSkin>().rootBone;
+        hitInvincibleDelay = new WaitForSeconds(playerScript.hitIFrame);
         puppy = null;
         isEnabled = true;
-        hitInvincibleDelay = new WaitForSeconds(playerScript.hitIFrame);
+    }
 
+    void Start()
+    {
+        eventManager = GetComponentInParent<EventManager>();
         eventManager.onAttacked.AddListener(playerHitEvent);
         eventManager.onDeath.AddListener(deathEvent);
         eventManager.onGameClear.AddListener(clearEvent);

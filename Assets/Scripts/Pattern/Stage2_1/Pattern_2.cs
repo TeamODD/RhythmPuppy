@@ -1,33 +1,29 @@
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Patterns;
-using Unity.VisualScripting;
 using UnityEngine;
 using EventManagement;
+using UIManagement;
 
 namespace Stage_2
 {
     public class Pattern_2 : MonoBehaviour
     {
-        public GameObject paw;
-        public GameObject warnBox;
+        [SerializeField] GameObject paw;
+        [SerializeField] WarningType warningType;
 
         EventManager eventManager;
-        AudioSource audioSource;
         Coroutine coroutine;
         List<GameObject> objectList;
-        PatternInfo patternInfo;
+
+        void Awake()
+        {
+            objectList = new List<GameObject>();
+        }
 
         void Start()
         {
             eventManager = GetComponentInParent<EventManager>();
-            audioSource = FindObjectOfType<AudioSource>();
-            objectList = new List<GameObject>();
-            patternInfo = GetComponent<PatternBase>().patternInfo;
-
             eventManager.onDeath.AddListener(deathEvent);
 
             coroutine = StartCoroutine(runPattern());
@@ -40,7 +36,7 @@ namespace Stage_2
             warn(r);
             yield return new WaitForSeconds(1);
 
-            GameObject paw = MonoBehaviour.Instantiate(this.paw);
+            GameObject paw = Instantiate(this.paw);
             paw.transform.position = new Vector3(r, paw.transform.position.y, paw.transform.position.z);
             paw.transform.SetParent(transform.parent);
             paw.SetActive(true);
@@ -50,7 +46,7 @@ namespace Stage_2
         private void warn(float x)
         {
             Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, -4.3f - 0.5f));
-            eventManager.onWarning.Invoke(warnBox, v, new Vector3(200, 500, 0));
+            eventManager.onWarning.Invoke(warningType, v, new Vector3(200, 500, 0), Vector3.zero);
         }
 
         public void deathEvent()

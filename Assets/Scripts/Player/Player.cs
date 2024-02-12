@@ -110,7 +110,6 @@ public class Player : MonoBehaviour
         hitbox = transform.GetComponentInChildren<CapsuleCollider2D>();
         spriteList = transform.GetComponentsInChildren<SpriteRenderer>();
         anim = GetComponent<Animator>();
-        eventManager = GetComponentInParent<EventManager>();
         hitInvincibleDelay = new WaitForSeconds(hitIFrame);
         reviveInvincibleDelay = new WaitForSeconds(3);
         dashDelay = new WaitForSeconds(dashDuration);
@@ -128,6 +127,11 @@ public class Player : MonoBehaviour
         anim.ResetTrigger("Jump");
         anim.SetInteger("JumpCount", 0);
 
+    }
+
+    void Start()
+    {
+        eventManager = GetComponentInParent<EventManager>();
         /** Add event functions to global event manager */
         eventManager.onDash.AddListener(dashEvent);
         eventManager.onShoot.AddListener(shootEvent);

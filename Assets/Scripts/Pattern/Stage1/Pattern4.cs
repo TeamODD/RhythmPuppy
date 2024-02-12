@@ -13,12 +13,12 @@ public class Pattern4 : MonoBehaviour
 
     void Awake()
     {
-        eventManager = GetComponentInParent<EventManager>();
-        eventManager.onDeath.AddListener(deathEvent);
         xPosition = Random.Range(-8.5f, 8.5f);
     }
     void Start()
     {
+        eventManager = GetComponentInParent<EventManager>();
+        eventManager.onDeath.AddListener(deathEvent);
         rb = gameObject.GetComponent<Rigidbody>();
         gameObject.transform.position = new Vector3(xPosition, 12f, 0);
     }

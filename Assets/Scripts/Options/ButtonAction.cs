@@ -12,7 +12,7 @@ public class ButtonAction : MonoBehaviour
     GameObject Option;
     EventManager eventManager;
 
-    void Awake()
+    void Start()
     {
         eventManager = GetComponentInParent<EventManager>();
     }

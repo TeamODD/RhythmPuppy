@@ -1,13 +1,7 @@
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Patterns;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 using EventManagement;
 
 namespace Stage_2
@@ -18,22 +12,23 @@ namespace Stage_2
         [SerializeField] float duration;
 
         EventManager eventManager;
-        AudioSource audioSource;
         Coroutine coroutine;
         PatternInfo patternInfo;
 
-        void Start()
+        void Awake()
         {
-            eventManager = GetComponentInParent<EventManager>();
-            audioSource = FindObjectOfType<AudioSource>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
-
-            eventManager.onDeath.AddListener(deathEvent);
 
             if (!patternInfo.duration.Equals(0))
                 setDuration(patternInfo.duration - startDelay[startDelay.Length - 1]);
             else if (!patternInfo.endAt.Equals(0))
                 setDuration(patternInfo.startAt, patternInfo.endAt);
+        }
+
+        void Start()
+        {
+            eventManager = GetComponentInParent<EventManager>();
+            eventManager.onDeath.AddListener(deathEvent);
 
             coroutine = StartCoroutine(runPattern());
         }
@@ -45,7 +40,7 @@ namespace Stage_2
 
         public void setDuration(float start, float end)
         {
-            this.duration = end - start - startDelay[startDelay.Length - 1];
+            duration = end - start - startDelay[startDelay.Length - 1];
         }
 
         private IEnumerator runPattern()

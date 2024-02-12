@@ -1,21 +1,18 @@
-using Cysharp.Threading.Tasks;
 using Obstacles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using Patterns;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using EventManagement;
+using UIManagement;
 
 namespace Stage_2
 {
     public class Pattern_5 : MonoBehaviour
     {
-        public GameObject ratSwarm;
-        public GameObject ratWarnBox;
+        [SerializeField] GameObject ratSwarm;
+        [SerializeField] WarningType warningType;
         public float startDelay;
         public float duration;
 
@@ -23,22 +20,23 @@ namespace Stage_2
         Transform parent;
         List<GameObject> objectList;
         Coroutine coroutine;
-        AudioSource audioSource;
         PatternInfo patternInfo;
 
-        void Start()
+        void Awake()
         {
-            eventManager = GetComponentInParent<EventManager>();
-            audioSource = FindObjectOfType<AudioSource>();
             objectList = new List<GameObject>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
-
-            eventManager.onDeath.AddListener(deathEvent);
 
             if (!patternInfo.duration.Equals(0))
                 setDuration(patternInfo.duration - startDelay);
             else if (!patternInfo.endAt.Equals(0))
                 setDuration(patternInfo.startAt, patternInfo.endAt);
+        }
+
+        void Start()
+        {
+            eventManager = GetComponentInParent<EventManager>();
+            eventManager.onDeath.AddListener(deathEvent);
 
             coroutine = StartCoroutine(runPattern());
         }
@@ -88,14 +86,20 @@ namespace Stage_2
 
         private void warn(bool dir)
         {
-            Vector2 pos = new Vector2(0, -3.6f + 0.2f);
+            Vector2 pos = new Vector2(0, -3.6f + 0.2f), warningDir = Vector3.left;
             if (dir)
+            {
                 pos.x = 10f;
+                warningDir = Vector3.left;
+            }
             else
+            {
                 pos.x = -10f;
+                warningDir = Vector3.right;
+            }
             pos = Camera.main.WorldToScreenPoint(pos);
 
-            eventManager.onWarning.Invoke(ratWarnBox, pos, new Vector3(700, 150, 0));
+            eventManager.onWarning.Invoke(warningType, pos, new Vector3(700, 150, 0), warningDir);
         }
 
         public void deathEvent()

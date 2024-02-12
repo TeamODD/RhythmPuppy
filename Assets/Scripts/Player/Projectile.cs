@@ -27,7 +27,6 @@ public class Projectile : MonoBehaviour
 
     void Awake()
     {
-        eventManager = GetComponentInParent<EventManager>();
         mainCamera = Camera.main;
         player = transform.GetComponentInParent<Player>();
         neck = player.transform.Find("bone_2/neck");
@@ -39,11 +38,6 @@ public class Projectile : MonoBehaviour
         correctFactor = 16f;
         data = new ProjectileData(rad, correctFactor);
 
-        eventManager.onShoot.AddListener(shootEvent);
-        eventManager.onTeleport.AddListener(stop);
-        eventManager.onShootCancel.AddListener(stop);
-        eventManager.onGameClear.AddListener(stop);
-
         GameObject Tutorials2Manager = GameObject.Find("Tutorials2Manager");
         if (Tutorials2Manager != null)
         {
@@ -54,6 +48,15 @@ public class Projectile : MonoBehaviour
         {
             IsBoneRecovered = true;
         }
+    }
+
+    void Start()
+    {
+        eventManager = GetComponentInParent<EventManager>();
+        eventManager.onShoot.AddListener(shootEvent);
+        eventManager.onTeleport.AddListener(stop);
+        eventManager.onShootCancel.AddListener(stop);
+        eventManager.onGameClear.AddListener(stop);
     }
 
     void FixedUpdate()

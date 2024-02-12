@@ -16,7 +16,14 @@ namespace Obstacles
 
         void Awake()
         {
-            init();
+            player = GameObject.FindGameObjectWithTag("Player");
+            sp = GetComponent<SpriteRenderer>();
+            cooldown = true;
+        }
+
+        void Start()
+        {
+            StartCoroutine(runCooldown());
         }
 
         void Update()
@@ -37,14 +44,6 @@ namespace Obstacles
             }
         }
 
-        public void init()
-        {
-            player = GameObject.FindGameObjectWithTag("Player");
-            sp = GetComponent<SpriteRenderer>();
-            cooldown = true;
-
-            StartCoroutine(runCooldown());
-        }
 
         public void setCooltime(float cooltime)
         {

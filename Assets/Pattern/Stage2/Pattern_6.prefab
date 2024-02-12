@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4b67c6c6eb52d409617a3b4796dc9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patternPlaylist: {fileID: 11400000, guid: 14dd42d6b6703414d92558df7bf9b6de, type: 2}
   cat: {fileID: 7425868369605693209, guid: 26cb71d2f187a5f45a55839efe7438a6, type: 3}
+  catWarnBox: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
 --- !u!114 &-7523437712563261912
 MonoBehaviour:
   m_ObjectHideFlags: 0

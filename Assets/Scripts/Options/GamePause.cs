@@ -13,9 +13,12 @@ public class GamePause : MonoBehaviour
     {
         /*stage1_2BGM = GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>();*/
         BGM = FindObjectOfType<AudioSource>();
-        eventManager = GetComponentInParent<EventManager>();
         isPaused = false;
+    }
 
+    void Start()
+    {
+        eventManager = GetComponentInParent<EventManager>();
         eventManager.onPause.AddListener(PauseEvent);
         eventManager.onResume.AddListener(ResumeEvent);
     }

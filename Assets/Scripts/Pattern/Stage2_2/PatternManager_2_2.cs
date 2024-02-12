@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Pool;
 using Obstacles;
 using EventManagement;
-
+using UIManagement;
 
 namespace Stage_2
 {
@@ -82,14 +82,13 @@ namespace Stage_2
 
         void Awake()
         {
-            eventManager = GetComponentInParent<EventManager>();
             playerScript = FindObjectOfType<Player>();
             //PoolingManager = FindObjectOfType<ObjectPoolManager>();
-            init();
         }
 
-        private void init()
+        void Start()
         {
+            eventManager = GetComponentInParent<EventManager>();
             IsReady = false;
             isPuppyShown = false;
 
@@ -120,7 +119,6 @@ namespace Stage_2
                     PoolingTest.GetComponent<ObjectPoolManager>().ReleaseObject();
                 }*/
             }
-
             eventManager.onGameStart.AddListener(gameStartEvent);
             eventManager.onDeath.AddListener(deathEvent);
             eventManager.onRevive.AddListener(gameStartEvent);
@@ -133,7 +131,6 @@ namespace Stage_2
             //StartCoroutine(PlayMusic());
             Debug.Log("Stage Start");
             StartCoroutine(StartGame());
-
         }
 
         IEnumerator StartGame()
@@ -213,7 +210,7 @@ namespace Stage_2
                 Debug.Log(string.Format("[%f]PatternManager_2_2.cs 211라인 수정필요", Time.time));
 
                 Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, 0));
-                eventManager.onWarning.Invoke(catWarnBox, v, new Vector3(300, 1080, 0));
+                eventManager.onWarning.Invoke(WarningType.Box, v, new Vector3(300, 1080, 0), Vector3.zero);
             }
 
             void MakingCat(string ObjectName, float X)

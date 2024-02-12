@@ -22,14 +22,14 @@ public class Pattern1_a : MonoBehaviour
 
     void Awake()
     {
-        eventManager = GetComponentInParent<EventManager>();
         PoolingManager = FindObjectOfType<ObjectPoolManager>();
-        eventManager.onDeath.AddListener(deathEvent);
         time = 0;
         yPosition = Random.Range(-2f, 4.5f);
     }
     void Start()
     {
+        eventManager = GetComponentInParent<EventManager>();
+        eventManager.onDeath.AddListener(deathEvent);
         if (!IsPooled)
         {
             gameObject.transform.position = new Vector3(XPosition, yPosition, 0);

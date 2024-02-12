@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   paw: {fileID: 2761808441138798636, guid: 1280a3ae35379834aa149cb7c7899afe, type: 3}
+  warnBox: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
 --- !u!114 &6361080280191891396
 MonoBehaviour:
   m_ObjectHideFlags: 0

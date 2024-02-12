@@ -3,6 +3,7 @@ using Patterns;
 using UnityEngine;
 using EventManagement;
 using System.Collections;
+using UIManagement;
 
 namespace Stage_2_2
 {
@@ -17,8 +18,12 @@ namespace Stage_2_2
 
         void Awake()
         {
-            eventManager = GetComponentInParent<EventManager>();
             objectList = new List<GameObject>();
+        }
+
+        void Start()
+        {
+            eventManager = GetComponentInParent<EventManager>();
         }
 
         public bool action(PatternInfo patterninfo)
@@ -54,7 +59,7 @@ namespace Stage_2_2
         private void warn(float x)
         {
             Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, 0));
-            eventManager.onWarning.Invoke(catWarnBox, v, new Vector3(300, 1080, 0));
+            eventManager.onWarning.Invoke(WarningType.Box, v, new Vector3(300, 1080, 0), Vector3.zero);
         }
 
         public void deathEvent()
