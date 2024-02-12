@@ -1,5 +1,3 @@
-using Cysharp.Threading.Tasks;
-using EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +5,8 @@ using UnityEngine.UI;
 
 namespace UIManagement
 {
-    /* 패턴 시작 전 표시되는 경고등 */
-    public class Warning : MonoBehaviour
+    /* 패턴 시작 전 표시되는 경고등 (박스형) */
+    public class WarningBox : MonoBehaviour
     {
         Image image;
         SpriteRenderer sp;
@@ -27,7 +25,6 @@ namespace UIManagement
             {
                 c = image.color;
             }
-
         }
 
         void Start()
@@ -55,7 +52,7 @@ namespace UIManagement
             }
         }*/
 
-        private IEnumerator ShowWarning()
+        IEnumerator ShowWarning()
         {
             Destroy(gameObject, 1f);
             const float ALPHA_RATE = 0.7f;

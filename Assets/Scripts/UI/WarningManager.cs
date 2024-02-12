@@ -42,25 +42,25 @@ namespace UIManagement
 
         public void warnWithBox(Vector3 pos, Vector3 size)
         {
-            GameObject o = Instantiate(warningBox);
-            o.transform.SetParent(transform);
-            o.transform.position = pos;
-            o.transform.localScale = size;
-            o.SetActive(true);
+            GameObject box = Instantiate(warningBox);
+            box.transform.SetParent(transform);
+            box.transform.position = pos;
+            box.transform.localScale = size;
+            box.SetActive(true);
         }
 
         public void warnWithArrow(Vector3 pos, Vector3 size, Vector3 dir)
         {
-            GameObject o = Instantiate(warningArrow);
-            o.transform.SetParent(transform);
-            o.transform.position = pos;
+            GameObject arrow = Instantiate(warningArrow);
+            arrow.transform.SetParent(transform);
+            arrow.transform.position = pos;
             // set arrow's dir - 화살표 방향 설정
             size.x = Mathf.Abs(size.x);
             if (dir == Vector3.right)
                 size.x = -size.x;
-            o.transform.localScale = size;
+            arrow.transform.localScale = size;
 
-            o.SetActive(true);
+            arrow.SetActive(true);
         }
     }
 }
