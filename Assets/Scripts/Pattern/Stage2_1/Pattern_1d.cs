@@ -18,17 +18,13 @@ namespace Stage_2
 
         EventManager eventManager;
         List<GameObject> objectList;
-        AudioSource audioSource;
         Coroutine coroutine;
-        PatternInfo patternInfo;
         Vector3 warnBoxPos, warnBoxSize;
 
         void Awake()
         {
-            audioSource = FindObjectOfType<AudioSource>();
             objectList = new List<GameObject>();
-            patternInfo = GetComponent<PatternBase>().patternInfo;
-            warnBoxPos = new Vector3(0, 0, 0);
+            warnBoxPos = Vector3.zero;
             warnBoxSize = new Vector3(200, 700, 0);
         }
 
@@ -71,7 +67,7 @@ namespace Stage_2
             warnBoxPos.x = x;
             warnBoxPos = Camera.main.WorldToScreenPoint(warnBoxPos);
             warnBoxPos.y = 830;
-            eventManager.onWarning.Invoke(warningType, warnBoxPos, warnBoxSize, Vector3.zero);
+            eventManager.onWarning.Invoke(warningType, warnBoxPos, warnBoxSize, Vector3.up);
         }
 
         public void deathEvent()

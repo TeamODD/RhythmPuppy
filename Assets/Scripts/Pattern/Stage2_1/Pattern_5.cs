@@ -21,11 +21,13 @@ namespace Stage_2
         List<GameObject> objectList;
         Coroutine coroutine;
         PatternInfo patternInfo;
+        Vector3 warnBoxPos, warnBoxSize;
 
         void Awake()
         {
             objectList = new List<GameObject>();
             patternInfo = GetComponent<PatternBase>().patternInfo;
+            warnBoxSize = new Vector3(300, 600, 0);
 
             if (!patternInfo.duration.Equals(0))
                 setDuration(patternInfo.duration - startDelay);
@@ -84,22 +86,13 @@ namespace Stage_2
             objectList.Clear();
         }
 
-        private void warn(bool dir)
+        private void warn(bool isRight)
         {
-            Vector2 pos = new Vector2(0, -3.6f + 0.2f), warningDir = Vector3.left;
-            if (dir)
-            {
-                pos.x = 10f;
-                warningDir = Vector3.left;
-            }
+            if (isRight)
+                warnBoxPos = Camera.main.WorldToScreenPoint(new Vector3(8.5f, -3f, 0));
             else
-            {
-                pos.x = -10f;
-                warningDir = Vector3.right;
-            }
-            pos = Camera.main.WorldToScreenPoint(pos);
-
-            eventManager.onWarning.Invoke(warningType, pos, new Vector3(700, 150, 0), warningDir);
+                warnBoxPos = Camera.main.WorldToScreenPoint(new Vector3(-8.5f, -3f, 0));
+            eventManager.onWarning.Invoke(warningType, warnBoxPos, warnBoxSize, Vector3.zero);
         }
 
         public void deathEvent()

@@ -8,7 +8,6 @@ namespace UIManagement
 {
     public class ScreenEffectManager : MonoBehaviour
     {
-        [Header("Effect Transform")]
         public Transform darkEffect, redEffect;
 
         Image darkImage, redImage;

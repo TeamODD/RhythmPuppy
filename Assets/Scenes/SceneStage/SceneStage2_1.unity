@@ -2355,6 +2355,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6110146464918438330, guid: 92e4a0cc54432dc44ba74a93be68011c, type: 3}
+      propertyPath: warningBoxPrefab
+      value: 
+      objectReference: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
+    - target: {fileID: 6110146464918438330, guid: 92e4a0cc54432dc44ba74a93be68011c, type: 3}
+      propertyPath: warningArrowPrefab
+      value: 
+      objectReference: {fileID: 4696043862458223561, guid: 7e9e74429b068744bb460b94c3896bf5, type: 3}
     - target: {fileID: 6423763024692267719, guid: 92e4a0cc54432dc44ba74a93be68011c, type: 3}
       propertyPath: m_RootOrder
       value: 0

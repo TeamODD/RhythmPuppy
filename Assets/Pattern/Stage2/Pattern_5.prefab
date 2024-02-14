@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ratSwarm: {fileID: 4216593479806984942, guid: 12579abe159e059469538a414fb31964, type: 3}
-  warningType: 1
+  warningType: 0
   startDelay: 0
   duration: 20
 --- !u!114 &4790019944751803797

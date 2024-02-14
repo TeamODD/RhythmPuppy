@@ -15,10 +15,12 @@ namespace Stage_2
         EventManager eventManager;
         Coroutine coroutine;
         List<GameObject> objectList;
+        Vector3 warnBoxPos, warnBoxSize;
 
         void Awake()
         {
             objectList = new List<GameObject>();
+            warnBoxSize = new Vector3(200, 500, 0);
         }
 
         void Start()
@@ -45,8 +47,8 @@ namespace Stage_2
 
         private void warn(float x)
         {
-            Vector2 v = Camera.main.WorldToScreenPoint(new Vector2(x, -4.3f - 0.5f));
-            eventManager.onWarning.Invoke(warningType, v, new Vector3(200, 500, 0), Vector3.zero);
+            warnBoxPos = Camera.main.WorldToScreenPoint(new Vector2(x, -4.3f - 0.5f));
+            eventManager.onWarning.Invoke(warningType, warnBoxPos, warnBoxSize, Vector3.zero);
         }
 
         public void deathEvent()

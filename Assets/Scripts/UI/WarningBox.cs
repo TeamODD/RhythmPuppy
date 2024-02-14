@@ -29,32 +29,12 @@ namespace UIManagement
 
         void Start()
         {
-            StartCoroutine(ShowWarning());
+            StartCoroutine(destroySelf(1f));
+            StartCoroutine(changeAlpha());
         }
 
-        /*void Update()
+        IEnumerator changeAlpha()
         {
-            if (image)
-            {
-                if (image.color.a < 0.7f)
-                {
-                    c.a += Time.deltaTime / 0.2f;
-                    image.color = c;
-                }
-            }
-            else if (sp)
-            {
-                if (sp.color.a < 0.7f)
-                {
-                    c.a += Time.deltaTime / 0.2f;
-                    sp.color = c;
-                }
-            }
-        }*/
-
-        IEnumerator ShowWarning()
-        {
-            Destroy(gameObject, 1f);
             const float ALPHA_RATE = 0.7f;
             float time = 0, alpha = 0;
 
@@ -88,6 +68,12 @@ namespace UIManagement
                 else if (sp) sp.color = c;
                 yield return null;
             }
+        }
+
+        IEnumerator destroySelf(float t)
+        {
+            yield return new WaitForSeconds(t);
+            Destroy(gameObject);
         }
     }
 }

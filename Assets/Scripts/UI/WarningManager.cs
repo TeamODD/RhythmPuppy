@@ -17,7 +17,7 @@ namespace UIManagement
     public class WarningManager : MonoBehaviour
     {
 
-        [SerializeField] GameObject warningBox, warningArrow;
+        [SerializeField] GameObject warningBoxPrefab, warningArrowPrefab;
 
         EventManager eventManager;
 
@@ -27,40 +27,40 @@ namespace UIManagement
             eventManager.onWarning.AddListener(onWarning);
         }
 
-        public void onWarning(WarningType type, Vector3 pos, Vector3 size, Vector3 dir)
+        public void onWarning(WarningType type, Vector3 pos, Vector3 scale, Vector3 dir)
         {
             switch (type)
             {
                 case WarningType.Box:
-                    warnWithBox(pos, size);
+                    warnWithBox(pos, scale);
                     break;
                 case WarningType.Arrow:
-                    warnWithArrow(pos, size, dir);
+                    warnWithArrow(pos, scale, dir);
                     break;
             }
         }
 
-        public void warnWithBox(Vector3 pos, Vector3 size)
+        void warnWithBox(Vector3 pos, Vector3 scale)
         {
-            GameObject box = Instantiate(warningBox);
-            box.transform.SetParent(transform);
-            box.transform.position = pos;
-            box.transform.localScale = size;
-            box.SetActive(true);
+            GameObject warningBox = Instantiate(warningBoxPrefab);
+            warningBox.transform.SetParent(transform);
+            warningBox.transform.position = pos;
+            warningBox.transform.localScale = scale;
+            warningBox.SetActive(true);
         }
 
-        public void warnWithArrow(Vector3 pos, Vector3 size, Vector3 dir)
+        void warnWithArrow(Vector3 pos, Vector3 scale, Vector3 dir)
         {
-            GameObject arrow = Instantiate(warningArrow);
-            arrow.transform.SetParent(transform);
-            arrow.transform.position = pos;
-            // set arrow's dir - 화살표 방향 설정
-            size.x = Mathf.Abs(size.x);
-            if (dir == Vector3.right)
-                size.x = -size.x;
-            arrow.transform.localScale = size;
+            GameObject warningArrow = Instantiate(warningArrowPrefab);
+            warningArrow.transform.SetParent(transform);
+            warningArrow.transform.position = pos;
 
-            arrow.SetActive(true);
+            WarningArrow warningArrowScript = warningArrow.GetComponent<WarningArrow>();
+            warningArrowScript.position = pos;
+            warningArrowScript.scale = scale;
+            warningArrowScript.direction = dir;
+
+            warningArrow.SetActive(true);
         }
     }
 }
