@@ -7,11 +7,10 @@ namespace UIManagement
 {
     public class ProgressBar : MonoBehaviour
     {
-        [SerializeField] GameObject emptySavePointPrefab;
-        [SerializeField] GameObject fullSavePointPrefab;
+        [SerializeField] GameObject emptySavePointPrefab, fullSavePointPrefab;
         [SerializeField] Transform playerBudge, beginPointTransform, endPointTransform;
 
-        AudioSource musicAudioSource;
+        AudioSource musicAudioSource, savePointSound;
 
         EventManager eventManager;
         Image fillImage;
@@ -19,16 +18,19 @@ namespace UIManagement
         GameObject[] emptySavePoint, fullSavePoint;
         Coroutine initCoroutine;
         Vector2 beginPoint, endPoint;
+        int filledSavePoints;
 
         void Awake()
         {
             eventManager = FindObjectOfType<EventManager>();
             fillImage = transform.Find("GameProgressGuage").GetComponent<Image>();
             musicAudioSource = GameObject.FindGameObjectWithTag("MusicManager").GetComponent<AudioSource>();
+            savePointSound = transform.GetComponent<AudioSource>();
             w = new WaitUntil(() => musicAudioSource.clip != null);
             beginPoint = beginPointTransform.position;
             endPoint = endPointTransform.position;
             fillImage.fillAmount = 0;
+            filledSavePoints = 0;
 
             eventManager.stageEvent.gameStartEvent += gameStartEvent;
             eventManager.stageEvent.rewindEvent += rewindEvent;
@@ -74,7 +76,7 @@ namespace UIManagement
             if (musicAudioSource.clip.length - 0.7f < musicAudioSource.time)
             {
                 MovePlayerBudge(musicAudioSource.clip.length);
-                SavePointChecking(1);
+                SavePointChecking();
                 musicAudioSource.Pause();
                 musicAudioSource.time = musicAudioSource.clip.length - 0.1f;
                 return;
@@ -90,7 +92,7 @@ namespace UIManagement
             }
 
             MovePlayerBudge(currentMusicPosition);
-            SavePointChecking(fillAmount);
+            SavePointChecking();
         }
 
         void resolutionChangeEvent()
@@ -114,17 +116,21 @@ namespace UIManagement
             }
         }
 
-        private void SavePointChecking(float fillAmount)
+        private void SavePointChecking()
         {
-            for (int i = 0; i < emptySavePoint.Length; i++)
+            for (int i = filledSavePoints; i < emptySavePoint.Length; i++)
             {
                 if (eventManager.savePointTime[i] <= musicAudioSource.time)
                 {
+                    // i번째 세이브포인트 달성
                     emptySavePoint[i].SetActive(false);
                     fullSavePoint[i].SetActive(true);
+                    savePointSound.Play();
+                    filledSavePoints += 1;
                 }
                 else
                 {
+                    // i번째 세이브포인트 미달성
                     emptySavePoint[i].SetActive(true);
                     fullSavePoint[i].SetActive(false);
                 }
@@ -145,17 +151,10 @@ namespace UIManagement
 
         private void rewindEvent()
         {
-            for (int i = 0; i < eventManager.savePointTime.Length; i++)
-            {
-                if (eventManager.savePointTime[i] <= musicAudioSource.time) continue;
-
-                if (i == 0)
-                    musicAudioSource.time = 0;
-                else
-                    musicAudioSource.time = eventManager.savePointTime[i - 1];
-                return;
-            }
-            musicAudioSource.time = eventManager.savePointTime[eventManager.savePointTime.Length - 1];
+            if (filledSavePoints == 0)
+                musicAudioSource.time = 0;
+            else
+                musicAudioSource.time = eventManager.savePointTime[filledSavePoints - 1];
         }
 
         private void deathEvent()

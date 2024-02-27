@@ -366,7 +366,6 @@ public class Player : MonoBehaviour
 
     private void evade(Collider2D c)
     {
-        Debug.Log(string.Format("[{0}] {1}", Time.time, "È¸ÇÇ!"));
         currentStamina = maxStamina < currentStamina + dashEvasionGen ? maxStamina : currentStamina + dashEvasionGen;
         StartCoroutine(delayCollision(c, dashDelay));
     }

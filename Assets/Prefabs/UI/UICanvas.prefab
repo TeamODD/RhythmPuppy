@@ -323,6 +323,7 @@ GameObject:
   - component: {fileID: 1338004345784677163}
   - component: {fileID: 3605880568092419517}
   - component: {fileID: 3605880568092419518}
+  - component: {fileID: 525739981111039819}
   m_Layer: 5
   m_Name: ProgressBar
   m_TagString: Untagged
@@ -394,6 +395,103 @@ MonoBehaviour:
   playerBudge: {fileID: 3605880568468913412}
   beginPointTransform: {fileID: 6542911483130336123}
   endPointTransform: {fileID: 3605880568213428785}
+  savePointSound: {fileID: 0}
+--- !u!82 &525739981111039819
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338004345784677156}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: f8d5fa492b62b4a4ab7ff14ac9c1fe62, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1338004346022117871
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,14 +538,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f0a1e47bfec41649aa442be6888ea37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warningBoxPrefab: {fileID: 6697391070419741162, guid: 4dda1c30a7b74a6468a9f425f602f7aa, type: 3}
-  warningArrowPrefab: {fileID: 4833175003564764285, guid: 1ba767352fb096447bdb87fccc5a66b9, type: 3}
   overlayCanvas:
     overlayCanvas: {fileID: 1338004347152322603}
-    screenEfffectCanvas: {fileID: 2098856159751937046}
-    warningCanvas: {fileID: 4666216187085666866}
     clearSpotlight: {fileID: 2169022453010016493}
-    progressBar: {fileID: 1338004345784677163}
   worldSpaceCanvas:
     worldSpaceCanvas: {fileID: 1338004347540094112}
 --- !u!1 &1338004347152322597

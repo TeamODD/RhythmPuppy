@@ -37,7 +37,6 @@ public class AFK : MonoBehaviour
                 animator.SetBool("IsAFK", false);
                 blownBubble.gameObject.SetActive(true);
                 StartCoroutine(wakeUpCoroutine());
-
             }
         }
 

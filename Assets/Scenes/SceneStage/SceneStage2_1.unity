@@ -1764,7 +1764,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1369526593}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -1781,7 +1781,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 23, y: 4.073672}
+  m_Size: {x: 23, y: 4}
   m_EdgeRadius: 0
 --- !u!50 &1369526597
 Rigidbody2D:
@@ -2532,14 +2532,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   darkEffect: {fileID: 664177933212231859}
   redEffect: {fileID: 664177933212231858}
-  darkImage: {fileID: 0}
-  redImage: {fileID: 0}
-  c:
-    r: 0
-    g: 0
-    b: 0
-    a: 0
-  eventManager: {fileID: 0}
 --- !u!1001 &1989851125167521190
 PrefabInstance:
   m_ObjectHideFlags: 0
