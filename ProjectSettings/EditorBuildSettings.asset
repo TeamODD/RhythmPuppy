@@ -51,6 +51,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Tutorials2.unity
     guid: 41052d0a4497daf4cb9fa788d1cbf01f
   - enabled: 1
-    path: Assets/Scenes/SceneStage/SceneLoadStage.unity
+    path: Assets/Scenes/SceneStage/LoadingCutscene.unity
     guid: 7ceeac04eab06604d90cb51cdae7c353
   m_configObjects: {}
