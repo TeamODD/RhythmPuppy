@@ -51,7 +51,7 @@ public class Menu_PlayerTransform : MonoBehaviour
     };
 
     WorldStage world = WorldStage.World1;
-   
+
     void Awake()
     {
         if (PlayerPrefs.HasKey("clearIndex"))
@@ -92,6 +92,7 @@ public class Menu_PlayerTransform : MonoBehaviour
         {
             ParticleSystem.GetComponent<ParticleSystem>().Stop();
         }
+        // 로딩 캔버스를 씬 이동중에 사라지지 않도록 유지
         DontDestroyOnLoad(Canvas);
         ReadyToGoStage = false;
         IsPaused = false;
@@ -104,7 +105,7 @@ public class Menu_PlayerTransform : MonoBehaviour
         savingIndex = currentIndex;
         PlayerOnPoint.Invoke();
     }
-    
+
     void OnTriggerExit2D(Collider2D other)
     {
         PlayerOnPointExceptMusicChange.Invoke();
@@ -119,7 +120,7 @@ public class Menu_PlayerTransform : MonoBehaviour
             world = WorldStage.World2;
         }
     }
-    
+
     void DifficultyOff()
     {
         ReadyToGoStage = false;
@@ -182,10 +183,10 @@ public class Menu_PlayerTransform : MonoBehaviour
             //좌우반전 구현 필요
             StartCoroutine(move("Back"));
         }
-        
+
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if(currentIndex == 1) //튜토리얼은 그냥 진입하도록
+            if (currentIndex == 1) //튜토리얼은 그냥 진입하도록
             {
                 onInputDelay = true;
                 PlaySelectSound.instance.MenuSelectSound();
@@ -211,7 +212,7 @@ public class Menu_PlayerTransform : MonoBehaviour
                     StartCoroutine(LoadingScene());
                     break;
             }
-        }      
+        }
     }
 
     IEnumerator move(string s)
@@ -271,7 +272,6 @@ public class Menu_PlayerTransform : MonoBehaviour
         }
         LoadingScreenSprite.color = new Color(0, 0, 0, 1);
         LoadingCanvas.alpha = 1;
-        
         AudioListener.GetComponent<AudioListener>().enabled = false;
         volume.enabled = false;
         //corgiLoading.gameObject.SetActive(true);
@@ -280,11 +280,13 @@ public class Menu_PlayerTransform : MonoBehaviour
     }
     void GetSceneString()
     {
-        switch(currentIndex)
+        switch (currentIndex)
         {
-            case 1: SceneName = "Tutorials2";
+            case 1:
+                SceneName = "Tutorials2";
                 break;
-            case 2: SceneName = "SceneStage1_1";
+            case 2:
+                SceneName = "SceneStage1_1";
                 break;
             case 4:
                 SceneName = "SceneStage1_2";

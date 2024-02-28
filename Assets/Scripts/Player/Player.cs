@@ -428,8 +428,8 @@ public class Player : MonoBehaviour
     private void fixPositionIntoScreen()
     {
         Vector3 pos = mainCamera.WorldToViewportPoint(transform.position);
-        if (pos.x <= 0f) pos.x = 0f;
-        if (1f <= pos.x) pos.x = 1f;
+        if (pos.x <= 0.05f) pos.x = 0.05f;
+        if (0.95f <= pos.x) pos.x = 0.95f;
         if (pos.y <= 0f) pos.y = 0f;
         if (1f <= pos.y) pos.y = 1f;
         transform.position = mainCamera.ViewportToWorldPoint(pos);

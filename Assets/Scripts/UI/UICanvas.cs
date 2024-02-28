@@ -9,27 +9,12 @@ namespace UIManagement
 {
     public class UICanvas : MonoBehaviour
     {
-        [Serializable]
-        struct OverlayCanvas
-        {
-            [Header("Main(Canvas) Transform")]
-            public Transform overlayCanvas;
-            [Header("Sub Transform")]
-            public Transform clearSpotlight;
-        }
-        [Serializable]
-        struct WorldSpaceCanvas
-        {
-            [Header("Main Transform")]
-            public Transform worldSpaceCanvas;
-        }
 
-        [SerializeField] OverlayCanvas overlayCanvas;
-        [SerializeField] WorldSpaceCanvas worldSpaceCanvas;
+        public Transform overlayCanvas;
+        public Transform worldSpaceCanvas;
 
         Player player;
         EventManager eventManager;
-        Image clearSpotlightImage;
         Color c;
         CanvasScaler overlayCanvasScaler;
         Vector2 baseResolution, currentResolution;
@@ -40,14 +25,15 @@ namespace UIManagement
             player = FindObjectOfType<Player>();
             baseResolution = new Vector2(1920, 1080);
             currentResolution = new Vector2(Screen.width, Screen.height);
-            overlayCanvasScaler = overlayCanvas.overlayCanvas.GetComponent<CanvasScaler>();
-            clearSpotlightImage = overlayCanvas.clearSpotlight.GetComponent<Image>();
+            overlayCanvasScaler = overlayCanvas.GetComponent<CanvasScaler>();
+            /* clearSpotlightImage = overlayCanvas.clearSpotlight.GetComponent<Image>(); */
 
             eventManager.playerEvent.deathEvent += deathEvent;
             eventManager.playerEvent.reviveEvent += reviveEvent;
-            eventManager.stageEvent.clearEvent += enableClearSpotlight;
+            // Moved to Assets/Scripts/UI/ClearSpotlight.cs
+            /* eventManager.stageEvent.clearEvent += enableClearSpotlight;
             eventManager.uiEvent.enableClearSpotlightEvent += enableClearSpotlight;
-            eventManager.uiEvent.disableClearSpotlightEvent += disableClearSpotlight;
+            eventManager.uiEvent.disableClearSpotlightEvent += disableClearSpotlight; */
             eventManager.stageEvent.onClear = false;
         }
 
@@ -68,7 +54,8 @@ namespace UIManagement
             return;
         }
 
-        public void disableClearSpotlight()
+        // Moved to Assets/Scripts/UI/ClearSpotlight.cs
+        /* public void disableClearSpotlight()
         {
             setImageAlpha(ref clearSpotlightImage, 0);
         }
@@ -89,9 +76,9 @@ namespace UIManagement
                 yield return null;
             }
             setImageAlpha(ref clearSpotlightImage, 1);
-        }
+        } */
 
-        private void setImageAlpha(ref Image i, float a)
+        public void setImageAlpha(ref Image i, float a)
         {
             c = i.color;
             c.a = a;

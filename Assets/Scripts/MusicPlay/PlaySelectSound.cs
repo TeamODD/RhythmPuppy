@@ -74,12 +74,16 @@ public class PlaySelectSound : MonoBehaviour
         //LoadingScreen.transform.SetParent(null, false);
         //DontDestroyOnLoad(LoadingScreen);
         yield return new WaitForSeconds(2f);
-        var mAsymcOperation = SceneManager.LoadSceneAsync(NextScene, LoadSceneMode.Single);
+        //var mAsymcOperation = SceneManager.LoadSceneAsync(NextScene, LoadSceneMode.Single);
+        // (???) ??? ???? SceneName? ?? ????? ????, ?? Scene? ???
+        PlayerPrefs.SetString("STAGE_NAME", NextScene);
+        var mAsymcOperation = SceneManager.LoadSceneAsync("LoadingCutscene", LoadSceneMode.Single);
+
         //LoadingScreen.GetComponent<LoadingFadeOut>().FadeOut();
         if (!(GameObject.FindWithTag("CurtainObject") == null))
             GameObject.FindWithTag("CurtainObject").GetComponent<Curtain>().CurtainEffect("Open", 0);
 
-        Debug.Log("Destroy Loading Screen");
+        // Debug.Log("Destroy Loading Screen");
         Destroy(LoadingScreen);
         yield return mAsymcOperation;
         LoadingScreen.transform.position = new Vector3(0, 0, 0);
