@@ -75,7 +75,6 @@ public class PlaySelectSound : MonoBehaviour
         //DontDestroyOnLoad(LoadingScreen);
         yield return new WaitForSeconds(2f);
         //var mAsymcOperation = SceneManager.LoadSceneAsync(NextScene, LoadSceneMode.Single);
-        // (???) ??? ???? SceneName? ?? ????? ????, ?? Scene? ???
         PlayerPrefs.SetString("STAGE_NAME", NextScene);
         var mAsymcOperation = SceneManager.LoadSceneAsync("LoadingCutscene", LoadSceneMode.Single);
 
