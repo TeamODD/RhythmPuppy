@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace CutsceneManagement
 {
-    public class Tutorial_A_Cutscene : MonoBehaviour
+    public class Cutscene : MonoBehaviour
     {
         [Serializable]
         struct CutsceneInfo
