@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace CutsceneManagement
 {
-    public class TutorialCutscene : MonoBehaviour
+    public class Tutorial_A_Cutscene : MonoBehaviour
     {
         [Serializable]
         struct CutsceneInfo
@@ -36,7 +36,6 @@ namespace CutsceneManagement
         int sceneIndex;
         Color c;
         Coroutine sceneCoroutine, soundCoroutine;
-        bool startDelay;
 
         void Awake()
         {
@@ -54,10 +53,9 @@ namespace CutsceneManagement
             //fadeinImageList = new List<Image>();
             //fadeoutImageList = new List<Image>();
             //soundList = new List<AudioSource>();
-            sceneIndex = 0;
             sceneCoroutine = null;
             soundCoroutine = null;
-            startDelay = true;
+            sceneIndex = -1;
         }
 
         void Start()
@@ -68,12 +66,17 @@ namespace CutsceneManagement
 
         void startCutscene()
         {
-            startDelay = false;
+            sceneIndex = 0;
         }
 
         void Update()
         {
-            if (startDelay) return;
+            if (sceneIndex < 0) return;
+            if (cutsceneInfo.Length <= sceneIndex)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
 
             // ESC ÀÔ·Â ½Ã - ÄÆ¾À ÀüºÎ ½ºÅµÇÏ±â
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -105,7 +108,7 @@ namespace CutsceneManagement
                 return;
             }
 
-            if (sceneIndex < cutsceneInfo.Length && sceneCoroutine == null)
+            if (sceneCoroutine == null)
             {
                 sceneCoroutine = StartCoroutine(
                     runSceneAction(
