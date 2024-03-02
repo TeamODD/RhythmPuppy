@@ -26,6 +26,13 @@ public class PatternController1_3 : MonoBehaviour
     GameObject Boss;
     [SerializeField]
     GameObject BlurEffect;
+    [Space(20)]
+    [SerializeField]
+    GameObject shinyEffect;
+    [SerializeField]
+    AudioClip shinySoundEffect;
+    [SerializeField]
+    GameObject soundPlayerPrefab;
 
     bool isPuppyShown;
 
@@ -57,11 +64,12 @@ public class PatternController1_3 : MonoBehaviour
 
     private List<float> BlurTimings = new List<float>
     {
-        10.0f, 60.1f
+        9.0f, 59.1f
     };
 
     private float startTime;
     EventManager eventManager;
+    Transform musicManager;
 
     private void Start()
     {
@@ -69,6 +77,7 @@ public class PatternController1_3 : MonoBehaviour
         audioSource.clip = music;
         audioSource.Stop();
         eventManager = FindObjectOfType<EventManager>();
+        musicManager = GameObject.FindWithTag("MusicManager").transform;
         eventManager.savePointTime = savePointTime;
         eventManager.playerEvent.deathEvent += deathEvent;
         eventManager.stageEvent.gameStartEvent += run;
@@ -219,6 +228,12 @@ public class PatternController1_3 : MonoBehaviour
             }
             yield return new WaitForSeconds(timing - audioSource.time + DelayTime);
 
+            // 패턴 실행 전, 별 이펙트 및 사운드 출력
+            playSoundEffect(shinySoundEffect);
+            shinyEffect.SetActive(true);
+
+            // 패턴 실행
+            yield return new WaitForSeconds(1f);
             if (i == 0)
                 StartCoroutine(Fading(BlurEffect, 0f, 255f, 2f, 12.9f));
             else if (i == 1)
@@ -275,5 +290,20 @@ public class PatternController1_3 : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+    }
+
+    public void playSoundEffect(AudioClip sound)
+    {
+        GameObject o = Instantiate(soundPlayerPrefab);
+        AudioSource audioSource = o.GetComponent<AudioSource>();
+        o.transform.SetParent(musicManager);
+        audioSource.clip = sound;
+        audioSource.Play();
+    }
+
+    public void stopAllSoundEffects()
+    {
+        foreach (Transform child in musicManager)
+            Destroy(child.gameObject);
     }
 }

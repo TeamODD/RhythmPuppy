@@ -25,7 +25,6 @@ namespace CutsceneManagement
 
             nextStageName = PlayerPrefs.GetString("STAGE_NAME");
             PlayerPrefs.DeleteKey("STAGE_NAME");
-            nextStageName = "SceneStage2_1";
         }
 
         void Start()
