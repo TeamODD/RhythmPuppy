@@ -700,6 +700,7 @@ MonoBehaviour:
   corgiList:
   - {fileID: 602560251}
   - {fileID: 158368234}
+  - {fileID: 1639935669}
   cutsceneInfo:
   - fadeinObjList:
     - {fileID: 1869589813}
