@@ -20,6 +20,7 @@ namespace CutsceneManagement
             public Vector3 movement;
             public AudioClip[] soundList;
             public float[] soundTimeList;
+            public float exitTime;
         }
 
         [SerializeField] Image[] sceneList;
@@ -28,7 +29,6 @@ namespace CutsceneManagement
         [SerializeField] CutsceneInfo[] cutsceneInfo;
 
         CutsceneManager cutsceneManager;
-        EventManager eventManager;
         //List<Image> fadeinImageList, fadeoutImageList;
         List<GameObject> copyObjectList;
         List<Image> copyImageList;
@@ -46,7 +46,6 @@ namespace CutsceneManagement
             for (i = 0; i < corgiList.Length; i++)
                 setImageAlpha(corgiList[i], 0);
 
-            eventManager = FindObjectOfType<EventManager>();
             cutsceneManager = GetComponentInParent<CutsceneManager>();
             copyObjectList = new List<GameObject>();
             copyImageList = new List<Image>();
@@ -59,12 +58,6 @@ namespace CutsceneManagement
         }
 
         void Start()
-        {
-            eventManager.uiEvent.fadeOutEvent();
-            Invoke("startCutscene", 1.3f);
-        }
-
-        void startCutscene()
         {
             sceneIndex = 0;
         }
@@ -165,7 +158,7 @@ namespace CutsceneManagement
             copyObjectList.Clear();
             copyImageList.Clear();
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(cutsceneInfo[sceneIndex].exitTime);
             sceneIndex++;
             sceneCoroutine = null;
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using EventManagement;
 
 namespace CutsceneManagement
 {
@@ -14,17 +15,26 @@ namespace CutsceneManagement
         public GameObject soundPlayerPrefab;
         public AudioClip shine, stop, love, paw, dash, think_a, think_b, warning, VS;
 
+        EventManager eventManager;
         Transform musicManager;
         string nextStageName;
         Color c;
 
         void Awake()
         {
+            eventManager = FindObjectOfType<EventManager>();
             musicManager = GameObject.FindGameObjectWithTag("MusicManager").transform;
             setImageAlpha(darkEffectUI, 1);
 
             nextStageName = PlayerPrefs.GetString("STAGE_NAME");
             PlayerPrefs.DeleteKey("STAGE_NAME");
+
+            // µð¹ö±×¿ë ÄÚµå (±âº» ÄÆ¾À) - Stage2-1 ÄÆ¾ÀÀ» º¸¿©ÁÜ
+            if (nextStageName.Length <= 0)
+            {
+                nextStageName = "SceneStage2_1";
+                Debug.Log(string.Format("[{0}] Now Playing Cutscene (for debug) : {1}", Time.time, nextStageName));
+            }
         }
 
         void Start()
@@ -48,6 +58,8 @@ namespace CutsceneManagement
 
         IEnumerator runTutorialCutscene()
         {
+            eventManager.uiEvent.fadeOutEvent();
+            yield return new WaitForSeconds(1f);
             tutorial_A.SetActive(true);
             while (tutorial_A.activeSelf)
             {
@@ -63,6 +75,8 @@ namespace CutsceneManagement
 
         IEnumerator runStage_1Cutscene()
         {
+            eventManager.uiEvent.fadeOutEvent();
+            yield return new WaitForSeconds(1f);
             stage1_A.SetActive(true);
             while (stage1_A.activeSelf)
             {
@@ -78,6 +92,8 @@ namespace CutsceneManagement
 
         IEnumerator runStage_2Cutscene()
         {
+            eventManager.uiEvent.fadeOutEvent();
+            yield return new WaitForSeconds(1f);
             stage2_A.SetActive(true);
             while (stage2_A.activeSelf)
             {

@@ -610,6 +610,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 0fec519607be9f64e975683f29892b0a, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 417321111}
     fadeoutObjList:
@@ -619,12 +620,16 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 0fec519607be9f64e975683f29892b0a, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 988402553}
     fadeoutObjList: []
     movement: {x: 0, y: -250, z: 0}
-    soundList: []
-    soundTimeList: []
+    soundList:
+    - {fileID: 8300000, guid: 4981a7efa88782e46bc477bbaaeb5e1f, type: 3}
+    soundTimeList:
+    - 0.5
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 1609706708}
     fadeoutObjList:
@@ -634,6 +639,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 98bc7bc8574906744a950f8ba08fb333, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 1
   - fadeinObjList:
     - {fileID: 1063090803}
     fadeoutObjList: []
@@ -642,6 +648,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: b3663dfdb0b2afd40999183d0363fded, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 2.3
 --- !u!1 &242562779
 GameObject:
   m_ObjectHideFlags: 0
@@ -711,6 +718,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 0fec519607be9f64e975683f29892b0a, type: 3}
     soundTimeList:
     - 0.5
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 158368234}
     fadeoutObjList:
@@ -720,6 +728,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 0fec519607be9f64e975683f29892b0a, type: 3}
     soundTimeList:
     - 0.5
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 1639935669}
     fadeoutObjList:
@@ -729,6 +738,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 98bc7bc8574906744a950f8ba08fb333, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 1636969662}
     fadeoutObjList: []
@@ -737,6 +747,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 4981a7efa88782e46bc477bbaaeb5e1f, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 1998108849}
     fadeoutObjList: []
@@ -745,6 +756,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: b3663dfdb0b2afd40999183d0363fded, type: 3}
     soundTimeList:
     - 0.2
+    exitTime: 2
 --- !u!1 &277256154
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,8 +817,16 @@ MonoBehaviour:
   - {fileID: 377060711}
   - {fileID: 1434918270}
   corgiList:
+  - {fileID: 847754862}
   - {fileID: 1365804083}
   cutsceneInfo:
+  - fadeinObjList:
+    - {fileID: 847754862}
+    fadeoutObjList: []
+    movement: {x: -100, y: 0, z: 0}
+    soundList: []
+    soundTimeList: []
+    exitTime: 0
   - fadeinObjList:
     - {fileID: 1434918270}
     - {fileID: 1919598649}
@@ -816,6 +836,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 6caaadff739026f4c9f598aed319f77f, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 1508069546}
     fadeoutObjList: []
@@ -824,6 +845,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 87c8687a2d56ce04e99558e07807425d, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 1.5
   - fadeinObjList: []
     fadeoutObjList:
     - {fileID: 1434918270}
@@ -832,6 +854,7 @@ MonoBehaviour:
     movement: {x: 0, y: 0, z: 0}
     soundList: []
     soundTimeList: []
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 1434918270}
     - {fileID: 1656759302}
@@ -841,6 +864,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 6caaadff739026f4c9f598aed319f77f, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 0
   - fadeinObjList:
     - {fileID: 878708546}
     fadeoutObjList: []
@@ -849,6 +873,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 71c2805642ec1e04e864ffeb6242b466, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 139092567}
     - {fileID: 377060711}
@@ -859,6 +884,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 5e82d7c03f20dcb4aa33bbacd53345bb, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 2
 --- !u!1 &321376601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,7 +1224,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -480, y: 210}
+  m_AnchoredPosition: {x: -440, y: 210}
   m_SizeDelta: {x: 380, y: 194}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &417321111
@@ -1477,37 +1503,42 @@ MonoBehaviour:
   - {fileID: 62082228}
   - {fileID: 1798521762}
   - {fileID: 727549960}
+  - {fileID: 1167409632}
+  - {fileID: 104270206}
+  - {fileID: 949614647}
+  - {fileID: 1572909880}
+  - {fileID: 831574902}
   corgiList:
   - {fileID: 1915111948}
   cutsceneInfo:
   - fadeinObjList:
     - {fileID: 831574902}
+    - {fileID: 62082228}
     fadeoutObjList: []
     movement: {x: 0, y: 0, z: 0}
     soundList:
     - {fileID: 8300000, guid: 6caaadff739026f4c9f598aed319f77f, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 0.5
   - fadeinObjList:
-    - {fileID: 62082228}
+    - {fileID: 1572909880}
     fadeoutObjList: []
     movement: {x: 0, y: 0, z: 0}
     soundList:
     - {fileID: 8300000, guid: 87c8687a2d56ce04e99558e07807425d, type: 3}
     soundTimeList:
     - 0.3
-  - fadeinObjList:
-    - {fileID: 1572909880}
-    fadeoutObjList: []
-    movement: {x: 0, y: 0, z: 0}
-    soundList: []
-    soundTimeList: []
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 1167409632}
     fadeoutObjList: []
     movement: {x: -50, y: 0, z: 0}
-    soundList: []
-    soundTimeList: []
+    soundList:
+    - {fileID: 8300000, guid: 0fec519607be9f64e975683f29892b0a, type: 3}
+    soundTimeList:
+    - 0.3
+    exitTime: 1.5
   - fadeinObjList:
     - {fileID: 1798521762}
     fadeoutObjList: []
@@ -1516,6 +1547,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 87c8687a2d56ce04e99558e07807425d, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 104270206}
     fadeoutObjList: []
@@ -1524,6 +1556,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 20c08fcafc62fe84993e73143b682042, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 727549960}
     - {fileID: 949614647}
@@ -1534,6 +1567,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 5e82d7c03f20dcb4aa33bbacd53345bb, type: 3}
     soundTimeList:
     - 0.3
+    exitTime: 2
 --- !u!1 &710178385
 GameObject:
   m_ObjectHideFlags: 0
@@ -4084,6 +4118,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 0fec519607be9f64e975683f29892b0a, type: 3}
     soundTimeList:
     - 0.5
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 354026842}
     fadeoutObjList:
@@ -4093,6 +4128,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 0fec519607be9f64e975683f29892b0a, type: 3}
     soundTimeList:
     - 0.5
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 366243551}
     fadeoutObjList:
@@ -4102,12 +4138,14 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 98bc7bc8574906744a950f8ba08fb333, type: 3}
     soundTimeList:
     - 0.5
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 106158339}
     fadeoutObjList: []
     movement: {x: 0, y: -250, z: 0}
     soundList: []
     soundTimeList: []
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 321376603}
     fadeoutObjList: []
@@ -4116,6 +4154,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 71c2805642ec1e04e864ffeb6242b466, type: 3}
     soundTimeList:
     - 0.5
+    exitTime: 0.5
   - fadeinObjList:
     - {fileID: 972400611}
     fadeoutObjList: []
@@ -4124,6 +4163,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 20c08fcafc62fe84993e73143b682042, type: 3}
     soundTimeList:
     - 0.5
+    exitTime: 2
 --- !u!1 &1891404621
 GameObject:
   m_ObjectHideFlags: 0

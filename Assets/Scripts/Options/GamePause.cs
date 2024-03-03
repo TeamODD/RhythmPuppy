@@ -5,14 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class GamePause : MonoBehaviour
 {
-    [HideInInspector]
-    public bool isPaused;
+    [HideInInspector] public bool isPaused;
     AudioSource BGM;
     EventManager eventManager;
 
     void Awake()
     {
-        /*stage1_2BGM = GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>();*/
+        // stage1_2BGM = GameObject.FindGameObjectWithTag("Music").GetComponent<AudioSource>();
         BGM = FindObjectOfType<AudioSource>();
         eventManager = FindObjectOfType<EventManager>();
         isPaused = false;
@@ -21,16 +20,24 @@ public class GamePause : MonoBehaviour
         eventManager.stageEvent.resumeEvent += ResumeEvent;
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+    }
+
     public void TogglePause()
     {
-        /* 하이어리키의 EventManager 오브젝트에서 이 함수를 참조함 */
-        if (isPaused)
+        // 하이어리키의 EventManager 오브젝트에서 이 함수를 참조함 
+        if (!isPaused)
         {
-            PauseEvent();
+            eventManager.stageEvent.pauseEvent();
         }
         else
         {
-            ResumeEvent();
+            eventManager.stageEvent.resumeEvent();
         }
     }
 
@@ -45,7 +52,6 @@ public class GamePause : MonoBehaviour
         {
             BGM.Pause();
         }
-
         // Option_Stage 씬을 로드합니다.
         SceneManager.LoadScene(SceneInfo.getSceneName(SceneName.OPTION), LoadSceneMode.Additive);
 
